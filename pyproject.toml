@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# Project metadata
+# ---------------------------------------------------------------------------
+[project]
+name = "football-analytics"
+version = "0.1.0"
+description = "Football eventing data processing and analysis toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+
+# Core dependencies — everything needed to run the pipeline and analysis
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.25",
+    "matplotlib>=3.7",
+    "seaborn>=0.12",
+    "pyyaml>=6.0",
+]
+
+# ---------------------------------------------------------------------------
+# Optional dependency groups
+# Install with: pip install -e ".[dev]" or pip install -e ".[dev,viz]"
+# ---------------------------------------------------------------------------
+[project.optional-dependencies]
+
+# Development tools — testing, notebooks, linting
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "jupyter>=1.0",
+    "ipykernel",
+    "black",
+    "ruff",
+]
+
+# Extended visualization libs — add as your project grows
+viz = [
+    "mplsoccer>=1.1",   # Football-specific pitch plotting
+    "plotly>=5.0",
+]
+
+# ---------------------------------------------------------------------------
+# Tell setuptools where to find your package (the src/ layout)
+# ---------------------------------------------------------------------------
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ---------------------------------------------------------------------------
+# Black formatter config
+# ---------------------------------------------------------------------------
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+# ---------------------------------------------------------------------------
+# Ruff linter config (fast replacement for flake8)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W"]
+ignore = []
+
+# ---------------------------------------------------------------------------
+# Pytest config
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+
