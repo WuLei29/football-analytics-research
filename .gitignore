@@ -6,6 +6,29 @@ __pycache__/
 # C extensions
 *.so
 
+# Data folder
+# Ignore everything inside data
+data/*
+
+# But allow the folder structure
+!data/raw/
+!data/mapping/
+!data/clean/
+!data/squads/
+
+
+# Ignore everything inside those folders
+data/raw/*
+data/mapping/*
+data/clean/*
+data/squads/*
+
+# Allow placeholder files
+!data/raw/.gitkeep
+!data/mapping/.gitkeep
+!data/clean/.gitkeep
+!data/squads/.gitkeep
+
 # Distribution / packaging
 .Python
 build/
