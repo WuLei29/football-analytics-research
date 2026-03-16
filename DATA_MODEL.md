@@ -283,19 +283,53 @@ One row per match. Home and away teams are stored as direct columns — home/awa
 
 ### 3.9 `match_lineups`
 
-Records which players participated in each match, whether they started, at what position, and their minutes on the pitch. Kept separate from events because a lineup is a squad fact *about* a match, not an event that occurred *during* it.
+Records which players participated in each match, whether they started, at what position, and their minutes on the pitch. Kept separate from `events` because a lineup is a squad fact *about* a match, not an event that occurred *during* it.
 
-| Column | Type | Nullable | Description |
+**Ingestion strategy — 5-pass processing** of each raw match file (see `load_match_lineups.py`):
+
+| Pass | Source event | Condition | Action |
 |---|---|---|---|
-| `lineup_id` | INT (PK) | No | Surrogate primary key |
-| `match_id` | INT (FK) | No | Reference to `matches` |
-| `player_id` | INT (FK) | No | Reference to `players` |
-| `team_id` | INT (FK) | No | Reference to `teams` |
-| `starting_xi` | BOOL | No | True if player started the match |
-| `position` | VARCHAR(10) | Yes | Position played in this match |
-| `shirt_number` | INT | Yes | Shirt number on the day |
-| `minute_in` | INT | No | Minute entered the pitch — 0 for starters |
-| `minute_out` | INT | Yes | Minute exited — null if played to the end |
+| 1 | `typeId: 34` (Team set up) | — | INSERT all rows for both teams — starters get `minute_in = 0`, bench get `minute_in = NULL` |
+| 2a | `typeId: 18` (Player off) | — | UPDATE → `minute_out = timeMin`, `exit_reason = 'substitution'` |
+| 2b | `typeId: 19` (Player on) | — | UPDATE → `minute_in = timeMin`, `formation_position = Q145` |
+| 2c | `typeId: 17` (Card) | Q33 present | UPDATE → `minute_out = timeMin`, `exit_reason = 'red_card'` |
+| 2d | `typeId: 17` (Card) | Q32 present | UPDATE → `minute_out = timeMin`, `exit_reason = 'second_yellow'` |
+
+Pass order matters — Pass 2a (player off) always runs before Pass 2b (player on) so that the outgoing player's row is closed before the incoming substitute's row is opened.
+
+| Column | Type | Nullable | Source | Description |
+|---|---|---|---|---|
+| `lineup_id` | SERIAL (PK) | No | — | Surrogate primary key |
+| `match_id` | INT (FK) | No | Resolved | Reference to `matches` |
+| `player_id` | INT (FK) | No | Q30 → resolved | Reference to `players` via `source_player_id` |
+| `team_id` | INT (FK) | No | `contestantId` → resolved | Reference to `teams` via `source_team_id` |
+| `starting_xi` | BOOL | No | Q131 | `true` if formation position > 0; `false` for bench |
+| `formation_position` | SMALLINT | Yes | Q131 / Q145 | 1–11 for starters (from typeId 34 Q131); updated to Q145 value for subs who enter; `NULL` for unused subs |
+| `position_code` | SMALLINT | No | Q44 (typeId 34) | Raw provider code: `1`=GK `2`=DEF `3`=MID `4`=FWD `5`=SUB |
+| `position` | VARCHAR(5) | No | Q44 → mapped | Human label: `GK` / `DEF` / `MID` / `FWD` / `SUB`. For starters: mapped from typeId 34 numeric code. For subs: text value from typeId 18 Q44 |
+| `shirt_number` | SMALLINT | Yes | Q59 (typeId 34) | Shirt number on the day |
+| `is_captain` | BOOL | No | Q194 (typeId 34) | `true` if this player's `source_player_id` matches qualifier 194 |
+| `team_formation` | VARCHAR(15) | Yes | Q130 (typeId 34) | Raw formation ID from provider. No decoding applied — appendix 14 mapping not yet available. Denormalised: repeated for all rows of the same team in the match |
+| `minute_in` | SMALLINT | Yes | Pass 1 / 2b | `0` for starters; `timeMin` of typeId 19 for subs who play; `NULL` for unused subs |
+| `minute_out` | SMALLINT | Yes | Pass 2a / 2c / 2d | `timeMin` of the exit event; `NULL` if played to the end or never entered |
+| `exit_reason` | VARCHAR(15) | Yes | Event type + qualifier | `substitution` / `red_card` / `second_yellow` / `NULL`. Disambiguates why `minute_out` was set — analytically critical for disciplinary records and minutes-played calculations |
+| `raw_status_flag` | SMALLINT | Yes | Q227 (typeId 34) | Raw qualifier 227 value — meaning unconfirmed (all-zero in observed data); preserved for future decoding |
+| `raw_sub_flag` | SMALLINT | Yes | Q293 (typeId 19) | Raw qualifier 293 value — meaning unconfirmed; preserved for future decoding |
+
+> **Unique constraint** on `(match_id, player_id)` — one row per player per match. Unlike most other tables where `ON CONFLICT DO NOTHING` is used, lineup corrections use `ON CONFLICT (match_id, player_id) DO UPDATE` because providers do issue lineup amendments post-match.
+
+> **Prerequisite:** the `matches` table must contain the corresponding `source_match_id` before a lineup file can be loaded. Files for unresolved matches are skipped and logged — they are not errors.
+
+> **`position` vs `preferred_position`:** `position` here is the match-specific role assigned by the manager. `players.preferred_position` is the player's general role. They frequently differ (e.g. a natural CM deployed as a DM) and must never be conflated.
+
+> **Minutes played calculation** (for gold layer `player_season_stats`) is a single expression that requires no re-scan of the `events` table:
+> ```sql
+> COALESCE(ml.minute_out, m.match_length_min) - COALESCE(ml.minute_in, 0) AS minutes_played
+> FROM match_lineups ml
+> JOIN matches m USING (match_id)
+> ```
+
+> **`team_formation` denormalisation:** this is a team×match level fact, repeated across all rows for that team (2 teams × up to 23 players = up to 46 rows per match). The repetition cost is negligible; the benefit is avoiding a join for the most common formation query.
 
 ---
 
