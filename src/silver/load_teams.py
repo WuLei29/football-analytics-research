@@ -15,6 +15,7 @@ from pathlib import Path
 
 import psycopg2
 from psycopg2.extras import execute_values
+from dotenv import load_dotenv
 
 # ---------------------------------------------------------------------------
 # Paths  (relative to src/bronze/)
@@ -29,15 +30,13 @@ TEAM_COMPETITION_SEASONS_CSV = SEEDS_DIR / "team_competition_seasons.csv"
 SEEDS_DIR.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------
-# PostgreSQL connection — update these values to match your setup
+# PostgreSQL connection — reads FOOTBALL_DB_DSN from .env
 # ---------------------------------------------------------------------------
-DB_CONFIG = {
-    "host":     "localhost",
-    "port":     5432,
-    "dbname":   "football_analytics",
-    "user":     "postgres",
-    "password": "WuLei2422",
-}
+load_dotenv(BASE_DIR / ".env")
+
+DSN = os.getenv("FOOTBALL_DB_DSN")
+if not DSN:
+    raise EnvironmentError("FOOTBALL_DB_DSN is not set in your .env file.")
 
 # ---------------------------------------------------------------------------
 # Column definitions — must match your PostgreSQL schema exactly
@@ -56,9 +55,9 @@ TEAMS_COLUMNS = [
 ]
 
 TEAM_CS_COLUMNS = [
-    "source_team_id",           # resolved to team_id during INSERT
-    "source_competition_id",    # resolved to competition_season_id during INSERT
-    "source_season_id",         # resolved to competition_season_id during INSERT
+    "source_team_id",
+    "source_competition_id",
+    "source_season_id",
     "kit_home_color",
     "kit_away_color",
     "badge_url",
@@ -88,7 +87,6 @@ def load_bronze_records() -> list[dict]:
 # Step 2 — Write silver seed CSVs
 # ---------------------------------------------------------------------------
 def write_teams_csv(records: list[dict]) -> list[dict]:
-    """Write teams.csv. Returns the rows written (used for deduplication check)."""
     seen = set()
     rows = []
 
@@ -109,7 +107,6 @@ def write_teams_csv(records: list[dict]) -> list[dict]:
 
 
 def write_team_competition_seasons_csv(records: list[dict]) -> list[dict]:
-    """Write team_competition_seasons.csv."""
     seen = set()
     rows = []
 
@@ -133,10 +130,6 @@ def write_team_competition_seasons_csv(records: list[dict]) -> list[dict]:
 # Step 3 — Load into PostgreSQL
 # ---------------------------------------------------------------------------
 def load_teams(cur, rows: list[dict]) -> None:
-    """
-    INSERT into teams using source_team_id as the deduplication key.
-    ON CONFLICT DO NOTHING — safe to re-run without creating duplicates.
-    """
     sql = """
         INSERT INTO silver.teams (
             source_team_id, name, short_name, abbreviation,
@@ -148,16 +141,9 @@ def load_teams(cur, rows: list[dict]) -> None:
     """
     values = [
         (
-            r["source_team_id"],
-            r["name"],
-            r["short_name"],
-            r["abbreviation"],
-            r["stadium_name"],
-            r["source_venue_id"],
-            r["country"],
-            r["city"],
-            r["stadium_capacity"],   # None → NULL
-            r["founded_year"],       # None → NULL
+            r["source_team_id"], r["name"], r["short_name"], r["abbreviation"],
+            r["stadium_name"], r["source_venue_id"], r["country"], r["city"],
+            r["stadium_capacity"], r["founded_year"],
         )
         for r in rows
     ]
@@ -166,47 +152,26 @@ def load_teams(cur, rows: list[dict]) -> None:
 
 
 def load_team_competition_seasons(cur, rows: list[dict]) -> None:
-    """
-    INSERT into team_competition_seasons.
-    Resolves team_id and competition_season_id via subqueries on source IDs.
-    ON CONFLICT DO NOTHING on (team_id, competition_season_id).
-    """
     sql = """
         INSERT INTO silver.team_competition_seasons (
-            team_id,
-            competition_season_id,
-            kit_home_color,
-            kit_away_color,
-            badge_url
+            team_id, competition_season_id,
+            kit_home_color, kit_away_color, badge_url
         )
         SELECT
-            t.team_id,
-            cs.competition_season_id,
-            v.kit_home_color,
-            v.kit_away_color,
-            v.badge_url
+            t.team_id, cs.competition_season_id,
+            v.kit_home_color, v.kit_away_color, v.badge_url
         FROM (VALUES %s) AS v(
-            source_team_id,
-            source_competition_id,
-            source_season_id,
-            kit_home_color,
-            kit_away_color,
-            badge_url
+            source_team_id, source_competition_id, source_season_id,
+            kit_home_color, kit_away_color, badge_url
         )
-        JOIN silver.teams t
-            ON t.source_team_id = v.source_team_id
-        JOIN silver.competition_seasons cs
-            ON cs.source_season_id = v.source_season_id
+        JOIN silver.teams t ON t.source_team_id = v.source_team_id
+        JOIN silver.competition_seasons cs ON cs.source_season_id = v.source_season_id
         ON CONFLICT (team_id, competition_season_id) DO NOTHING
     """
     values = [
         (
-            r["source_team_id"],
-            r["source_competition_id"],
-            r["source_season_id"],
-            r["kit_home_color"],
-            r["kit_away_color"],
-            r["badge_url"],
+            r["source_team_id"], r["source_competition_id"], r["source_season_id"],
+            r["kit_home_color"], r["kit_away_color"], r["badge_url"],
         )
         for r in rows
     ]
@@ -226,13 +191,13 @@ def main():
     print("\n" + "=" * 60)
     print("Step 2 — Writing silver seed CSVs")
     print("=" * 60)
-    teams_rows    = write_teams_csv(records)
-    team_cs_rows  = write_team_competition_seasons_csv(records)
+    teams_rows   = write_teams_csv(records)
+    team_cs_rows = write_team_competition_seasons_csv(records)
 
     print("\n" + "=" * 60)
     print("Step 3 — Loading into PostgreSQL")
     print("=" * 60)
-    conn = psycopg2.connect(**DB_CONFIG)
+    conn = psycopg2.connect(DSN)
     try:
         with conn:
             with conn.cursor() as cur:
