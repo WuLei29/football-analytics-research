@@ -142,4 +142,4 @@ def insert_events(df: pd.DataFrame, conn) -> int:
             rows,
             page_size=500,
         )
-        return cur.rowcount
+        return len(rows)
