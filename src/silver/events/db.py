@@ -31,7 +31,8 @@ SILVER_COLUMNS = [
     "goal_mouth_z", "goal_mouth_y",
     "start_zone_value_xt", "end_zone_value_xt", "xt",
     "sequence_id", "sequence_start", "sequence_end", "sequence_event_number",
-    "raw_data",
+    "value_assist",      # ← new
+    "raw_data"
 ]
 
 

@@ -32,6 +32,27 @@ from .xt import calculate_xt
 
 log = logging.getLogger(__name__)
 
+CARRY_NOISE_EVENTS = frozenset({
+    "Card",
+    "Coach Setup",
+    "Collection End",
+    "Condition change",
+    "Contentious referee decision",
+    "Corner Awarded",
+    "Deleted event",
+    "End",
+    "End delay",
+    "Formation change",
+    "Injury Time Announcement",
+    "Official change",
+    "Penalty faced",
+    "Player off",
+    "Player on",
+    "Player retired",
+    "Start",
+    "Start delay",
+    "Team set up",
+})
 
 class EventsProcessor:
 
@@ -152,6 +173,24 @@ class EventsProcessor:
 
             # Step 5 — carries
             if include_carries:
+                df_clean = (
+                    df[~df["event_type"].isin(CARRY_NOISE_EVENTS)]
+                    .copy()
+                    .reset_index(drop=True)
+                )
+
+                df_clean_with_carries = calculate_carries(df_clean)
+
+                new_carries = df_clean_with_carries[
+                    df_clean_with_carries["event_type"] == "Carry"
+                ].copy()
+
+                if not new_carries.empty:
+                    df = pd.concat([df, new_carries], ignore_index=True)
+                    df = df.sort_values(
+                        ["period", "minute", "second", "provider_event_id"],
+                        na_position="last",
+                    ).reset_index(drop=True)
                 df = calculate_carries(df)
 
             # Step 6 — xT

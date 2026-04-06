@@ -141,6 +141,11 @@ _QUALIFIER_COORD_MAP = {
     "Goal mouth y coordinate":     ("goal_mouth_y", None),
 }
 
+# Qualifier IDs that map to named columns
+_QUALIFIER_VALUE_MAP = {
+    "Assist": "value_assist",
+}
+
 
 def _scale(value: Any, axis: Optional[str]) -> Optional[float]:
     """Convert a 0-100 provider coordinate to real pitch dimensions (105×68)."""
@@ -177,7 +182,7 @@ def _extract_event(
     type_id = event.get("typeId")
     event_info = event_codes.get(type_id, {"name": "Unknown"})
     row["event_type"] = event_info["name"]
-    if row["event_type"] == "Unknown":
+    if row["event_type"] in ("Unknown", "Deleted event"):
         return None
 
     # outcome
@@ -193,14 +198,26 @@ def _extract_event(
         "blocked_x": None, "blocked_y": None,
         "goal_mouth_z": None, "goal_mouth_y": None,
     }
+
+    named_values: Dict[str, Optional[str]] = {
+    "value_assist": None,
+    }
+
+
     for q in event.get("qualifier", []):
         qinfo = qualifier_codes.get(q["qualifierId"], {"name": ""})
         qname = qinfo.get("name", "")
+
         if qname in _QUALIFIER_COORD_MAP:
             col, axis = _QUALIFIER_COORD_MAP[qname]
             named_coords[col] = _scale(q.get("value"), axis)
 
+        if qname in _QUALIFIER_VALUE_MAP:
+            col = _QUALIFIER_VALUE_MAP[qname]
+            named_values[col] = q.get("value")
+
     row.update(named_coords)
+    row.update(named_values)
 
     # Fallback: use x/y as end_x/end_y when not set
     row["end_x"] = row["end_x"] if row["end_x"] is not None else row["x"]

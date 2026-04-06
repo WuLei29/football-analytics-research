@@ -33,17 +33,27 @@ def _carry_row(
     opposition_team_name: Optional[str],
     h_a: Optional[str],
 ) -> Dict:
+    
     avg_minute = (event1["minute"] + event2["minute"]) / 2
     avg_second = (event1["second"] + event2["second"]) / 2
     if avg_second >= 60:
         avg_minute += 1
         avg_second -= 60
 
+    e1_pid = event1.get("provider_event_id")
+    e2_pid = event2.get("provider_event_id")
+    carry_sort_key = (
+        (e1_pid + e2_pid) / 2
+        if e1_pid is not None and e2_pid is not None
+        else None
+    )
+
+
     return {
         "match_id":             match_id,
         "source_event_id":      None,   # synthesised — no provider UUID
-        "provider_event_id":    None,
-        "type_id":              None,
+        "provider_event_id":    carry_sort_key, # ← fractional, for in-memory sort only
+        "type_id":              -1, # ← marks synthesised carries
         "minute":               int(avg_minute),
         "second":               avg_second,
         "source_team_id":       source_team_id,
@@ -102,6 +112,10 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
     for i in range(len(df) - 1):
         cur  = df.iloc[i]
         nxt  = df.iloc[i + 1]
+
+        # Never synthesise a carry across a period boundary
+        if cur["period"] != nxt["period"]:
+            continue
         cur_type = cur["event_type"]
         nxt_type = nxt["event_type"]
         same_team = cur["source_team_id"] == nxt["source_team_id"]

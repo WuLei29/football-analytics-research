@@ -374,6 +374,7 @@ The granular event stream for each match. One row per event, including synthesis
 | `sequence_start` | BOOLEAN | Yes | `true` if this event opens a possession sequence |
 | `sequence_end` | BOOLEAN | Yes | `true` if this event closes a possession sequence |
 | `sequence_event_number` | SMALLINT | Yes | Position of this event within its sequence (1-based) |
+| `value_assist` | FLOAT | No | Value indicating that the event is an assist. The value matches the 'type_id' column of the event assisted |
 | `raw_data` | JSONB | Yes | Full raw provider payload — `NULL` for synthesised carries. As the model evolves, new attributes can be promoted from here to proper columns without losing historical data |
 | `created_at` | TIMESTAMP | No | Record creation timestamp — DB default `NOW()` |
 
