@@ -182,7 +182,7 @@ def _extract_event(
     type_id = event.get("typeId")
     event_info = event_codes.get(type_id, {"name": "Unknown"})
     row["event_type"] = event_info["name"]
-    if row["event_type"] in ("Unknown", "Deleted event"):
+    if row["event_type"] in ("Unknown", "Deleted event", "Out"):
         return None
 
     # outcome

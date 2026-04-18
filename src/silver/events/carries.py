@@ -3,9 +3,15 @@ carries.py
 ──────────
 Carry detection and insertion.
 
-Takes a pandas DataFrame of events (already sorted by eventId)
-and returns a new DataFrame with synthesised carry rows inserted
-at the correct positions.
+Takes a pandas DataFrame of events and returns a new DataFrame with
+synthesised carry rows inserted at the correct positions.
+
+IMPORTANT: The DataFrame is sorted by (period, minute, second,
+provider_event_id) at the start of calculate_carries() to guarantee
+chronological order. Provider eventIds are assigned at recording time,
+so late-added events (e.g. off-the-ball actions, VAR corrections) get
+higher IDs despite occurring earlier — sorting by eventId alone produces
+incorrect consecutive pairs and phantom carries.
 
 No DB access. No parsing. Pure transformation.
 """
@@ -99,14 +105,25 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
     ball moved without a recorded event.
 
     Args:
-        df: Events DataFrame, sorted by provider_event_id / minute+second.
-            Must have columns: event_type, outcome, source_team_id, source_player_id,
-            player_name, jersey_number, x, y, end_x, end_y, period, match_id,
-            team_name, opposition_team_name, h_a.
+        df: Events DataFrame. Must have columns: event_type, outcome,
+            source_team_id, source_player_id, player_name, jersey_number,
+            x, y, end_x, end_y, period, minute, second, match_id,
+            provider_event_id, team_name, opposition_team_name, h_a.
 
     Returns:
-        New DataFrame with carry rows inserted at the correct positions.
+        New DataFrame with carry rows inserted at the correct positions,
+        sorted chronologically by (period, minute, second, provider_event_id).
     """
+    # ── Sort chronologically ──────────────────────────────────────────────
+    # Provider eventIds are assigned at recording time, so late-added events
+    # (off-ball actions, VAR reviews) get higher IDs despite occurring earlier
+    # in the match. Sorting by (period, minute, second) with provider_event_id
+    # as tiebreaker guarantees correct consecutive pairs for carry detection.
+    df = df.sort_values(
+        by=["period", "minute", "second", "provider_event_id"],
+        na_position="last",
+    ).reset_index(drop=True)
+
     carries: list[tuple[int, dict]] = []  # (insert_before_index, row_dict)
 
     for i in range(len(df) - 1):
