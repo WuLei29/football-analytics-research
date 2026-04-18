@@ -15,9 +15,6 @@ Pipeline:
 Idempotency:
   - Resets all sequence columns for target match_ids before processing
   - Safe to re-run after classifier fixes or new data
-
-Usage:
-  python -m src.silver.events.sequences [--match-ids 123 456] [--limit 10] [--batch-size 50]
 """
 
 import json
@@ -39,23 +36,13 @@ log = logging.getLogger(__name__)
 # Meta events: hard sequence boundaries. Never assigned to a sequence.
 # A sequence ends just before them, a new one starts just after.
 META_EVENTS = frozenset({
-    'Start', 'End', 'Player on', 'Player off', 'Player retired',
+    'Start', 'End', 'SubstitutionOn', 'SubstitutionOff',
 })
 
 # Excluded events: filtered out entirely before classification.
 # They never affect sequence logic — treated as if they don't exist.
 EXCLUDED_EVENTS = frozenset({
-    'Formation change',
-    'Team set up',
-    'Card',
-    'Coach Setup',
-    'Collection End',
-    'Condition change',
-    'Contentious referee decision',
-    'End delay',
-    'Injury Time Announcement',
-    'Official change',
-    'Start delay',
+    'FormationChange', 'FormationSet',
 })
 
 # Excluded periods: pre-match (16), penalty shootout / other non-live (14)
@@ -74,7 +61,7 @@ DEAD_BALL_GOAL_QUALIFIER_IDS = frozenset({9, 5})
 
 # Shot event types (for gold-layer aggregation reference)
 SHOT_EVENT_TYPES = frozenset({
-    'Goal', 'Attempt Saved', 'Miss', 'Post',
+    'Goal', 'SavedShot', 'MissedShots', 'ShotOnPost',
 })
 
 # Columns required from silver.events for the classifier
@@ -131,7 +118,8 @@ def preprocess_for_sequences(df: pd.DataFrame) -> pd.DataFrame:
     Prepare a silver.events DataFrame for the possession-sequence classifier.
 
     Steps:
-      1. Filter out excluded periods (14, 16) and excluded event types.
+      1. Filter out excluded periods (14, 16) and excluded event types
+         (FormationChange, FormationSet).
       2. Sort chronologically within each match.
       3. Materialise boolean flag columns from raw_data qualifiers:
          - is_set_piece_pass:  Pass with Q5, Q6, or Q107
@@ -148,11 +136,9 @@ def preprocess_for_sequences(df: pd.DataFrame) -> pd.DataFrame:
     out = df.loc[mask].copy()
 
     # ── Sort chronologically ──────────────────────────────────────────
-    # json_index captures the original JSONP array position.
-    # Carries get fractional values (e.g. 42.5 between events 42 and 43),
-    # so sorting by json_index preserves correct chronological order
-    # for both real and synthesised events.
-    sort_cols = ['match_id', 'json_index']
+    sort_cols = ['match_id', 'period', 'minute', 'second']
+    if 'provider_event_id' in out.columns:
+        sort_cols.append('provider_event_id')
     out = out.sort_values(sort_cols, na_position='last').reset_index(drop=True)
 
     # ── Materialise qualifier flags ───────────────────────────────────
@@ -190,7 +176,6 @@ def preprocess_for_sequences(df: pd.DataFrame) -> pd.DataFrame:
 def _is_sequence_start(
     row: dict,
     prev_row: Optional[dict],
-    prev_prev_row: Optional[dict] = None,
     in_sequence: bool = False,
 ) -> bool:
     """
@@ -201,26 +186,20 @@ def _is_sequence_start(
     evt = row['event_type']
     outcome = row['outcome']
 
-    # ── Corner Awarded can be *part of* a sequence but never starts one
-    if evt == 'Corner Awarded':
+    # ── CornerAwarded can be *part of* a sequence but never starts one ─
+    if evt == 'CornerAwarded':
         return False
 
     # ── Sandwich continuation guard ────────────────────────────────────
     # If we're inside an active sequence and the previous event was a
-    # Ball touch or Error from the OTHER team that didn't end the sequence
+    # BallTouch or Error from the OTHER team that didn't end the sequence
     # (sandwich exemption applied), this event is a continuation, not a
     # new start.  Without this guard, the team-change checks below would
     # incorrectly open a new sequence.
-    #
-    # Only suppress when the Ball touch/Error was a genuine sandwich:
-    # prev_prev_row must be the same team as the current row (Team A →
-    # Team B touch → Team A pattern).
     if (in_sequence
             and prev_row is not None
-            and prev_row['event_type'] in ('Ball touch', 'Error')
-            and prev_row['source_team_id'] != row['source_team_id']
-            and prev_prev_row is not None
-            and prev_prev_row['source_team_id'] == row['source_team_id']):
+            and prev_row['event_type'] in ('BallTouch', 'Error')
+            and prev_row['source_team_id'] != row['source_team_id']):
         return False
 
     # ── Fix 3: Set-piece pass always starts ────────────────────────────
@@ -248,9 +227,9 @@ def _is_sequence_start(
             return True
         if prev_row['event_type'] == 'Start':
             return True
-        if prev_row['event_type'] == 'Corner Awarded':
+        if prev_row['event_type'] == 'CornerAwarded':
             return True
-        if prev_row['event_type'] == 'Offside provoked':
+        if prev_row['event_type'] == 'OffsideProvoked':
             return True
         # Team change, but NOT via a Challenge (contested duel)
         if (prev_row['source_team_id'] != row['source_team_id']
@@ -261,16 +240,16 @@ def _is_sequence_start(
     if evt == 'Tackle' and outcome == 'success':
         return True
 
-    # ── Successful Blocked Pass ────────────────────────────────────────
-    if evt == 'Blocked Pass' and outcome == 'success':
+    # ── Successful BlockedPass ─────────────────────────────────────────
+    if evt == 'BlockedPass' and outcome == 'success':
         return True
 
-    # ── Successful Ball recovery — Fix 4: also after Ball touch ────────
-    if evt == 'Ball recovery' and outcome == 'success':
+    # ── Successful BallRecovery — Fix 4: also after BallTouch ──────────
+    if evt == 'BallRecovery' and outcome == 'success':
         if prev_row is not None:
             if prev_row['source_team_id'] != row['source_team_id']:
                 return True
-            if prev_row['event_type'] == 'Ball touch':
+            if prev_row['event_type'] == 'BallTouch':
                 return True
 
     # ── Successful Interception ────────────────────────────────────────
@@ -281,12 +260,12 @@ def _is_sequence_start(
     if evt == 'Claim' and outcome == 'success':
         return True
 
-    # ── Successful Keeper pick-up ──────────────────────────────────────
-    if evt == 'Keeper pick-up' and outcome == 'success':
+    # ── Successful KeeperPickup ────────────────────────────────────────
+    if evt == 'KeeperPickup' and outcome == 'success':
         return True
 
-    # ── Attempt Saved from opposition (not after Aerial/Challenge) ─────
-    if evt == 'Attempt Saved':
+    # ── SavedShot from opposition (not after Aerial/Challenge) ─────────
+    if evt == 'SavedShot':
         if (prev_row is not None
                 and prev_row['source_team_id'] != row['source_team_id']
                 and prev_row['event_type'] not in ('Aerial', 'Challenge')):
@@ -314,15 +293,15 @@ def _is_sequence_end(
     evt = row['event_type']
     outcome = row['outcome']
 
-    # ── Fix 8: Corner Awarded always ends the sequence it belongs to ───
-    if evt == 'Corner Awarded':
+    # ── Fix 8: CornerAwarded always ends the sequence it belongs to ────
+    if evt == 'CornerAwarded':
         return True
 
-    # ── Fix 8 (suppress): if next event IS Corner Awarded, do NOT end
-    #    here — let the sequence extend to include Corner Awarded.
+    # ── Fix 8 (suppress): if next event IS CornerAwarded, do NOT end
+    #    here — let the sequence extend to include CornerAwarded.
     #    Exception: Goal always ends regardless. ────────────────────────
     if (next_row is not None
-            and next_row['event_type'] == 'Corner Awarded'
+            and next_row['event_type'] == 'CornerAwarded'
             and evt != 'Goal'):
         return False
 
@@ -331,8 +310,8 @@ def _is_sequence_end(
         # Fix 2: assist pass must not end the sequence
         if _has_value_assist(row):
             return False
-        # Fix 6: Ball touch / Error sandwich — deflection, possession kept
-        if next_row is not None and next_row['event_type'] in ('Ball touch', 'Error'):
+        # Fix 6: BallTouch / Error sandwich — deflection, possession kept
+        if next_row is not None and next_row['event_type'] in ('BallTouch', 'Error'):
             if (next_next_row is not None
                     and next_next_row['source_team_id'] == row['source_team_id']):
                 return False
@@ -342,16 +321,16 @@ def _is_sequence_end(
     if evt == 'Dispossessed' and outcome == 'success':
         return True
 
-    # ── Unsuccessful Ball touch / Error — Fix 7: sandwich exemption ────
-    if evt in ('Ball touch', 'Error') and outcome == 'failure':
+    # ── Unsuccessful BallTouch / Error — Fix 7: sandwich exemption ─────
+    if evt in ('BallTouch', 'Error') and outcome == 'failure':
         if (prev_row is not None and next_row is not None
                 and prev_row['source_team_id'] == next_row['source_team_id']
                 and prev_row['source_team_id'] != row['source_team_id']):
             return False  # deflection — sequence continues for other team
         return True
 
-    # ── Offside Pass (any outcome) ─────────────────────────────────────
-    if evt == 'Offside Pass':
+    # ── OffsidePass (any outcome) ──────────────────────────────────────
+    if evt == 'OffsidePass':
         return True
 
     # ── Successful Foul ────────────────────────────────────────────────
@@ -362,22 +341,22 @@ def _is_sequence_end(
     if evt == 'Goal':
         return True
 
-    # ── Miss ───────────────────────────────────────────────────────────
-    if evt == 'Miss':
+    # ── MissedShots ────────────────────────────────────────────────────
+    if evt == 'MissedShots':
         return True
 
-    # ── Post — only if opposition gets the ball next ───────────────────
-    if evt == 'Post':
+    # ── ShotOnPost — only if opposition gets the ball next ─────────────
+    if evt == 'ShotOnPost':
         if next_row is not None and next_row['source_team_id'] != row['source_team_id']:
             return True
 
-    # ── Attempt Saved — ends when next event is different team or absent
-    if evt == 'Attempt Saved':
+    # ── SavedShot — ends when next event is different team or absent ───
+    if evt == 'SavedShot':
         if next_row is None or next_row['source_team_id'] != row['source_team_id']:
             return True
 
-    # ── Unsuccessful Take On (except when fouled immediately after) ────
-    if evt == 'Take On' and outcome == 'failure':
+    # ── Unsuccessful TakeOn (except when fouled immediately after) ─────
+    if evt == 'TakeOn' and outcome == 'failure':
         if next_row is not None and next_row['event_type'] == 'Foul':
             return False
         return True
@@ -486,15 +465,9 @@ def classify_possession_sequences(
             if idx < n - 2 and rows[idx + 2][match_id_column] == match_id
             else None
         )
-        # prev_prev_row: needed for sandwich guard validation
-        prev_prev_row = (
-            rows[idx - 2]
-            if idx > 1 and rows[idx - 2][match_id_column] == match_id
-            else None
-        )
 
         # ── Check sequence start ──────────────────────────────────────
-        if _is_sequence_start(row, prev_row, prev_prev_row=prev_prev_row, in_sequence=in_sequence):
+        if _is_sequence_start(row, prev_row, in_sequence=in_sequence):
             # Close existing sequence before opening a new one
             if in_sequence and current_seq_id is not None:
                 _mark_prev_end(rows, seq_ends, idx, match_id_column, match_id)
@@ -556,7 +529,7 @@ def _mark_prev_end(
 # event_id is included so we can UPDATE back.
 _SELECT_COLS = """
     event_id, match_id, period, minute, second,
-    json_index, provider_event_id, source_event_id,
+    provider_event_id, source_event_id,
     event_type, outcome, type_id,
     team_id, source_team_id, player_id,
     h_a, x, y, end_x, end_y, xt,
@@ -583,7 +556,7 @@ def _get_unprocessed_match_ids(conn, limit: Optional[int] = None) -> List[int]:
     sql = """
         SELECT DISTINCT e.match_id
         FROM silver.events e
-        WHERE e.event_type NOT IN ('Formation change', 'Team set up')
+        WHERE e.event_type NOT IN ('FormationChange', 'FormationSet')
           AND e.period NOT IN (14, 16)
           AND NOT EXISTS (
               SELECT 1 FROM silver.events e2
@@ -712,11 +685,9 @@ def populate_silver_sequences(
             SELECT {select_cols}
             FROM silver.events
             WHERE match_id = ANY(%s)
-            ORDER BY match_id, json_index
+            ORDER BY match_id, period, minute, second, provider_event_id
         """
-        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-            cur.execute(query, (batch_ids,))
-            df = pd.DataFrame(cur.fetchall())
+        df = pd.read_sql(query, conn, params=(batch_ids,))
 
         if df.empty:
             stats['matches_skipped'] += len(batch_ids)
@@ -768,66 +739,3 @@ def populate_silver_sequences(
         stats,
     )
     return stats
-
-
-# ──────────────────────────────────────────────────────────────────────
-# CLI entry point
-# ──────────────────────────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    import argparse
-    import os
-    import sys
-
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
-    parser = argparse.ArgumentParser(
-        description="Step 1 — Classify possession sequences in silver.events",
-    )
-    parser.add_argument(
-        "--match-ids", nargs="+", type=int, default=None,
-        help="Specific match IDs to process (default: auto-discover unprocessed)",
-    )
-    parser.add_argument(
-        "--limit", type=int, default=None,
-        help="Max number of matches to process (only used with auto-discovery)",
-    )
-    parser.add_argument(
-        "--batch-size", type=int, default=50,
-        help="Matches per batch (default: 50)",
-    )
-    parser.add_argument(
-        "--log-level", default="INFO",
-        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
-        help="Logging verbosity (default: INFO)",
-    )
-    args = parser.parse_args()
-
-    logging.basicConfig(
-        level=getattr(logging, args.log_level),
-        format="%(asctime)s  %(levelname)-8s  %(message)s",
-        datefmt="%H:%M:%S",
-    )
-
-    dsn = os.getenv("FOOTBALL_DB_DSN")
-    if not dsn:
-        log.error("FOOTBALL_DB_DSN is not set in your .env file.")
-        sys.exit(1)
-
-    conn = psycopg2.connect(dsn)
-    try:
-        stats = populate_silver_sequences(
-            conn,
-            match_ids=args.match_ids,
-            limit=args.limit,
-            batch_size=args.batch_size,
-        )
-        print(f"\nDone: {stats}")
-    except Exception:
-        log.exception("Pipeline failed")
-        conn.rollback()
-        sys.exit(1)
-    finally:
-        conn.close()

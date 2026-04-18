@@ -188,10 +188,9 @@ class EventsProcessor:
                 if not new_carries.empty:
                     df = pd.concat([df, new_carries], ignore_index=True)
                     df = df.sort_values(
-                        ["period", "minute", "second", "provider_event_id"],
+                        ["json_index"],
                         na_position="last",
                     ).reset_index(drop=True)
-                df = calculate_carries(df)
 
             # Step 6 — xT
             if include_xt:

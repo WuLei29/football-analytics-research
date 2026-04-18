@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 # Columns written to silver.events — must match DDL order exactly.
 SILVER_COLUMNS = [
-    "source_event_id", "provider_event_id", "match_id",
+    "source_event_id", "provider_event_id", "json_index", "match_id",
     "period", "minute", "second", "timestamp",
     "team_id", "source_team_id",
     "player_id", "source_player_id",

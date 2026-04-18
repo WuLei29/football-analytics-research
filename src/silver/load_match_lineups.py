@@ -364,8 +364,9 @@ def process_match_file(conn, file_path: Path) -> str:
 
         events = data.get("liveData", {}).get("event", [])
 
-        # Sort by eventId to guarantee correct processing order for passes 2a/2b
-        events_sorted = sorted(events, key=lambda e: e.get("eventId", 0))
+        # Process events in JSONP array order — the native order is
+        # the correct chronological sequence (eventId is NOT sequential).
+        events_sorted = events
 
         # ── Pass 1 — INSERT all lineup rows ───────────────────────────────────
         lineup_events = [e for e in events_sorted if e.get("typeId") == 34]

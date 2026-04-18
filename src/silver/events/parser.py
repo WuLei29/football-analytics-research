@@ -167,12 +167,14 @@ def _extract_event(
     team_mapping: Dict[str, Dict],
     jersey_mapping: Dict[str, int],
     match_id: int,
+    json_index: int = 0,
 ) -> Optional[Dict]:
     """
     Transform a single provider event dict into a flat row dict.
     Returns None for 'Unknown' event types (filtered at call site).
     """
     row: Dict[str, Any] = {"match_id": match_id}
+    row["json_index"] = json_index
 
     # Basic fields
     for src_key, dst_key in _BASIC_FIELDS.items():
@@ -286,10 +288,10 @@ def parse_event_file(
     jersey_mapping = build_jersey_mapping(events)
 
     rows = []
-    for event in events:
+    for idx, event in enumerate(events):
         row = _extract_event(event, event_codes, qualifier_codes,
-                             team_mapping, jersey_mapping, match_id)
+                             team_mapping, jersey_mapping, match_id,
+                             json_index=idx)
         if row is not None:
-            rows.append(row)
-
+            rows.append(row)   
     return rows

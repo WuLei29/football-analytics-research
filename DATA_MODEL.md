@@ -341,7 +341,8 @@ The granular event stream for each match. One row per event, including synthesis
 |---|---|---|---|
 | `event_id` | BIGSERIAL (PK) | No | Surrogate primary key — DB generated, never set by the pipeline |
 | `source_event_id` | VARCHAR(50) | Yes | Provider's unique event UUID — `NULL` for synthesised carry events |
-| `provider_event_id` | INT | Yes | Provider's sequential event number within the match — `NULL` for carries |
+| `provider_event_id` | INT | Yes | Provider's sequential event number within the match, one order for each team — `NULL` for carries |
+| `json_index ` | FLOAT | Yes | Sequential event number within the match, as they appear in the JSON — For carries, we apply the median (.5), so there the FLOAT type |
 | `match_id` | INT (FK) | No | Reference to `matches` |
 | `period` | SMALLINT | No | 1 = first half, 2 = second half, 3/4 = extra time |
 | `minute` | SMALLINT | No | Match minute of the event |

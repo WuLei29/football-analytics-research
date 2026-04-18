@@ -6,12 +6,10 @@ Carry detection and insertion.
 Takes a pandas DataFrame of events and returns a new DataFrame with
 synthesised carry rows inserted at the correct positions.
 
-IMPORTANT: The DataFrame is sorted by (period, minute, second,
-provider_event_id) at the start of calculate_carries() to guarantee
-chronological order. Provider eventIds are assigned at recording time,
-so late-added events (e.g. off-the-ball actions, VAR corrections) get
-higher IDs despite occurring earlier — sorting by eventId alone produces
-incorrect consecutive pairs and phantom carries.
+IMPORTANT: The DataFrame is sorted by json_index (the 0-based position
+in the raw JSONP array) at the start of calculate_carries(). This is
+the only reliable source of chronological order — neither the provider's
+"id" (UUID) nor "eventId" follow sequential order.
 
 No DB access. No parsing. Pure transformation.
 """
@@ -46,11 +44,11 @@ def _carry_row(
         avg_minute += 1
         avg_second -= 60
 
-    e1_pid = event1.get("provider_event_id")
-    e2_pid = event2.get("provider_event_id")
-    carry_sort_key = (
-        (e1_pid + e2_pid) / 2
-        if e1_pid is not None and e2_pid is not None
+    e1_idx = event1.get("json_index")
+    e2_idx = event2.get("json_index")
+    carry_json_index = (
+        (e1_idx + e2_idx) / 2
+        if e1_idx is not None and e2_idx is not None
         else None
     )
 
@@ -58,7 +56,8 @@ def _carry_row(
     return {
         "match_id":             match_id,
         "source_event_id":      None,   # synthesised — no provider UUID
-        "provider_event_id":    carry_sort_key, # ← fractional, for in-memory sort only
+        "provider_event_id":    None,           # synthesised — no provider eventId
+        "json_index":           carry_json_index, # fractional, sits between neighbors
         "type_id":              -1, # ← marks synthesised carries
         "minute":               int(avg_minute),
         "second":               avg_second,
@@ -117,10 +116,9 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
     # ── Sort chronologically ──────────────────────────────────────────────
     # Provider eventIds are assigned at recording time, so late-added events
     # (off-ball actions, VAR reviews) get higher IDs despite occurring earlier
-    # in the match. Sorting by (period, minute, second) with provider_event_id
-    # as tiebreaker guarantees correct consecutive pairs for carry detection.
+    # in the match. Sorting by json_index solves the ordering edge-case.
     df = df.sort_values(
-        by=["period", "minute", "second", "provider_event_id"],
+        by=["json_index"],
         na_position="last",
     ).reset_index(drop=True)
 
