@@ -56,6 +56,14 @@ EXCLUDED_EVENTS = frozenset({
     'Injury Time Announcement',
     'Official change',
     'Start delay',
+    'Attempted Tackle',
+})
+
+# Events that are excluded from the classifier but should be backfilled
+# into their surrounding sequence afterwards (sequence_event_number = 0
+# to mark them as interpolated, not part of the possession chain).
+BACKFILL_EVENTS = frozenset({
+    'Attempted Tackle',
 })
 
 # Excluded periods: pre-match (16), penalty shootout / other non-live (14)
@@ -651,6 +659,59 @@ def _batch_update_sequences(
     return total
 
 
+def _backfill_excluded_events(conn, match_ids: List[int]) -> int:
+    """
+    Backfill excluded-but-relevant events into their surrounding sequence.
+
+    Events in BACKFILL_EVENTS (e.g. Attempted Tackle) are excluded from
+    the classifier so they don't interfere with possession logic, but they
+    are real on-pitch actions that belong to the sequence they sit inside.
+
+    For each such event, we look at the nearest classified event before and
+    after it (by json_index within the same match).  If both neighbours
+    share the same sequence_id, the event inherits that sequence_id with
+    sequence_event_number = 0 to mark it as interpolated.
+
+    Returns the number of rows backfilled.
+    """
+    if not BACKFILL_EVENTS:
+        return 0
+
+    event_types = tuple(BACKFILL_EVENTS)
+
+    sql = """
+        UPDATE silver.events e
+        SET sequence_id           = surrounding.prev_seq_id,
+            sequence_event_number = 0
+        FROM (
+            SELECT
+                e2.event_id,
+                (SELECT e3.sequence_id FROM silver.events e3
+                 WHERE e3.match_id = e2.match_id
+                   AND e3.json_index < e2.json_index
+                   AND e3.sequence_id IS NOT NULL
+                 ORDER BY e3.json_index DESC LIMIT 1
+                ) AS prev_seq_id,
+                (SELECT e3.sequence_id FROM silver.events e3
+                 WHERE e3.match_id = e2.match_id
+                   AND e3.json_index > e2.json_index
+                   AND e3.sequence_id IS NOT NULL
+                 ORDER BY e3.json_index ASC LIMIT 1
+                ) AS next_seq_id
+            FROM silver.events e2
+            WHERE e2.event_type IN %s
+              AND e2.match_id = ANY(%s)
+              AND e2.sequence_id IS NULL
+        ) surrounding
+        WHERE e.event_id = surrounding.event_id
+          AND surrounding.prev_seq_id IS NOT NULL
+          AND surrounding.prev_seq_id = surrounding.next_seq_id
+    """
+    with conn.cursor() as cur:
+        cur.execute(sql, (event_types, match_ids))
+        return cur.rowcount
+
+
 def populate_silver_sequences(
     conn,
     match_ids: Optional[List[int]] = None,
@@ -696,7 +757,7 @@ def populate_silver_sequences(
     if has_value_assist:
         select_cols += ", value_assist"
 
-    stats = {'matches_processed': 0, 'events_updated': 0, 'matches_skipped': 0}
+    stats = {'matches_processed': 0, 'events_updated': 0, 'events_backfilled': 0, 'matches_skipped': 0}
 
     # ── Process in batches ────────────────────────────────────────────
     for batch_start in range(0, len(match_ids), batch_size):
@@ -753,17 +814,25 @@ def populate_silver_sequences(
         updated = _batch_update_sequences(conn, updates)
         conn.commit()
 
+        # Backfill excluded-but-relevant events (e.g. Attempted Tackle)
+        backfilled = _backfill_excluded_events(conn, batch_ids)
+        conn.commit()
+        if backfilled:
+            log.debug("Backfilled %d excluded events into sequences", backfilled)
+
         n_matches = df_to_update['match_id'].nunique()
-        stats['matches_processed'] += n_matches
-        stats['events_updated']    += updated
+        stats['matches_processed']  += n_matches
+        stats['events_updated']     += updated
+        stats['events_backfilled']  += backfilled
         log.info(
-            "Batch done: %d matches, %d events updated",
-            n_matches, updated,
+            "Batch done: %d matches, %d events updated, %d backfilled",
+            n_matches, updated, backfilled,
         )
 
     log.info(
         "Step 1 complete: %(matches_processed)d matches processed, "
         "%(events_updated)d events updated, "
+        "%(events_backfilled)d events backfilled, "
         "%(matches_skipped)d matches skipped",
         stats,
     )

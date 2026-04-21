@@ -65,5 +65,6 @@ var optaEventCodes = {
 71:{name:"Coach Setup",description:"Coach Type; 1,2,18,30,32,54,57,58,59"},
 72:{name:"Caught Offside",description:"New event to just show player who is offside instead of offside pass event"},
 73:{name:"Other Ball Contact",description:"This is an automated extra event for DFL. It comes with a tackle or an interception and indicates if the player who made the tackle/interception retained the ball after this action or if the tackle/interception was a single ball touch (other ball contact with type interception, type Defensive Clearance or type  TackleRetainedBall)."},
-74:{name:"Blocked Pass",description:"Defender is close to player in possession and blocks a pass. Different from interception which is where the player has moved to intercept."}
+74:{name:"Blocked Pass",description:"Defender is close to player in possession and blocks a pass. Different from interception which is where the player has moved to intercept."},
+83:{name:"Attempted Tackle", description: "Unsuccessful tackle, where the player does not touch the ball"}
 }

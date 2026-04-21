@@ -190,6 +190,9 @@ def _extract_event(
     # outcome
     row["outcome"] = _OUTCOME_MAP.get(event.get("outcome"))
 
+    if type_id == 83:
+        row["outcome"] = "failure"   # always — outcome=1 is a known Opta coding artifact
+
     # Scale x/y from provider 0-100 to real pitch
     row["x"] = _scale(row["x"], "x")
     row["y"] = _scale(row["y"], "y")
