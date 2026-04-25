@@ -10,13 +10,14 @@ Pipeline per file:
   4. Parse events → list of row dicts
   5. Build DataFrame
   6. (Optional) Insert carries
-  7. (Optional) Calculate xT
-  8. Resolve FK columns (source → internal IDs)
-  9. Insert to silver.events
-  10. Commit
+  7. (Optional) Calculate SPADL columns
+  8. (Optional) Calculate xT
+  9. Resolve FK columns (source → internal IDs)
+  10. Insert to silver.events
+  11. Commit
 
 No SQL lives here — all DB calls go through db.py.
-No transformation logic lives here — parser, carries, xt own that.
+No transformation logic lives here — parser, carries, spadl, xt own that.
 """
 
 import logging
@@ -28,6 +29,7 @@ import pandas as pd
 from . import db as db_ops
 from .carries import calculate_carries
 from .parser import extract_source_match_id, load_mapping_file, parse_event_file
+from .spadl import calculate_spadl
 from .xt import calculate_xt
 
 log = logging.getLogger(__name__)
@@ -75,6 +77,7 @@ class EventsProcessor:
         base_path: str,
         conn,
         include_carries: bool = True,
+        include_spadl: bool = True,
         include_xt: bool = True,
         skip_existing: bool = True,
         dry_run: bool = False,
@@ -109,6 +112,7 @@ class EventsProcessor:
             result = self.process_file(
                 file_path, conn,
                 include_carries=include_carries,
+                include_spadl=include_spadl,
                 include_xt=include_xt,
                 skip_existing=skip_existing,
                 dry_run=dry_run,
@@ -132,6 +136,7 @@ class EventsProcessor:
         file_path: Path,
         conn,
         include_carries: bool = True,
+        include_spadl: bool = True,
         include_xt: bool = True,
         skip_existing: bool = True,
         dry_run: bool = False,
@@ -192,14 +197,18 @@ class EventsProcessor:
                         na_position="last",
                     ).reset_index(drop=True)
 
-            # Step 6 — xT
+            # Step 6 — SPADL
+            if include_spadl:
+                df = calculate_spadl(df)
+
+            # Step 7 — xT
             if include_xt:
                 df = calculate_xt(df)
 
-            # Step 7 — resolve FKs
+            # Step 8 — resolve FKs
             df = db_ops.resolve_fk_columns(df, self._team_cache, self._player_cache)
 
-            # Step 8 — insert
+            # Step 9 — insert
             if dry_run:
                 log.info("[dry-run] Would insert %d events for match_id=%s", len(df), match_id)
             else:

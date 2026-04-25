@@ -30,6 +30,7 @@ SILVER_COLUMNS = [
     "blocked_x", "blocked_y",
     "goal_mouth_z", "goal_mouth_y",
     "start_zone_value_xt", "end_zone_value_xt", "xt",
+    "spadl_type_id", "spadl_result_id", "spadl_bodypart_id",
     "sequence_id", "sequence_start", "sequence_end", "sequence_event_number",
     "value_assist",      # ← new
     "raw_data"
