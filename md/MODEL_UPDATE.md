@@ -6,8 +6,9 @@
 3. [Updating the Database — New Matches](#3-updating-the-database--new-matches)
 4. [Updating the Database — Mid-Season Squad Changes](#4-updating-the-database--mid-season-squad-changes)
 5. [Adding a New Competition or Season](#5-adding-a-new-competition-or-season)
-6. [Idempotency Reference](#6-idempotency-reference)
-7. [Common Errors & Fixes](#7-common-errors--fixes)
+6. [Extending the Gold Layer](#6-extending-the-gold-layer)
+7. [Idempotency Reference](#7-idempotency-reference)
+8. [Common Errors & Fixes](#8-common-errors--fixes)
 
 ---
 
@@ -37,6 +38,17 @@ Every table has foreign key dependencies. You must always respect this load orde
          │
          ▼
     events  ◄───────────────── python -m src.silver.events
+         │
+         ▼
+    players.preferred_foot  ◄── foot_preference.py                      [auto in Phase 6]
+    events.is_weak_foot     ◄── foot_preference.py                      [auto in Phase 6]
+    events.xg               ◄── python -m src.silver.events.xg          [auto in Phase 6]
+         │
+         ▼
+    events (sequence cols)  ◄── python -m src.silver.events.sequences   [Phase 7]
+         │
+         ▼
+    gold.sequences  ◄────────── python -m src.gold.sequences            [Phase 8]
 ```
 
 **Hard rules:**
@@ -44,6 +56,8 @@ Every table has foreign key dependencies. You must always respect this load orde
 - `match_lineups` requires `matches` and `players`
 - `events` requires `matches`, `teams`, and `players`
 - `team_competition_seasons` requires `teams` and `competition_seasons`
+- **Phase 7** (sequence classification) requires `events` to be fully loaded for the target matches
+- **Phase 8** (gold sequences) requires Phase 7 to have run — it reads the `sequence_*` columns written by the classifier
 
 ---
 
@@ -169,17 +183,86 @@ python -m src.silver.events \
 | Flag | Effect |
 |---|---|
 | `--no-carries` | Skip carry synthesis (faster, useful for testing) |
+| `--no-spadl` | Skip SPADL column mapping |
 | `--no-xt` | Skip xT calculation |
+| `--no-vaep` | Skip VAEP calculation |
+| `--no-xg` | Skip post-processing (foot preference + xG backfill) |
 | `--dry-run` | Parse and resolve IDs but write nothing to the DB |
 | `--no-skip-existing` | Re-load matches already in `silver.events` |
 
-**Output:** rows in `silver.events` with xT values and synthesised carry events.
+**Output:** rows in `silver.events` with xT, VAEP, and xG values, plus synthesised carry events. Also enriches `silver.players.preferred_foot` and `silver.events.is_weak_foot`. The `sequence_*` columns are `NULL` at this point — they are populated in Phase 7.
+
+**Post-processing (automatic):** after all match files are inserted, the pipeline runs foot preference enrichment (`preferred_foot` + `is_weak_foot`) then xG backfill. Skip with `--no-xg`. Standalone:
+
+```bash
+python src/silver/foot_preference.py               # foot preference only
+python -m src.silver.events.xg                     # xG backfill (auto-discovers NULL xG)
+python -m src.silver.events.xg --match-ids 1 2 3   # specific matches
+```
+
+---
+
+### Phase 7 — Classify Possession Sequences
+
+Reads events from `silver.events`, runs the possession-sequence classifier, and writes back the four sequence columns: `sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number`.
+
+```bash
+python -m src.silver.events.sequences
+```
+
+**Flags:**
+| Flag | Effect |
+|---|---|
+| `--match-ids 42 43 44` | Process only specific match_ids (space-separated) |
+| `--limit 100` | Cap the number of matches to process in one run |
+| `--batch-size 50` | Matches loaded into memory at a time (default: 50) |
+
+**What it does internally:**
+1. Discovers matches with no sequence data (or uses explicit `--match-ids`)
+2. Resets existing sequence columns for those matches (idempotency)
+3. Pulls events into a DataFrame
+4. Pre-processes: filters excluded rows (period 14/16, FormationChange, FormationSet), materialises qualifier flags (`is_set_piece_pass`, `is_dead_ball_goal`) from `raw_data`
+5. Runs the state-machine classifier
+6. Batch-UPDATEs `silver.events` with the results
+
+**Output:** `silver.events` rows updated with `sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number`.
+
+> **When to re-run:** after fixing classifier logic or adding new rules. The function resets all sequence columns for the target matches before re-classifying, so it is fully idempotent.
+
+---
+
+### Phase 8 — Build Gold Sequences
+
+Aggregates classified events from `silver.events` into `gold.sequences` — one row per possession sequence with derived metrics.
+
+```bash
+python -m src.gold.sequences
+```
+
+**Flags:**
+| Flag | Effect |
+|---|---|
+| `--match-ids 42 43 44` | Process only specific match_ids |
+| `--limit 100` | Cap the number of matches per run |
+| `--batch-size 50` | Matches loaded into memory at a time |
+
+**What it does internally:**
+1. Creates the `gold` schema and `gold.sequences` table if they don't exist
+2. Discovers matches that have classified sequences but no gold rows yet (or uses explicit `--match-ids`)
+3. Deletes existing gold rows for target matches (idempotency)
+4. SELECTs classified events joined with `silver.matches` (for `competition_season_id`)
+5. Aggregates per `sequence_id`: length, duration, xT, pass/carry/shot counts, start/end zones, flags
+6. INSERTs into `gold.sequences`
+
+**Output:** rows in `gold.sequences`.
+
+> **First run:** also creates the `gold` schema and the table with all indexes. Subsequent runs only insert/update data.
 
 ---
 
 ## 3. Updating the Database — New Matches
 
-When new match files arrive (weekly jornada update), you only need to run Phases 4–6. All three scripts are idempotent — they skip anything already loaded.
+When new match files arrive (weekly jornada update), you need to run Phases 4–8. All scripts are idempotent — they skip anything already loaded.
 
 ### Step-by-step
 
@@ -205,7 +288,35 @@ python -m src.silver.events --raw-root data/raw \
     --qualifiers-map data/mapping/opta-qualifiers.js
 ```
 
-That's it. The idempotency guards in each script ensure already-loaded matches are skipped automatically.
+> This automatically runs foot preference enrichment and xG backfill as post-processing. Use `--no-xg` to skip.
+
+**5. Run sequence classifier:**
+```bash
+python -m src.silver.events.sequences
+```
+
+If we need to truncate the sequence classifier:
+
+```bash
+UPDATE silver.events
+SET sequence_id           = NULL,
+    sequence_start        = FALSE,
+    sequence_end          = FALSE,
+    sequence_event_number = 0;
+```
+
+**6. Run gold sequences builder:**
+```bash
+python -m src.gold.sequences
+```
+
+That's it. The idempotency guards in each script ensure already-loaded/classified matches are skipped automatically. Phases 7 and 8 only pick up matches that have new events but no sequence data yet.
+
+> **Shortcut:** if you want to run the full pipeline for new matches in one go, you can also use the convenience function from Python:
+> ```python
+> from gold.sequences import run_full_sequence_pipeline
+> run_full_sequence_pipeline(conn)  # runs Phase 7 then Phase 8
+> ```
 
 ---
 
@@ -228,7 +339,7 @@ The processor's diff logic handles everything automatically:
 - New arrivals → a new `player_squads` row is opened with `start_date = snapshot_date`
 - Shirt number changes → updated in place (no new row)
 
-No action needed for matches, lineups, or events — historical rows reference `player_id`, not squad membership, so they stay correctly attributed.
+No action needed for matches, lineups, events, or sequences — historical rows reference `player_id`, not squad membership, so they stay correctly attributed.
 
 ---
 
@@ -239,7 +350,7 @@ No action needed for matches, lineups, or events — historical rows reference `
 2. Insert rows into `competition_seasons` for each participating league
 3. Re-run Phase 1 (bronze teams) and Phase 2 (load teams) for new clubs from promotion/relegation
 4. Run Phase 3 for the new squad snapshots
-5. Run Phases 4–6 as matches arrive
+5. Run Phases 4–8 as matches arrive
 
 **New competition (e.g. adding Copa del Rey):**
 1. Insert one row into `competitions`
@@ -250,7 +361,46 @@ No schema changes are ever required.
 
 ---
 
-## 6. Idempotency Reference
+## 6. Extending the Gold Layer
+
+The gold layer is fully derived from silver and can be rebuilt at any time. This makes it safe to evolve iteratively.
+
+### Adding new columns to `gold.sequences`
+
+When you need new derived metrics (e.g. `progressive_passes`, `final_third_entries`, `ppda_contribution`):
+
+1. **Add the column to the table:**
+   ```sql
+   ALTER TABLE gold.sequences ADD COLUMN progressive_passes INT DEFAULT 0;
+   ```
+
+2. **Update `gold_sequences.py`** — add the aggregation logic inside `_aggregate_sequences()` and include the new column in the `_insert_gold_sequences()` column list and UPSERT clause.
+
+3. **Re-run Phase 8** for all matches to backfill:
+   ```bash
+   python -m src.gold.sequences --match-ids <all_match_ids>
+   ```
+   Or, for a full rebuild, delete all existing rows and re-run:
+   ```sql
+   TRUNCATE gold.sequences;
+   ```
+   ```bash
+   python -m src.gold.sequences
+   ```
+
+> **Nuclear option:** if the schema change is large, you can `DROP TABLE gold.sequences` and re-run Phase 8 — the `create_gold_sequences_table()` function recreates it from scratch. This is always safe because gold is never a source of truth.
+
+### Adding new gold tables
+
+Future gold tables (`team_season_stats`, `player_season_stats`, `match_summaries`) follow the same pattern:
+- DDL lives inside the module (or in `sql/gold/`)
+- A `build_*` function reads from silver, aggregates, and inserts
+- Idempotency via DELETE + INSERT per match/season batch
+- Can be fully rebuilt from silver at any time
+
+---
+
+## 7. Idempotency Reference
 
 All silver scripts are safe to re-run. Here's how each one handles duplicates:
 
@@ -261,10 +411,14 @@ All silver scripts are safe to re-run. Here's how each one handles duplicates:
 | `load_matches.py` | `source_match_id` | `ON CONFLICT DO NOTHING` |
 | `load_match_lineups.py` | `match_id` presence in `match_lineups` | Entire match skipped |
 | `src.silver.events` | `match_id` presence in `silver.events` | Entire match skipped |
+| `foot_preference.py` | None — always re-derives from full event data | UPDATE (idempotent) |
+| `src.silver.events.xg` | `match_id` — auto-discovers shots with NULL xG | UPDATE xg column |
+| `src.silver.events.sequences` | `match_id` — resets sequence cols before re-classifying | UPDATE with fresh values |
+| `src.gold.sequences` | `match_id` — deletes gold rows before re-inserting | DELETE + INSERT |
 
 ---
 
-## 7. Common Errors & Fixes
+## 8. Common Errors & Fixes
 
 **`FOOTBALL_DB_DSN is not set`**
 Your `.env` file is missing or in the wrong location. The scripts look for it at the project root. Create it:
@@ -283,3 +437,36 @@ The raw match file has no `typeId: 34` (Team set up) event, or all player IDs fa
 
 **Squad diff closing every player on first run**
 This happens when the `squad_snapshot_log` table is empty (or was cleared) and the script treats a snapshot as an initial load for a team that already has rows. Fix: ensure `squad_snapshot_log` has not been truncated independently of `player_squads`.
+
+**`No sequences found for batch`** (Phase 7)
+The classifier found no events matching start conditions. This usually means the events for those matches have unusual coverage. Check `coverage_level` on the match — low-coverage matches may lack pass/tackle events. You can inspect with:
+```sql
+SELECT event_type, COUNT(*) FROM silver.events
+WHERE match_id = <id> GROUP BY event_type ORDER BY count DESC;
+```
+
+**`Column 'value_assist' not found`** (Phase 7 warning)
+The classifier logs a warning but continues. Assist-based sequence guards will be inactive — assist passes may incorrectly break sequences. To fix, add the column:
+```sql
+ALTER TABLE silver.events ADD COLUMN value_assist FLOAT;
+```
+Then populate it from `raw_data` qualifier 210 and re-run Phase 7.
+
+**xG values are NULL after events pipeline**
+The xG model files are missing from `models/xg/`, or the pipeline was run with `--no-xg`. Ensure the four model artifacts are in place and run the standalone backfill:
+```bash
+python -m src.silver.events.xg
+```
+
+**Gold sequences out of sync after classifier fix**
+If you changed the classifier logic and re-ran Phase 7, Phase 8 won't automatically detect the change (the gold rows already exist for those matches). Force a rebuild:
+```bash
+python -m src.gold.sequences --match-ids <affected_match_ids>
+```
+Or truncate and rebuild all:
+```sql
+TRUNCATE gold.sequences;
+```
+```bash
+python -m src.gold.sequences
+```

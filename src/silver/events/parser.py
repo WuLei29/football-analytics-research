@@ -116,6 +116,18 @@ def build_jersey_mapping(events: List[Dict]) -> Dict[str, int]:
 
 _OUTCOME_MAP = {1: "success", 0: "failure"}
 
+_SHOT_TYPE_IDS = frozenset({13, 14, 15, 16})
+
+_SHOT_PLAY_PATTERN_MAP = {
+    22: "regular_play",
+    23: "fast_break",
+    24: "set_piece",
+    25: "from_corner",
+    26: "free_kick",
+    160: "throw_in_set_piece",
+    9: "penalty",
+}
+
 _BASIC_FIELDS = {
     "id":           "source_event_id",
     "eventId":      "provider_event_id",
@@ -227,6 +239,17 @@ def _extract_event(
     # Fallback: use x/y as end_x/end_y when not set
     row["end_x"] = row["end_x"] if row["end_x"] is not None else row["x"]
     row["end_y"] = row["end_y"] if row["end_y"] is not None else row["y"]
+
+    # Shot-specific columns
+    row["shot_play_pattern"] = None
+    row["first_time"] = None
+    if type_id in _SHOT_TYPE_IDS:
+        qualifier_ids = {q["qualifierId"] for q in event.get("qualifier", [])}
+        for qid in (22, 23, 24, 25, 26, 160, 9):
+            if qid in qualifier_ids:
+                row["shot_play_pattern"] = _SHOT_PLAY_PATTERN_MAP[qid]
+                break
+        row["first_time"] = 328 in qualifier_ids
 
     # Jersey number
     src_pid = row.get("source_player_id")

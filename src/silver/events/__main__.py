@@ -38,6 +38,7 @@ logging.basicConfig(
     format="%(asctime)s  %(levelname)-8s  %(message)s",
     datefmt="%H:%M:%S",
 )
+log = logging.getLogger(__name__)
 
 
 def main() -> None:
@@ -50,6 +51,8 @@ def main() -> None:
     parser.add_argument("--no-carries",      action="store_true")
     parser.add_argument("--no-spadl",        action="store_true")
     parser.add_argument("--no-xt",           action="store_true")
+    parser.add_argument("--no-vaep",         action="store_true")
+    parser.add_argument("--no-xg",           action="store_true")
     parser.add_argument("--no-skip-existing",action="store_true")
     parser.add_argument("--dry-run",         action="store_true")
 
@@ -71,9 +74,28 @@ def main() -> None:
             include_carries=not args.no_carries,
             include_spadl=not args.no_spadl,
             include_xt=not args.no_xt,
+            include_vaep=not args.no_vaep,
             skip_existing=not args.no_skip_existing,
             dry_run=args.dry_run,
         )
+
+        if not args.dry_run and not args.no_xg:
+            try:
+                from ..foot_preference import enrich_foot_preference
+                from .xg import backfill_xg
+
+                log.info("Post-processing: foot preference enrichment")
+                enrich_foot_preference(conn)
+
+                log.info("Post-processing: xG computation")
+                xg_result = backfill_xg(conn)
+                log.info(
+                    "xG complete: %d matches, %d shots updated",
+                    xg_result["matches_processed"],
+                    xg_result["events_updated"],
+                )
+            except Exception as exc:
+                log.warning("Post-processing failed (events are loaded): %s", exc)
     finally:
         conn.close()
 

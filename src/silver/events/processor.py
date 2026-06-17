@@ -13,8 +13,9 @@ Pipeline per file:
   7. (Optional) Calculate SPADL columns
   8. (Optional) Calculate xT
   9. Resolve FK columns (source → internal IDs)
-  10. Insert to silver.events
-  11. Commit
+  10. (Optional) Calculate VAEP columns (needs resolved team_id)
+  11. Insert to silver.events
+  12. Commit
 
 No SQL lives here — all DB calls go through db.py.
 No transformation logic lives here — parser, carries, spadl, xt own that.
@@ -31,6 +32,7 @@ from .carries import calculate_carries
 from .parser import extract_source_match_id, load_mapping_file, parse_event_file
 from .spadl import calculate_spadl
 from .xt import calculate_xt
+from .vaep import calculate_vaep
 
 log = logging.getLogger(__name__)
 
@@ -79,6 +81,7 @@ class EventsProcessor:
         include_carries: bool = True,
         include_spadl: bool = True,
         include_xt: bool = True,
+        include_vaep: bool = True,
         skip_existing: bool = True,
         dry_run: bool = False,
     ) -> Dict[str, Any]:
@@ -114,6 +117,7 @@ class EventsProcessor:
                 include_carries=include_carries,
                 include_spadl=include_spadl,
                 include_xt=include_xt,
+                include_vaep=include_vaep,
                 skip_existing=skip_existing,
                 dry_run=dry_run,
             )
@@ -138,6 +142,7 @@ class EventsProcessor:
         include_carries: bool = True,
         include_spadl: bool = True,
         include_xt: bool = True,
+        include_vaep: bool = True,
         skip_existing: bool = True,
         dry_run: bool = False,
     ) -> str:
@@ -208,7 +213,11 @@ class EventsProcessor:
             # Step 8 — resolve FKs
             df = db_ops.resolve_fk_columns(df, self._team_cache, self._player_cache)
 
-            # Step 9 — insert
+            # Step 9 — VAEP (runs after FK resolution so team_id is populated)
+            if include_vaep and include_spadl:
+                df = calculate_vaep(df)
+
+            # Step 10 — insert
             if dry_run:
                 log.info("[dry-run] Would insert %d events for match_id=%s", len(df), match_id)
             else:
