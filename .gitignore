@@ -23,6 +23,7 @@ data/mapping/*
 data/clean/*
 data/squads/*
 skills/*
+md/*
 
 # Allow placeholder files
 !data/raw/.gitkeep

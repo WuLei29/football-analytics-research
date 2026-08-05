@@ -64,6 +64,25 @@ _PERIOD_OFFSETS: dict = {1: 0, 2: 45, 3: 90, 4: 105}
 # Attacking goal centre (SPADL standard: acting team attacks toward x=105)
 _GOAL_X, _GOAL_Y = 105.0, 34.0
 
+# Pitch dimensions, used to mirror opposing-team actions into a common frame.
+# Opta records every event in its own acting team's attacking frame, so an
+# action by the other team is rotated 180° about the pitch centre relative to
+# a0.  Verified on 10,855 aerial-duel pairs (two events at one physical point,
+# one per team): x_a + x_b = 105.00 and y_a + y_b = 68.00 in 99.9% of cases.
+_PITCH_X, _PITCH_Y = 105.0, 68.0
+
+# ── Formula guards (socceraction.vaep.formula) ────────────────────────────────
+# A previous state older than this no longer bears on the current action.
+_SAMEPHASE_SECONDS = 10.0
+# SPADL type ids: shot / shot_penalty / shot_freekick, and the two corner types
+_SHOT_TYPES        = (11, 12, 13)
+_SHOT_PENALTY      = 12
+_CORNER_TYPES      = (5, 6)
+_RESULT_SUCCESS    = 1
+# Fixed pre-action scoring odds, taken from socceraction's reference values
+_PENALTY_PREV_SCORES = 0.792453
+_CORNER_PREV_SCORES  = 0.046500
+
 # ── Model cache ───────────────────────────────────────────────────────────────
 
 _CACHE: dict = {}
@@ -140,14 +159,16 @@ def _build_features(valid_df: pd.DataFrame, feature_names: List[str]) -> pd.Data
     period    = valid_df["period"].fillna(1).to_numpy(dtype=float)
     team      = valid_df["team_id"].fillna(0).to_numpy(dtype=float)
 
-    # Derived arrays computed once over the full (unshifted) sequence
+    # Derived arrays computed once over the full (unshifted) sequence.
+    # Coordinate-derived features (dx/dy, polar) are NOT precomputed here: they
+    # must be built per game-state position, after the shifted action has been
+    # mirrored into a0's attacking frame (see the loop below).
     time_overall  = minute * 60.0 + second
     period_offset = np.array([_PERIOD_OFFSETS.get(int(p), 0) for p in period], dtype=float)
     time_period   = np.clip((minute - period_offset) * 60.0 + second, 0.0, None)
-    raw_dx        = ex - sx
-    raw_dy        = ey - sy
-    sd, sa        = _polar(sx, sy)
-    ed, ea        = _polar(ex, ey)
+
+    # Position index, used to spot the leading rows that _shift zero-pads
+    positions = np.arange(n)
 
     data: dict = {}
 
@@ -162,12 +183,25 @@ def _build_features(valid_df: pd.DataFrame, feature_names: List[str]) -> pd.Data
         s_to      = _shift(time_overall, k)
         s_tp      = _shift(time_period,  k)
         s_per     = _shift(period,       k)
-        s_dx      = _shift(raw_dx,       k)
-        s_dy      = _shift(raw_dy,       k)
-        s_sd      = _shift(sd,           k)
-        s_sa      = _shift(sa,           k)
-        s_ed      = _shift(ed,           k)
-        s_ea      = _shift(ea,           k)
+        s_team    = _shift(team,         k)
+
+        # Put the whole game state in a0's attacking frame, mirroring actions
+        # by the other team 180° about the pitch centre.  This is socceraction's
+        # play_left_to_right(gamestates, ...), which flips a0/a1/a2 together on
+        # a0's team, so x=105 is a0's attacking goal in every frame.
+        # Leading rows (position < k) are _shift zero-padding, not real actions,
+        # so they are left untouched rather than mirrored to the far corner.
+        flip = (s_team != team) & (positions >= k)
+        s_sx = np.where(flip, _PITCH_X - s_sx, s_sx)
+        s_ex = np.where(flip, _PITCH_X - s_ex, s_ex)
+        s_sy = np.where(flip, _PITCH_Y - s_sy, s_sy)
+        s_ey = np.where(flip, _PITCH_Y - s_ey, s_ey)
+
+        # Movement and polar features derive from the mirrored coordinates
+        s_dx      = s_ex - s_sx
+        s_dy      = s_ey - s_sy
+        s_sd, s_sa = _polar(s_sx, s_sy)
+        s_ed, s_ea = _polar(s_ex, s_ey)
 
         # Action type one-hot (23 columns)
         for t_id, t_name in _TYPE_NAMES.items():
@@ -265,12 +299,51 @@ def calculate_vaep(df: pd.DataFrame) -> pd.DataFrame:
         p_concedes = m_concedes.predict_proba(X)[:, 1]
 
         # Delta against the previous game state; first action has no predecessor → NaN
-        p_scores_prev   = np.concatenate([[np.nan], p_scores[:-1]])
-        p_concedes_prev = np.concatenate([[np.nan], p_concedes[:-1]])
+        prev_scores_raw   = np.concatenate([[np.nan], p_scores[:-1]])
+        prev_concedes_raw = np.concatenate([[np.nan], p_concedes[:-1]])
 
-        offensive = p_scores   - p_scores_prev
-        defensive = p_concedes_prev - p_concedes
-        vaep      = offensive  + defensive
+        # Both probabilities are from the ACTING team's perspective, so when
+        # possession changes hands the previous action's P(scores) is the new
+        # team's P(concedes) and vice versa.  Mirrors socceraction's
+        # offensive_value/defensive_value:
+        #   prev_scores   = _prev(scores)   * sameteam + _prev(concedes) * (~sameteam)
+        #   prev_concedes = _prev(concedes) * sameteam + _prev(scores)   * (~sameteam)
+        team_arr  = valid_df["team_id"].fillna(-1).to_numpy(dtype=float)
+        same_team = np.concatenate([[False], team_arr[1:] == team_arr[:-1]])
+
+        prev_scores   = np.where(same_team, prev_scores_raw, prev_concedes_raw)
+        prev_concedes = np.where(same_team, prev_concedes_raw, prev_scores_raw)
+
+        # ── Guards, per socceraction.vaep.formula ─────────────────────────────
+        t_secs    = (valid_df["minute"].fillna(0).to_numpy(dtype=float) * 60.0
+                     + valid_df["second"].fillna(0).to_numpy(dtype=float))
+        prev_t    = np.concatenate([[np.nan], t_secs[:-1]])
+        cur_type  = valid_df["spadl_type_id"].fillna(-1).to_numpy(dtype=float)
+        prev_type = np.concatenate([[np.nan], cur_type[:-1]])
+        prev_res  = np.concatenate(
+            [[np.nan], valid_df["spadl_result_id"].fillna(-1).to_numpy(dtype=float)[:-1]]
+        )
+
+        # A stale predecessor carries no information about the current state
+        toolong = np.abs(t_secs - prev_t) > _SAMEPHASE_SECONDS
+        # After a goal, play restarts from a neutral kick-off state
+        prevgoal = np.isin(prev_type, _SHOT_TYPES) & (prev_res == _RESULT_SUCCESS)
+        for guard in (toolong, prevgoal):
+            prev_scores[guard]   = 0.0
+            prev_concedes[guard] = 0.0
+
+        # Penalties and corners have known pre-action scoring odds.  Applied to
+        # the offensive term only, matching the reference implementation.
+        prev_scores[cur_type == _SHOT_PENALTY]         = _PENALTY_PREV_SCORES
+        prev_scores[np.isin(cur_type, _CORNER_TYPES)]  = _CORNER_PREV_SCORES
+
+        offensive = p_scores     - prev_scores
+        defensive = prev_concedes - p_concedes
+        vaep      = offensive    + defensive
+
+        # The guards above can overwrite row 0 with a fixed value, so re-assert
+        # the contract that the first action of a match has no delta.
+        offensive[0] = defensive[0] = vaep[0] = np.nan
 
         df.loc[orig_idx, "vaep_offensive"] = offensive
         df.loc[orig_idx, "vaep_defensive"] = defensive

@@ -19,6 +19,7 @@ dependencies = [
     "matplotlib>=3.7",
     "seaborn>=0.12",
     "pyyaml>=6.0",
+    "xgboost>=1.7",
 ]
 
 # ---------------------------------------------------------------------------
@@ -35,12 +36,19 @@ dev = [
     "ipykernel",
     "black",
     "ruff",
+    "soccer_xg",
+    "socceraction",
 ]
 
 # Extended visualization libs — add as your project grows
 viz = [
     "mplsoccer>=1.1",   # Football-specific pitch plotting
     "plotly>=5.0",
+]
+
+# Scraper — browser automation for downloading Opta event files
+scraper = [
+    "playwright>=1.40",
 ]
 
 # ---------------------------------------------------------------------------

@@ -74,6 +74,13 @@ _ALWAYS_FAIL    = frozenset({FOUL, BAD_TOUCH})
 # Opta event_type strings that map to shots
 _SHOT_EVENTS = frozenset({"Miss", "Post", "Attempt Saved", "Goal"})
 
+# Shot events that did NOT result in a goal.  Opta sets outcome='success' on
+# these too (the outcome flag means "attempt recorded", not "scored"), so they
+# must be resolved before the generic outcome fallback or every shot maps to
+# SUCCESS.  Matches socceraction's Opta converter:
+#     elif e in ['attempt saved', 'miss', 'post']: r = 'fail'
+_SHOT_NO_GOAL_EVENTS = frozenset({"Miss", "Post", "Attempt Saved"})
+
 
 # ── Qualifier extraction ─────────────────────────────────────────────────────
 
@@ -188,6 +195,11 @@ def _map_spadl_result(
         if 28 in qids:
             return OWNGOAL
         return SUCCESS
+
+    # Must precede the outcome fallback: Opta reports outcome='success' on
+    # off-target, woodwork and saved attempts alike.
+    if event_type in _SHOT_NO_GOAL_EVENTS:
+        return FAIL
 
     if outcome == "success":
         return SUCCESS

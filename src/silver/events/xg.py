@@ -18,6 +18,7 @@ Usage (adjust module path to your project layout):
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -91,8 +92,8 @@ _PLAY_PATTERN_MAP: dict[str, str] = {
 # Paths & model cache
 # ---------------------------------------------------------------------------
 
-ROOT = Path(__file__).resolve().parent
-MODELS_DIR = ROOT / "xg"
+ROOT = Path(__file__).resolve().parents[3]
+MODELS_DIR = ROOT / "models" / "xg"
 
 EPS = 1e-7
 _models: dict[str, Any] = {}
@@ -145,15 +146,19 @@ def _load_models() -> dict[str, Any]:
     if _models:
         return _models
 
+    print("Loading open-play model ...", flush=True)
     op = XGBClassifier()
     op.load_model(str(MODELS_DIR / "06_xgboost_full.json"))
     _models["op_model"] = op
     _models["op_cal"] = joblib.load(MODELS_DIR / "07_platt_xgboost_full.joblib")
+    print("  open-play model loaded", flush=True)
 
+    print("Loading free-kick model ...", flush=True)
     fk = XGBClassifier()
     fk.load_model(str(MODELS_DIR / "fk_xgboost.json"))
     _models["fk_model"] = fk
     _models["fk_cal"] = joblib.load(MODELS_DIR / "fk_platt_calibrator.joblib")
+    print("  free-kick model loaded", flush=True)
 
     return _models
 
@@ -231,9 +236,8 @@ def _map_columns(df: pd.DataFrame) -> pd.DataFrame:
         .fillna("Other")
     )
 
-    out["is_first_time"] = df["first_time"].fillna(False).astype(int)
-    iw = iw.astype("boolean")
-    out["is_weak_foot"] = df["is_weak_foot"].fillna(False).astype(int)
+    out["is_first_time"] = df["first_time"].astype("boolean").fillna(False).astype(int)
+    out["is_weak_foot"] = df["is_weak_foot"].astype("boolean").fillna(False).astype(int)
 
     return out
 
@@ -339,6 +343,7 @@ def compute_xg(df: pd.DataFrame) -> pd.DataFrame:
     """
     models = _load_models()
 
+    print("Building features ...", flush=True)
     mapped = _map_columns(df)
     featured = _build_features(mapped)
 
@@ -352,11 +357,13 @@ def compute_xg(df: pd.DataFrame) -> pd.DataFrame:
 
     op = eligible[~is_fk]
     if len(op):
+        print(f"Predicting open-play xG for {len(op):,} shots ...", flush=True)
         p_raw = models["op_model"].predict_proba(op[OPEN_PLAY_FEATURES].values)[:, 1]
         xg.loc[op.index] = _apply_platt(models["op_cal"], p_raw)
 
     fk = eligible[is_fk]
     if len(fk):
+        print(f"Predicting free-kick xG for {len(fk):,} shots ...", flush=True)
         p_raw = models["fk_model"].predict_proba(fk[FREEKICK_FEATURES].values)[:, 1]
         xg.loc[fk.index] = _apply_platt(models["fk_cal"], p_raw)
 
@@ -371,9 +378,12 @@ def compute_xg(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 def get_connection():
-    """Return a psycopg2 connection. Replace with your project's helper."""
-    from src.config import get_db_connection
-    return get_db_connection()
+    from dotenv import load_dotenv
+    load_dotenv(ROOT / ".env")
+    dsn = os.environ.get("FOOTBALL_DB_DSN")
+    if not dsn:
+        raise EnvironmentError("FOOTBALL_DB_DSN not set in environment / .env file")
+    return psycopg2.connect(dsn)
 
 
 def fetch_shots(
@@ -388,15 +398,47 @@ def fetch_shots(
         params = ()
 
     query = _SHOTS_QUERY.format(match_filter=match_filter)
-    return pd.read_sql(query, conn, params=params)
+    with conn.cursor() as cur:
+        cur.execute(query, params)
+        cols = [desc[0] for desc in cur.description]
+        return pd.DataFrame(cur.fetchall(), columns=cols)
 
 
 def write_xg(conn, results: pd.DataFrame) -> int:
     rows = list(zip(results["xg"], results["source_event_id"]))
+    total = len(rows)
+    page_size = 500
+    print(f"Writing {total:,} xG values to DB ...", flush=True)
     with conn.cursor() as cur:
-        psycopg2.extras.execute_batch(cur, _UPDATE_XG, rows, page_size=500)
+        for i in range(0, total, page_size):
+            batch = rows[i : i + page_size]
+            psycopg2.extras.execute_batch(cur, _UPDATE_XG, batch, page_size=page_size)
+            print(f"  {min(i + page_size, total):,}/{total:,} written", flush=True)
     conn.commit()
-    return len(rows)
+    return total
+
+
+# ---------------------------------------------------------------------------
+# Pipeline API
+# ---------------------------------------------------------------------------
+
+def backfill_xg(conn) -> dict:
+    """
+    Compute xG for all shots with NULL xg in silver.events.
+
+    Returns {"matches_processed": int, "events_updated": int}.
+    """
+    df = fetch_shots(conn)
+    if df.empty:
+        return {"matches_processed": 0, "events_updated": 0}
+
+    n_matches = df["match_id"].nunique()
+    results = compute_xg(df)
+    if results.empty:
+        return {"matches_processed": n_matches, "events_updated": 0}
+
+    updated = write_xg(conn, results)
+    return {"matches_processed": n_matches, "events_updated": updated}
 
 
 # ---------------------------------------------------------------------------

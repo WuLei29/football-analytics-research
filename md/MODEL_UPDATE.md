@@ -48,7 +48,7 @@ Every table has foreign key dependencies. You must always respect this load orde
     events (sequence cols)  ◄── python -m src.silver.events.sequences   [Phase 7]
          │
          ▼
-    gold.sequences  ◄────────── python -m src.gold.sequences            [Phase 8]
+    gold.sequences  ◄────────── NOT YET IMPLEMENTED                     [Phase 8, WIP]
 ```
 
 **Hard rules:**
@@ -57,7 +57,7 @@ Every table has foreign key dependencies. You must always respect this load orde
 - `events` requires `matches`, `teams`, and `players`
 - `team_competition_seasons` requires `teams` and `competition_seasons`
 - **Phase 7** (sequence classification) requires `events` to be fully loaded for the target matches
-- **Phase 8** (gold sequences) requires Phase 7 to have run — it reads the `sequence_*` columns written by the classifier
+- **Phase 8** (gold sequences) is not built yet — see the note in [§2 Phase 8](#phase-8--build-gold-sequences-wip)
 
 ---
 
@@ -160,6 +160,8 @@ python src/silver/load_matches.py
 
 ```bash
 python src/silver/load_match_lineups.py
+
+python src/silver/load_match_lineups.py 2>&1 | tee lineups_run.log 
 ```
 
 **Output:** rows in `silver.match_lineups`.
@@ -231,38 +233,16 @@ python -m src.silver.events.sequences
 
 ---
 
-### Phase 8 — Build Gold Sequences
+### Phase 8 — Build Gold Sequences (WIP)
 
-Aggregates classified events from `silver.events` into `gold.sequences` — one row per possession sequence with derived metrics.
-
-```bash
-python -m src.gold.sequences
-```
-
-**Flags:**
-| Flag | Effect |
-|---|---|
-| `--match-ids 42 43 44` | Process only specific match_ids |
-| `--limit 100` | Cap the number of matches per run |
-| `--batch-size 50` | Matches loaded into memory at a time |
-
-**What it does internally:**
-1. Creates the `gold` schema and `gold.sequences` table if they don't exist
-2. Discovers matches that have classified sequences but no gold rows yet (or uses explicit `--match-ids`)
-3. Deletes existing gold rows for target matches (idempotency)
-4. SELECTs classified events joined with `silver.matches` (for `competition_season_id`)
-5. Aggregates per `sequence_id`: length, duration, xT, pass/carry/shot counts, start/end zones, flags
-6. INSERTs into `gold.sequences`
-
-**Output:** rows in `gold.sequences`.
-
-> **First run:** also creates the `gold` schema and the table with all indexes. Subsequent runs only insert/update data.
+**Not yet implemented.** The plan is to aggregate classified events from `silver.events` into `gold.sequences` — one row per possession sequence with derived metrics (length, duration, xT, pass/carry/shot counts, start/end zones, flags).
+`src/gold/gold_sequences.py` currently holds a stray duplicate of the Phase 7 classifier (its own docstring says `Placement: src/silver/events/sequences.py`) rather than aggregation logic — there is no gold table DDL, no `_aggregate_sequences()`, and no CLI/`__main__` entry point yet. Track it as an open item (see `CLAUDE.md` → "Immediate Next").
 
 ---
 
 ## 3. Updating the Database — New Matches
 
-When new match files arrive (weekly jornada update), you need to run Phases 4–8. All scripts are idempotent — they skip anything already loaded.
+When new match files arrive (weekly jornada update), you need to run Phases 4–7 (Phase 8 is not yet implemented — see note above). All scripts are idempotent — they skip anything already loaded.
 
 ### Step-by-step
 
@@ -305,18 +285,9 @@ SET sequence_id           = NULL,
     sequence_event_number = 0;
 ```
 
-**6. Run gold sequences builder:**
-```bash
-python -m src.gold.sequences
-```
+**6. Gold sequences builder — not yet implemented, skip for now.**
 
-That's it. The idempotency guards in each script ensure already-loaded/classified matches are skipped automatically. Phases 7 and 8 only pick up matches that have new events but no sequence data yet.
-
-> **Shortcut:** if you want to run the full pipeline for new matches in one go, you can also use the convenience function from Python:
-> ```python
-> from gold.sequences import run_full_sequence_pipeline
-> run_full_sequence_pipeline(conn)  # runs Phase 7 then Phase 8
-> ```
+That's it. The idempotency guards in each script ensure already-loaded/classified matches are skipped automatically. Phase 7 only picks up matches that have new events but no sequence data yet.
 
 ---
 
@@ -350,7 +321,7 @@ No action needed for matches, lineups, events, or sequences — historical rows 
 2. Insert rows into `competition_seasons` for each participating league
 3. Re-run Phase 1 (bronze teams) and Phase 2 (load teams) for new clubs from promotion/relegation
 4. Run Phase 3 for the new squad snapshots
-5. Run Phases 4–8 as matches arrive
+5. Run Phases 4–7 as matches arrive (Phase 8 not yet implemented)
 
 **New competition (e.g. adding Copa del Rey):**
 1. Insert one row into `competitions`
@@ -365,7 +336,9 @@ No schema changes are ever required.
 
 The gold layer is fully derived from silver and can be rebuilt at any time. This makes it safe to evolve iteratively.
 
-### Adding new columns to `gold.sequences`
+> **Status:** `gold.sequences` and its builder are not built yet (see [Phase 8](#phase-8--build-gold-sequences-wip)). The plan below is the intended pattern once it exists.
+
+### Adding new columns to `gold.sequences` (planned)
 
 When you need new derived metrics (e.g. `progressive_passes`, `final_third_entries`, `ppda_contribution`):
 
@@ -374,21 +347,11 @@ When you need new derived metrics (e.g. `progressive_passes`, `final_third_entri
    ALTER TABLE gold.sequences ADD COLUMN progressive_passes INT DEFAULT 0;
    ```
 
-2. **Update `gold_sequences.py`** — add the aggregation logic inside `_aggregate_sequences()` and include the new column in the `_insert_gold_sequences()` column list and UPSERT clause.
+2. **Update the gold builder** — add the aggregation logic and include the new column in the insert column list and UPSERT clause.
 
-3. **Re-run Phase 8** for all matches to backfill:
-   ```bash
-   python -m src.gold.sequences --match-ids <all_match_ids>
-   ```
-   Or, for a full rebuild, delete all existing rows and re-run:
-   ```sql
-   TRUNCATE gold.sequences;
-   ```
-   ```bash
-   python -m src.gold.sequences
-   ```
+3. **Re-run Phase 8** for all matches to backfill, or truncate and rebuild all.
 
-> **Nuclear option:** if the schema change is large, you can `DROP TABLE gold.sequences` and re-run Phase 8 — the `create_gold_sequences_table()` function recreates it from scratch. This is always safe because gold is never a source of truth.
+> **Nuclear option:** once the builder exists, a large schema change can `DROP TABLE gold.sequences` and re-run Phase 8 to recreate it from scratch — always safe because gold is never a source of truth.
 
 ### Adding new gold tables
 
@@ -414,7 +377,7 @@ All silver scripts are safe to re-run. Here's how each one handles duplicates:
 | `foot_preference.py` | None — always re-derives from full event data | UPDATE (idempotent) |
 | `src.silver.events.xg` | `match_id` — auto-discovers shots with NULL xG | UPDATE xg column |
 | `src.silver.events.sequences` | `match_id` — resets sequence cols before re-classifying | UPDATE with fresh values |
-| `src.gold.sequences` | `match_id` — deletes gold rows before re-inserting | DELETE + INSERT |
+| gold sequences builder | *(not yet implemented — planned: `match_id`, DELETE + INSERT)* | — |
 
 ---
 
@@ -458,15 +421,5 @@ The xG model files are missing from `models/xg/`, or the pipeline was run with `
 python -m src.silver.events.xg
 ```
 
-**Gold sequences out of sync after classifier fix**
-If you changed the classifier logic and re-ran Phase 7, Phase 8 won't automatically detect the change (the gold rows already exist for those matches). Force a rebuild:
-```bash
-python -m src.gold.sequences --match-ids <affected_match_ids>
-```
-Or truncate and rebuild all:
-```sql
-TRUNCATE gold.sequences;
-```
-```bash
-python -m src.gold.sequences
-```
+**Gold sequences out of sync after classifier fix** *(applies once Phase 8 is implemented)*
+If you changed the classifier logic and re-ran Phase 7, Phase 8 won't automatically detect the change (the gold rows already exist for those matches). Force a rebuild via the gold builder's `--match-ids` flag, or truncate `gold.sequences` and rebuild all.
