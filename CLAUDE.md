@@ -50,6 +50,13 @@ python -m src.silver.events --raw-root data/raw --no-carries --no-xt
 python src/silver/foot_preference.py
 python src/silver/foot_preference.py --dry-run
 
+# Backfill SPADL columns, then VAEP (VAEP requires SPADL to be populated first)
+python -m src.silver.events.spadl
+python -m src.silver.events.vaep
+python -m src.silver.events.vaep --match-ids 1 2 3
+# NOTE: vaep only discovers matches WHERE vaep_value IS NULL. To re-score after a
+# model change, NULL the three vaep_* columns first or the run silently does nothing.
+
 # Scrape raw Opta match event files from scoresway.com (interactive, Playwright)
 python -m src.scraper
 python -m src.scraper --headless
@@ -96,6 +103,8 @@ src/
       parser.py                   #   JSONP -> event dicts (pure transform)
       carries.py                  #   Synthesised carry detection (pure transform)
       xt.py                       #   Expected Threat calculation (pure transform)
+      spadl.py                    #   SPADL mapping + backfill (python -m src.silver.events.spadl)
+      vaep.py                     #   VAEP valuation + backfill (python -m src.silver.events.vaep)
       db.py                       #   All SQL operations for events
       sequences.py                #   Possession sequence classifier (state machine)
     squads/                       # Squad pipeline (run as module: python -m src.silver.squads)
@@ -184,13 +193,14 @@ WHERE cs.source_stage_id = :source_stage_id
 
 ## Skills Available
 
-Four project-specific skills are registered and should be consulted automatically:
+These project-specific skills are registered and should be consulted automatically:
 
 - **`football-silver-schema`** — full table DDL, FK resolution, idempotency patterns, ingestion strategies. Use when writing or debugging ingestion scripts, silver SQL, or gold table design.
 - **`opta-events-reference`** — full event typeId list, qualifier IDs, JSONP format, coordinate conversion, carry synthesis, sequence columns. Use when working on event pipeline files or event-level SQL.
 - **`phases-of-play`** — possession sequence phase definitions and classification conditions. Use when working on sequence/phase logic.
 - **`pitch-guide`** — language-agnostic pitch drawing primitives (all markings with exact coordinates and angles), the 30-zone grid (6x5), zone assignment logic in Python/SQL/JS. Use when drawing pitches, implementing zone assignment, or building spatial visualisations.
 - **`spadl-mapping`** — full SPADL mapping reference: the three columns added to `silver.events` (`spadl_type_id`, `spadl_result_id`, `spadl_bodypart_id`), Opta event_type → action type decision tree, qualifier-based sub-type detection, result/body-part mapping, always-success/always-fail sets, backfill API, and VAEP downstream contract. Use when working on `spadl.py`, writing SPADL-filtered queries, or building gold-layer VAEP features.
+- **`vaep-model`** — the retrained VAEP model: why the previous production weights were degenerate, the artifact contract (`vaep_model.json` + `metrics.json`, including the load-bearing Platt calibrator), the 148-feature set and the four semantics that are easy to get backwards, the frame convention, the formula and its four guards, the ten acceptance gates with measured values, and a symptom → cause → fix table. Use when working on `vaep.py`, `_build_features`, the VAEP backfill, `models/vaep/*.json`, or debugging the `vaep_*` columns — and **before any feature-set change**, since it must be mirrored in the training repo.
 - **`karpathy-guidelines`** - Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
 
 ---
@@ -208,12 +218,13 @@ Four project-specific skills are registered and should be consulted automaticall
 
 ## Current State
 
-> Last updated: May 2026
+> Last updated: 11 August 2026
 
 ### Done
 - Silver schema fully designed and operational for La Liga 2025/26 — all 10 tables
 - Data ingestion pipelines built for matches, lineups, squads, teams, players, events (carries + xT + SPADL mapping)
 - SPADL columns (`spadl_type_id`, `spadl_result_id`, `spadl_bodypart_id`) added to `silver.events`; backfill via `python -m src.silver.events.spadl`
+- **VAEP is live.** `vaep_value` / `vaep_offensive` / `vaep_defensive` are populated across all 427 matches / 780,395 events. The previously shipped model was degenerate (`scores` AUC excluding goal actions **0.5222** — a coin flip; it had learned "was this a successful shot?"). It was retrained from scratch in a companion repo, Platt-calibrated on held-out Opta, and integrated on 11 Aug 2026: **0.7465** AUC excluding goal actions, `corr(vaep_offensive, xt)` **−0.1942 → +0.2605**. Backfill via `python -m src.silver.events.vaep`; consult the **`vaep-model`** skill before touching `vaep.py`, `_build_features` or `models/vaep/*.json`
 - Possession sequence classifier implemented (`sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number`)
 - Squad diff strategy live with `squad_snapshot_log` audit table
 - Shot enrichment columns: `shot_play_pattern` (7-value enum from Q22/23/24/25/26/160/9) and `first_time` (bool from Q328)

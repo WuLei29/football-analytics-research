@@ -3,8 +3,14 @@ vaep.py
 ───────
 VAEP (Valuing Actions by Estimating Probabilities) column calculation.
 
-Uses a pre-trained XGBoost model:
-  https://huggingface.co/luxury-lakehouse/vaep-model-statsbomb-wyscout
+Uses the XGBoost artifact exported by the vaep-model training repo
+(``models/vaep/{vaep_model.json, metrics.json}``).
+
+Feature construction must match the training pipeline exactly — see
+md/VAEP_RETRAINING_v2.md §10.  The artifact is self-describing: the ordered
+feature list (`config.feature_names`), the coordinate frame
+(`config.frame_convention`) and the per-head probability calibrator
+(`config.calibration`) are all read from metrics.json, never assumed here.
 
 Stateless: takes a DataFrame of ALL match events, returns the same DataFrame
 with three new columns: vaep_offensive, vaep_defensive, vaep_value.
@@ -59,7 +65,7 @@ _RESULT_NAMES: dict = {
 }
 
 # Period start offsets in minutes (for time_seconds within period)
-_PERIOD_OFFSETS: dict = {1: 0, 2: 45, 3: 90, 4: 105}
+_PERIOD_OFFSETS: dict = {1: 0, 2: 45, 3: 90, 4: 105, 5: 120}
 
 # Attacking goal centre (SPADL standard: acting team attacks toward x=105)
 _GOAL_X, _GOAL_Y = 105.0, 34.0
@@ -79,6 +85,7 @@ _SHOT_TYPES        = (11, 12, 13)
 _SHOT_PENALTY      = 12
 _CORNER_TYPES      = (5, 6)
 _RESULT_SUCCESS    = 1
+_RESULT_OWNGOAL    = 3
 # Fixed pre-action scoring odds, taken from socceraction's reference values
 _PENALTY_PREV_SCORES = 0.792453
 _CORNER_PREV_SCORES  = 0.046500
@@ -89,7 +96,25 @@ _CACHE: dict = {}
 
 
 def _load_models():
-    """Load and cache the two XGBoost classifiers from vaep_model.json."""
+    """Load and cache the two XGBoost classifiers from vaep_model.json.
+
+    Returns (scores_model, concedes_model, feature_names, mirror_to_a0_frame,
+    calibration).
+
+    ``mirror_to_a0_frame`` comes from ``config.frame_convention`` in
+    metrics.json and must match what the training run did:
+      "ltr"          — actions already in the acting team's attacking frame,
+                       fed to the model as-is (silly-kicks >= 3.0.0 default).
+      "a0_mirrored"  — a1/a2 rotated 180° into a0's frame
+                       (socceraction's play_left_to_right).
+    There is no default: the frame is a contract between the two ends and
+    guessing it wrong degrades every game state spanning a turnover silently.
+
+    ``calibration`` carries one block per head from ``config.calibration``.
+    It is likewise required — the raw boosters fail the calibration gate on
+    Opta, so an artifact without a calibrator must not be scored by accident.
+    ``{"method": "none"}`` is the explicit way to say "no correction".
+    """
     if "scores" not in _CACHE:
         from xgboost import XGBClassifier
 
@@ -105,23 +130,100 @@ def _load_models():
         with open(_METRICS_PATH) as f:
             metrics = json.load(f)
 
+        config = metrics["config"]
+
+        if "frame_convention" not in config:
+            raise ValueError(
+                f"{_METRICS_PATH.name} declares no frame_convention. It is the "
+                "contract between training and inference and must not be guessed."
+            )
+        convention = config["frame_convention"]
+        if convention not in ("ltr", "a0_mirrored"):
+            raise ValueError(f"Unknown frame_convention {convention!r} in {_METRICS_PATH}")
+
+        if "calibration" not in config:
+            raise ValueError(
+                f"{_METRICS_PATH.name} carries no config.calibration. The raw "
+                'boosters are not calibrated for Opta; declare {"method": "none"} '
+                "explicitly if that is really what is wanted."
+            )
+        calibration = config["calibration"]
+        for head in ("scores", "concedes"):
+            if head not in calibration:
+                raise ValueError(
+                    f"config.calibration in {_METRICS_PATH.name} has no {head!r} block"
+                )
+
         _CACHE["scores"]        = m_scores
         _CACHE["concedes"]      = m_concedes
-        _CACHE["feature_names"] = metrics["config"]["feature_names"]
-        log.info("VAEP models loaded from %s", _MODEL_PATH)
+        _CACHE["feature_names"] = config["feature_names"]
+        _CACHE["mirror"]        = convention == "a0_mirrored"
+        _CACHE["calibration"]   = calibration
+        log.info(
+            "VAEP models loaded from %s (frame_convention=%s, %d features, "
+            "calibration=%s)",
+            _MODEL_PATH, convention, len(config["feature_names"]),
+            calibration.get("method", "none"),
+        )
 
-    return _CACHE["scores"], _CACHE["concedes"], _CACHE["feature_names"]
+    return (
+        _CACHE["scores"], _CACHE["concedes"], _CACHE["feature_names"],
+        _CACHE["mirror"], _CACHE["calibration"],
+    )
+
+
+# ── Probability calibration ───────────────────────────────────────────────────
+# Verbatim from vaep_model.calibrate.CONSUMER_REFERENCE, which the training
+# repo asserts bit-identical to the code that fitted the parameters
+# (tests/test_calibrate.py, through a JSON round-trip).  Do not "simplify":
+# the naive 1/(1+exp(-z)) differs in the last bits and overflows on extreme
+# log-odds.  Applied per head AFTER predict_proba and BEFORE the VAEP formula.
+
+
+def _stable_sigmoid(z):
+    """1/(1+exp(-z)) without overflowing on large-magnitude z."""
+    out = np.empty_like(z, dtype=np.float64)
+    pos = z >= 0
+    out[pos] = 1.0 / (1.0 + np.exp(-z[pos]))
+    ez = np.exp(z[~pos])
+    out[~pos] = ez / (1.0 + ez)
+    return out
+
+
+def _apply_calibration(p, cal):
+    """metrics.json -> config.calibration, applied to one head's probabilities."""
+    method = cal.get("method", "none")
+    if method == "none":
+        return p
+    if method == "platt":
+        q = np.clip(np.asarray(p, dtype=np.float64), 1e-12, 1 - 1e-12)
+        return _stable_sigmoid(cal["a"] * np.log(q / (1.0 - q)) + cal["b"])
+    if method == "isotonic":
+        return np.interp(np.asarray(p, dtype=np.float64), cal["x"], cal["y"])
+    raise ValueError(f"unknown calibration method {method!r}")
 
 
 # ── Feature engineering ───────────────────────────────────────────────────────
 
-def _shift(arr: np.ndarray, k: int) -> np.ndarray:
-    """Shift array right by k, zero-padding the leading k positions."""
-    if k == 0:
-        return arr.copy()
-    out = np.zeros(len(arr), dtype=arr.dtype)
-    out[k:] = arr[:-k]
-    return out
+def _state_index(period: np.ndarray, k: int) -> np.ndarray:
+    """Row index of the action k steps back, within the same period.
+
+    Mirrors silly_kicks.vaep.feature_framework.gamestates: the game-state
+    window never crosses a period boundary, and the first k actions of a
+    period fall back to the first action of that period rather than being
+    padded with zeros.
+    """
+    n = len(period)
+    if n == 0:
+        return np.empty(0, dtype=int)
+
+    # First row of each period block (events arrive ordered by json_index)
+    block_start = np.zeros(n, dtype=int)
+    starts = np.flatnonzero(np.concatenate([[True], period[1:] != period[:-1]]))
+    for s, e in zip(starts, np.append(starts[1:], n)):
+        block_start[s:e] = s
+
+    return np.maximum(np.arange(n) - k, block_start)
 
 
 def _polar(x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -133,16 +235,64 @@ def _polar(x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     return dist, angle
 
 
-def _build_features(valid_df: pd.DataFrame, feature_names: List[str]) -> pd.DataFrame:
+def _goalscore(
+    type_id: np.ndarray, result_id: np.ndarray, team: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Score BEFORE each action, from the acting team's perspective.
+
+    ``cumsum() - self``, so the action's own goal is excluded.  Both reference
+    libraries' docstrings say "after the action" and are wrong — the code
+    computes before, which is the correct non-leaking definition.  Cumulative
+    within a match, so this must be called per match on json_index-ordered
+    actions.
+
+    Reproduces silly_kicks.vaep.features.context.goalscore, including its
+    shot-type gate on the own-goal branch: that branch is live on our Opta
+    feed, whose own goals are type shot / result owngoal.  An own goal counts
+    toward the OTHER team's score, hence the cross-attribution below.
     """
-    Build the 145-feature matrix for one match's SPADL-valid events.
+    n = len(type_id)
+    if n == 0:
+        empty = np.empty(0, dtype=float)
+        return empty, empty.copy(), empty.copy()
+
+    is_shot  = np.isin(type_id, _SHOT_TYPES)
+    goals    = is_shot & (result_id == _RESULT_SUCCESS)
+    owngoals = is_shot & (result_id == _RESULT_OWNGOAL)
+
+    # "team a" is whoever acted first in the match; "team b" is everyone else.
+    is_a = team == team[0]
+    is_b = ~is_a
+
+    goals_a = (goals & is_a) | (owngoals & is_b)
+    goals_b = (goals & is_b) | (owngoals & is_a)
+    score_a = np.cumsum(goals_a) - goals_a
+    score_b = np.cumsum(goals_b) - goals_b
+
+    gs_team     = score_a * is_a + score_b * is_b
+    gs_opponent = score_b * is_a + score_a * is_b
+    return (
+        gs_team.astype(float),
+        gs_opponent.astype(float),
+        (gs_team - gs_opponent).astype(float),
+    )
+
+
+def _build_features(
+    valid_df: pd.DataFrame, feature_names: List[str], mirror: bool
+) -> pd.DataFrame:
+    """
+    Build the 148-feature matrix for one match's SPADL-valid events.
 
     valid_df must already be:
       - filtered to rows where spadl_type_id IS NOT NULL
       - sorted by json_index (ascending)
       - reset to a 0-based integer index
 
-    Returns a DataFrame with exactly 145 columns in model order.
+    mirror: rotate a1/a2 into a0's attacking frame. Must match the training
+    run's coordinate convention — see _load_models.
+
+    Returns a DataFrame with exactly 148 columns in model order.
     """
     n = len(valid_df)
 
@@ -167,35 +317,35 @@ def _build_features(valid_df: pd.DataFrame, feature_names: List[str]) -> pd.Data
     period_offset = np.array([_PERIOD_OFFSETS.get(int(p), 0) for p in period], dtype=float)
     time_period   = np.clip((minute - period_offset) * 60.0 + second, 0.0, None)
 
-    # Position index, used to spot the leading rows that _shift zero-pads
-    positions = np.arange(n)
+    period_int = period.astype(int)
 
     data: dict = {}
 
     for k, suffix in enumerate(["a0", "a1", "a2"]):
-        s_type    = _shift(type_id,      k)
-        s_result  = _shift(result_id,    k)
-        s_body    = _shift(body_id,      k)
-        s_sx      = _shift(sx,           k)
-        s_sy      = _shift(sy,           k)
-        s_ex      = _shift(ex,           k)
-        s_ey      = _shift(ey,           k)
-        s_to      = _shift(time_overall, k)
-        s_tp      = _shift(time_period,  k)
-        s_per     = _shift(period,       k)
-        s_team    = _shift(team,         k)
+        idx       = _state_index(period_int, k)
+        s_type    = type_id[idx]
+        s_result  = result_id[idx]
+        s_body    = body_id[idx]
+        s_sx      = sx[idx]
+        s_sy      = sy[idx]
+        s_ex      = ex[idx]
+        s_ey      = ey[idx]
+        s_to      = time_overall[idx]
+        s_tp      = time_period[idx]
+        s_per     = period[idx]
+        s_team    = team[idx]
 
-        # Put the whole game state in a0's attacking frame, mirroring actions
-        # by the other team 180° about the pitch centre.  This is socceraction's
-        # play_left_to_right(gamestates, ...), which flips a0/a1/a2 together on
-        # a0's team, so x=105 is a0's attacking goal in every frame.
-        # Leading rows (position < k) are _shift zero-padding, not real actions,
-        # so they are left untouched rather than mirrored to the far corner.
-        flip = (s_team != team) & (positions >= k)
-        s_sx = np.where(flip, _PITCH_X - s_sx, s_sx)
-        s_ex = np.where(flip, _PITCH_X - s_ex, s_ex)
-        s_sy = np.where(flip, _PITCH_Y - s_sy, s_sy)
-        s_ey = np.where(flip, _PITCH_Y - s_ey, s_ey)
+        if mirror:
+            # Put the whole game state in a0's attacking frame, rotating actions
+            # by the other team 180° about the pitch centre — socceraction's
+            # play_left_to_right(gamestates, ...).  Only correct when the model
+            # was trained that way; silly-kicks >= 3.0.0 removed this step and
+            # feeds canonical LTR coordinates straight through.
+            flip = s_team != team
+            s_sx = np.where(flip, _PITCH_X - s_sx, s_sx)
+            s_ex = np.where(flip, _PITCH_X - s_ex, s_ex)
+            s_sy = np.where(flip, _PITCH_Y - s_sy, s_sy)
+            s_ey = np.where(flip, _PITCH_Y - s_ey, s_ey)
 
         # Movement and polar features derive from the mirrored coordinates
         s_dx      = s_ex - s_sx
@@ -211,12 +361,14 @@ def _build_features(valid_df: pd.DataFrame, feature_names: List[str]) -> pd.Data
         for r_id, r_name in _RESULT_NAMES.items():
             data[f"result_{r_name}_{suffix}"] = (s_result == r_id).astype(float)
 
-        # Body part one-hot (4 columns)
-        # foot_left (4) and foot_right (5) collapse into foot
+        # Body part one-hot (4 columns), per silly_kicks bodypart_onehot:
+        # foot_left (4) and foot_right (5) collapse into foot, and head/other
+        # is the union of head (1), other (2) and head/other (3) — it is NOT
+        # mutually exclusive with the head and other columns.
         data[f"bodypart_foot_{suffix}"]       = np.isin(s_body, [0, 4, 5]).astype(float)
         data[f"bodypart_head_{suffix}"]       = (s_body == 1).astype(float)
         data[f"bodypart_other_{suffix}"]      = (s_body == 2).astype(float)
-        data[f"bodypart_head/other_{suffix}"] = np.zeros(n, dtype=float)
+        data[f"bodypart_head/other_{suffix}"] = np.isin(s_body, [1, 2, 3]).astype(float)
 
         # Time features
         data[f"period_id_{suffix}"]           = s_per
@@ -240,18 +392,42 @@ def _build_features(valid_df: pd.DataFrame, feature_names: List[str]) -> pd.Data
         data[f"dy_{suffix}"]       = s_dy
         data[f"movement_{suffix}"] = np.sqrt(s_dx ** 2 + s_dy ** 2)
 
-    # Team change flags between consecutive game-state positions
-    t_a0 = team
-    t_a1 = _shift(team, 1)
-    t_a2 = _shift(team, 2)
-    data["team_1"] = (t_a0 != t_a1).astype(float)
-    data["team_2"] = (t_a1 != t_a2).astype(float)
+    # Cross-action features: every slot is compared against a0, and team_i is
+    # TRUE when a_i was performed by a0's team (silly_kicks team / time_delta).
+    idx_1 = _state_index(period_int, 1)
+    idx_2 = _state_index(period_int, 2)
 
-    # Time elapsed between consecutive game-state positions (seconds)
-    data["time_delta_1"] = time_overall - _shift(time_overall, 1)
-    data["time_delta_2"] = _shift(time_overall, 1) - _shift(time_overall, 2)
+    data["team_1"] = (team[idx_1] == team).astype(float)
+    data["team_2"] = (team[idx_2] == team).astype(float)
 
-    return pd.DataFrame(data, columns=feature_names)
+    # Seconds between a_i and a0, on the within-period clock
+    data["time_delta_1"] = time_period - time_period[idx_1]
+    data["time_delta_2"] = time_period - time_period[idx_2]
+
+    # Goalscore (3): computed on a0 only, hence unsuffixed.  Not decorated with
+    # @simple upstream, which is why it adds 3 columns and not 3x3.
+    gs_team, gs_opponent, gs_diff = _goalscore(type_id, result_id, team)
+    data["goalscore_team"]     = gs_team
+    data["goalscore_opponent"] = gs_opponent
+    data["goalscore_diff"]     = gs_diff
+
+    # A name that doesn't match the model's list would silently become an
+    # all-NaN column rather than an error, so check before reindexing.
+    if set(data) != set(feature_names):
+        missing = sorted(set(feature_names) - set(data))
+        extra   = sorted(set(data) - set(feature_names))
+        raise ValueError(
+            f"Feature mismatch against {_METRICS_PATH.name}: "
+            f"missing={missing} unexpected={extra}"
+        )
+
+    # float32 throughout, as the training shards were: the DMatrix is float32
+    # regardless, so this only makes the contract explicit — and keeps a parity
+    # diff from looking like a coordinate bug when it is really a dtype one.
+    return pd.DataFrame(
+        {name: np.asarray(data[name], dtype="float32") for name in feature_names},
+        columns=feature_names,
+    )
 
 
 # ── Public transform ───────────────────────────────────────────────────────────
@@ -283,6 +459,11 @@ def calculate_vaep(df: pd.DataFrame) -> pd.DataFrame:
     if not valid_mask.any():
         return df
 
+    # Deliberately outside the try below: a broken or mis-declared artifact is
+    # not a per-match data problem, and swallowing it would turn a whole
+    # backfill into "0 events updated" with a warning per match.
+    m_scores, m_concedes, feature_names, mirror, calibration = _load_models()
+
     # Isolate SPADL-valid events in chronological order; preserve original indices
     valid_df = (
         df.loc[valid_mask]
@@ -292,11 +473,15 @@ def calculate_vaep(df: pd.DataFrame) -> pd.DataFrame:
     orig_idx = valid_df["index"].to_numpy()
 
     try:
-        m_scores, m_concedes, feature_names = _load_models()
-        X = _build_features(valid_df, feature_names)
+        X = _build_features(valid_df, feature_names, mirror)
 
-        p_scores   = m_scores.predict_proba(X)[:, 1]
-        p_concedes = m_concedes.predict_proba(X)[:, 1]
+        # Per-head Platt correction, fitted on held-out Opta.  It must land
+        # between predict_proba and the formula: VAEP is a DIFFERENCE of
+        # probabilities, so calibrating afterwards is not the same operation.
+        p_scores   = _apply_calibration(m_scores.predict_proba(X)[:, 1],
+                                        calibration["scores"])
+        p_concedes = _apply_calibration(m_concedes.predict_proba(X)[:, 1],
+                                        calibration["concedes"])
 
         # Delta against the previous game state; first action has no predecessor → NaN
         prev_scores_raw   = np.concatenate([[np.nan], p_scores[:-1]])
@@ -315,8 +500,18 @@ def calculate_vaep(df: pd.DataFrame) -> pd.DataFrame:
         prev_concedes = np.where(same_team, prev_concedes_raw, prev_scores_raw)
 
         # ── Guards, per socceraction.vaep.formula ─────────────────────────────
-        t_secs    = (valid_df["minute"].fillna(0).to_numpy(dtype=float) * 60.0
-                     + valid_df["second"].fillna(0).to_numpy(dtype=float))
+        # The reference compares actions on the within-period clock, so a new
+        # period always trips the staleness guard.
+        minute_arr = valid_df["minute"].fillna(0).to_numpy(dtype=float)
+        period_arr = valid_df["period"].fillna(1).to_numpy(dtype=float)
+        offset_arr = np.array(
+            [_PERIOD_OFFSETS.get(int(p), 0) for p in period_arr], dtype=float
+        )
+        t_secs    = np.clip(
+            (minute_arr - offset_arr) * 60.0
+            + valid_df["second"].fillna(0).to_numpy(dtype=float),
+            0.0, None,
+        )
         prev_t    = np.concatenate([[np.nan], t_secs[:-1]])
         cur_type  = valid_df["spadl_type_id"].fillna(-1).to_numpy(dtype=float)
         prev_type = np.concatenate([[np.nan], cur_type[:-1]])
