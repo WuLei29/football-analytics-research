@@ -1,14 +1,16 @@
 """
 Compute xG for shots in silver.events.
 
-Model: XGBoost + Platt calibration, trained on StatsBomb open data (~82k shots).
-Two models: open-play (22 features) and free-kick (11 features).
-Penalties are excluded from prediction (different generative process)
-but included in the query so score_diff_at_shot is accurate.
+Model: XGBoost trained on StatsBomb open data (~82k shots).
+Two models: open-play (22 features, Platt-calibrated) and free-kick
+(11 features, raw — its shipped calibrator is degenerate, see _load_models).
+Penalties are never modelled (different generative process) — they are assigned
+the fixed Opta value PENALTY_XG. They are also kept in the query so
+score_diff_at_shot is accurate for the shots around them.
 
 Artifacts required in models/xg/ (relative to this file):
-  06_xgboost_full.json, 07_platt_xgboost_full.joblib,
-  fk_xgboost.json, fk_platt_calibrator.joblib
+  06_xgboost_full.json, 07_platt_xgboost_full.joblib, fk_xgboost.json
+  (fk_platt_calibrator.joblib is present but intentionally unused)
 
 Usage (adjust module path to your project layout):
     python -m models.compute_xg                    # matches with NULL xG
@@ -62,6 +64,9 @@ _SHOT_PENALTY = 12
 _SHOT_FREEKICK = 13
 _XG_ELIGIBLE = {_SHOT, _SHOT_FREEKICK}
 
+# Opta's fixed xG for a penalty kick. Penalties bypass the model entirely.
+PENALTY_XG = 0.79
+
 # SPADL bodypart → xG model label
 _BODYPART_MAP: dict[int, str | None] = {
     1: "Head",        # HEAD
@@ -104,6 +109,7 @@ _models: dict[str, Any] = {}
 
 _SHOTS_QUERY = """
 SELECT
+    e.event_id,
     e.source_event_id,
     e.match_id,
     e.team_id,
@@ -132,11 +138,15 @@ ORDER BY e.match_id, e.period, e.minute, e.second
 _NULL_XG_MATCHES = """
 AND e.match_id IN (
     SELECT DISTINCT match_id FROM silver.events
-    WHERE spadl_type_id IN (11, 13) AND xg IS NULL
+    WHERE spadl_type_id IN (11, 12, 13)
+      AND spadl_result_id IS DISTINCT FROM 3
+      AND xg IS NULL
 )
 """
 
-_UPDATE_XG = "UPDATE silver.events SET xg = %s WHERE source_event_id = %s"
+# Keyed on the primary key: source_event_id is not indexed, so keying on it
+# makes every UPDATE a sequential scan of the whole events table.
+_UPDATE_XG = "UPDATE silver.events SET xg = %s WHERE event_id = %s"
 
 # ---------------------------------------------------------------------------
 # Model loading
@@ -157,8 +167,16 @@ def _load_models() -> dict[str, Any]:
     fk = XGBClassifier()
     fk.load_model(str(MODELS_DIR / "fk_xgboost.json"))
     _models["fk_model"] = fk
-    _models["fk_cal"] = joblib.load(MODELS_DIR / "fk_platt_calibrator.joblib")
-    print("  free-kick model loaded", flush=True)
+    print("  free-kick model loaded (uncalibrated — see note below)", flush=True)
+
+    # models/xg/fk_platt_calibrator.joblib is deliberately NOT loaded.
+    # It is degenerate: slope 15.75, intercept -3.75 (vs 1.03 / 0.05 for the
+    # open-play calibrator), fit with C=1e9 on a small free-kick sample. It maps
+    # sigmoid(15.75 * logit(p) - 3.75), which collapses every realistic free-kick
+    # probability to ~1e-17 — it zeroed out all 293 free kicks in the dataset.
+    # The raw model is already well calibrated on Opta: 16.65 predicted vs 14
+    # actual goals over those 293 shots (0.67 sd). Refit the calibrator in the
+    # xg-model repo before reinstating it here.
 
     return _models
 
@@ -206,6 +224,7 @@ def _map_body_part(spadl_id: int | None, preferred_foot: str | None) -> str:
 def _map_columns(df: pd.DataFrame) -> pd.DataFrame:
     out = pd.DataFrame(index=df.index)
 
+    out["event_id"] = df["event_id"]
     out["source_event_id"] = df["source_event_id"]
     out["match_id"] = df["match_id"]
     out["team_id"] = df["team_id"]
@@ -338,39 +357,55 @@ def compute_xg(df: pd.DataFrame) -> pd.DataFrame:
 
     Returns
     -------
-    DataFrame with (source_event_id, xg) for xG-eligible shots only
-    (open-play + free-kick; penalties excluded).
+    DataFrame with (event_id, source_event_id, xg) for every scorable shot:
+    open-play and free-kick from the models, penalties at the fixed
+    PENALTY_XG value. Own goals are excluded upstream by the query.
     """
-    models = _load_models()
-
     print("Building features ...", flush=True)
     mapped = _map_columns(df)
     featured = _build_features(mapped)
 
-    # Only predict for non-penalty shots
+    frames: list[pd.DataFrame] = []
+
+    # Penalties bypass the model: fixed Opta value.
+    pens = featured[featured["spadl_type_id"] == _SHOT_PENALTY]
+    if len(pens):
+        print(f"Assigning fixed xG {PENALTY_XG} to {len(pens):,} penalties ...", flush=True)
+        frames.append(pd.DataFrame({
+            "event_id": pens["event_id"].values,
+            "source_event_id": pens["source_event_id"].values,
+            "xg": np.full(len(pens), PENALTY_XG, dtype=float),
+        }))
+
     eligible = featured[featured["spadl_type_id"].isin(_XG_ELIGIBLE)].copy()
-    if eligible.empty:
-        return pd.DataFrame(columns=["source_event_id", "xg"])
+    if len(eligible):
+        models = _load_models()
+        is_fk = eligible["shot_type"] == "Free Kick"
+        xg = pd.Series(np.nan, index=eligible.index, dtype=float)
 
-    is_fk = eligible["shot_type"] == "Free Kick"
-    xg = pd.Series(np.nan, index=eligible.index, dtype=float)
+        op = eligible[~is_fk]
+        if len(op):
+            print(f"Predicting open-play xG for {len(op):,} shots ...", flush=True)
+            p_raw = models["op_model"].predict_proba(op[OPEN_PLAY_FEATURES].values)[:, 1]
+            xg.loc[op.index] = _apply_platt(models["op_cal"], p_raw)
 
-    op = eligible[~is_fk]
-    if len(op):
-        print(f"Predicting open-play xG for {len(op):,} shots ...", flush=True)
-        p_raw = models["op_model"].predict_proba(op[OPEN_PLAY_FEATURES].values)[:, 1]
-        xg.loc[op.index] = _apply_platt(models["op_cal"], p_raw)
+        fk = eligible[is_fk]
+        if len(fk):
+            print(f"Predicting free-kick xG for {len(fk):,} shots ...", flush=True)
+            # Raw output, no Platt step — the shipped FK calibrator is degenerate.
+            xg.loc[fk.index] = models["fk_model"].predict_proba(
+                fk[FREEKICK_FEATURES].values
+            )[:, 1]
 
-    fk = eligible[is_fk]
-    if len(fk):
-        print(f"Predicting free-kick xG for {len(fk):,} shots ...", flush=True)
-        p_raw = models["fk_model"].predict_proba(fk[FREEKICK_FEATURES].values)[:, 1]
-        xg.loc[fk.index] = _apply_platt(models["fk_cal"], p_raw)
+        frames.append(pd.DataFrame({
+            "event_id": eligible["event_id"].values,
+            "source_event_id": eligible["source_event_id"].values,
+            "xg": xg.values,
+        }))
 
-    return pd.DataFrame({
-        "source_event_id": eligible["source_event_id"].values,
-        "xg": xg.values,
-    })
+    if not frames:
+        return pd.DataFrame(columns=["event_id", "source_event_id", "xg"])
+    return pd.concat(frames, ignore_index=True)
 
 
 # ---------------------------------------------------------------------------
@@ -405,7 +440,7 @@ def fetch_shots(
 
 
 def write_xg(conn, results: pd.DataFrame) -> int:
-    rows = list(zip(results["xg"], results["source_event_id"]))
+    rows = list(zip(results["xg"], results["event_id"]))
     total = len(rows)
     page_size = 500
     print(f"Writing {total:,} xG values to DB ...", flush=True)
@@ -468,7 +503,7 @@ def main() -> None:
         n_penalties = (df["spadl_type_id"] == _SHOT_PENALTY).sum()
         print(
             f"Loaded {len(df):,} shots from {n_matches} matches "
-            f"({n_penalties} penalties excluded from xG)"
+            f"({n_penalties} penalties at fixed xG {PENALTY_XG})"
         )
 
         results = compute_xg(df)
@@ -476,17 +511,18 @@ def main() -> None:
             print("No xG-eligible shots to update.")
             return
 
-        n_fk = (
-            df.loc[
-                df["source_event_id"].isin(results["source_event_id"]),
-                "spadl_type_id",
-            ]
-            == _SHOT_FREEKICK
-        ).sum()
-        n_op = len(results) - n_fk
+        scored_types = df.loc[
+            df["source_event_id"].isin(results["source_event_id"]), "spadl_type_id"
+        ]
+        n_fk = (scored_types == _SHOT_FREEKICK).sum()
+        n_pen = (scored_types == _SHOT_PENALTY).sum()
+        n_op = len(results) - n_fk - n_pen
 
         updated = write_xg(conn, results)
-        print(f"Updated {updated:,} shots (open-play: {n_op}, free-kick: {n_fk})")
+        print(
+            f"Updated {updated:,} shots "
+            f"(open-play: {n_op}, free-kick: {n_fk}, penalty: {n_pen})"
+        )
         print(f"  Mean xG : {results['xg'].mean():.4f}")
         print(f"  Range   : [{results['xg'].min():.4f}, {results['xg'].max():.4f}]")
     finally:
