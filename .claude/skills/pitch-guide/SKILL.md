@@ -261,18 +261,35 @@ The channels are defined by the penalty area edges (y = 13.84 and y = 54.16) and
 
 | Channel | y range | Width (m) | ID | Name |
 |---------|---------|-----------|-----|------|
-| **Y1** | 0.00 -> 13.84 | 13.84 | `wide_left` | Wide channel (left touchline) |
-| **Y2** | 13.84 -> 24.84 | 11.00 | `half_space_left` | Left half-space |
+| **Y1** | 0.00 -> 13.84 | 13.84 | `wide_right` | Wide channel (right touchline) |
+| **Y2** | 13.84 -> 24.84 | 11.00 | `half_space_right` | Right half-space |
 | **Y3** | 24.84 -> 43.16 | 18.32 | `center` | Central corridor (six-yard box width) |
-| **Y4** | 43.16 -> 54.16 | 11.00 | `half_space_right` | Right half-space |
-| **Y5** | 54.16 -> 68.00 | 13.84 | `wide_right` | Wide channel (right touchline) |
+| **Y4** | 43.16 -> 54.16 | 11.00 | `half_space_left` | Left half-space |
+| **Y5** | 54.16 -> 68.00 | 13.84 | `wide_left` | Wide channel (left touchline) |
 
 **Design rationale:** The central corridor (Y3) spans the full width of the six-yard box (18.32 m), capturing the most dangerous scoring zone. The half-spaces (Y2, Y4) correspond to the areas between the six-yard box and the penalty area edges. The wide channels (Y1, Y5) cover everything outside the penalty area width.
+
+> ### Which side is `y = 0`? Settled from data: **low `y` is the RIGHT flank.**
+>
+> This was inverted in an earlier revision of this skill and is the kind of
+> convention that is guessed wrong half the time, so it is recorded here with
+> its evidence. Opta's `y` axis runs in the acting team's attacking frame.
+> Taking the mean position of every player occupying each formation slot and
+> cross-tabulating against `players.preferred_foot`:
+>
+> | Formation slot | Mean `y` | Right-footed | Left-footed | Conclusion |
+> |---|---|---|---|---|
+> | 2 | ~11.2 | **839** | 13 | **Right back** — low `y` is the right flank |
+> | 3 | ~57.2 | 94 | **756** | **Left back** — high `y` is the left flank |
+>
+> 65:1 and 8:1. Not a marginal call. Consumers of this skill that predate the
+> correction may carry the old names — `gold.pitch_zones` is the authoritative
+> materialisation (`GOLD_LAYER.md` §4.1.7).
 
 ```
 y=0                                                           y=68
 |     Y1      |    Y2     |       Y3        |    Y4     |     Y5      |
-|  wide_left  | hs_left   |     center      | hs_right  | wide_right  |
+| wide_right  | hs_right  |     center      |  hs_left  |  wide_left  |
 0           13.84       24.84             43.16       54.16          68
                ^           ^               ^           ^
           Pen. area    Six-yard box    Six-yard box   Pen. area
@@ -287,14 +304,14 @@ Each zone is identified by a composite key: `X{strip}_{channel_name}`.
 
 ### Full Zone Grid (30 zones)
 
-|  | Y1: wide_left | Y2: half_space_left | Y3: center | Y4: half_space_right | Y5: wide_right |
+|  | Y1: wide_right | Y2: half_space_right | Y3: center | Y4: half_space_left | Y5: wide_left |
 |--|---------------|---------------------|------------|----------------------|----------------|
-| **X1** (0-16.5) | X1_wide_left | X1_half_space_left | X1_center | X1_half_space_right | X1_wide_right |
-| **X2** (16.5-35) | X2_wide_left | X2_half_space_left | X2_center | X2_half_space_right | X2_wide_right |
-| **X3** (35-52.5) | X3_wide_left | X3_half_space_left | X3_center | X3_half_space_right | X3_wide_right |
-| **X4** (52.5-70) | X4_wide_left | X4_half_space_left | X4_center | X4_half_space_right | X4_wide_right |
-| **X5** (70-88.5) | X5_wide_left | X5_half_space_left | X5_center | X5_half_space_right | X5_wide_right |
-| **X6** (88.5-105) | X6_wide_left | X6_half_space_left | X6_center | X6_half_space_right | X6_wide_right |
+| **X1** (0-16.5) | X1_wide_right | X1_half_space_right | X1_center | X1_half_space_left | X1_wide_left |
+| **X2** (16.5-35) | X2_wide_right | X2_half_space_right | X2_center | X2_half_space_left | X2_wide_left |
+| **X3** (35-52.5) | X3_wide_right | X3_half_space_right | X3_center | X3_half_space_left | X3_wide_left |
+| **X4** (52.5-70) | X4_wide_right | X4_half_space_right | X4_center | X4_half_space_left | X4_wide_left |
+| **X5** (70-88.5) | X5_wide_right | X5_half_space_right | X5_center | X5_half_space_left | X5_wide_left |
+| **X6** (88.5-105) | X6_wide_right | X6_half_space_right | X6_center | X6_half_space_left | X6_wide_left |
 
 ### Compact Numeric Notation
 
@@ -319,7 +336,7 @@ zone_61  zone_62  zone_63  zone_64  zone_65
 X_BOUNDARIES = [0, 16.5, 35.0, 52.5, 70.0, 88.5, 105.0]
 Y_BOUNDARIES = [0, 13.84, 24.84, 43.16, 54.16, 68.0]
 
-CHANNEL_NAMES = ['wide_left', 'half_space_left', 'center', 'half_space_right', 'wide_right']
+CHANNEL_NAMES = ['wide_right', 'half_space_right', 'center', 'half_space_left', 'wide_left']
 STRIP_NAMES  = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6']
 
 
@@ -355,11 +372,11 @@ CASE
 END AS x_strip,
 
 CASE
-    WHEN y BETWEEN 0     AND 13.84 THEN 1  -- wide_left
-    WHEN y BETWEEN 13.84 AND 24.84 THEN 2  -- half_space_left
+    WHEN y BETWEEN 0     AND 13.84 THEN 1  -- wide_right
+    WHEN y BETWEEN 13.84 AND 24.84 THEN 2  -- half_space_right
     WHEN y BETWEEN 24.84 AND 43.16 THEN 3  -- center
-    WHEN y BETWEEN 43.16 AND 54.16 THEN 4  -- half_space_right
-    WHEN y BETWEEN 54.16 AND 68.0  THEN 5  -- wide_right
+    WHEN y BETWEEN 43.16 AND 54.16 THEN 4  -- half_space_left
+    WHEN y BETWEEN 54.16 AND 68.0  THEN 5  -- wide_left
 END AS y_channel
 ```
 
@@ -368,7 +385,7 @@ END AS y_channel
 ```javascript
 const X_BOUNDARIES = [0, 16.5, 35.0, 52.5, 70.0, 88.5, 105.0];
 const Y_BOUNDARIES = [0, 13.84, 24.84, 43.16, 54.16, 68.0];
-const CHANNEL_NAMES = ['wide_left', 'half_space_left', 'center', 'half_space_right', 'wide_right'];
+const CHANNEL_NAMES = ['wide_right', 'half_space_right', 'center', 'half_space_left', 'wide_left'];
 const STRIP_NAMES = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6'];
 
 function assignZone(x, y) {
@@ -467,7 +484,7 @@ Each sequence row should include:
 
 ### Zone Transition Matrix
 
-For phase-of-play analysis, build a 30x30 transition matrix counting how often sequences move from one zone to another. This powers questions like: "How often do sequences starting in X2_half_space_left end in X6_center?"
+For phase-of-play analysis, build a 30x30 transition matrix counting how often sequences move from one zone to another. This powers questions like: "How often do sequences starting in X2_half_space_right end in X6_center?"
 
 ### Per-Zone Aggregations
 
@@ -498,7 +515,7 @@ PITCH_WIDTH  = 68
 X_BOUNDARIES  = [0, 16.5, 35.0, 52.5, 70.0, 88.5, 105.0]
 Y_BOUNDARIES  = [0, 13.84, 24.84, 43.16, 54.16, 68.0]
 STRIP_NAMES   = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6']
-CHANNEL_NAMES = ['wide_left', 'half_space_left', 'center', 'half_space_right', 'wide_right']
+CHANNEL_NAMES = ['wide_right', 'half_space_right', 'center', 'half_space_left', 'wide_left']
 N_STRIPS   = 6
 N_CHANNELS = 5
 N_ZONES    = 30

@@ -85,6 +85,53 @@ SHOT_EVENT_TYPES = frozenset({
     'Goal', 'Attempt Saved', 'Miss', 'Post',
 })
 
+# ── Fix A / Fix B support sets (see md/GOLD_SEQUENCES.md §6.3) ────────
+#
+# Both fixes are ON by default as of 16 Aug 2026, after verification on 100
+# matches against two gates: the classifier is deterministic under input
+# shuffling, and no event that belonged to a sequence loses its coverage.
+# Pass --no-fix-a / --no-fix-b to reproduce the pre-fix behaviour for an A/B
+# comparison; do not run a production backfill that way, or the database ends
+# up with two classification generations mixed together.
+#
+# Neither fix ever removes sequence coverage. Fix A changes coverage by
+# exactly zero events — it only re-partitions events between sequences.
+
+# Fix A — events that do NOT open a new sequence even when they belong to a
+# team other than the one that owns the running sequence.  These are
+# deflections, contested duels, and mirror records (the same physical action
+# logged once per team).  Opening a sequence on any of them would break
+# behaviour that is currently correct — in particular a `Ball touch` with
+# outcome 'success' is Opta's "ball simply hit the player unintentionally",
+# i.e. a deflection that does not concede possession.
+PASSIVE_EVENTS = frozenset({
+    'Ball touch', 'Error', 'Challenge', 'Aerial', 'Foul', 'Corner Awarded',
+    'Save', 'Offside provoked', 'Attempted Tackle', 'Penalty faced',
+})
+
+# Fix B — events that may open a sequence when no sequence is running.
+# Deliberately conservative: possession-bearing actions only.  Every member
+# either already opens a sequence under some narrower condition today, or is
+# an unambiguous on-ball action.  Mirror/passive events are excluded so the
+# gap closer cannot manufacture a sequence out of a bookkeeping duplicate.
+ON_BALL_START_EVENTS = frozenset({
+    'Pass', 'Carry', 'Take On', 'Clearance', 'Ball recovery', 'Tackle',
+    'Interception', 'Blocked Pass', 'Keeper pick-up', 'Claim',
+    'Goal', 'Miss', 'Post', 'Attempt Saved',
+})
+
+# Of those, the contested ones only carry possession when they SUCCEED.
+# A `Tackle` with outcome 'failure' means the tackler did *not* win the ball,
+# so opening a sequence for their team there would invent a possession that
+# never happened — 1,342 of them in a 100-match sample before this gate was
+# added.  `Pass` and `Take On` are deliberately absent: a misplaced pass and a
+# failed dribble are both actions by a player who *had* the ball, which is the
+# whole point of the gap closer.
+FIX_B_REQUIRES_SUCCESS = frozenset({
+    'Tackle', 'Interception', 'Blocked Pass', 'Ball recovery',
+    'Keeper pick-up', 'Claim',
+})
+
 # Columns required from silver.events for the classifier
 REQUIRED_COLUMNS = [
     'event_id', 'match_id', 'period', 'minute', 'second',
@@ -160,7 +207,22 @@ def preprocess_for_sequences(df: pd.DataFrame) -> pd.DataFrame:
     # Carries get fractional values (e.g. 42.5 between events 42 and 43),
     # so sorting by json_index preserves correct chronological order
     # for both real and synthesised events.
+    #
+    # event_id is a REQUIRED tiebreaker, not a nicety: 11,766 events share a
+    # json_index with another event in the same match (6,026 Carry, 5,445
+    # Challenge). Without it the order of those pairs is whatever the database
+    # happened to return, and since _is_sequence_start reads prev_row's team,
+    # a Carry/Challenge pair resolving the other way flips the decision. The
+    # classifier was non-deterministic across runs before this was added.
     sort_cols = ['match_id', 'json_index']
+    if 'event_id' in out.columns:
+        sort_cols.append('event_id')
+    else:
+        log.warning(
+            "Column 'event_id' not found — sequence classification will be "
+            "non-deterministic for the %d events that share a json_index.",
+            int(out.duplicated(subset=['match_id', 'json_index'], keep=False).sum()),
+        )
     out = out.sort_values(sort_cols, na_position='last').reset_index(drop=True)
 
     # ── Materialise qualifier flags ───────────────────────────────────
@@ -200,11 +262,23 @@ def _is_sequence_start(
     prev_row: Optional[dict],
     prev_prev_row: Optional[dict] = None,
     in_sequence: bool = False,
+    current_seq_team: Optional[Any] = None,
+    fix_a: bool = True,
+    fix_b: bool = True,
 ) -> bool:
     """
     Determine whether the current event opens a new possession sequence.
 
     Conditions are evaluated in priority order.  The first match wins.
+
+    Parameters
+    ----------
+    current_seq_team : source_team_id owning the running sequence, or None.
+        Only read by Fix A.
+    fix_a, fix_b : bool
+        Opt-in classifier fixes, both default OFF.  With both off this
+        function returns exactly what it returned before they existed —
+        every new branch is guarded and appended after the original ones.
     """
     evt = row['event_type']
     outcome = row['outcome']
@@ -305,6 +379,35 @@ def _is_sequence_start(
         if prev_row is not None and prev_row['source_team_id'] != row['source_team_id']:
             return True
 
+    # ══ Everything below is opt-in and additive ════════════════════════
+    # Reaching here means the original rules all declined.  Neither branch
+    # can therefore suppress a start that would otherwise have happened.
+
+    # ── Fix A: possession changed relative to the SEQUENCE OWNER ───────
+    # The original rules compare each event to its immediate predecessor.
+    # Once an opponent event has been absorbed (a deflection, a duel), every
+    # event after it looks "same team as previous" and the real possession
+    # change is never seen — so an entire opposition attack can end up
+    # stamped with the wrong team.  Compare to the sequence owner instead.
+    #
+    # PASSIVE_EVENTS are exempt: they are the opponent-side events that
+    # legitimately live inside someone else's sequence.
+    if (fix_a
+            and in_sequence
+            and current_seq_team is not None
+            and row['source_team_id'] != current_seq_team
+            and evt not in PASSIVE_EVENTS):
+        return True
+
+    # ── Fix B: gap closer ──────────────────────────────────────────────
+    # No sequence is running and a possession-bearing action occurs.  Today
+    # play can continue for a dozen events with nothing recorded because the
+    # start rules require either a team change or a success outcome.
+    if fix_b and not in_sequence and evt in ON_BALL_START_EVENTS:
+        if evt in FIX_B_REQUIRES_SUCCESS and outcome != 'success':
+            return False
+        return True
+
     return False
 
 
@@ -404,6 +507,8 @@ def _is_sequence_end(
 def classify_possession_sequences(
     df: pd.DataFrame,
     match_id_column: str = 'match_id',
+    fix_a: bool = True,
+    fix_b: bool = True,
 ) -> pd.DataFrame:
     """
     Segment a pre-processed event stream into discrete possession sequences.
@@ -420,6 +525,11 @@ def classify_possession_sequences(
         is_set_piece_pass, is_dead_ball_goal, value_assist.
     match_id_column : str
         Column holding the match identifier.
+    fix_a, fix_b : bool
+        Opt-in classifier fixes (md/GOLD_SEQUENCES.md §6.3), both default
+        OFF.  With both off the output is bit-identical to the shipped
+        classifier.  Both are strictly additive — they can only open extra
+        sequences, never suppress an existing one.
 
     Returns
     -------
@@ -452,6 +562,8 @@ def classify_possession_sequences(
     current_match_id:  Any           = None
     current_event_num: int           = 0
     in_sequence:       bool          = False
+    # source_team_id owning the running sequence — read by Fix A only.
+    current_seq_team:  Any           = None
 
     for idx in range(n):
         row = rows[idx]
@@ -468,6 +580,7 @@ def classify_possession_sequences(
             in_sequence       = False
             current_seq_id    = None
             current_event_num = 0
+            current_seq_team  = None
 
         # ── Meta events: close active sequence, skip stamping ─────────
         if row['event_type'] in META_EVENTS:
@@ -476,6 +589,7 @@ def classify_possession_sequences(
                 in_sequence       = False
                 current_seq_id    = None
                 current_event_num = 0
+                current_seq_team  = None
             continue  # meta events are never stamped with a sequence
 
         # ── Lookup neighbours (same match only) ───────────────────────
@@ -502,7 +616,14 @@ def classify_possession_sequences(
         )
 
         # ── Check sequence start ──────────────────────────────────────
-        if _is_sequence_start(row, prev_row, prev_prev_row=prev_prev_row, in_sequence=in_sequence):
+        if _is_sequence_start(
+            row, prev_row,
+            prev_prev_row=prev_prev_row,
+            in_sequence=in_sequence,
+            current_seq_team=current_seq_team,
+            fix_a=fix_a,
+            fix_b=fix_b,
+        ):
             # Close existing sequence before opening a new one
             if in_sequence and current_seq_id is not None:
                 _mark_prev_end(rows, seq_ends, idx, match_id_column, match_id)
@@ -514,6 +635,7 @@ def classify_possession_sequences(
             )
             current_event_num = 1
             in_sequence       = True
+            current_seq_team  = row['source_team_id']
             seq_starts[idx]   = True
 
         elif in_sequence:
@@ -530,6 +652,7 @@ def classify_possession_sequences(
             in_sequence       = False
             current_seq_id    = None
             current_event_num = 0
+            current_seq_team  = None
 
     # Write results into the DataFrame
     df_result['sequence_id']           = seq_ids
@@ -717,6 +840,8 @@ def populate_silver_sequences(
     match_ids: Optional[List[int]] = None,
     limit: Optional[int] = None,
     batch_size: int = 50,
+    fix_a: bool = True,
+    fix_b: bool = True,
 ) -> Dict[str, int]:
     """
     Step 1 — classify possession sequences and write results to silver.events.
@@ -733,6 +858,8 @@ def populate_silver_sequences(
         incremental loads).
     batch_size : int
         Number of matches to load into memory at a time.
+    fix_a, fix_b : bool
+        Opt-in classifier fixes, both default OFF (md/GOLD_SEQUENCES.md §6.3).
 
     Returns
     -------
@@ -773,7 +900,7 @@ def populate_silver_sequences(
             SELECT {select_cols}
             FROM silver.events
             WHERE match_id = ANY(%s)
-            ORDER BY match_id, json_index
+            ORDER BY match_id, json_index, event_id
         """
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(query, (batch_ids,))
@@ -792,7 +919,9 @@ def populate_silver_sequences(
             continue
 
         # Classify
-        df_classified = classify_possession_sequences(df_clean)
+        df_classified = classify_possession_sequences(
+            df_clean, fix_a=fix_a, fix_b=fix_b,
+        )
 
         # Build update tuples — only rows that belong to a sequence
         mask = df_classified['sequence_id'].notna()
@@ -868,6 +997,17 @@ if __name__ == "__main__":
         help="Matches per batch (default: 50)",
     )
     parser.add_argument(
+        "--no-fix-a", dest="fix_a", action="store_false", default=True,
+        help="Disable Fix A (possession change detected against the sequence "
+             "owner rather than the previous event). A/B comparison only — "
+             "see md/GOLD_SEQUENCES.md 6.3.",
+    )
+    parser.add_argument(
+        "--no-fix-b", dest="fix_b", action="store_false", default=True,
+        help="Disable Fix B (gap closer: open a sequence on any on-ball action "
+             "when none is running). A/B comparison only.",
+    )
+    parser.add_argument(
         "--log-level", default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
         help="Logging verbosity (default: INFO)",
@@ -892,6 +1032,8 @@ if __name__ == "__main__":
             match_ids=args.match_ids,
             limit=args.limit,
             batch_size=args.batch_size,
+            fix_a=args.fix_a,
+            fix_b=args.fix_b,
         )
         print(f"\nDone: {stats}")
     except Exception:

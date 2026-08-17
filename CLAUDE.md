@@ -116,8 +116,8 @@ src/
       db.py                       #   SQL operations
       models.py                   #   Data models
       preflight_squads.py         #   Pre-load checks
-  gold/
-    gold_sequences.py             #   Possession sequence aggregation (WIP)
+  gold/                           # Gold layer — spec in md/GOLD_LAYER.md, DDL in sql/ddl/
+                                  #   (build scripts not written yet; see GOLD_LAYER.md §6)
   scraper/                        # Opta match file scraper (run as module: python -m src.scraper)
     __main__.py                   #   CLI entry point (--headless flag)
     scraper.py                    #   Playwright browser automation: navigates scoresway.com,
@@ -231,10 +231,66 @@ These project-specific skills are registered and should be consulted automatical
 - Foot preference enrichment: `preferred_foot` on `silver.players` (derived from Q20/Q72 counts) and `is_weak_foot` on `silver.events` (standalone script, not part of events pipeline)
 
 ### Immediate Next — Gold Layer
-1. **Sequences & phases of play table** — derive from `silver.events.sequence_id`; classify by phase
-2. **Player aggregation** (`player_season_stats`) — goals, assists, minutes, xG, xA, progressive passes
-3. **Team aggregation** (`team_season_stats`) — W/D/L, GF/GA, xG, PPDA, per-phase breakdowns
-4. **Match summaries** (`match_summaries`) — denormalised match rows for dashboards
+
+The full gold layer is **designed** in `md/GOLD_LAYER.md` (sequences §4.1, teams
+§4.3–4.5, players §4.2/§4.6). Nothing is built yet. Build order is §5; do not
+reorder it.
+
+1. **Sequence tables** — spec §4.1. DDL **applied** (`sql/ddl/gold_sequences.sql`):
+   `gold.sequences`, `gold.sequence_players`, `gold.sequence_phase_segments` and
+   `gold.pitch_zones` (30 rows seeded) exist and are empty. Next:
+   `src/gold/build_sequences.sql` and `src/gold/sequence_phases.py`
+2. **Team aggregation** — `team_match_stats` then `team_season_stats`; depends
+   on the sequence tables *including* the phase pass
+3. **Player aggregation** — `player_match_stats` then `player_season_stats`
+   then `player_season_percentiles`; depends on `team_match_stats` for `padj_*`
+
+**Pitch geometry is settled:** 6 strips × 5 lateral channels = 30 zones, and
+**low `y` is the RIGHT flank** (839:13 on foot preference — GOLD_LAYER §4.6.0).
+The `pitch-guide` skill was inverted and was corrected on 16 Aug 2026; skill,
+GOLD_LAYER and `gold.pitch_zones` now agree. `gold.pitch_zones` is authoritative.
+
+**`sequences.py` — Fix 0 + Fix A + Fix B applied 16 Aug 2026, all 427 matches
+re-classified.** Diagnosis, worked examples and full before/after in
+`md/GOLD_SEQUENCES.md §6`.
+
+- **Fix 0 — determinism.** The classifier was **non-deterministic**: 11,766
+  events share a `json_index` with another event in the same match (6,026
+  `Carry`, 5,445 `Challenge`) and neither the SQL `ORDER BY` nor the pandas sort
+  had a tiebreaker, so a re-run reproduced only 92.7% of stored `sequence_id`s
+  with no code change. `event_id` is now the tiebreaker in both. Verified: a
+  shuffled re-run now reproduces the stored columns exactly.
+- **Fix A** — possession change is detected against the team that owns the
+  running sequence, not the previous event.
+- **Fix B** — gap closer: any on-ball action opens a sequence when none is
+  running (contested events gated on `outcome = 'success'`, so a *failed* tackle
+  never opens one).
+
+Fixes A and B are **ON by default**; `--no-fix-a` / `--no-fix-b` reproduce the
+old behaviour for A/B comparison only — never for a production backfill.
+
+| | before | after |
+|---|---|---|
+| Events with a `sequence_id` | 782,251 | **821,278** |
+| Sequences | 121,850 | **144,763** |
+| Orphaned passes | 22,036 | **301** |
+| Majority-flip sequences | 3,738 | **1,374** |
+| Sequences with 6+ opponent events | 604 | **5** |
+| Goals inside a sequence | — | **1,140 / 1,140** |
+| Single-event sequences | 22,440 | 43,243 |
+| Sequences per team-match | 142.7 | 169.5 |
+
+The last two rows are the intended price of Fix B — recording brief possessions
+that were previously invisible. Two consequences downstream: `possession_pct`
+**must** use the one-second floor (`GOLD_LAYER.md §4.5.0`), and style clustering
+must filter `event_count >= 3` (§4.1.9), which now drops ~40% of rows.
+
+Pre-fix snapshot kept in `silver.sequences_backup_20260816` (901,805 rows) —
+drop it once you are satisfied.
+
+Note `Ball touch` with `outcome = 'success'` is a *deflection* (Opta: "ball
+simply hit the player unintentionally") and correctly does **not** end a
+sequence; do not "fix" that.
 
 ### Future Scope
 - Segunda Division (zero schema changes needed)
