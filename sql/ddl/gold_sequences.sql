@@ -347,6 +347,9 @@ CREATE TABLE IF NOT EXISTS gold.sequence_players (
     last_event_number     SMALLINT NOT NULL,
     is_sequence_starter   BOOLEAN  NOT NULL DEFAULT FALSE,
     is_sequence_finisher  BOOLEAN  NOT NULL DEFAULT FALSE,
+    -- STRICTLY value_assist = '16' (the pass created a Goal). NOT "any
+    -- value_assist" — that would silently fold key passes in. See §4.1.2a.
+    -- Redundant with assists > 0; kept as a filter convenience.
     is_assister           BOOLEAN  NOT NULL DEFAULT FALSE,
 
     -- volume
@@ -360,8 +363,15 @@ CREATE TABLE IF NOT EXISTS gold.sequence_players (
     goals            SMALLINT NOT NULL DEFAULT 0,
     progression_m    REAL,     -- Σ (end_x - x) over their passes and carries
 
+    -- decisive actions (§4.1.2a) — value_assist mapping per §4.6.5
+    assists          SMALLINT NOT NULL DEFAULT 0,  -- value_assist = '16'
+    key_passes       SMALLINT NOT NULL DEFAULT 0,  -- value_assist IN ('13','14','15')
+    shots_on_target  SMALLINT NOT NULL DEFAULT 0,  -- Goal + Attempt Saved w/o Q82
+    big_chances      SMALLINT NOT NULL DEFAULT 0,  -- Q214 on one of their events
+
     -- model values
     xg             REAL,
+    xa             REAL,      -- Σ xg of the shot each of their assist-passes created
     xt             REAL,
     vaep           REAL,
     vaep_offensive REAL,
@@ -369,6 +379,18 @@ CREATE TABLE IF NOT EXISTS gold.sequence_players (
 
     PRIMARY KEY (sequence_id, player_id)
 );
+
+-- Amendment (§4.1.2a): the decisive-action columns were added after this file
+-- was first applied. CREATE TABLE IF NOT EXISTS above no-ops on a database that
+-- already has the pre-amendment table, so add them explicitly. No-ops on a
+-- fresh create.
+ALTER TABLE gold.sequence_players
+    ADD COLUMN IF NOT EXISTS assists         SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS key_passes      SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS shots_on_target SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS big_chances     SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS xa              REAL;
+
 
 CREATE INDEX IF NOT EXISTS sequence_players_season_player_idx
     ON gold.sequence_players (competition_season_id, player_id);

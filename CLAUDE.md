@@ -74,6 +74,12 @@ python -m src.silver.events --raw-root data/raw --no-spadl --no-vaep
 #    step. Auto-discovers matches with no sequence_id.
 python -m src.silver.events.sequences
 python -m src.silver.events.sequences --match-ids 1 2 3
+
+# 7. Gold layer. Full rebuild of all four gold tables in dependency order,
+#    ~5 minutes. MUST run after step 6 — it reads sequence_id. Operating
+#    manual, validation gates and troubleshooting: md/GOLD_LAYER.md §9.
+python -m src.gold.build_gold
+python -m src.gold.build_gold --step team_match_stats
 ```
 
 ### Backfill-only tools
@@ -279,20 +285,42 @@ These project-specific skills are registered and should be consulted automatical
 - Foot preference enrichment: `preferred_foot` on `silver.players` (derived from Q20/Q72 counts) and `is_weak_foot` on `silver.events`. Runs automatically as post-processing inside `python -m src.silver.events`, alongside xG; `foot_preference.py` is the standalone backfill
 - SPADL and VAEP are computed **inline** by the events pipeline (`include_spadl` / `include_vaep`, both default True). `src.silver.events.spadl` and `.vaep` are backfill tools for already-loaded rows, not part of the new-season path
 
-### Immediate Next — Gold Layer
+### Gold Layer — sequence and team tiers are BUILT (5 Sep 2026)
 
-The full gold layer is **designed** in `md/GOLD_LAYER.md` (sequences §4.1, teams
-§4.3–4.5, players §4.2/§4.6). Nothing is built yet. Build order is §5; do not
-reorder it.
+The full gold layer is designed in `md/GOLD_LAYER.md`. **The operating manual is
+`GOLD_LAYER.md §9`** — run order, validation gates, documented deviations and
+troubleshooting. Read that before touching anything in `src/gold/`.
 
-1. **Sequence tables** — spec §4.1. DDL **applied** (`sql/ddl/gold_sequences.sql`):
-   `gold.sequences`, `gold.sequence_players`, `gold.sequence_phase_segments` and
-   `gold.pitch_zones` (30 rows seeded) exist and are empty. Next:
-   `src/gold/build_sequences.sql` and `src/gold/sequence_phases.py`
-2. **Team aggregation** — `team_match_stats` then `team_season_stats`; depends
-   on the sequence tables *including* the phase pass
-3. **Player aggregation** — `player_match_stats` then `player_season_stats`
-   then `player_season_percentiles`; depends on `team_match_stats` for `padj_*`
+Built and populated over all 458 matches:
+
+| Table | Rows |
+|---|---|
+| `gold.sequences` | 155,050 |
+| `gold.sequence_players` | 450,833 |
+| `gold.sequence_phase_segments` | 234,952 |
+| `gold.team_match_stats` | 916 |
+| `gold.team_season_stats` | 60 |
+
+```bash
+# Append to the silver run order every weekend. Full rebuild, ~5 minutes.
+python -m src.silver.events.sequences
+python -m src.gold.build_gold
+```
+
+**Full rebuild is the intended posture, not a fallback** (§9.2): at this volume
+it costs ~5 min and cannot leave rows computed under an old definition beside
+rows computed under a new one. `--match-ids` is for fast iteration while
+developing a query, not for the weekend run.
+
+**Not built yet — player aggregation** (`player_match_stats` →
+`player_season_stats` → `player_season_percentiles`, §5 steps 6–9). It depends
+on `gold.team_match_stats` for `padj_*`, which now exists. Next concrete step is
+`sql/ddl/gold_players.sql` plus the `gold.formation_slot_positions` seed.
+
+**The phase pass is a hard dependency of the team build**, not an enrichment:
+without it `counter_attack_sequences` and `high_transition_sequences` are zero
+league-wide, which looks plausible and is wrong. `build_gold.py` refuses to run
+the team step if `gold.sequence_phase_segments` is empty.
 
 **Pitch geometry is settled:** 6 strips × 5 lateral channels = 30 zones, and
 **low `y` is the RIGHT flank** (839:13 on foot preference — GOLD_LAYER §4.6.0).
