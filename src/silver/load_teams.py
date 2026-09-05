@@ -130,6 +130,17 @@ def write_team_competition_seasons_csv(records: list[dict]) -> list[dict]:
 # Step 3 — Load into PostgreSQL
 # ---------------------------------------------------------------------------
 def load_teams(cur, rows: list[dict]) -> None:
+    """
+    Insert teams that don't yet exist.
+
+    Already-present teams are filtered out in Python rather than left to
+    ON CONFLICT DO NOTHING: silver.teams.country is NOT NULL, and a NOT NULL
+    violation is raised while the tuple is being formed — before the unique
+    index is consulted — so DO NOTHING never gets the chance to swallow it.
+    Since the provider squad feed carries no country, every record arrives with
+    country = None and the whole batch would abort on teams that are already
+    loaded and enriched.
+    """
     sql = """
         INSERT INTO silver.teams (
             source_team_id, name, short_name, abbreviation,
@@ -139,16 +150,37 @@ def load_teams(cur, rows: list[dict]) -> None:
         VALUES %s
         ON CONFLICT (source_team_id) DO NOTHING
     """
+
+    cur.execute("SELECT source_team_id FROM silver.teams")
+    existing = {r[0] for r in cur.fetchall()}
+
+    new_rows = [r for r in rows if r["source_team_id"] not in existing]
+    if not new_rows:
+        print(f"  All {len(rows)} team(s) already present — nothing to insert")
+        return
+
+    # country is NOT NULL and is not in the provider feed; it must be supplied
+    # by hand (as must city, though that one is nullable).
+    missing = [r for r in new_rows if not r.get("country")]
+    if missing:
+        print(f"\n  [ERROR] {len(missing)} new team(s) have no country, which is NOT NULL:")
+        for r in missing:
+            print(f"    - {r['source_team_id']}  {r['name']}")
+        raise ValueError(
+            "New teams need country (and ideally city) filled in manually before loading. "
+            "Insert them directly into silver.teams, then re-run this script."
+        )
+
     values = [
         (
             r["source_team_id"], r["name"], r["short_name"], r["abbreviation"],
             r["stadium_name"], r["source_venue_id"], r["country"], r["city"],
             r["stadium_capacity"], r["founded_year"],
         )
-        for r in rows
+        for r in new_rows
     ]
     execute_values(cur, sql, values)
-    print(f"  Inserted/skipped {len(values)} rows into teams")
+    print(f"  Inserted {len(values)} new row(s) into teams ({len(rows) - len(new_rows)} already present)")
 
 
 def load_team_competition_seasons(cur, rows: list[dict]) -> None:
