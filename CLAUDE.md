@@ -26,26 +26,62 @@ Football analytics data platform — collecting, structuring, and analysing La L
 
 All scripts use `FOOTBALL_DB_DSN` from `.env` (loaded via `python-dotenv`). Data files live in `data/raw/{competition_code}/{season_code}/matches/` and `data/raw/{competition_code}/{season_code}/squads/` (gitignored).
 
-```bash
-# Load matches into silver.matches
-python src/silver/load_matches.py
+### Full run order — new season, or new matchdays of an existing one
 
-# Load teams
+Every step below is idempotent and scans the whole `data/raw` tree, so re-running
+the sequence over already-loaded seasons is safe and cheap. **Run them in this
+order** — each resolves FKs written by the one before it.
+
+```bash
+# 0. Scrape raw Opta match files (interactive, Playwright).
+#    Prompts for the results URL, league code (PRD) and season code (2026-2027);
+#    creates data/raw/{league}/{season}/matches/ itself. Squad JSON is downloaded
+#    by hand into data/raw/{league}/{season}/squads/{YYYY-MM-DD}/{team_id}.json
+python -m src.scraper
+python -m src.scraper --headless
+
+# 1. Seed silver.seasons + silver.competition_seasons from the raw match files.
+#    MUST run before load_matches for a new season — every other loader resolves
+#    competition_season_id via source_stage_id, and if the anchor row is missing
+#    load_matches inserts nothing and reports it as "skipped", with no error.
+python src/silver/load_competition_seasons.py
+python src/silver/load_competition_seasons.py --dry-run
+
+# 2. Teams. parse_teams_bronze reads the EARLIEST squad snapshot of each season
+#    and writes data/teams/{COMP}_{season}.json; load_teams then loads
+#    teams + team_competition_seasons.
+python src/bronze/parse_teams_bronze.py
 python src/silver/load_teams.py
 
-# Load match lineups (5-pass strategy)
-python src/silver/load_match_lineups.py
-
-# Load squads (diff strategy)
+# 3. Squads (diff strategy) — creates silver.players, which match_lineups needs.
 python -m src.silver.squads --raw-root data/raw
 
-# Load events (full pipeline: parse + carries + xT)
+# 4. Matches, then lineups (5-pass strategy).
+python src/silver/load_matches.py
+python src/silver/load_match_lineups.py
+
+# 5. Events. This is the FULL pipeline: parse + carries + xT + SPADL + VAEP,
+#    then foot-preference enrichment and xG as post-processing. For a newly
+#    loaded match nothing else needs running — see the note below.
 python -m src.silver.events --raw-root data/raw
 
 # Events with options
 python -m src.silver.events --raw-root data/raw --dry-run
 python -m src.silver.events --raw-root data/raw --no-carries --no-xt
+python -m src.silver.events --raw-root data/raw --no-spadl --no-vaep
 
+# 6. Possession sequences. NOT part of the events pipeline — always a separate
+#    step. Auto-discovers matches with no sequence_id.
+python -m src.silver.events.sequences
+python -m src.silver.events.sequences --match-ids 1 2 3
+```
+
+### Backfill-only tools
+
+These re-derive columns on rows that are **already loaded**. They are not part of
+the new-season path — step 5 above already populates all of them.
+
+```bash
 # Enrich preferred_foot (players) + is_weak_foot (events)
 python src/silver/foot_preference.py
 python src/silver/foot_preference.py --dry-run
@@ -56,15 +92,25 @@ python -m src.silver.events.vaep
 python -m src.silver.events.vaep --match-ids 1 2 3
 # NOTE: vaep only discovers matches WHERE vaep_value IS NULL. To re-score after a
 # model change, NULL the three vaep_* columns first or the run silently does nothing.
-
-# Scrape raw Opta match event files from scoresway.com (interactive, Playwright)
-python -m src.scraper
-python -m src.scraper --headless
 ```
 
+**Load order matters**: `competitions -> seasons, competition_seasons -> teams, players -> matches -> match_lineups, events -> sequences`
 
+### New-season gotchas
 
-**Load order matters**: `competitions, seasons -> competition_seasons -> teams, players -> matches -> match_lineups, events`
+- **`silver.teams.country` is `NOT NULL` and is not in the provider squad feed.**
+  `load_teams.py` therefore refuses to insert a new club until `country` is
+  supplied by hand (`city` too — nullable, but filled for every existing row).
+  It raises a named error listing the offending clubs. Insert them directly into
+  `silver.teams`, then re-run. Do **not** try to lean on `ON CONFLICT DO NOTHING`
+  here: a `NOT NULL` violation is raised while the tuple is formed, *before* the
+  unique index is consulted, so `DO NOTHING` never sees it and the whole batch
+  aborts — including on clubs that were already loaded and enriched.
+- **`num_teams` / `total_matchdays` / `promo_spots` / `relegation_spots`** are not
+  in the feed either. `load_competition_seasons.py` leaves them NULL; set them by
+  hand if you need them.
+- **`status` is derived from the date window at insert time only.** An existing
+  row is never updated, so a season will not flip to `completed` on its own.
 
 ---
 
@@ -93,6 +139,7 @@ src/
   bronze/
     parse_teams_bronze.py         # Raw team data parsing
   silver/
+    load_competition_seasons.py   # Seeds seasons + competition_seasons (run FIRST for a new season)
     load_matches.py               # Match ingestion (standalone script)
     load_match_lineups.py         # 5-pass lineup ingestion (standalone script)
     load_teams.py                 # Team ingestion (standalone script)
@@ -218,17 +265,19 @@ These project-specific skills are registered and should be consulted automatical
 
 ## Current State
 
-> Last updated: 11 August 2026
+> Last updated: 5 September 2026
 
 ### Done
-- Silver schema fully designed and operational for La Liga 2025/26 — all 10 tables
+- Silver schema fully designed and operational for La Liga — all 10 tables
+- **Seasons loaded: 2024/25 (47 matches), 2025/26 (380), 2026/27 (31 and counting) — 458 total.** 2026/27 was loaded on 5 Sep 2026 through matchday 3 plus one early matchday-6 fixture; re-run the full order in "How to Run Pipelines" to pick up later matchdays
 - Data ingestion pipelines built for matches, lineups, squads, teams, players, events (carries + xT + SPADL mapping)
 - SPADL columns (`spadl_type_id`, `spadl_result_id`, `spadl_bodypart_id`) added to `silver.events`; backfill via `python -m src.silver.events.spadl`
-- **VAEP is live.** `vaep_value` / `vaep_offensive` / `vaep_defensive` are populated across all 427 matches / 780,395 events. The previously shipped model was degenerate (`scores` AUC excluding goal actions **0.5222** — a coin flip; it had learned "was this a successful shot?"). It was retrained from scratch in a companion repo, Platt-calibrated on held-out Opta, and integrated on 11 Aug 2026: **0.7465** AUC excluding goal actions, `corr(vaep_offensive, xt)` **−0.1942 → +0.2605**. Backfill via `python -m src.silver.events.vaep`; consult the **`vaep-model`** skill before touching `vaep.py`, `_build_features` or `models/vaep/*.json`
+- **VAEP is live.** `vaep_value` / `vaep_offensive` / `vaep_defensive` are populated across all 458 matches (840,540 of 970,623 events; the rest are action types SPADL does not map). The previously shipped model was degenerate (`scores` AUC excluding goal actions **0.5222** — a coin flip; it had learned "was this a successful shot?"). It was retrained from scratch in a companion repo, Platt-calibrated on held-out Opta, and integrated on 11 Aug 2026: **0.7465** AUC excluding goal actions, `corr(vaep_offensive, xt)` **−0.1942 → +0.2605**. Backfill via `python -m src.silver.events.vaep`; consult the **`vaep-model`** skill before touching `vaep.py`, `_build_features` or `models/vaep/*.json`
 - Possession sequence classifier implemented (`sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number`)
 - Squad diff strategy live with `squad_snapshot_log` audit table
 - Shot enrichment columns: `shot_play_pattern` (7-value enum from Q22/23/24/25/26/160/9) and `first_time` (bool from Q328)
-- Foot preference enrichment: `preferred_foot` on `silver.players` (derived from Q20/Q72 counts) and `is_weak_foot` on `silver.events` (standalone script, not part of events pipeline)
+- Foot preference enrichment: `preferred_foot` on `silver.players` (derived from Q20/Q72 counts) and `is_weak_foot` on `silver.events`. Runs automatically as post-processing inside `python -m src.silver.events`, alongside xG; `foot_preference.py` is the standalone backfill
+- SPADL and VAEP are computed **inline** by the events pipeline (`include_spadl` / `include_vaep`, both default True). `src.silver.events.spadl` and `.vaep` are backfill tools for already-loaded rows, not part of the new-season path
 
 ### Immediate Next — Gold Layer
 
@@ -252,7 +301,10 @@ GOLD_LAYER and `gold.pitch_zones` now agree. `gold.pitch_zones` is authoritative
 
 **`sequences.py` — Fix 0 + Fix A + Fix B applied 16 Aug 2026, all 427 matches
 re-classified.** Diagnosis, worked examples and full before/after in
-`md/GOLD_SEQUENCES.md §6`.
+`md/GOLD_SEQUENCES.md §6`. The before/after table below is that 427-match
+snapshot and is kept as the historical record; the 2026/27 matches loaded on
+5 Sep 2026 were classified with the same fixes, bringing the current totals to
+**458 matches / 884,330 events with a `sequence_id` / 155,050 sequences**.
 
 - **Fix 0 — determinism.** The classifier was **non-deterministic**: 11,766
   events share a `json_index` with another event in the same match (6,026
