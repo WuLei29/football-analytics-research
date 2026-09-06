@@ -169,8 +169,16 @@ src/
       db.py                       #   SQL operations
       models.py                   #   Data models
       preflight_squads.py         #   Pre-load checks
-  gold/                           # Gold layer — spec in md/GOLD_LAYER.md, DDL in sql/ddl/
-                                  #   (build scripts not written yet; see GOLD_LAYER.md §6)
+  gold/                           # Gold layer — spec in md/GOLD_LAYER.md, MANUAL in §9
+    build_gold.py                 #   Runner; enforces the §5 dependency order (python -m src.gold.build_gold)
+    build_sequences.sql           #   gold.sequences + gold.sequence_players
+    phases.py                     #   Zone x tempo state machine (pure transform, no SQL)
+    sequence_phases.py            #   Phase segments + the eleven has_* flags
+    build_team_match_stats.sql    #   gold.team_match_stats
+    build_team_season_stats.sql   #   gold.team_season_stats (+ league_position pass)
+    build_player_match_stats.sql  #   gold.player_match_stats
+    build_player_season_stats.sql #   gold.player_season_stats (+ vaep_rank_in_team pass)
+    build_player_percentiles.sql  #   gold.player_season_percentiles
   scraper/                        # Opta match file scraper (run as module: python -m src.scraper)
     __main__.py                   #   CLI entry point (--headless flag)
     scraper.py                    #   Playwright browser automation: navigates scoresway.com,
@@ -285,7 +293,7 @@ These project-specific skills are registered and should be consulted automatical
 - Foot preference enrichment: `preferred_foot` on `silver.players` (derived from Q20/Q72 counts) and `is_weak_foot` on `silver.events`. Runs automatically as post-processing inside `python -m src.silver.events`, alongside xG; `foot_preference.py` is the standalone backfill
 - SPADL and VAEP are computed **inline** by the events pipeline (`include_spadl` / `include_vaep`, both default True). `src.silver.events.spadl` and `.vaep` are backfill tools for already-loaded rows, not part of the new-season path
 
-### Gold Layer — sequence and team tiers are BUILT (5 Sep 2026)
+### Gold Layer — COMPLETE: sequences, teams and players (5 Sep 2026)
 
 The full gold layer is designed in `md/GOLD_LAYER.md`. **The operating manual is
 `GOLD_LAYER.md §9`** — run order, validation gates, documented deviations and
@@ -300,6 +308,10 @@ Built and populated over all 458 matches:
 | `gold.sequence_phase_segments` | 234,952 |
 | `gold.team_match_stats` | 916 |
 | `gold.team_season_stats` | 60 |
+| `gold.player_match_stats` | 14,394 |
+| `gold.player_season_stats` | 1,464 |
+| `gold.player_season_percentiles` | 9,735 |
+| `gold.formation_slot_positions` | 209 (seeded, generated) |
 
 ```bash
 # Append to the silver run order every weekend. Full rebuild, ~5 minutes.
@@ -312,15 +324,26 @@ it costs ~5 min and cannot leave rows computed under an old definition beside
 rows computed under a new one. `--match-ids` is for fast iteration while
 developing a query, not for the weekend run.
 
-**Not built yet — player aggregation** (`player_match_stats` →
-`player_season_stats` → `player_season_percentiles`, §5 steps 6–9). It depends
-on `gold.team_match_stats` for `padj_*`, which now exists. Next concrete step is
-`sql/ddl/gold_players.sql` plus the `gold.formation_slot_positions` seed.
-
 **The phase pass is a hard dependency of the team build**, not an enrichment:
 without it `counter_attack_sequences` and `high_transition_sequences` are zero
 league-wide, which looks plausible and is wrong. `build_gold.py` refuses to run
 the team step if `gold.sequence_phase_segments` is empty.
+
+**Player position comes from the Opta formation slot, not from
+`match_lineups.position`** (which is `SUB` for every substitute) or
+`players.position_raw` (4 values only). `gold.formation_slot_positions` maps
+`(team_formation, formation_position) -> position, position_group` and is
+**generated** from the measured mean `(x, y)` of each slot — regeneration
+procedure and validation assertions in `GOLD_LAYER.md §9.6 deviation 10` and
+gate G14. The build fails loudly on an unmapped slot rather than emitting a
+NULL position.
+
+**Two traps that will bite anyone extending this** (both in §9.5):
+`sequence_number` is per **team**, not per match — ordering a match by it ties
+every value and silently corrupts any `lag()`/`lead()`; and the percentile
+build reads metrics via `to_jsonb(row) ->> metric`, so a typo in
+`gold.percentile_metrics` yields NULL rather than an error. Gates G10 and G12
+exist to catch exactly these.
 
 **Pitch geometry is settled:** 6 strips × 5 lateral channels = 30 zones, and
 **low `y` is the RIGHT flank** (839:13 on foot preference — GOLD_LAYER §4.6.0).

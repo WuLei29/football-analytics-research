@@ -42,10 +42,16 @@ DDL_DIR = PROJECT_ROOT / "sql" / "ddl"
 
 # Applied in this order: functions and pitch zones before anything that uses
 # them, team tables last. Each file is idempotent.
+SEED_DIR = PROJECT_ROOT / "sql" / "seed"
+
 DDL_FILES = [
     DDL_DIR / "gold_functions.sql",
     DDL_DIR / "gold_sequences.sql",
     DDL_DIR / "gold_teams.sql",
+    DDL_DIR / "gold_players.sql",
+    # Seeded reference data, not a build step: it changes only when a new
+    # formation id appears in the data (§5).
+    SEED_DIR / "formation_slot_positions.sql",
 ]
 
 # The §5 dependency order. Do not reorder.
@@ -55,6 +61,9 @@ STEP_ORDER = [
     "sequence_phases",
     "team_match_stats",
     "team_season_stats",
+    "player_match_stats",
+    "player_season_stats",
+    "player_percentiles",
 ]
 
 
@@ -123,6 +132,59 @@ def _check_team_season_stats(cur) -> str | None:
     return None
 
 
+def _check_player_match_stats(cur) -> str | None:
+    if _count(cur, "gold.team_match_stats") == 0:
+        return (
+            "gold.team_match_stats is empty. The player build reads it for "
+            "match context and for the opponent possession share that every "
+            "padj_* column depends on (§4.6.14). Run --step team_match_stats."
+        )
+    if _count(cur, "gold.formation_slot_positions") == 0:
+        return (
+            "gold.formation_slot_positions is empty. Apply "
+            "sql/seed/formation_slot_positions.sql (the ddl step does this)."
+        )
+    # §5: "fail loudly on an unmapped (team_formation, formation_position) pair
+    # rather than silently emitting a NULL position". A NULL position would
+    # drop the player out of every percentile peer set without an error.
+    cur.execute(
+        """
+        SELECT DISTINCT ml.team_formation, ml.formation_position
+        FROM silver.match_lineups ml
+        LEFT JOIN gold.formation_slot_positions f
+          ON f.team_formation     = ml.team_formation
+         AND f.formation_position = ml.formation_position
+        WHERE ml.minute_in IS NOT NULL
+          AND ml.formation_position IS NOT NULL
+          AND f.position IS NULL
+        ORDER BY 1, 2
+        """
+    )
+    unmapped = cur.fetchall()
+    if unmapped:
+        pairs = ", ".join(f"formation {f} slot {s}" for f, s in unmapped[:10])
+        return (
+            f"{len(unmapped)} unmapped formation slot(s): {pairs}. "
+            "Add them to sql/seed/formation_slot_positions.sql "
+            "(regeneration procedure in GOLD_LAYER.md §9.6 deviation 11)."
+        )
+    return None
+
+
+def _check_player_season_stats(cur) -> str | None:
+    if _count(cur, "gold.player_match_stats") == 0:
+        return "gold.player_match_stats is empty. Run --step player_match_stats first."
+    return None
+
+
+def _check_player_percentiles(cur) -> str | None:
+    if _count(cur, "gold.player_season_stats") == 0:
+        return "gold.player_season_stats is empty. Run --step player_season_stats first."
+    if _count(cur, "gold.percentile_metrics") == 0:
+        return "gold.percentile_metrics is empty. Re-run the ddl step."
+    return None
+
+
 # ───────────────────────────────────────────────────────────────────────────
 # Steps
 # ───────────────────────────────────────────────────────────────────────────
@@ -188,12 +250,56 @@ def step_team_season_stats(conn, args) -> str:
     return f"gold.team_season_stats {n:,} rows across {len(season_ids)} season(s)"
 
 
+def step_player_match_stats(conn, args) -> str:
+    params = {"match_ids": args.match_ids}
+    with conn.cursor() as cur:
+        _run_sql_file(cur, SQL_DIR / "build_player_match_stats.sql", params)
+        n = _count(cur, "gold.player_match_stats")
+    conn.commit()
+    return f"gold.player_match_stats {n:,} rows"
+
+
+def _season_ids(cur, args) -> list[int]:
+    if args.competition_season_id is not None:
+        return [args.competition_season_id]
+    cur.execute(
+        "SELECT DISTINCT competition_season_id "
+        "FROM silver.team_competition_seasons ORDER BY 1"
+    )
+    return [r[0] for r in cur.fetchall()]
+
+
+def step_player_season_stats(conn, args) -> str:
+    with conn.cursor() as cur:
+        season_ids = _season_ids(cur, args)
+        sql = (SQL_DIR / "build_player_season_stats.sql").read_text(encoding="utf-8")
+        for cs_id in season_ids:
+            cur.execute(sql, {"cs_id": cs_id})
+        n = _count(cur, "gold.player_season_stats")
+    conn.commit()
+    return f"gold.player_season_stats {n:,} rows across {len(season_ids)} season(s)"
+
+
+def step_player_percentiles(conn, args) -> str:
+    with conn.cursor() as cur:
+        season_ids = _season_ids(cur, args)
+        sql = (SQL_DIR / "build_player_percentiles.sql").read_text(encoding="utf-8")
+        for cs_id in season_ids:
+            cur.execute(sql, {"cs_id": cs_id})
+        n = _count(cur, "gold.player_season_percentiles")
+    conn.commit()
+    return f"gold.player_season_percentiles {n:,} rows"
+
+
 STEPS = {
     "ddl": (step_ddl, None),
     "sequences": (step_sequences, _check_sequences),
     "sequence_phases": (step_sequence_phases, _check_sequence_phases),
     "team_match_stats": (step_team_match_stats, _check_team_match_stats),
     "team_season_stats": (step_team_season_stats, _check_team_season_stats),
+    "player_match_stats": (step_player_match_stats, _check_player_match_stats),
+    "player_season_stats": (step_player_season_stats, _check_player_season_stats),
+    "player_percentiles": (step_player_percentiles, _check_player_percentiles),
 }
 
 
