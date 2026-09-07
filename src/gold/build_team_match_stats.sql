@@ -272,9 +272,18 @@ event_agg AS (
                         )::smallint AS aerials_won,
         count(*) FILTER (WHERE e.event_type = 'Aerial' AND e.outcome = 'failure'
                         )::smallint AS aerials_lost,
-        count(*) FILTER (WHERE e.event_type IN ('Challenge','50/50')
+        -- Ground + aerial duels. The original definition was `Challenge` +
+        -- `50/50`, which can only ever count zero wins: Opta emits no `50/50`
+        -- on this feed, and a `Challenge` IS the record of being dribbled past,
+        -- so all 6,998 of them carry outcome = 'failure'. Tackle and Aerial
+        -- are the two contested events that carry both outcomes, so the pair
+        -- is symmetric and duels_won + duels_lost is duels contested.
+        -- Note this makes duels_won == tackles_won + aerials_won by
+        -- construction; the columns are kept separate because the season
+        -- profile reads them as different rows.
+        count(*) FILTER (WHERE e.event_type IN ('Tackle','Aerial')
                            AND e.outcome = 'success')::smallint AS duels_won,
-        count(*) FILTER (WHERE e.event_type IN ('Challenge','50/50')
+        count(*) FILTER (WHERE e.event_type IN ('Tackle','Aerial')
                            AND e.outcome = 'failure')::smallint AS duels_lost,
         -- Foul is a mirror pair: 'failure' is the foul COMMITTED, 'success'
         -- the foul WON. Reversing these inverts both columns.
