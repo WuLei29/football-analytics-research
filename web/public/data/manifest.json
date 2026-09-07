@@ -1,0 +1,66 @@
+{
+  "default": {
+    "season": "2026-27",
+    "team": "espanyol"
+  },
+  "generated_at": "2026-09-07T16:37:17Z",
+  "schema_version": 1,
+  "seasons": [
+    {
+      "competition_code": "PRD",
+      "competition_name": "Primera División",
+      "competition_season_id": 9,
+      "first_match_date": "2026-08-15",
+      "label": "2026/2027",
+      "last_matchday_loaded": 6,
+      "league_complete": false,
+      "matchdays_complete": 3,
+      "matchdays_scheduled": 38,
+      "num_teams": 20,
+      "slug": "2026-27",
+      "through_match_date": "2026-09-03",
+      "tier_level": 1
+    },
+    {
+      "competition_code": "PRD",
+      "competition_name": "Primera División",
+      "competition_season_id": 1,
+      "first_match_date": "2025-08-15",
+      "label": "2025/2026",
+      "last_matchday_loaded": 38,
+      "league_complete": true,
+      "matchdays_complete": 38,
+      "matchdays_scheduled": 38,
+      "num_teams": 20,
+      "slug": "2025-26",
+      "through_match_date": "2026-05-24",
+      "tier_level": 1
+    }
+  ],
+  "source": {
+    "metrics_note": "derived_by_author",
+    "provider": "Opta"
+  },
+  "teams": [
+    {
+      "abbreviation": "ESP",
+      "city": "Barcelona",
+      "name": "Reial Club Deportiu Espanyol de Barcelona",
+      "seasons": [
+        {
+          "is_final": false,
+          "matches_played": 3,
+          "slug": "2026-27"
+        },
+        {
+          "is_final": true,
+          "matches_played": 38,
+          "slug": "2025-26"
+        }
+      ],
+      "short_name": "Espanyol",
+      "slug": "espanyol",
+      "team_id": 8
+    }
+  ]
+}

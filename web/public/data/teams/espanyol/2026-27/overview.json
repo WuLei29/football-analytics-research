@@ -1,0 +1,331 @@
+{
+  "generated_at": "2026-09-07T16:37:17Z",
+  "kpis": [
+    {
+      "key": "points",
+      "peer_n": 20,
+      "rank": 12,
+      "secondary": {
+        "key": "points_per_match",
+        "value": 1.0
+      },
+      "unit": "pts",
+      "value": 3
+    },
+    {
+      "key": "xg_difference",
+      "peer_n": 20,
+      "rank": 15,
+      "secondary": {
+        "key": "xg_difference_per_match",
+        "value": -0.5
+      },
+      "unit": "xG",
+      "value": -1.5
+    },
+    {
+      "key": "possession_pct",
+      "peer_n": 20,
+      "rank": 14,
+      "secondary": null,
+      "unit": "%",
+      "value": 45.6
+    },
+    {
+      "key": "ppda",
+      "peer_n": 20,
+      "rank": 13,
+      "secondary": null,
+      "unit": null,
+      "value": 16.3
+    },
+    {
+      "key": "set_piece_goals_for",
+      "peer_n": 20,
+      "rank": 3,
+      "secondary": {
+        "key": "set_piece_goal_share",
+        "value": 20.0
+      },
+      "unit": null,
+      "value": 1
+    }
+  ],
+  "leaders": [
+    {
+      "key": "goals",
+      "rows": [
+        {
+          "name": "Roberto Fernández",
+          "player_id": 2359,
+          "position_group": "ST",
+          "shirt_number": 9,
+          "value": 3
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 1
+        },
+        {
+          "name": "Cala",
+          "player_id": 4785,
+          "position_group": "W",
+          "shirt_number": 22,
+          "value": 1
+        },
+        {
+          "name": "Marko Dmitrović",
+          "player_id": 2373,
+          "position_group": "GK",
+          "shirt_number": 13,
+          "value": 0
+        },
+        {
+          "name": "Omar El Hilali Khayat",
+          "player_id": 2363,
+          "position_group": "RB",
+          "shirt_number": 23,
+          "value": 0
+        },
+        {
+          "name": "Roger Hinojo Estrada",
+          "player_id": 2375,
+          "position_group": "LB",
+          "shirt_number": 21,
+          "value": 0
+        }
+      ],
+      "unit": null
+    },
+    {
+      "key": "xt_per_90",
+      "rows": [
+        {
+          "name": "Rafel Bauzà Sureda",
+          "player_id": 2372,
+          "position_group": "W",
+          "shirt_number": 26,
+          "value": 0.67
+        },
+        {
+          "name": "Francisco Javier Hernández Coarasa",
+          "player_id": 2355,
+          "position_group": "MID",
+          "shirt_number": 28,
+          "value": 0.56
+        },
+        {
+          "name": "Omar El Hilali Khayat",
+          "player_id": 2363,
+          "position_group": "RB",
+          "shirt_number": 23,
+          "value": 0.51
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 0.45
+        },
+        {
+          "name": "Eduardo Expósito Jaén",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 0.3
+        },
+        {
+          "name": "Cala",
+          "player_id": 4785,
+          "position_group": "W",
+          "shirt_number": 22,
+          "value": 0.29
+        }
+      ],
+      "unit": null
+    },
+    {
+      "key": "progressive_passes",
+      "rows": [
+        {
+          "name": "Marko Dmitrović",
+          "player_id": 2373,
+          "position_group": "GK",
+          "shirt_number": 13,
+          "value": 39
+        },
+        {
+          "name": "Roger Hinojo Estrada",
+          "player_id": 2375,
+          "position_group": "LB",
+          "shirt_number": 21,
+          "value": 32
+        },
+        {
+          "name": "Omar El Hilali Khayat",
+          "player_id": 2363,
+          "position_group": "RB",
+          "shirt_number": 23,
+          "value": 30
+        },
+        {
+          "name": "Unai Núñez Gestoso",
+          "player_id": 2339,
+          "position_group": "CB",
+          "shirt_number": 14,
+          "value": 23
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 22
+        },
+        {
+          "name": "Eduardo Expósito Jaén",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 22
+        }
+      ],
+      "unit": null
+    },
+    {
+      "key": "carries_into_final_third",
+      "rows": [
+        {
+          "name": "Francisco Javier Hernández Coarasa",
+          "player_id": 2355,
+          "position_group": "MID",
+          "shirt_number": 28,
+          "value": 9
+        },
+        {
+          "name": "Cala",
+          "player_id": 4785,
+          "position_group": "W",
+          "shirt_number": 22,
+          "value": 5
+        },
+        {
+          "name": "Roger Hinojo Estrada",
+          "player_id": 2375,
+          "position_group": "LB",
+          "shirt_number": 21,
+          "value": 4
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 4
+        },
+        {
+          "name": "Eduardo Expósito Jaén",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 4
+        },
+        {
+          "name": "Roberto Fernández",
+          "player_id": 2359,
+          "position_group": "ST",
+          "shirt_number": 9,
+          "value": 2
+        }
+      ],
+      "unit": null
+    }
+  ],
+  "matches": [
+    {
+      "date": "2026-08-16",
+      "goals_against": 0,
+      "goals_for": 3,
+      "is_home": true,
+      "match_id": 1543,
+      "matchday": 1,
+      "opponent_abbr": "LEV",
+      "opponent_name": "Levante UD",
+      "opponent_short_name": "Levante",
+      "opponent_team_id": 11,
+      "result": "W",
+      "xg_against": 0.18,
+      "xg_for": 2.1,
+      "xt_against": 3.121,
+      "xt_for": 3.572
+    },
+    {
+      "date": "2026-08-22",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 1553,
+      "matchday": 2,
+      "opponent_abbr": "RMA",
+      "opponent_name": "Real Madrid CF",
+      "opponent_short_name": "Real Madrid",
+      "opponent_team_id": 16,
+      "result": "L",
+      "xg_against": 2.42,
+      "xg_for": 0.86,
+      "xt_against": 4.203,
+      "xt_for": 3.034
+    },
+    {
+      "date": "2026-08-29",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 1567,
+      "matchday": 3,
+      "opponent_abbr": "RSO",
+      "opponent_name": "Real Sociedad de Fútbol",
+      "opponent_short_name": "Real Sociedad",
+      "opponent_team_id": 17,
+      "result": "L",
+      "xg_against": 2.49,
+      "xg_for": 0.66,
+      "xt_against": 4.286,
+      "xt_for": 2.201
+    }
+  ],
+  "record": {
+    "drawn": 0,
+    "form_last_5": "LLW",
+    "goals_against": 4,
+    "goals_for": 5,
+    "league_position": 12,
+    "lost": 2,
+    "points": 3,
+    "points_per_match": 1.0,
+    "won": 1
+  },
+  "rolling": {
+    "points": [],
+    "window": 5
+  },
+  "schema_version": 1,
+  "season": {
+    "is_final": false,
+    "label": "2026/2027",
+    "matchdays_complete": 3,
+    "matchdays_scheduled": 38,
+    "matches_played": 3,
+    "slug": "2026-27"
+  },
+  "team": {
+    "abbr": "ESP",
+    "short_name": "Espanyol",
+    "slug": "espanyol",
+    "team_id": 8
+  }
+}

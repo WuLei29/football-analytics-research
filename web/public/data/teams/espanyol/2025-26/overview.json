@@ -1,0 +1,1097 @@
+{
+  "generated_at": "2026-09-07T16:37:17Z",
+  "kpis": [
+    {
+      "key": "points",
+      "peer_n": 20,
+      "rank": 11,
+      "secondary": {
+        "key": "points_per_match",
+        "value": 1.2
+      },
+      "unit": "pts",
+      "value": 46
+    },
+    {
+      "key": "xg_difference",
+      "peer_n": 20,
+      "rank": 14,
+      "secondary": {
+        "key": "xg_difference_per_match",
+        "value": -0.2
+      },
+      "unit": "xG",
+      "value": -8.3
+    },
+    {
+      "key": "possession_pct",
+      "peer_n": 20,
+      "rank": 19,
+      "secondary": null,
+      "unit": "%",
+      "value": 41.7
+    },
+    {
+      "key": "ppda",
+      "peer_n": 20,
+      "rank": 12,
+      "secondary": null,
+      "unit": null,
+      "value": 15.3
+    },
+    {
+      "key": "set_piece_goals_for",
+      "peer_n": 20,
+      "rank": 5,
+      "secondary": {
+        "key": "set_piece_goal_share",
+        "value": 25.6
+      },
+      "unit": null,
+      "value": 11
+    }
+  ],
+  "leaders": [
+    {
+      "key": "goals",
+      "rows": [
+        {
+          "name": "Enrique García Martínez",
+          "player_id": 2353,
+          "position_group": "ST",
+          "shirt_number": 19,
+          "value": 8
+        },
+        {
+          "name": "Roberto Fernández",
+          "player_id": 2359,
+          "position_group": "ST",
+          "shirt_number": 9,
+          "value": 7
+        },
+        {
+          "name": "Pere Milla Peña",
+          "player_id": 2346,
+          "position_group": "W",
+          "shirt_number": 11,
+          "value": 7
+        },
+        {
+          "name": "Carlos Romero Serrano",
+          "player_id": 2358,
+          "position_group": "LB",
+          "shirt_number": 22,
+          "value": 6
+        },
+        {
+          "name": "Leandro Daniel Cabrera Sasía",
+          "player_id": 2360,
+          "position_group": "CB",
+          "shirt_number": 6,
+          "value": 4
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 2
+        }
+      ],
+      "unit": null
+    },
+    {
+      "key": "xt_per_90",
+      "rows": [
+        {
+          "name": "Eduardo Expósito Jaén",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 1.43
+        },
+        {
+          "name": "Cyril Ngonge",
+          "player_id": 2370,
+          "position_group": "W",
+          "shirt_number": 16,
+          "value": 1.04
+        },
+        {
+          "name": "Luca Warrick Daeovie Koleosho",
+          "player_id": 2352,
+          "position_group": "W",
+          "shirt_number": 16,
+          "value": 0.67
+        },
+        {
+          "name": "Rubén Sánchez Sáez",
+          "player_id": 2354,
+          "position_group": "RB",
+          "shirt_number": 2,
+          "value": 0.63
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 0.51
+        },
+        {
+          "name": "Ramón Terrats Espacio",
+          "player_id": 2348,
+          "position_group": "MID",
+          "shirt_number": 14,
+          "value": 0.45
+        }
+      ],
+      "unit": null
+    },
+    {
+      "key": "progressive_passes",
+      "rows": [
+        {
+          "name": "Marko Dmitrović",
+          "player_id": 2373,
+          "position_group": "GK",
+          "shirt_number": 13,
+          "value": 661
+        },
+        {
+          "name": "Eduardo Expósito Jaén",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 506
+        },
+        {
+          "name": "Leandro Daniel Cabrera Sasía",
+          "player_id": 2360,
+          "position_group": "CB",
+          "shirt_number": 6,
+          "value": 407
+        },
+        {
+          "name": "Omar El Hilali Khayat",
+          "player_id": 2363,
+          "position_group": "RB",
+          "shirt_number": 23,
+          "value": 387
+        },
+        {
+          "name": "Carlos Romero Serrano",
+          "player_id": 2358,
+          "position_group": "LB",
+          "shirt_number": 22,
+          "value": 338
+        },
+        {
+          "name": "Pol Lozano Vizuete",
+          "player_id": 2362,
+          "position_group": "MID",
+          "shirt_number": 10,
+          "value": 172
+        }
+      ],
+      "unit": null
+    },
+    {
+      "key": "carries_into_final_third",
+      "rows": [
+        {
+          "name": "Carlos Romero Serrano",
+          "player_id": 2358,
+          "position_group": "LB",
+          "shirt_number": 22,
+          "value": 57
+        },
+        {
+          "name": "Tyrhys Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 45
+        },
+        {
+          "name": "Eduardo Expósito Jaén",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 37
+        },
+        {
+          "name": "Urko González de Zárate",
+          "player_id": 2073,
+          "position_group": "MID",
+          "shirt_number": 4,
+          "value": 18
+        },
+        {
+          "name": "Pol Lozano Vizuete",
+          "player_id": 2362,
+          "position_group": "MID",
+          "shirt_number": 10,
+          "value": 18
+        },
+        {
+          "name": "Pere Milla Peña",
+          "player_id": 2346,
+          "position_group": "W",
+          "shirt_number": 11,
+          "value": 17
+        }
+      ],
+      "unit": null
+    }
+  ],
+  "matches": [
+    {
+      "date": "2025-08-17",
+      "goals_against": 1,
+      "goals_for": 2,
+      "is_home": true,
+      "match_id": 4,
+      "matchday": 1,
+      "opponent_abbr": "ATM",
+      "opponent_name": "Club Atlético de Madrid",
+      "opponent_short_name": "Atlético",
+      "opponent_team_id": 3,
+      "result": "W",
+      "xg_against": 1.09,
+      "xg_for": 1.17,
+      "xt_against": 4.021,
+      "xt_for": 3.903
+    },
+    {
+      "date": "2025-08-24",
+      "goals_against": 2,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 16,
+      "matchday": 2,
+      "opponent_abbr": "RSO",
+      "opponent_name": "Real Sociedad de Fútbol",
+      "opponent_short_name": "Real Sociedad",
+      "opponent_team_id": 17,
+      "result": "D",
+      "xg_against": 0.94,
+      "xg_for": 1.66,
+      "xt_against": 3.588,
+      "xt_for": 2.328
+    },
+    {
+      "date": "2025-08-31",
+      "goals_against": 0,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 22,
+      "matchday": 3,
+      "opponent_abbr": "OSA",
+      "opponent_name": "CA Osasuna",
+      "opponent_short_name": "Osasuna",
+      "opponent_team_id": 13,
+      "result": "W",
+      "xg_against": 1.43,
+      "xg_for": 1.07,
+      "xt_against": 4.301,
+      "xt_for": 3.253
+    },
+    {
+      "date": "2025-09-15",
+      "goals_against": 2,
+      "goals_for": 3,
+      "is_home": true,
+      "match_id": 31,
+      "matchday": 4,
+      "opponent_abbr": "MLL",
+      "opponent_name": "Real Club Deportivo Mallorca",
+      "opponent_short_name": "Mallorca",
+      "opponent_team_id": 12,
+      "result": "W",
+      "xg_against": 2.36,
+      "xg_for": 2.06,
+      "xt_against": 5.056,
+      "xt_for": 2.504
+    },
+    {
+      "date": "2025-09-20",
+      "goals_against": 2,
+      "goals_for": 0,
+      "is_home": false,
+      "match_id": 48,
+      "matchday": 5,
+      "opponent_abbr": "RMA",
+      "opponent_name": "Real Madrid CF",
+      "opponent_short_name": "Real Madrid",
+      "opponent_team_id": 16,
+      "result": "L",
+      "xg_against": 2.01,
+      "xg_for": 1.15,
+      "xt_against": 2.986,
+      "xt_for": 3.168
+    },
+    {
+      "date": "2025-09-23",
+      "goals_against": 2,
+      "goals_for": 2,
+      "is_home": true,
+      "match_id": 54,
+      "matchday": 6,
+      "opponent_abbr": "VAL",
+      "opponent_name": "Valencia CF",
+      "opponent_short_name": "Valencia",
+      "opponent_team_id": 19,
+      "result": "D",
+      "xg_against": 0.75,
+      "xg_for": 2.72,
+      "xt_against": 2.622,
+      "xt_for": 7.121
+    },
+    {
+      "date": "2025-09-26",
+      "goals_against": 0,
+      "goals_for": 0,
+      "is_home": false,
+      "match_id": 70,
+      "matchday": 7,
+      "opponent_abbr": "GIR",
+      "opponent_name": "Girona FC",
+      "opponent_short_name": "Girona",
+      "opponent_team_id": 10,
+      "result": "D",
+      "xg_against": 0.76,
+      "xg_for": 1.21,
+      "xt_against": 4.015,
+      "xt_for": 3.748
+    },
+    {
+      "date": "2025-10-05",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 77,
+      "matchday": 8,
+      "opponent_abbr": "BET",
+      "opponent_name": "Real Betis Balompié",
+      "opponent_short_name": "Betis",
+      "opponent_team_id": 5,
+      "result": "L",
+      "xg_against": 1.01,
+      "xg_for": 2.39,
+      "xt_against": 3.255,
+      "xt_for": 5.965
+    },
+    {
+      "date": "2025-10-17",
+      "goals_against": 0,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 89,
+      "matchday": 9,
+      "opponent_abbr": "OVI",
+      "opponent_name": "Real Oviedo",
+      "opponent_short_name": "Oviedo",
+      "opponent_team_id": 14,
+      "result": "W",
+      "xg_against": 0.81,
+      "xg_for": 4.46,
+      "xt_against": 3.831,
+      "xt_for": 5.416
+    },
+    {
+      "date": "2025-10-25",
+      "goals_against": 0,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 99,
+      "matchday": 10,
+      "opponent_abbr": "ELC",
+      "opponent_name": "Elche CF",
+      "opponent_short_name": "Elche",
+      "opponent_team_id": 7,
+      "result": "W",
+      "xg_against": 1.09,
+      "xg_for": 2.89,
+      "xt_against": 3.62,
+      "xt_for": 5.1
+    },
+    {
+      "date": "2025-11-02",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 111,
+      "matchday": 11,
+      "opponent_abbr": "ALA",
+      "opponent_name": "Deportivo Alavés",
+      "opponent_short_name": "Alavés",
+      "opponent_team_id": 1,
+      "result": "L",
+      "xg_against": 1.57,
+      "xg_for": 1.02,
+      "xt_against": 1.755,
+      "xt_for": 7.069
+    },
+    {
+      "date": "2025-11-08",
+      "goals_against": 2,
+      "goals_for": 0,
+      "is_home": true,
+      "match_id": 116,
+      "matchday": 12,
+      "opponent_abbr": "VIL",
+      "opponent_name": "Villarreal CF",
+      "opponent_short_name": "Villarreal",
+      "opponent_team_id": 20,
+      "result": "L",
+      "xg_against": 1.92,
+      "xg_for": 0.79,
+      "xt_against": 2.704,
+      "xt_for": 6.07
+    },
+    {
+      "date": "2025-11-24",
+      "goals_against": 1,
+      "goals_for": 2,
+      "is_home": true,
+      "match_id": 125,
+      "matchday": 13,
+      "opponent_abbr": "SEV",
+      "opponent_name": "Sevilla FC",
+      "opponent_short_name": "Sevilla",
+      "opponent_team_id": 18,
+      "result": "W",
+      "xg_against": 2.14,
+      "xg_for": 0.9,
+      "xt_against": 4.658,
+      "xt_for": 2.679
+    },
+    {
+      "date": "2025-11-30",
+      "goals_against": 0,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 320,
+      "matchday": 14,
+      "opponent_abbr": "CEL",
+      "opponent_name": "Real Club Celta de Vigo",
+      "opponent_short_name": "Celta",
+      "opponent_team_id": 6,
+      "result": "W",
+      "xg_against": 0.69,
+      "xg_for": 0.39,
+      "xt_against": 2.926,
+      "xt_for": 2.762
+    },
+    {
+      "date": "2025-12-07",
+      "goals_against": 0,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 322,
+      "matchday": 15,
+      "opponent_abbr": "RAY",
+      "opponent_name": "Rayo Vallecano de Madrid",
+      "opponent_short_name": "Rayo",
+      "opponent_team_id": 15,
+      "result": "W",
+      "xg_against": 0.35,
+      "xg_for": 1.23,
+      "xt_against": 3.392,
+      "xt_for": 5.187
+    },
+    {
+      "date": "2025-12-13",
+      "goals_against": 0,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 532,
+      "matchday": 16,
+      "opponent_abbr": "GET",
+      "opponent_name": "Getafe CF",
+      "opponent_short_name": "Getafe",
+      "opponent_team_id": 9,
+      "result": "W",
+      "xg_against": 0.24,
+      "xg_for": 0.57,
+      "xt_against": 4.242,
+      "xt_for": 3.561
+    },
+    {
+      "date": "2025-12-22",
+      "goals_against": 1,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 544,
+      "matchday": 17,
+      "opponent_abbr": "ATH",
+      "opponent_name": "Athletic Club",
+      "opponent_short_name": "Athletic",
+      "opponent_team_id": 2,
+      "result": "W",
+      "xg_against": 1.83,
+      "xg_for": 1.0,
+      "xt_against": 5.828,
+      "xt_for": 3.188
+    },
+    {
+      "date": "2026-01-03",
+      "goals_against": 2,
+      "goals_for": 0,
+      "is_home": true,
+      "match_id": 550,
+      "matchday": 18,
+      "opponent_abbr": "BAR",
+      "opponent_name": "FC Barcelona",
+      "opponent_short_name": "Barcelona",
+      "opponent_team_id": 4,
+      "result": "L",
+      "xg_against": 2.11,
+      "xg_for": 1.55,
+      "xt_against": 3.575,
+      "xt_for": 2.501
+    },
+    {
+      "date": "2026-01-11",
+      "goals_against": 1,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 563,
+      "matchday": 19,
+      "opponent_abbr": "LEV",
+      "opponent_name": "Levante UD",
+      "opponent_short_name": "Levante",
+      "opponent_team_id": 11,
+      "result": "D",
+      "xg_against": 0.88,
+      "xg_for": 1.48,
+      "xt_against": 2.352,
+      "xt_for": 3.118
+    },
+    {
+      "date": "2026-01-16",
+      "goals_against": 2,
+      "goals_for": 0,
+      "is_home": true,
+      "match_id": 578,
+      "matchday": 20,
+      "opponent_abbr": "GIR",
+      "opponent_name": "Girona FC",
+      "opponent_short_name": "Girona",
+      "opponent_team_id": 10,
+      "result": "L",
+      "xg_against": 1.94,
+      "xg_for": 0.85,
+      "xt_against": 2.953,
+      "xt_for": 4.666
+    },
+    {
+      "date": "2026-01-24",
+      "goals_against": 3,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 580,
+      "matchday": 21,
+      "opponent_abbr": "VAL",
+      "opponent_name": "Valencia CF",
+      "opponent_short_name": "Valencia",
+      "opponent_team_id": 19,
+      "result": "L",
+      "xg_against": 2.04,
+      "xg_for": 1.48,
+      "xt_against": 3.589,
+      "xt_for": 4.52
+    },
+    {
+      "date": "2026-01-30",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 855,
+      "matchday": 22,
+      "opponent_abbr": "ALA",
+      "opponent_name": "Deportivo Alavés",
+      "opponent_short_name": "Alavés",
+      "opponent_team_id": 1,
+      "result": "L",
+      "xg_against": 1.04,
+      "xg_for": 0.77,
+      "xt_against": 2.884,
+      "xt_for": 5.282
+    },
+    {
+      "date": "2026-02-09",
+      "goals_against": 4,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 858,
+      "matchday": 23,
+      "opponent_abbr": "VIL",
+      "opponent_name": "Villarreal CF",
+      "opponent_short_name": "Villarreal",
+      "opponent_team_id": 20,
+      "result": "L",
+      "xg_against": 0.96,
+      "xg_for": 0.49,
+      "xt_against": 3.692,
+      "xt_for": 4.263
+    },
+    {
+      "date": "2026-02-14",
+      "goals_against": 2,
+      "goals_for": 2,
+      "is_home": true,
+      "match_id": 871,
+      "matchday": 24,
+      "opponent_abbr": "CEL",
+      "opponent_name": "Real Club Celta de Vigo",
+      "opponent_short_name": "Celta",
+      "opponent_team_id": 6,
+      "result": "D",
+      "xg_against": 2.37,
+      "xg_for": 0.97,
+      "xt_against": 3.912,
+      "xt_for": 3.847
+    },
+    {
+      "date": "2026-02-21",
+      "goals_against": 4,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 883,
+      "matchday": 25,
+      "opponent_abbr": "ATM",
+      "opponent_name": "Club Atlético de Madrid",
+      "opponent_short_name": "Atlético",
+      "opponent_team_id": 3,
+      "result": "L",
+      "xg_against": 2.53,
+      "xg_for": 0.97,
+      "xt_against": 4.872,
+      "xt_for": 3.446
+    },
+    {
+      "date": "2026-03-01",
+      "goals_against": 2,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 893,
+      "matchday": 26,
+      "opponent_abbr": "ELC",
+      "opponent_name": "Elche CF",
+      "opponent_short_name": "Elche",
+      "opponent_team_id": 7,
+      "result": "D",
+      "xg_against": 1.93,
+      "xg_for": 0.64,
+      "xt_against": 4.932,
+      "xt_for": 2.476
+    },
+    {
+      "date": "2026-03-09",
+      "goals_against": 1,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 903,
+      "matchday": 27,
+      "opponent_abbr": "OVI",
+      "opponent_name": "Real Oviedo",
+      "opponent_short_name": "Oviedo",
+      "opponent_team_id": 14,
+      "result": "D",
+      "xg_against": 0.6,
+      "xg_for": 1.23,
+      "xt_against": 2.415,
+      "xt_for": 6.389
+    },
+    {
+      "date": "2026-03-15",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 909,
+      "matchday": 28,
+      "opponent_abbr": "MLL",
+      "opponent_name": "Real Club Deportivo Mallorca",
+      "opponent_short_name": "Mallorca",
+      "opponent_team_id": 12,
+      "result": "L",
+      "xg_against": 2.93,
+      "xg_for": 0.61,
+      "xt_against": 4.432,
+      "xt_for": 3.897
+    },
+    {
+      "date": "2026-03-21",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 924,
+      "matchday": 29,
+      "opponent_abbr": "GET",
+      "opponent_name": "Getafe CF",
+      "opponent_short_name": "Getafe",
+      "opponent_team_id": 9,
+      "result": "L",
+      "xg_against": 1.39,
+      "xg_for": 1.04,
+      "xt_against": 3.489,
+      "xt_for": 5.822
+    },
+    {
+      "date": "2026-04-04",
+      "goals_against": 0,
+      "goals_for": 0,
+      "is_home": false,
+      "match_id": 933,
+      "matchday": 30,
+      "opponent_abbr": "BET",
+      "opponent_name": "Real Betis Balompié",
+      "opponent_short_name": "Betis",
+      "opponent_team_id": 5,
+      "result": "D",
+      "xg_against": 1.82,
+      "xg_for": 0.29,
+      "xt_against": 4.02,
+      "xt_for": 2.912
+    },
+    {
+      "date": "2026-04-11",
+      "goals_against": 4,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 941,
+      "matchday": 31,
+      "opponent_abbr": "BAR",
+      "opponent_name": "FC Barcelona",
+      "opponent_short_name": "Barcelona",
+      "opponent_team_id": 4,
+      "result": "L",
+      "xg_against": 2.96,
+      "xg_for": 1.36,
+      "xt_against": 3.774,
+      "xt_for": 3.324
+    },
+    {
+      "date": "2026-04-27",
+      "goals_against": 0,
+      "goals_for": 0,
+      "is_home": true,
+      "match_id": 952,
+      "matchday": 32,
+      "opponent_abbr": "LEV",
+      "opponent_name": "Levante UD",
+      "opponent_short_name": "Levante",
+      "opponent_team_id": 11,
+      "result": "D",
+      "xg_against": 1.01,
+      "xg_for": 0.7,
+      "xt_against": 4.085,
+      "xt_for": 4.769
+    },
+    {
+      "date": "2026-04-23",
+      "goals_against": 1,
+      "goals_for": 0,
+      "is_home": false,
+      "match_id": 968,
+      "matchday": 33,
+      "opponent_abbr": "RAY",
+      "opponent_name": "Rayo Vallecano de Madrid",
+      "opponent_short_name": "Rayo",
+      "opponent_team_id": 15,
+      "result": "L",
+      "xg_against": 1.19,
+      "xg_for": 1.68,
+      "xt_against": 4.276,
+      "xt_for": 4.752
+    },
+    {
+      "date": "2026-05-03",
+      "goals_against": 2,
+      "goals_for": 0,
+      "is_home": true,
+      "match_id": 974,
+      "matchday": 34,
+      "opponent_abbr": "RMA",
+      "opponent_name": "Real Madrid CF",
+      "opponent_short_name": "Real Madrid",
+      "opponent_team_id": 16,
+      "result": "L",
+      "xg_against": 1.65,
+      "xg_for": 1.01,
+      "xt_against": 4.056,
+      "xt_for": 4.305
+    },
+    {
+      "date": "2026-05-09",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 988,
+      "matchday": 35,
+      "opponent_abbr": "SEV",
+      "opponent_name": "Sevilla FC",
+      "opponent_short_name": "Sevilla",
+      "opponent_team_id": 18,
+      "result": "L",
+      "xg_against": 1.44,
+      "xg_for": 0.76,
+      "xt_against": 3.84,
+      "xt_for": 4.248
+    },
+    {
+      "date": "2026-05-13",
+      "goals_against": 0,
+      "goals_for": 2,
+      "is_home": true,
+      "match_id": 995,
+      "matchday": 36,
+      "opponent_abbr": "ATH",
+      "opponent_name": "Athletic Club",
+      "opponent_short_name": "Athletic",
+      "opponent_team_id": 2,
+      "result": "W",
+      "xg_against": 0.87,
+      "xg_for": 0.7,
+      "xt_against": 4.703,
+      "xt_for": 5.023
+    },
+    {
+      "date": "2026-05-17",
+      "goals_against": 1,
+      "goals_for": 2,
+      "is_home": false,
+      "match_id": 1008,
+      "matchday": 37,
+      "opponent_abbr": "OSA",
+      "opponent_name": "CA Osasuna",
+      "opponent_short_name": "Osasuna",
+      "opponent_team_id": 13,
+      "result": "W",
+      "xg_against": 2.14,
+      "xg_for": 0.76,
+      "xt_against": 5.935,
+      "xt_for": 3.056
+    },
+    {
+      "date": "2026-05-23",
+      "goals_against": 1,
+      "goals_for": 1,
+      "is_home": true,
+      "match_id": 1013,
+      "matchday": 38,
+      "opponent_abbr": "RSO",
+      "opponent_name": "Real Sociedad de Fútbol",
+      "opponent_short_name": "Real Sociedad",
+      "opponent_team_id": 17,
+      "result": "D",
+      "xg_against": 1.1,
+      "xg_for": 1.52,
+      "xt_against": 3.178,
+      "xt_for": 3.118
+    }
+  ],
+  "record": {
+    "drawn": 10,
+    "form_last_5": "DWWLL",
+    "goals_against": 55,
+    "goals_for": 43,
+    "league_position": 11,
+    "lost": 16,
+    "points": 46,
+    "points_per_match": 1.2,
+    "won": 12
+  },
+  "rolling": {
+    "points": [
+      {
+        "matchday": 5,
+        "xg_difference": -0.144,
+        "xt_difference": -0.959
+      },
+      {
+        "matchday": 6,
+        "xg_difference": 0.234,
+        "xt_difference": -0.036
+      },
+      {
+        "matchday": 7,
+        "xg_difference": 0.18,
+        "xt_difference": 0.163
+      },
+      {
+        "matchday": 8,
+        "xg_difference": 0.528,
+        "xt_difference": 0.914
+      },
+      {
+        "matchday": 9,
+        "xg_difference": 1.318,
+        "xt_difference": 1.742
+      },
+      {
+        "matchday": 10,
+        "xg_difference": 1.85,
+        "xt_difference": 2.001
+      },
+      {
+        "matchday": 11,
+        "xg_difference": 1.346,
+        "xt_difference": 2.164
+      },
+      {
+        "matchday": 12,
+        "xg_difference": 1.03,
+        "xt_difference": 2.891
+      },
+      {
+        "matchday": 13,
+        "xg_difference": 0.506,
+        "xt_difference": 1.953
+      },
+      {
+        "matchday": 14,
+        "xg_difference": -0.284,
+        "xt_difference": 1.603
+      },
+      {
+        "matchday": 15,
+        "xg_difference": -0.468,
+        "xt_difference": 1.666
+      },
+      {
+        "matchday": 16,
+        "xg_difference": -0.292,
+        "xt_difference": 0.467
+      },
+      {
+        "matchday": 17,
+        "xg_difference": -0.232,
+        "xt_difference": -0.734
+      },
+      {
+        "matchday": 18,
+        "xg_difference": -0.096,
+        "xt_difference": -0.553
+      },
+      {
+        "matchday": 19,
+        "xg_difference": 0.084,
+        "xt_difference": -0.367
+      },
+      {
+        "matchday": 20,
+        "xg_difference": -0.31,
+        "xt_difference": -0.383
+      },
+      {
+        "matchday": 21,
+        "xg_difference": -0.488,
+        "xt_difference": -0.061
+      },
+      {
+        "matchday": 22,
+        "xg_difference": -0.376,
+        "xt_difference": 0.947
+      },
+      {
+        "matchday": 23,
+        "xg_difference": -0.358,
+        "xt_difference": 1.276
+      },
+      {
+        "matchday": 24,
+        "xg_difference": -0.758,
+        "xt_difference": 1.11
+      },
+      {
+        "matchday": 25,
+        "xg_difference": -0.852,
+        "xt_difference": 0.482
+      },
+      {
+        "matchday": 26,
+        "xg_difference": -0.998,
+        "xt_difference": -0.196
+      },
+      {
+        "matchday": 27,
+        "xg_difference": -0.818,
+        "xt_difference": 0.12
+      },
+      {
+        "matchday": 28,
+        "xg_difference": -1.188,
+        "xt_difference": -0.102
+      },
+      {
+        "matchday": 29,
+        "xg_difference": -0.978,
+        "xt_difference": 0.378
+      },
+      {
+        "matchday": 30,
+        "xg_difference": -0.972,
+        "xt_difference": 0.442
+      },
+      {
+        "matchday": 31,
+        "xg_difference": -1.034,
+        "xt_difference": 0.843
+      },
+      {
+        "matchday": 32,
+        "xg_difference": -1.222,
+        "xt_difference": 0.185
+      },
+      {
+        "matchday": 33,
+        "xg_difference": -0.66,
+        "xt_difference": 0.387
+      },
+      {
+        "matchday": 34,
+        "xg_difference": -0.718,
+        "xt_difference": -0.03
+      },
+      {
+        "matchday": 35,
+        "xg_difference": -0.548,
+        "xt_difference": 0.273
+      },
+      {
+        "matchday": 36,
+        "xg_difference": -0.262,
+        "xt_difference": 0.427
+      },
+      {
+        "matchday": 37,
+        "xg_difference": -0.476,
+        "xt_difference": -0.285
+      },
+      {
+        "matchday": 38,
+        "xg_difference": -0.49,
+        "xt_difference": -0.392
+      }
+    ],
+    "window": 5
+  },
+  "schema_version": 1,
+  "season": {
+    "is_final": true,
+    "label": "2025/2026",
+    "matchdays_complete": 38,
+    "matchdays_scheduled": 38,
+    "matches_played": 38,
+    "slug": "2025-26"
+  },
+  "team": {
+    "abbr": "ESP",
+    "short_name": "Espanyol",
+    "slug": "espanyol",
+    "team_id": 8
+  }
+}
