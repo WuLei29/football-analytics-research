@@ -149,8 +149,13 @@ _QUALIFIER_COORD_MAP = {
     "Pass End Y":                  ("end_y",       "y"),
     "Blocked x co-ordinate":       ("blocked_x",   "x"),
     "Blocked y co-ordinate":       ("blocked_y",   "y"),
-    "Goal mouth z coordinate":     ("goal_mouth_z", None),
-    "Goal mouth y coordinate":     ("goal_mouth_y", None),
+    # The names must match opta-qualifiers.js exactly, and it writes
+    # "co-ordinate", hyphen and all — without it these two never matched and
+    # both columns stayed NULL across every match loaded before 9 Sep 2026.
+    # Left UNSCALED on purpose: they are not pitch metres but Opta goalmouth
+    # coordinates (posts at 45.2 / 54.8, crossbar at 38).
+    "Goal mouth z co-ordinate":    ("goal_mouth_z", None),
+    "Goal mouth y co-ordinate":    ("goal_mouth_y", None),
 }
 
 # Qualifier IDs that map to named columns
