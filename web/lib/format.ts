@@ -1,41 +1,54 @@
 /**
  * format.ts — every number and date the site renders passes through here.
  *
- * The site is Spanish (WEB_PLAN.md decision 4), so the decimal separator is a
- * comma and the thousands separator is a dot: `41,7` and `1.464`. Getting that
- * right by hand in each component is how a site ends up with `41.7` in one
- * card and `41,7` in the next, so nothing hand-formats a number — it calls one
- * of these.
+ * Two locales, on purpose:
+ *
+ *   - **Numbers use a decimal POINT** — `41.7`, `1,464`. The Spanish standard
+ *     is the comma and this file used to follow it (WEB_PLAN.md decision 4);
+ *     the author's call is the point, which is what football numbers are
+ *     written with everywhere they are read. Flip `NUMBER_LOCALE` back to
+ *     `es-ES` and the whole site follows — that is the point of routing every
+ *     number through one file.
+ *   - **Dates stay Spanish** — `3 de septiembre de 2026`. Those are words, and
+ *     the site is written in Spanish.
+ *
+ * Getting the separator right by hand in each component is how a site ends up
+ * with `41.7` in one card and `41,7` in the next, so nothing hand-formats a
+ * number — it calls one of these. That includes digits inside a caption:
+ * build the caption from `dec()`, never type the number into a string.
  *
  * The formatters are built once at module load; `Intl.NumberFormat` is
  * expensive to construct and cheap to reuse.
  */
 
-const LOCALE = "es-ES";
+/** Decimal point, comma thousands: `41.7`, `1,464`. */
+const NUMBER_LOCALE = "en-GB";
+/** Spanish month and day names. */
+const DATE_LOCALE = "es-ES";
 
-const integer = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 });
+const integer = new Intl.NumberFormat(NUMBER_LOCALE, { maximumFractionDigits: 0 });
 
 const decimals = [0, 1, 2, 3].map(
   (d) =>
-    new Intl.NumberFormat(LOCALE, {
+    new Intl.NumberFormat(NUMBER_LOCALE, {
       minimumFractionDigits: d,
       maximumFractionDigits: d,
     }),
 );
 
-/** `46` -> "46". Thousands get a dot: `1464` -> "1.464". */
+/** `46` -> "46". Thousands get a comma: `1464` -> "1,464". */
 export function num(value: number): string {
   return integer.format(value);
 }
 
-/** Fixed decimals, always shown: `dec(1.2, 1)` -> "1,2"; `dec(2, 1)` -> "2,0". */
+/** Fixed decimals, always shown: `dec(1.2, 1)` -> "1.2"; `dec(2, 1)` -> "2.0". */
 export function dec(value: number, places: 0 | 1 | 2 | 3 = 1): string {
   return decimals[places].format(value);
 }
 
 /**
  * A difference, with an explicit sign — the design colours these by sign and
- * a bare "0,4" reads as an absolute value. `+0,4`, `-1,2`, `0,0`.
+ * a bare "0.4" reads as an absolute value. `+0.4`, `−1.2`, `0.0`.
  */
 export function signed(value: number, places: 0 | 1 | 2 | 3 = 1): string {
   const body = dec(Math.abs(value), places);
@@ -44,7 +57,7 @@ export function signed(value: number, places: 0 | 1 | 2 | 3 = 1): string {
   return body;
 }
 
-/** A share that arrives already scaled (`41.7`), rendered as "41,7 %". */
+/** A share that arrives already scaled (`41.7`), rendered as "41.7 %". */
 export function pct(value: number, places: 0 | 1 = 1): string {
   return `${dec(value, places)} %`;
 }
@@ -62,13 +75,13 @@ export function orEmpty(
 
 /* -------------------------------------------------------------------------- */
 
-const dateLong = new Intl.DateTimeFormat(LOCALE, {
+const dateLong = new Intl.DateTimeFormat(DATE_LOCALE, {
   day: "numeric",
   month: "long",
   year: "numeric",
 });
 
-const dateShort = new Intl.DateTimeFormat(LOCALE, {
+const dateShort = new Intl.DateTimeFormat(DATE_LOCALE, {
   day: "2-digit",
   month: "short",
 });
@@ -96,7 +109,7 @@ export function shortDate(iso: string): string {
 
 /** `generated_at` is a real instant: "7 sept 2026, 16:37". */
 export function buildStamp(isoInstant: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return new Intl.DateTimeFormat(DATE_LOCALE, {
     dateStyle: "medium",
     timeStyle: "short",
     timeZone: "Europe/Madrid",
