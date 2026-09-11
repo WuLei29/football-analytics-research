@@ -92,7 +92,14 @@ export function SequenceBrowser({
     <div className={`grid gap-4 lg:grid-cols-[2fr_1fr] ${className ?? ""}`}>
       <div>
         <SequenceDetail actions={active.actions} title={title} orientation={orientation} />
-        {legend}
+        {/* The legend gets a wrapper of its own rather than sitting beside the
+            pitch as a sibling. It arrives from a server component through the
+            Flight payload as a lazy node, which React cannot mark as
+            key-validated at JSX time, so as one of two array children it
+            trips "each child in a list should have a unique key" in dev — a
+            false positive, but one the reader sees. As a sole child there is
+            no list to validate. */}
+        {legend && <div>{legend}</div>}
       </div>
 
       <aside className="flex min-w-0 flex-col gap-2">
