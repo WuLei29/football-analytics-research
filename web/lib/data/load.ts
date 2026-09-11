@@ -24,7 +24,14 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 
-import { SCHEMA_VERSION, type Envelope, type LeagueTable, type Manifest, type Overview } from "./types";
+import {
+  SCHEMA_VERSION,
+  type Envelope,
+  type LeagueTable,
+  type Manifest,
+  type MatchFile,
+  type Overview,
+} from "./types";
 
 /** `public/` is served at the site root, so `public/data/x.json` is `/data/x.json`. */
 const DATA_ROOT = path.join(process.cwd(), "public", "data");
@@ -81,6 +88,16 @@ export const getLeagueTable = cache((season: string) =>
 /** Screen 01 and the match list, for one club and season (§6). */
 export const getOverview = cache((team: string, season: string) =>
   readData<Overview>(`teams/${team}/${season}/overview.json`),
+);
+
+/**
+ * Screen 02: one match (§7). The biggest file the site reads — 200 to 380 KB
+ * of momentum bins, shots, arrows and every sequence of the match with its
+ * actions — which is exactly why a page reads its own match file and never a
+ * tree of them (WEB_PLAN.md §3.3 point 4).
+ */
+export const getMatch = cache((team: string, season: string, matchId: number) =>
+  readData<MatchFile>(`teams/${team}/${season}/matches/${matchId}.json`),
 );
 
 /* --------------------------------------------------------------------------

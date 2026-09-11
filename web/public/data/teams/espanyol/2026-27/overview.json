@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T16:37:17Z",
+  "generated_at": "2026-09-10T23:14:09Z",
   "kpis": [
     {
       "key": "points",
@@ -63,7 +63,7 @@
           "value": 3
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
@@ -77,21 +77,21 @@
           "value": 1
         },
         {
-          "name": "Marko Dmitrović",
+          "name": "M. Dmitrović",
           "player_id": 2373,
           "position_group": "GK",
           "shirt_number": 13,
           "value": 0
         },
         {
-          "name": "Omar El Hilali Khayat",
+          "name": "O. El Hilali",
           "player_id": 2363,
           "position_group": "RB",
           "shirt_number": 23,
           "value": 0
         },
         {
-          "name": "Roger Hinojo Estrada",
+          "name": "Roger Hinojo",
           "player_id": 2375,
           "position_group": "LB",
           "shirt_number": 21,
@@ -104,35 +104,35 @@
       "key": "xt_per_90",
       "rows": [
         {
-          "name": "Rafel Bauzà Sureda",
+          "name": "Rafel Bauzà",
           "player_id": 2372,
           "position_group": "W",
           "shirt_number": 26,
           "value": 0.67
         },
         {
-          "name": "Francisco Javier Hernández Coarasa",
+          "name": "Javi Hernández",
           "player_id": 2355,
           "position_group": "MID",
           "shirt_number": 28,
           "value": 0.56
         },
         {
-          "name": "Omar El Hilali Khayat",
+          "name": "O. El Hilali",
           "player_id": 2363,
           "position_group": "RB",
           "shirt_number": 23,
           "value": 0.51
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
           "value": 0.45
         },
         {
-          "name": "Eduardo Expósito Jaén",
+          "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
@@ -152,42 +152,42 @@
       "key": "progressive_passes",
       "rows": [
         {
-          "name": "Marko Dmitrović",
+          "name": "M. Dmitrović",
           "player_id": 2373,
           "position_group": "GK",
           "shirt_number": 13,
           "value": 39
         },
         {
-          "name": "Roger Hinojo Estrada",
+          "name": "Roger Hinojo",
           "player_id": 2375,
           "position_group": "LB",
           "shirt_number": 21,
           "value": 32
         },
         {
-          "name": "Omar El Hilali Khayat",
+          "name": "O. El Hilali",
           "player_id": 2363,
           "position_group": "RB",
           "shirt_number": 23,
           "value": 30
         },
         {
-          "name": "Unai Núñez Gestoso",
+          "name": "Unai Núñez",
           "player_id": 2339,
           "position_group": "CB",
           "shirt_number": 14,
           "value": 23
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
           "value": 22
         },
         {
-          "name": "Eduardo Expósito Jaén",
+          "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
@@ -200,7 +200,7 @@
       "key": "carries_into_final_third",
       "rows": [
         {
-          "name": "Francisco Javier Hernández Coarasa",
+          "name": "Javi Hernández",
           "player_id": 2355,
           "position_group": "MID",
           "shirt_number": 28,
@@ -214,21 +214,21 @@
           "value": 5
         },
         {
-          "name": "Roger Hinojo Estrada",
+          "name": "Roger Hinojo",
           "player_id": 2375,
           "position_group": "LB",
           "shirt_number": 21,
           "value": 4
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
           "value": 4
         },
         {
-          "name": "Eduardo Expósito Jaén",
+          "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,

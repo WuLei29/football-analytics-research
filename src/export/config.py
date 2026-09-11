@@ -172,3 +172,47 @@ DEFENSIVE_ACTIONS = 34
 MATCH_SEQUENCES = 12
 SEQUENCE_MAX_WAYPOINTS = 6
 SEQUENCE_MIN_EVENTS = 3     # sequences.json filter (GOLD_LAYER.md §4.1.9)
+
+
+# ---------------------------------------------------------------------------
+# Match file: the 14 stat rows of screen 02 block 3 (§7.2)
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class MatchTotal:
+    key: str                # what the site translates and renders
+    column: str             # column on gold.team_match_stats
+    scale: str = "raw"      # "pct" for the 0-1 shares gold stores
+    decimals: int = 1
+
+
+# Order is the design's, top to bottom. Three keys differ from their column
+# because the row is labelled from the reader's side of the match, not the
+# table's: `xg` is xg_for, `xt_created` is xt_for, `corners` is corners_for.
+MATCH_TOTALS: list[MatchTotal] = [
+    MatchTotal("possession_pct",      "possession_pct", scale="pct"),
+    MatchTotal("xg",                  "xg_for",                decimals=2),
+    MatchTotal("shots",               "shots",                 decimals=0),
+    MatchTotal("shots_on_target",     "shots_on_target",       decimals=0),
+    MatchTotal("big_chances",         "big_chances",           decimals=0),
+    MatchTotal("passes_completed",    "passes_completed",      decimals=0),
+    MatchTotal("final_third_entries", "final_third_entries",   decimals=0),
+    MatchTotal("xt_created",          "xt_for",                decimals=3),
+    MatchTotal("yellow_cards",        "yellow_cards",          decimals=0),
+    MatchTotal("red_cards",           "red_cards",             decimals=0),
+    MatchTotal("fouls_committed",     "fouls_committed",       decimals=0),
+    MatchTotal("corners",             "corners_for",           decimals=0),
+    MatchTotal("xg_open_play",        "xg_open_play",          decimals=2),
+    MatchTotal("xg_set_piece",        "xg_set_piece",          decimals=2),
+]
+
+# The four player boxes at the foot of screen 02. A box is a key plus the
+# column(s) summed into its value; only the last one has two, and it ships its
+# components as well so a reader can tell a finisher from a creator.
+MATCH_PLAYER_BOXES: list[tuple[str, tuple[str, ...]]] = [
+    ("recoveries", ("ball_recoveries",)),
+    ("passes_completed", ("passes_completed",)),
+    ("passes_into_final_third", ("passes_into_final_third",)),
+    ("xg_xa", ("xg", "xa")),
+]
+MATCH_PLAYER_ROWS = 6

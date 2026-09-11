@@ -45,11 +45,30 @@ web/
     globals.css               THE DESIGN SYSTEM — tokens, base, the four idioms
     page.tsx                  "/" — the landing page
     demo/page.tsx             "/demo" — the drawing primitives, with fake data
+    [equipo]/
+      temporada/[season]/       screen 01 — the season overview
+      partido/[match_id]/       screen 02 — one match, eight blocks
+      partidos/[season]/        the plain match list that links them
+  content/
+    narratives.ts             the authored prose: season and match readings.
+                              The ONLY content not produced by the export
   components/
     shell/
       Masthead.tsx            the dark hero + the section nav
       SeasonSwitcher.tsx      the season chips ("use client" — see below)
+      PageHeader.tsx          eyebrow + H1 + dek over the hard ink rule
+      SectionHead.tsx         a section or card heading with its mono caption
+      Narrative.tsx           the bordered prose block that closes 01 and 02
       Footer.tsx              provenance: source, derivations, build stamp
+    season/                   the blocks of screen 01, one component each
+      KpiStrip.tsx              the five cards, with their rank chips
+      LeagueTable.tsx           20 rows, zone markers, the club highlighted
+      FormStrip.tsx             last ten matches, each a link to its page
+      TeamProfile.tsx           4 cards x 6 metrics with percentile bars
+      PlayerLeaders.tsx         4 boxes x 6 rows (inert until screen 03 lands)
+    match/                    the blocks of screen 02 that are not pitches
+      MatchTotals.tsx           the fourteen stat rows with their share bars
+      MatchPlayers.tsx          four player boxes, both teams
     viz/                      one component per graphical block
       Pitch.tsx                 the pitch itself, both orientations
       ShotMap.tsx               shots, both teams, area ∝ xG ("use client")
@@ -64,6 +83,7 @@ web/
       SequenceBrowser.tsx       that pitch + a selectable list of plays ("use client")
       RollingArea.tsx           the diverging 5-match rolling chart
       Momentum.tsx              per-minute net xT over one match
+      Legend.tsx                the mark legend and the LOW->HIGH heat ramp
       VizDefs.tsx               the arrowhead markers, declared once per page
   lib/
     data/
@@ -208,19 +228,27 @@ own.
 Built (Phase 3, `WEB_PLAN.md` §5): the scaffold, the design tokens, the three
 fonts, the masthead shell, the landing page, and the deploy. Built (Phase 4):
 `lib/viz/` and `components/viz/` — the pitch in both orientations, seven pitch
-layers and the two chart primitives, catalogued on `/demo`.
+layers and the two chart primitives, catalogued on `/demo`. Built (Phase 5a,
+v1): the two hi-fi screens and the match list, on the real export —
+`next build` emits 49 static pages, 41 of them match pages.
 
-The nav lists the six sections, all marked *en construcción*. They are inert
-text, not links — a static export has no useful 404. When a page lands, flip
-its `ready` flag in `lib/routes.ts` and it becomes a link.
+The nav's first two sections are links; the other four are still inert text
+marked *en construcción*, because a static export has no useful 404. When a
+page lands, flip its `ready` flag in `lib/routes.ts`.
 
 Next:
 
 | Phase | What |
 |---|---|
-| 5a | Season overview (screen 01), match analysis (screen 02), the match list |
+| 5a | **built** — a fidelity pass against the design screenshots is still to do |
 | 5b | Player, squad, sequence lab, comparison, methodology |
 | 6 | Mobile collapse pass, share images, custom domain, Spanish copy review |
+
+Two flags to know about while iterating: `LINK_TO_PLAYER` in
+`components/season/PlayerLeaders.tsx` turns the leader rows into links to
+screen 03 the day it exists, and `content/narratives.ts` holds an empty
+`matchReadings` map — a match page shows no reading block until it has a key
+there, on purpose (`WEB_PLAN.md` §3.7).
 
 The only dependency still deliberately **not** installed is
 `@tanstack/react-table` (the squad table, Phase 5b). `d3-scale` / `d3-shape`

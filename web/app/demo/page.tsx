@@ -26,6 +26,7 @@ import { RollingArea } from "@/components/viz/RollingArea";
 import { SequenceBrowser } from "@/components/viz/SequenceBrowser";
 import { ShotMap } from "@/components/viz/ShotMap";
 import { VizDefs } from "@/components/viz/VizDefs";
+import { Legend, Ramp } from "@/components/viz/Legend";
 import { ZoneHeatmap } from "@/components/viz/ZoneHeatmap";
 import { dec } from "@/lib/format";
 import { demo, viz } from "@/lib/labels";
@@ -123,12 +124,12 @@ export default function DemoPage() {
               showGrid
             />
           </div>
-          <Ramp />
+          <Ramp low={viz.legend.low} high={viz.legend.high} />
         </Block>
 
         <Block title={demo.blocks.zones} dek={demo.blocks.zonesDek}>
           <ZoneHeatmap cells={demoZoneCells} title={demo.blocks.zones} showGrid />
-          <Ramp />
+          <Ramp low={viz.legend.low} high={viz.legend.high} />
         </Block>
 
         <Block title={demo.blocks.network} dek={demo.blocks.networkDek}>
@@ -203,15 +204,11 @@ export default function DemoPage() {
           <div className="grid gap-4 md:grid-cols-2">
             <RollingArea
               points={demoRollingXgd}
-              pxPerUnit={60}
-              ticks={[1, 0.5, 0, -0.5, -1]}
               axisLabel={viz.axis.rollingXgd}
               xCaption={viz.axis.matchday}
             />
             <RollingArea
               points={demoRollingXt}
-              pxPerUnit={150}
-              ticks={[0.4, 0.2, 0, -0.2, -0.4]}
               axisLabel={viz.axis.rollingXt}
               xCaption={viz.axis.matchday}
             />
@@ -258,115 +255,5 @@ function Block({
       </div>
       {children}
     </section>
-  );
-}
-
-interface LegendItem {
-  swatch?: string;
-  outline?: string;
-  bar?: string;
-  /** A dashed rule — the carry mark. */
-  dotted?: string;
-  /** A curved rule — the cross mark; the colour is its origin dot. */
-  curved?: string;
-  diamond?: boolean;
-  text: string;
-}
-
-/**
- * The legend row of the design: real marks, in HTML, under the figure.
- *
- * Pass `items` for the usual single wrapping row, or `rows` when the marks
- * divide into named groups — the shot map, where the same three marks exist
- * once per team. Six marks in one wrapping row put the split wherever the
- * container width happens to fall, which is never the team boundary; a row
- * each makes the grouping the reader's first read instead of a puzzle.
- */
-function Legend({
-  items,
-  rows,
-}: {
-  items?: LegendItem[];
-  /** One line per group, each with a name in the gutter. */
-  rows?: { label: string; items: LegendItem[] }[];
-}) {
-  if (rows) {
-    return (
-      <div className="label mt-2 flex flex-col gap-[5px]">
-        {rows.map((row) => (
-          <div key={row.label} className="flex flex-wrap items-center gap-x-3 gap-y-[5px]">
-            {/* Fixed gutter so the first mark of every row starts at the same
-                x — the alignment is what makes the block read as a table. */}
-            <span style={{ minWidth: 68, color: "var(--color-ink)", fontWeight: 600 }}>
-              {row.label}
-            </span>
-            <LegendMarks items={row.items} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <div className="label mt-2 flex flex-wrap gap-3">
-      <LegendMarks items={items ?? []} />
-    </div>
-  );
-}
-
-/** The marks themselves, shared by both arrangements. */
-function LegendMarks({ items }: { items: LegendItem[] }) {
-  return (
-    <>
-      {items.map((item) => (
-        <span key={item.text} className="flex items-center gap-[5px]">
-          {item.dotted ? (
-            <span
-              style={{
-                display: "inline-block",
-                width: 14,
-                height: 0,
-                borderTop: `2px dotted ${item.dotted}`,
-              }}
-            />
-          ) : item.curved ? (
-            <svg width={14} height={9} viewBox="0 0 14 9" aria-hidden="true">
-              <path d="M1,8 Q7,0 13,5" fill="none" stroke="var(--color-mid)" strokeWidth={1.2} />
-              <circle cx={1} cy={8} r={1.6} fill={item.curved} />
-            </svg>
-          ) : (
-            <span
-              style={{
-                display: "inline-block",
-                width: item.bar ? 14 : 9,
-                height: item.bar ? 2 : 9,
-                borderRadius: item.bar || item.diamond ? 0 : "50%",
-                transform: item.diamond ? "rotate(45deg)" : undefined,
-                background: item.swatch ?? item.bar ?? "transparent",
-                border: item.outline ? `1px solid ${item.outline}` : undefined,
-              }}
-            />
-          )}
-          {item.text}
-        </span>
-      ))}
-    </>
-  );
-}
-
-/** The LOW -> HIGH gradient the design puts under every heat layer. */
-function Ramp() {
-  return (
-    <div className="mt-2 flex items-center gap-[6px]">
-      <span className="label">{viz.legend.low}</span>
-      <div
-        style={{
-          flex: 1,
-          height: 8,
-          background: "linear-gradient(90deg,rgba(11,76,158,.06),rgba(11,76,158,1))",
-        }}
-      />
-      <span className="label">{viz.legend.high}</span>
-    </div>
   );
 }

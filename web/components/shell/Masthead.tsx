@@ -94,7 +94,14 @@ export function Masthead({
           <p className="dek max-w-[400px] text-on-dark/80">{dek}</p>
         </div>
 
-        <SeasonSwitcher seasons={seasons} />
+        {/* Season-scoped pages pass `season`, and the chips become links to
+            that season overview; the landing page does not, and they stay
+            local state. */}
+        <SeasonSwitcher
+          seasons={seasons}
+          team={season ? team : undefined}
+          current={season}
+        />
       </div>
 
       {/* Section nav. Items whose page does not exist yet are inert text with

@@ -44,8 +44,8 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { key: "season", label: "Temporada", href: routes.season, ready: false },
-  { key: "matches", label: "Partidos", href: routes.matches, ready: false },
+  { key: "season", label: "Temporada", href: routes.season, ready: true },
+  { key: "matches", label: "Partidos", href: routes.matches, ready: true },
   { key: "squad", label: "Plantilla", href: routes.squad, ready: false },
   { key: "sequences", label: "Secuencias", href: routes.sequences, ready: false },
   { key: "compare", label: "Comparar", href: routes.compare, ready: false },

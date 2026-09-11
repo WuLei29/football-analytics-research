@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T16:37:17Z",
+  "generated_at": "2026-09-10T23:14:09Z",
   "kpis": [
     {
       "key": "points",
@@ -56,7 +56,7 @@
       "key": "goals",
       "rows": [
         {
-          "name": "Enrique García Martínez",
+          "name": "Kike García",
           "player_id": 2353,
           "position_group": "ST",
           "shirt_number": 19,
@@ -70,28 +70,28 @@
           "value": 7
         },
         {
-          "name": "Pere Milla Peña",
+          "name": "Pere Milla",
           "player_id": 2346,
           "position_group": "W",
           "shirt_number": 11,
           "value": 7
         },
         {
-          "name": "Carlos Romero Serrano",
+          "name": "Carlos Romero",
           "player_id": 2358,
           "position_group": "LB",
           "shirt_number": 22,
           "value": 6
         },
         {
-          "name": "Leandro Daniel Cabrera Sasía",
+          "name": "L. Cabrera",
           "player_id": 2360,
           "position_group": "CB",
           "shirt_number": 6,
           "value": 4
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
@@ -104,42 +104,42 @@
       "key": "xt_per_90",
       "rows": [
         {
-          "name": "Eduardo Expósito Jaén",
+          "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
           "value": 1.43
         },
         {
-          "name": "Cyril Ngonge",
+          "name": "C. Ngonge",
           "player_id": 2370,
           "position_group": "W",
           "shirt_number": 16,
           "value": 1.04
         },
         {
-          "name": "Luca Warrick Daeovie Koleosho",
+          "name": "L. Koleosho",
           "player_id": 2352,
           "position_group": "W",
           "shirt_number": 16,
           "value": 0.67
         },
         {
-          "name": "Rubén Sánchez Sáez",
+          "name": "Rubén Sánchez",
           "player_id": 2354,
           "position_group": "RB",
           "shirt_number": 2,
           "value": 0.63
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
           "value": 0.51
         },
         {
-          "name": "Ramón Terrats Espacio",
+          "name": "Ramón Terrats",
           "player_id": 2348,
           "position_group": "MID",
           "shirt_number": 14,
@@ -152,42 +152,42 @@
       "key": "progressive_passes",
       "rows": [
         {
-          "name": "Marko Dmitrović",
+          "name": "M. Dmitrović",
           "player_id": 2373,
           "position_group": "GK",
           "shirt_number": 13,
           "value": 661
         },
         {
-          "name": "Eduardo Expósito Jaén",
+          "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
           "value": 506
         },
         {
-          "name": "Leandro Daniel Cabrera Sasía",
+          "name": "L. Cabrera",
           "player_id": 2360,
           "position_group": "CB",
           "shirt_number": 6,
           "value": 407
         },
         {
-          "name": "Omar El Hilali Khayat",
+          "name": "O. El Hilali",
           "player_id": 2363,
           "position_group": "RB",
           "shirt_number": 23,
           "value": 387
         },
         {
-          "name": "Carlos Romero Serrano",
+          "name": "Carlos Romero",
           "player_id": 2358,
           "position_group": "LB",
           "shirt_number": 22,
           "value": 338
         },
         {
-          "name": "Pol Lozano Vizuete",
+          "name": "Pol Lozano",
           "player_id": 2362,
           "position_group": "MID",
           "shirt_number": 10,
@@ -200,21 +200,21 @@
       "key": "carries_into_final_third",
       "rows": [
         {
-          "name": "Carlos Romero Serrano",
+          "name": "Carlos Romero",
           "player_id": 2358,
           "position_group": "LB",
           "shirt_number": 22,
           "value": 57
         },
         {
-          "name": "Tyrhys Dolan",
+          "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
           "value": 45
         },
         {
-          "name": "Eduardo Expósito Jaén",
+          "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
@@ -228,14 +228,14 @@
           "value": 18
         },
         {
-          "name": "Pol Lozano Vizuete",
+          "name": "Pol Lozano",
           "player_id": 2362,
           "position_group": "MID",
           "shirt_number": 10,
           "value": 18
         },
         {
-          "name": "Pere Milla Peña",
+          "name": "Pere Milla",
           "player_id": 2346,
           "position_group": "W",
           "shirt_number": 11,

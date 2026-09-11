@@ -140,3 +140,32 @@ export function heatOpacity(value: number, max: number): number {
   const [lo, hi] = HEAT_OPACITY;
   return lo + (hi - lo) * Math.max(0, Math.min(1, value / max));
 }
+
+/**
+ * A symmetric tick ladder around zero that just contains `peak`, the largest
+ * absolute value of a diverging series.
+ *
+ * The step is the smallest of a short list of round numbers that needs at
+ * most `maxTicks` ticks per side, so a ±0.9 xGD series gets `0.5` steps and a
+ * ±2.9 xT series gets `1`. `decimals` is how many places that step needs, so
+ * the labels can print "0.5" and "0.25" but never "1.0".
+ *
+ * The chart draws the top and bottom tick at its edges, which is what makes
+ * the series fill the plot: the scale is the data's, not a fixed ladder that
+ * clips a good month (WEB_PLAN.md §9.7).
+ */
+export function symmetricTicks(
+  peak: number,
+  maxTicks = 3,
+): { ticks: number[]; max: number; decimals: 0 | 1 | 2 } {
+  const STEPS = [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 5, 10];
+  const safePeak = peak > 0 ? peak : 1;
+  const step = STEPS.find((s) => safePeak / s <= maxTicks) ?? STEPS[STEPS.length - 1];
+  const count = Math.max(1, Math.ceil(safePeak / step - 1e-9));
+  const max = count * step;
+  const decimals = step % 1 === 0 ? 0 : step * 10 === Math.round(step * 10) ? 1 : 2;
+  const ticks: number[] = [];
+  // Rounded, so 3 * 0.1 is 0.3 and not 0.30000000000000004 as a React key.
+  for (let i = -count; i <= count; i += 1) ticks.push(Number((i * step).toFixed(decimals)));
+  return { ticks, max, decimals };
+}

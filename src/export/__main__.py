@@ -2,12 +2,12 @@
 
 Spec: md/WEB_DATA.md §11. Architecture decision: md/WEB_PLAN.md §2.
 
-Reads gold (and, once the match file lands, the per-team slice of
-silver.events) and writes the static JSON tree the Next.js site is built
-from::
+Reads gold (and, for the match file, the per-team slice of silver.events) and
+writes the static JSON tree the Next.js site is built from::
 
     python -m src.export                      # everything implemented
     python -m src.export --only manifest,table
+    python -m src.export --only match --match-ids 1013
     python -m src.export --season 2026-27
     python -m src.export --dry-run            # report, write nothing
     python -m src.export --out /tmp/data
@@ -29,7 +29,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import db, league_table, manifest, overview
+from . import db, league_table, manifest, match, overview
 from .config import DEFAULT_OUT, EXPORT_TEAMS
 from .io import Writer
 from .seasons import load_seasons
@@ -37,10 +37,10 @@ from .seasons import load_seasons
 log = logging.getLogger("export")
 
 # Order matters only for readability of the log; the files are independent.
-STEPS = ["manifest", "table", "overview"]
+STEPS = ["manifest", "table", "overview", "match"]
 
-# Specified in WEB_DATA.md §7-§10 but not yet implemented (§14 item 1).
-PLANNED_STEPS = ["match", "squad", "player", "sequences"]
+# Specified in WEB_DATA.md §8-§10 but not yet implemented (§14 item 1).
+PLANNED_STEPS = ["squad", "player", "sequences"]
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -55,6 +55,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument(
         "--season",
         help="restrict to one season slug, e.g. 2026-27 (default: all published)",
+    )
+    p.add_argument(
+        "--match-ids",
+        type=int,
+        nargs="+",
+        help="restrict the match step to these match_ids (fast iteration only; "
+             "the weekend run writes every match)",
     )
     p.add_argument("--out", type=Path, default=DEFAULT_OUT,
                    help=f"output root (default: {DEFAULT_OUT})")
@@ -115,6 +122,30 @@ def main(argv: list[str] | None = None) -> int:
             for team_cfg in EXPORT_TEAMS:
                 for season in seasons:
                     overview.build(conn, writer, team_cfg, season, generated_at)
+
+        # One file per match of every published club: the biggest step by far,
+        # and the only one that reads silver.events (a few seconds per match).
+        if "match" in steps:
+            for team_cfg in EXPORT_TEAMS:
+                for season in seasons:
+                    match_ids = db.fetch_team_match_ids(
+                        conn, season.competition_season_id, team_cfg.team_id
+                    )
+                    if args.match_ids:
+                        wanted = set(args.match_ids)
+                        skipped = wanted - set(match_ids)
+                        match_ids = [m for m in match_ids if m in wanted]
+                        if skipped and not match_ids:
+                            log.warning(
+                                "%s %s: none of %s is a match of this club and "
+                                "season", team_cfg.slug, season.slug,
+                                ", ".join(str(m) for m in sorted(skipped)),
+                            )
+                    log.info("%s %s: %d match files", team_cfg.slug, season.slug,
+                             len(match_ids))
+                    for match_id in match_ids:
+                        match.build(conn, writer, team_cfg, season, match_id,
+                                    generated_at)
     finally:
         conn.close()
 

@@ -15,22 +15,71 @@
  * as JavaScript because it has to answer a click. That is the whole rule
  * (WEB_PLAN.md §3.3, point 3).
  *
- * Today the selection only changes the coverage line. From Phase 5a it will
- * also navigate to `/{equipo}/temporada/{slug}`, at which point the selected
- * season comes from the URL and this component keeps no state of its own.
+ * Two modes, and the difference is the whole point of Phase 5a:
+ *
+ *   - **`team` given** (every page from screen 01 onwards): the chips are
+ *     links to `/{equipo}/temporada/{slug}` and the selection comes from the
+ *     URL. This component then keeps no state at all, which is the right
+ *     answer — the season is a fact about the page, not about a widget.
+ *   - **no `team`** (the landing page, which is not season-scoped): the chips
+ *     are buttons and the selection is local, changing only the coverage line
+ *     underneath them.
  */
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { home } from "@/lib/labels";
 import { longDate } from "@/lib/format";
+import { routes } from "@/lib/routes";
 import type { SeasonRef } from "@/lib/data/types";
 
-export function SeasonSwitcher({ seasons }: { seasons: SeasonRef[] }) {
-  const [selected, setSelected] = useState(seasons[0]?.slug);
-  const season = seasons.find((s) => s.slug === selected) ?? seasons[0];
+export function SeasonSwitcher({
+  seasons,
+  team,
+  current,
+}: {
+  seasons: SeasonRef[];
+  /** Team slug. When given, the chips navigate instead of setting state. */
+  team?: string;
+  /** The season slug of the current page, when the page is season-scoped. */
+  current?: string;
+}) {
+  const [selected, setSelected] = useState(current ?? seasons[0]?.slug);
+  const season =
+    seasons.find((s) => s.slug === (current ?? selected)) ?? seasons[0];
 
   if (!season) return null;
+
+  /** One class list for both modes, so a link and a button cannot drift. */
+  const chipClass = (active: boolean) =>
+    [
+      "rounded-pill border px-3 py-1.5 font-mono text-[10px] tracking-[0.14em] uppercase",
+      active
+        ? "border-transparent bg-on-dark text-ink"
+        : "border-white/25 text-on-dark/75 hover:border-white/60 hover:text-on-dark",
+    ].join(" ");
+
+  if (team) {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap gap-2">
+          {seasons.map((s) => (
+            <Link
+              key={s.slug}
+              href={routes.season(team, s.slug)}
+              aria-current={s.slug === season.slug ? "page" : undefined}
+              className={chipClass(s.slug === season.slug)}
+            >
+              {/* "2025-26" -> "2025/26"; the slug already has the short form. */}
+              {s.slug.replace("-", "/")}
+            </Link>
+          ))}
+        </div>
+        <Coverage season={season} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -43,12 +92,7 @@ export function SeasonSwitcher({ seasons }: { seasons: SeasonRef[] }) {
               type="button"
               onClick={() => setSelected(s.slug)}
               aria-pressed={active}
-              className={[
-                "rounded-pill border px-3 py-1.5 font-mono text-[10px] tracking-[0.14em] uppercase",
-                active
-                  ? "border-transparent bg-on-dark text-ink"
-                  : "border-white/25 text-on-dark/75 hover:border-white/60 hover:text-on-dark",
-              ].join(" ")}
+              className={chipClass(active)}
             >
               {/* "2025-26" -> "2025/26"; the slug already has the short form. */}
               {s.slug.replace("-", "/")}
@@ -57,18 +101,25 @@ export function SeasonSwitcher({ seasons }: { seasons: SeasonRef[] }) {
         })}
       </div>
 
-      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-on-dark/70">
-        {home.matchdaysComplete(
-          season.matchdays_complete,
-          season.matchdays_scheduled,
-        )}
-        {season.through_match_date ? (
-          <>
-            {" · "}
-            {home.throughDate(longDate(season.through_match_date))}
-          </>
-        ) : null}
-      </p>
+      <Coverage season={season} />
     </div>
+  );
+}
+
+/** How much of the season is loaded: the one line under the chips. */
+function Coverage({ season }: { season: SeasonRef }) {
+  return (
+    <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-on-dark/70">
+      {home.matchdaysComplete(
+        season.matchdays_complete,
+        season.matchdays_scheduled,
+      )}
+      {season.through_match_date ? (
+        <>
+          {" · "}
+          {home.throughDate(longDate(season.through_match_date))}
+        </>
+      ) : null}
+    </p>
   );
 }

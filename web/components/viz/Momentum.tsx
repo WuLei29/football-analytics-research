@@ -2,8 +2,9 @@
  * Momentum — who was threatening, minute by minute, over one match.
  *
  * Renders: the published team's xT above the axis in blue, the opponent's
- * below in grey, a vertical marker per goal, substitution, card and period
- * end, minute ticks, and both team names.
+ * below in grey, a labelled vertical rule per goal, card and period end, a
+ * substitution icon per minute with a change in it, minute ticks, and both
+ * team names.
  * Props: `bins` (one per minute), `markers`, `teamSide`, the two team names,
  * and the rolling `windowMinutes`.
  * Data:  `matches/{match_id}.json` -> `momentum` (md/WEB_DATA.md §7): per-minute
@@ -22,6 +23,14 @@
  * The line starts at minute `windowMinutes`, because a trailing five-minute mean does
  * not exist before the fifth minute. Drawing zeros there would invent a calm
  * opening the data does not describe.
+ *
+ * Substitutions are NOT drawn as labelled rules. A real match has seven to
+ * ten of them, in pairs and triples at the same minute, and "CAMBIO 67'" three
+ * times over on one x is unreadable and hides the goal label beside it. Each
+ * minute with a change gets one faint dashed rule and one icon at the end of
+ * it — the published team's at the top, the opponent's at the bottom — with a
+ * "×2" / "×3" when several came on together, and the whole thing at 55 %
+ * opacity so a goal marker on the same minute still reads through it.
  *
  * Geometry from the handoff, in viewBox units: 1180 x 268 (eight units taller,
  * so the minute ticks clear the opponent marker labels), zero line y = 120.
@@ -78,6 +87,41 @@ const MARKER_STYLE = {
   period: { dash: "2 3" },
 } as const;
 
+/** Top and bottom of every marker rule; the sub icons sit just past them. */
+const RULE = { top: 8, bottom: 232 };
+const SUB_OPACITY = 0.55;
+
+/**
+ * Substitutions folded to one entry per (minute, side), so the chart draws one
+ * icon with a count rather than three rules on top of each other.
+ */
+function groupSubs(markers: MomentumMarker[]) {
+  const groups = new Map<string, { minute: number; side: MomentumMarker["side"]; count: number }>();
+  for (const m of markers) {
+    if (m.type !== "sub") continue;
+    const key = `${m.minute}-${m.side}`;
+    const g = groups.get(key);
+    if (g) g.count += 1;
+    else groups.set(key, { minute: m.minute, side: m.side, count: 1 });
+  }
+  return [...groups.values()];
+}
+
+/**
+ * The substitution glyph: two opposed arrows, 12 units wide, centred on
+ * (0, 0). Drawn as strokes with the marker colour, so it inherits the side.
+ */
+function SubIcon({ x, y, color }: { x: number; y: number; color: string }) {
+  return (
+    <g transform={`translate(${x} ${y})`} stroke={color} strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" fill="none">
+      {/* → on top */}
+      <path d="M-5.5,-2.2 H5.5 M3,-4.7 L5.5,-2.2 L3,0.3" />
+      {/* ← underneath */}
+      <path d="M5.5,2.2 H-5.5 M-3,-0.3 L-5.5,2.2 L-3,4.7" />
+    </g>
+  );
+}
+
 export function Momentum({
   bins,
   markers,
@@ -112,6 +156,13 @@ export function Momentum({
     y: VIEW.zeroY - p.value * scale,
   }));
 
+  const subs = groupSubs(markers);
+  const labelled = markers.filter((m) => m.type !== "sub");
+
+  // A marker belongs to whoever it happened to; a period end to nobody.
+  const colorOf = (side: MomentumMarker["side"]) =>
+    side === null ? "var(--color-faint)" : side === teamSide ? "var(--color-blue)" : "var(--color-mid)";
+
   return (
     <svg
       viewBox={`0 0 ${VIEW.width} ${VIEW.height}`}
@@ -138,24 +189,52 @@ export function Momentum({
         strokeWidth={1}
       />
 
-      {markers.map((marker, i) => {
+      {/* Substitutions first, so a goal on the same minute draws over them. */}
+      {subs.map((sub) => {
+        const x = xAt(sub.minute);
+        const color = colorOf(sub.side);
+        const atTop = sub.side === teamSide;
+        const iconY = atTop ? RULE.top + 6 : RULE.bottom - 6;
+        return (
+          <g key={`sub-${sub.minute}-${sub.side}`} opacity={SUB_OPACITY}>
+            <line
+              x1={x}
+              y1={atTop ? RULE.top + 13 : RULE.top}
+              x2={x}
+              y2={atTop ? RULE.bottom : RULE.bottom - 13}
+              stroke={color}
+              strokeWidth={1}
+              strokeDasharray={MARKER_STYLE.sub.dash}
+            />
+            <SubIcon x={x} y={iconY} color={color} />
+            {sub.count > 1 && (
+              <text
+                x={x + 8}
+                y={iconY + 3}
+                fontFamily="var(--font-mono)"
+                fontSize={8.5}
+                fontWeight={600}
+                fill={color}
+              >
+                ×{sub.count}
+              </text>
+            )}
+          </g>
+        );
+      })}
+
+      {labelled.map((marker, i) => {
         const x = xAt(marker.minute);
-        // A marker belongs to whoever it happened to; a period end to nobody.
-        const color =
-          marker.side === null
-            ? "var(--color-faint)"
-            : marker.side === teamSide
-              ? "var(--color-blue)"
-              : "var(--color-mid)";
+        const color = colorOf(marker.side);
         // Past x = 900 the label would run off the right edge, so it flips.
         const flip = x > 900;
         return (
           <g key={`${marker.minute}-${marker.type}-${i}`}>
             <line
               x1={x}
-              y1={8}
+              y1={RULE.top}
               x2={x}
-              y2={232}
+              y2={RULE.bottom}
               stroke={color}
               strokeWidth={1}
               strokeDasharray={MARKER_STYLE[marker.type].dash}
@@ -190,8 +269,10 @@ export function Momentum({
       ))}
 
       {/* The two team names are static labels at fixed viewBox positions, so
-          they stay in the SVG — nothing about them depends on the data. */}
-      <text x={0} y={30} fontFamily="var(--font-mono)" fontSize={9} letterSpacing={1.4} fill="var(--color-blue)">
+          they stay in the SVG — nothing about them depends on the data. The
+          top one sits a few units above the y = 30 gridline rather than on
+          it, so its baseline does not merge with the rule. */}
+      <text x={0} y={25} fontFamily="var(--font-mono)" fontSize={9} letterSpacing={1.4} fill="var(--color-blue)">
         {teamName.toUpperCase()}
       </text>
       <text x={0} y={222} fontFamily="var(--font-mono)" fontSize={9} letterSpacing={1.4} fill="var(--color-mid)">

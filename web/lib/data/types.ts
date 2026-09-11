@@ -266,3 +266,218 @@ export interface Overview extends Envelope {
   kpis: OverviewKpi[];
   leaders: OverviewLeaders[];
 }
+
+/* ==========================================================================
+ * teams/{team}/{season}/matches/{match_id}.json  (WEB_DATA.md §7)
+ *
+ * The largest file the site reads, and the only one built from silver.events.
+ * Eight blocks, one key each. Two conventions carry the risk, both settled by
+ * the export before the site sees the numbers (§3.1):
+ *
+ *   - Coordinates are FINAL. Both sides are stored attacking towards x = 105,
+ *     and the export has already mirrored the opponent in `shots` — the one
+ *     both-team figure. No component flips anything.
+ *   - The two sides are named `home` and `away`, and `match.team_side` says
+ *     which of them is the published club, so no page has to work it out from
+ *     a team id.
+ * ======================================================================== */
+
+/** One club's side of the match header. */
+export interface MatchSide {
+  team_id: number;
+  short_name: string;
+  abbr: string;
+  goals: number;
+  goals_ht: number | null;
+  xg: number;
+}
+
+export interface MatchHeader {
+  match_id: number;
+  matchday: number;
+  /** Calendar date, `YYYY-MM-DD`. */
+  date: string;
+  competition_name: string;
+  season: string;
+  venue: string | null;
+  /** Includes stoppage: 97 on a long match. The momentum axis runs to it. */
+  match_length_min: number;
+  /** Which of the two sides is the club this site publishes. */
+  team_side: "home" | "away";
+  home: MatchSide;
+  away: MatchSide;
+}
+
+/** xT per minute, both sides positive. The site draws `away` downwards. */
+export interface MomentumBinData {
+  minute: number;
+  home: number;
+  away: number;
+}
+
+/** A vertical rule on the momentum chart. `label_key` is translated here. */
+export interface MomentumMarkerData {
+  minute: number;
+  type: "goal" | "sub" | "card" | "period";
+  /** Null on half time, which belongs to neither side. */
+  side: "home" | "away" | null;
+  label_key: string;
+  player_id: number | null;
+  name: string | null;
+}
+
+export interface MatchNetwork {
+  /** Published team only — the design draws one network. */
+  side: "home" | "away";
+  min_combinations: number;
+  nodes: {
+    player_id: number;
+    surname: string;
+    shirt_number: number | null;
+    x: number;
+    y: number;
+    touches: number;
+  }[];
+  edges: { from: number; to: number; passes: number }[];
+}
+
+/** One of the fourteen stat rows, in the design's order (§7.2). */
+export interface MatchTotal {
+  key: string;
+  home: number | null;
+  away: number | null;
+}
+
+/** One shot, both teams, already in the published team's frame. */
+export interface MatchShot {
+  shot_id: number;
+  side: "home" | "away";
+  player_id: number | null;
+  name: string;
+  minute: number;
+  x: number;
+  y: number;
+  xg: number;
+  body_part: string;
+  outcome: string;
+  play_pattern: string | null;
+  first_time: boolean | null;
+  big_chance: boolean;
+  /** Opta's goalmouth frame (posts 45.2/54.8, crossbar 38). NOT mirrored. */
+  goal_mouth_y: number | null;
+  goal_mouth_z: number | null;
+}
+
+/** The 12 x 8 surface of `xt.py`, non-zero cells only (§3.3). */
+export interface MatchXtGrid {
+  side: "home" | "away";
+  cols: number;
+  rows: number;
+  cells: { cx: number; cy: number; xt: number }[];
+}
+
+/**
+ * The same xT sum on the 30 zones of `gold.pitch_zones`, non-zero zones only.
+ * This is what the page draws; `xt_grid` stays in the file for a reader who
+ * wants the model's own grid.
+ */
+export interface MatchXtZones {
+  side: "home" | "away";
+  cells: { zone_id: number; value: number }[];
+}
+
+export interface MatchProgression {
+  kind: "pass" | "carry";
+  x: number;
+  y: number;
+  end_x: number;
+  end_y: number;
+  xt: number | null;
+  completed: boolean;
+}
+
+export interface MatchDefence {
+  /** Average defensive line, in the attacking frame: low means deep. */
+  line_x: number | null;
+  actions: {
+    type: string;
+    x: number;
+    y: number;
+    outcome: "won" | "lost";
+    minute: number;
+    player: string | null;
+  }[];
+}
+
+/** One action of a chain, for the detailed sequence view (§7.3). */
+export interface MatchSequenceAction {
+  kind: "pass" | "cross" | "carry" | "take_on" | "shot" | "other";
+  x: number;
+  y: number;
+  /** Null on a point event: a take-on, a shot, anything with no destination. */
+  end_x: number | null;
+  end_y: number | null;
+  player_id: number | null;
+  surname: string | null;
+  shirt_number: number | null;
+  outcome: "success" | "fail";
+}
+
+/**
+ * One possession sequence of the published team with 3+ events, best xT first.
+ * `rank` is 1..12 on the twelve the design draws and null on the rest: the
+ * page takes the first twelve as they come and never re-sorts.
+ */
+export interface MatchSequence {
+  sequence_id: string;
+  rank: number | null;
+  period: number;
+  minute: number;
+  second: number;
+  duration_s: number;
+  events: number;
+  passes: number;
+  xt: number | null;
+  xg: number | null;
+  vaep: number | null;
+  /** Zone id of `gold.pitch_zones` (30-zone grid), not the 12 x 8 grid. */
+  start_zone: number | null;
+  start_trigger: string | null;
+  outcome: string | null;
+  primary_phase: string | null;
+  final_third_entry: boolean;
+  penalty_box_entry: boolean;
+  ends_in_shot: boolean;
+  /** Simplified trace: start, end and up to 6 waypoints. */
+  points: [number, number][];
+  /** Every event of the chain, for the detailed view. */
+  actions: MatchSequenceAction[];
+}
+
+/** One of the four player boxes, both teams, six rows each. */
+export interface MatchPlayerBox {
+  key: string;
+  rows: {
+    player_id: number;
+    name: string;
+    side: "home" | "away";
+    abbr: string;
+    value: number;
+    /** Only on the xG + xA box, which has to name its two parts. */
+    components?: Record<string, number | null>;
+  }[];
+}
+
+export interface MatchFile extends Envelope {
+  match: MatchHeader;
+  momentum: { bins: MomentumBinData[]; markers: MomentumMarkerData[] };
+  network: MatchNetwork;
+  totals: MatchTotal[];
+  shots: MatchShot[];
+  xt_grid: MatchXtGrid;
+  xt_zones: MatchXtZones;
+  progression: MatchProgression[];
+  defence: MatchDefence;
+  sequences: MatchSequence[];
+  players: MatchPlayerBox[];
+}

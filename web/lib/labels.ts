@@ -368,3 +368,220 @@ export const demo = {
     momentumDek: "xT neto por minuto, suavizado con una ventana de 5 minutos.",
   },
 } as const;
+
+/* --------------------------------------------------------------------------
+ * Screen 01 — season overview (Phase 5a).
+ *
+ * The prototype's copy is English; this is its translation, block by block
+ * (WEB_PLAN.md §9.4). The eyebrow keeps the design's "01 ·" numbering because
+ * it is part of the visual system, not a label.
+ * ------------------------------------------------------------------------ */
+
+export const season = {
+  eyebrow: "01 · TEMPORADA",
+  title: { plain: "La temporada, ", accent: "medida" },
+  /** The italic dek to the right of the H1. `matches` arrives formatted. */
+  dek: (team: string, label: string, matches: string) =>
+    `Todo lo que el ${team} ha hecho en ${label}, medido sobre ${matches} ` +
+    `partidos de datos de eventos: dónde está, hacia dónde va y qué tipo de ` +
+    `equipo es.`,
+  dekEmpty: (team: string, label: string) =>
+    `El ${team} aún no ha jugado en ${label}. Esta página se rellena con la ` +
+    `primera jornada cargada.`,
+
+  /** KPI cards. The rank chip reads "11.º de 20". */
+  rank: (rank: number, peers: number) => `${rank}.º de ${peers}`,
+  rankEmpty: "sin dato",
+
+  tableHeading: "Clasificación",
+  tableCaption: (competition: string) => `${competition} · orden final por puntos`,
+  tableCaptionRunning: (competition: string) =>
+    `${competition} · clasificación con los datos cargados`,
+  /** Column heads of the league table, in the design's order. */
+  tableColumns: {
+    position: "#",
+    club: "Club",
+    played: "PJ",
+    won: "G",
+    drawn: "E",
+    lost: "P",
+    goalDifference: "DG",
+    xgDifference: "DxG",
+    points: "Pts",
+  },
+
+  formHeading: "Forma · últimos 10",
+  formCaption: "Resultado, marcador y xG neto de cada partido",
+  formEmpty: "Todavía no hay partidos jugados.",
+
+  rollingHeading: "Tendencia",
+  rollingCaption: (window: number) =>
+    `Media móvil de ${window} partidos · xGD y xT netos por partido`,
+  rollingEmpty: (window: number) =>
+    `La media móvil arranca en el partido ${window}: aún no hay suficientes ` +
+    `jornadas cargadas.`,
+
+  profileHeading: "Perfil del equipo",
+  profileCaption:
+    "Valor por partido · la barra es el percentil entre los 20 equipos de la " +
+    "categoría, más alto es mejor",
+  /** The small caption in each profile card head. */
+  profileVs: "VS LA LIGA",
+  percentileEmpty: "—",
+
+  leadersHeading: "Jugadores destacados",
+  leadersCaption: "Totales de la temporada, de mayor a menor",
+
+  readingEyebrow: "LECTURA DE LA TEMPORADA",
+  matchesLinkN: (n: string) => `Ver los ${n} partidos`,
+} as const;
+
+/* --------------------------------------------------------------------------
+ * The plain match list (`/{equipo}/partidos/{season}`).
+ * Not a designed screen: it borrows the form-strip row style and exists so
+ * that every match page is reachable (WEB_PLAN.md §4).
+ * ------------------------------------------------------------------------ */
+
+export const matchList = {
+  eyebrow: "PARTIDOS",
+  title: { plain: "Los partidos, ", accent: "uno a uno" },
+  dek:
+    "Cada partido de la temporada con su marcador y su xG. Abre uno para ver " +
+    "el análisis completo.",
+  columns: {
+    matchday: "J",
+    date: "Fecha",
+    venue: "",
+    opponent: "Rival",
+    score: "Resultado",
+    xg: "xG",
+  },
+  home: "Casa",
+  away: "Fuera",
+  homeShort: "L",
+  awayShort: "V",
+  empty: "No hay partidos cargados en esta temporada.",
+} as const;
+
+/* --------------------------------------------------------------------------
+ * Screen 02 — match analysis (Phase 5a).
+ * ------------------------------------------------------------------------ */
+
+export const match = {
+  eyebrow: "02 · ANÁLISIS DEL PARTIDO",
+  /** Right-aligned meta, three mono lines. */
+  meta: (competition: string, matchday: number) =>
+    `${competition} · Jornada ${matchday}`,
+  venueLine: (venue: string | null, date: string) =>
+    venue ? `${venue} · ${date}` : date,
+  xgLine: (home: string, away: string) => `${home} xG – ${away} xG`,
+  halfTime: (home: number, away: number) => `Descanso ${home}–${away}`,
+
+  momentumHeading: "Momentum",
+  momentumCaption: (window: number) =>
+    `xT por minuto, media móvil de ${window} minutos`,
+
+  networkHeading: "Red de pases",
+  networkCaption: (min: number) =>
+    `Once inicial · posición media y combinaciones (${min} o más)`,
+
+  totalsHeading: "Datos del partido",
+  totalsCaption: "La barra reparte cada fila entre los dos equipos",
+
+  shotsHeading: "Mapa de tiros",
+  shotsCaption: "Los dos equipos, cada uno atacando hacia su portería",
+
+  xtHeading: "Superficie de xT",
+  xtCaption: (team: string) => `Amenaza generada por el ${team}, por zona`,
+
+  progressionHeading: "Progresión",
+  progressionCaption: (n: number) =>
+    `Los ${n} pases y conducciones progresivas de más xT`,
+
+  defenceHeading: "Acciones defensivas",
+  defenceCaption: (n: number) => `Las ${n} más adelantadas, y la línea media`,
+  defenceLine: (metres: string) => `LÍNEA DEF. ${metres} M`,
+
+  sequencesHeading: "Jugadas por xT",
+  sequencesCaption: (n: number) =>
+    `Las ${n} secuencias de posesión de tres o más acciones, de más a menos ` +
+    `amenaza. Elige una para leerla en detalle.`,
+  sequencesEmpty: "No hay secuencias de tres o más acciones en este partido.",
+  sequenceDetailHeading: "La jugada, en detalle",
+  /** A row of the sequence list: "SEC-04 · 23 min". */
+  sequenceRow: (rank: number, minute: number) =>
+    `SEC-${String(rank).padStart(2, "0")} · ${minute} min`,
+  /** Its second line: "6 pases · 14.2 s · 0.184 xT". */
+  sequenceSummary: (passes: string, seconds: string, xt: string) =>
+    `${passes} pases · ${seconds} s · ${xt} xT`,
+  sequenceDescription: (trigger: string, outcome: string) =>
+    `${trigger} → ${outcome}`,
+
+  playersHeading: "Destacados del partido",
+  playersCaption: "Los dos equipos, seis jugadores por métrica",
+
+  readEyebrow: "LECTURA DEL PARTIDO",
+  backToList: "Todos los partidos",
+} as const;
+
+/** The fourteen match totals, in the design order (WEB_DATA.md §7.2). */
+export const matchTotalLabels: Record<string, string> = {
+  possession_pct: "Posesión",
+  xg: "xG",
+  shots: "Tiros",
+  shots_on_target: "Tiros a puerta",
+  big_chances: "Ocasiones claras",
+  passes_completed: "Pases completados",
+  final_third_entries: "Entradas al último tercio",
+  xt_created: "xT generado",
+  yellow_cards: "Tarjetas amarillas",
+  red_cards: "Tarjetas rojas",
+  fouls_committed: "Faltas cometidas",
+  corners: "Córners",
+  xg_open_play: "xG en juego abierto",
+  xg_set_piece: "xG a balón parado",
+};
+
+/** The four player boxes at the foot of screen 02. */
+export const matchPlayerBoxLabels: Record<string, string> = {
+  recoveries: "Recuperaciones",
+  passes_completed: "Pases completados",
+  passes_into_final_third: "Pases al último tercio",
+  xg_xa: "xG + xA",
+};
+
+/**
+ * `gold.sequences.start_trigger` — how a possession began. The keys are the
+ * column values, so a trigger the classifier adds later shows up as a missing
+ * label rather than in English.
+ */
+const sequenceTriggerLabels: Record<string, string> = {
+  recovery: "Recuperación",
+  tackle: "Entrada",
+  interception: "Intercepción",
+  clearance: "Despeje",
+  block: "Bloqueo",
+  aerial: "Duelo aéreo",
+  pass: "Pase",
+  carry: "Conducción",
+  take_on: "Regate",
+  goal_kick: "Saque de puerta",
+  throw_in: "Saque de banda",
+  corner: "Córner",
+  free_kick: "Falta",
+  kick_off: "Saque inicial",
+  keeper: "Portero",
+  keeper_pickup: "Atrapada del portero",
+  penalty: "Penalti",
+  ball_touch: "Toque",
+  challenge: "Duelo",
+  dispossessed: "Pérdida",
+  error: "Error",
+  offside: "Fuera de juego",
+  period_start: "Inicio del periodo",
+  unknown: "Sin determinar",
+};
+
+export function sequenceTrigger(key: string): string {
+  return label(sequenceTriggerLabels, key);
+}

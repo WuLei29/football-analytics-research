@@ -54,8 +54,13 @@ export interface SequenceAction {
   /** Absent on point events (a take-on, a failed touch). */
   end_x?: number | null;
   end_y?: number | null;
-  player_id: number;
-  surname: string;
+  /**
+   * Null on a team-level event inside the chain — a corner awarded, a ball
+   * out. Those are part of the possession and are drawn as marks, but they
+   * get no player node (see `playerNodes`).
+   */
+  player_id: number | null;
+  surname: string | null;
   shirt_number: number | null;
   outcome: "success" | "fail";
 }
@@ -221,7 +226,7 @@ export function SequenceDetail({
                 fontWeight={600}
                 fill={node.isFinal ? "var(--color-card)" : "var(--color-blue)"}
               >
-                {node.shirt_number ?? node.surname.slice(0, 2).toUpperCase()}
+                {node.shirt_number ?? node.surname?.slice(0, 2).toUpperCase() ?? ""}
               </text>
             </g>
           );
@@ -263,7 +268,7 @@ function arcPath(
 function playerNodes(actions: SequenceAction[]) {
   const nodes: {
     player_id: number;
-    surname: string;
+    surname: string | null;
     shirt_number: number | null;
     x: number;
     y: number;
@@ -272,6 +277,10 @@ function playerNodes(actions: SequenceAction[]) {
   }[] = [];
 
   actions.forEach((action, i) => {
+    // A team-level event has nobody to label, and two of them in a row are not
+    // "the same player still on the ball".
+    if (action.player_id === null) return;
+
     const previous = nodes[nodes.length - 1];
     if (previous && previous.player_id === action.player_id && previous.index === i - 1) {
       // Same player still on the ball: move the node to this, later, action.
