@@ -44,7 +44,19 @@ WITH ev AS (
            e.x, e.y, e.end_x, e.end_y, e.json_index,
            e.spadl_type_id, e.xg, e.xt,
            e.vaep_value, e.vaep_offensive, e.vaep_defensive,
-           e.shot_play_pattern, e.raw_data,
+           e.shot_play_pattern,
+           -- The qualifier tests are materialised HERE, as booleans, so that
+           -- raw_data (the largest column in the table) is not carried through
+           -- the three window sorts below. With work_mem at its 4 MB default
+           -- those sorts spill to disk, and sorting ~900k rows with a JSONB
+           -- payload three times is what made this step take 27 minutes on
+           -- 17 Sep 2026 (about 3 before).
+           (e.raw_data->'qualifier' @> '[{"qualifierId": 279}]') AS q_kick_off,
+           (e.raw_data->'qualifier' @> '[{"qualifierId": 82}]')  AS q_blocked,
+           (e.raw_data->'qualifier' @> '[{"qualifierId": 2}]')   AS q_cross,
+           (e.raw_data->'qualifier' @> '[{"qualifierId": 4}]')   AS q_through_ball,
+           (e.raw_data->'qualifier' @> '[{"qualifierId": 157}]') AS q_long_ball,
+           (e.raw_data->'qualifier' @> '[{"qualifierId": 214}]') AS q_big_chance,
            m.competition_season_id,
            m.match_date::date AS match_date,
            m.home_team_id, m.away_team_id
@@ -55,13 +67,22 @@ WITH ev AS (
 ),
 
 ordered AS (
-    SELECT ev.*,
-           row_number() OVER w_asc                       AS rn,
-           row_number() OVER w_desc                      AS rn_desc,
-           count(*)     OVER (PARTITION BY sequence_id)  AS total_event_count
-    FROM ev
-    WINDOW w_asc  AS (PARTITION BY sequence_id ORDER BY json_index,      event_id),
-           w_desc AS (PARTITION BY sequence_id ORDER BY json_index DESC, event_id DESC)
+    SELECT o.*,
+           -- Last event of EACH side of the sequence. rn_desc_side = 1 with
+           -- team_id = first_team is the possessing team's last action, which
+           -- is where the spatial end is read from (see hdr).
+           row_number() OVER (PARTITION BY sequence_id, team_id = first_team
+                              ORDER BY json_index DESC, event_id DESC) AS rn_desc_side
+    FROM (
+        SELECT ev.*,
+               row_number() OVER w_asc                       AS rn,
+               row_number() OVER w_desc                      AS rn_desc,
+               count(*)     OVER (PARTITION BY sequence_id)  AS total_event_count,
+               first_value(team_id) OVER w_asc               AS first_team
+        FROM ev
+        WINDOW w_asc  AS (PARTITION BY sequence_id ORDER BY json_index,      event_id),
+               w_desc AS (PARTITION BY sequence_id ORDER BY json_index DESC, event_id DESC)
+    ) o
 ),
 
 -- Per-sequence header: everything that comes from the first or the last event.
@@ -89,7 +110,7 @@ hdr AS (
         max(y)             FILTER (WHERE rn = 1) AS start_y,
         -- Q279 kick-off must be tested first or a kick-off taken as a free
         -- kick is mis-typed (§4.1.3 rule 1).
-        bool_or(raw_data->'qualifier' @> '[{"qualifierId": 279}]')
+        bool_or(q_kick_off)
             FILTER (WHERE rn = 1)                AS start_is_kick_off,
 
         -- last event
@@ -100,11 +121,20 @@ hdr AS (
         max(spadl_type_id) FILTER (WHERE rn_desc = 1) AS end_spadl_type_id,
         max(minute)        FILTER (WHERE rn_desc = 1) AS end_minute,
         max(second)        FILTER (WHERE rn_desc = 1) AS end_second,
-        max(x)             FILTER (WHERE rn_desc = 1) AS end_x,
-        max(y)             FILTER (WHERE rn_desc = 1) AS end_y,
+        -- SPATIAL end: the possessing team's LAST action, not the last event in
+        -- the sequence. Opta coordinates are in the acting team's frame, so when
+        -- a sequence closes on an opponent record (a corner award, the losing
+        -- half of an aerial pair, a foul) the last event's x is mirrored. Before
+        -- 16 Sep 2026: 4,940 sequences, 4,616 of them off by more than 10 m, 992
+        -- wrongly reported as ending in their own third -- feeding end_zone,
+        -- field_progression, directness, direct_speed, the counter-attack flags
+        -- and opp_sequences_ended_own_third. Time and outcome still come from
+        -- the true last event.
+        max(x) FILTER (WHERE rn_desc_side = 1 AND team_id = first_team) AS end_x,
+        max(y) FILTER (WHERE rn_desc_side = 1 AND team_id = first_team) AS end_y,
         max(json_index)    FILTER (WHERE rn_desc = 1) AS end_json_index,
         -- Q82 is the ONLY way to split Attempt Saved into saved vs blocked.
-        bool_or(raw_data->'qualifier' @> '[{"qualifierId": 82}]')
+        bool_or(q_blocked)
             FILTER (WHERE rn_desc = 1)                AS end_is_blocked,
 
         -- Outcome rule 1 checks ANY event, not the last: a goal is frequently
@@ -225,16 +255,16 @@ agg AS (
                            AND NOT gold.in_box(x, y))::smallint
                                                               AS passes_into_box,
         count(*) FILTER (WHERE event_type = 'Pass'
-                           AND raw_data->'qualifier' @> '[{"qualifierId": 2}]')::smallint
+                           AND q_cross)::smallint
                                                               AS cross_count,
         count(*) FILTER (WHERE event_type = 'Pass' AND outcome = 'success'
-                           AND raw_data->'qualifier' @> '[{"qualifierId": 2}]')::smallint
+                           AND q_cross)::smallint
                                                               AS cross_completed,
         count(*) FILTER (WHERE event_type = 'Pass'
-                           AND raw_data->'qualifier' @> '[{"qualifierId": 4}]')::smallint
+                           AND q_through_ball)::smallint
                                                               AS through_ball_count,
         count(*) FILTER (WHERE event_type = 'Pass'
-                           AND raw_data->'qualifier' @> '[{"qualifierId": 157}]')::smallint
+                           AND q_long_ball)::smallint
                                                               AS long_ball_count,
         count(*) FILTER (WHERE event_type = 'Pass'
                            AND abs(end_y - y) >= 30)::smallint AS switch_count,
@@ -261,13 +291,13 @@ agg AS (
                                                                  AS shot_count,
         count(*) FILTER (WHERE event_type = 'Goal'
                             OR (event_type = 'Attempt Saved'
-                                AND NOT raw_data->'qualifier' @> '[{"qualifierId": 82}]'))::smallint
+                                AND NOT q_blocked))::smallint
                                                                  AS shots_on_target,
         count(*) FILTER (WHERE event_type IN ('Goal','Attempt Saved','Miss','Post')
                            AND gold.in_box(x, y))::smallint      AS shots_in_box,
         count(*) FILTER (WHERE event_type = 'Goal')::smallint    AS goal_count,
         count(*) FILTER (WHERE event_type = 'Post')::smallint    AS woodwork_count,
-        count(*) FILTER (WHERE raw_data->'qualifier' @> '[{"qualifierId": 214}]')::smallint
+        count(*) FILTER (WHERE q_big_chance)::smallint
                                                                  AS big_chance_count,
 
         -- ── set-piece restarts and regains inside the sequence ─────────────
@@ -341,7 +371,10 @@ nxt AS (
            n.outcome    AS next_outcome,
            n.raw_data   AS next_raw_data,
            p.corner_won_after,
-           p.foul_won_after
+           p.foul_won_after,
+           p.corner_conceded_after,
+           p.foul_conceded_after,
+           ob.team_id   AS next_onball_team_id
     FROM hdr h
     LEFT JOIN LATERAL (
         SELECT e2.event_type, e2.team_id, e2.outcome, e2.raw_data
@@ -357,7 +390,15 @@ nxt AS (
                        AND w.team_id = h.possessing_team_id) AS corner_won_after,
                bool_or(w.event_type = 'Foul'
                        AND w.outcome = 'success'
-                       AND w.team_id = h.possessing_team_id) AS foul_won_after
+                       AND w.team_id = h.possessing_team_id) AS foul_won_after,
+               -- the same two mirror pairs seen from the other side: the
+               -- OPPONENT won the corner / the free kick off this possession
+               bool_or(w.event_type = 'Corner Awarded'
+                       AND w.outcome = 'success'
+                       AND w.team_id <> h.possessing_team_id) AS corner_conceded_after,
+               bool_or(w.event_type = 'Foul'
+                       AND w.outcome = 'success'
+                       AND w.team_id <> h.possessing_team_id) AS foul_conceded_after
         FROM (
             SELECT e3.event_type, e3.outcome, e3.team_id
             FROM silver.events e3
@@ -367,6 +408,24 @@ nxt AS (
             LIMIT 3
         ) w
     ) p ON TRUE
+    -- The next POSSESSION-BEARING action in the same period, any team. This is
+    -- the classifier's own lookahead (sequences.py ON_BALL_EVENTS, contested
+    -- actions only when they succeed) and is what separates a real turnover
+    -- from a possession the same team won straight back (`retained`).
+    LEFT JOIN LATERAL (
+        SELECT e4.team_id
+        FROM silver.events e4
+        WHERE e4.match_id = h.match_id
+          AND e4.period   = h.period
+          AND (e4.json_index, e4.event_id) > (h.end_json_index, h.end_event_id)
+          AND (e4.event_type IN ('Pass','Offside Pass','Carry','Take On','Clearance',
+                                 'Goal','Miss','Post','Attempt Saved','Dispossessed')
+               OR (e4.event_type IN ('Tackle','Interception','Blocked Pass',
+                                     'Ball recovery','Keeper pick-up','Claim')
+                   AND e4.outcome = 'success'))
+        ORDER BY e4.json_index, e4.event_id
+        LIMIT 1
+    ) ob ON TRUE
 )
 
 INSERT INTO gold.sequences (
@@ -498,9 +557,32 @@ SELECT
         WHEN h.end_event_type IN ('Claim','Keeper pick-up')
              AND h.end_team_id IS DISTINCT FROM h.possessing_team_id
                                                                THEN 'keeper_collected'
+        -- 16 Sep 2026: the four values that used to hide inside `turnover`
+        -- (md/GOLD_SEQUENCES.md §6.5). The opponent's mirror record of a
+        -- corner or foul is checked the same way as our own above.
+        WHEN (h.end_event_type = 'Corner Awarded'
+              AND h.end_team_id IS DISTINCT FROM h.possessing_team_id
+              AND h.end_outcome = 'success')
+          OR COALESCE(n.corner_conceded_after, FALSE)          THEN 'corner_conceded'
+        WHEN (h.end_event_type = 'Foul'
+              AND h.end_team_id IS DISTINCT FROM h.possessing_team_id
+              AND h.end_outcome = 'success')
+          OR COALESCE(n.foul_conceded_after, FALSE)            THEN 'foul_committed'
         WHEN n.next_event_type IS NULL
-          OR n.next_event_type IN ('End','Player on','Player off')
-                                                               THEN 'period_end'
+          OR n.next_event_type = 'End'                         THEN 'period_end'
+        -- A substitution, a delay, a card, a drop ball: the sequence was cut
+        -- by the referee's whistle, not by the opponent. 752 of the old
+        -- `period_end` rows were substitutions.
+        WHEN n.next_event_type IN ('Player on','Player off','Player retired',
+                                   'Start delay','End delay',
+                                   'Injury Time Announcement',
+                                   'Referee Drop Ball','Card',
+                                   'Contentious referee decision')
+                                                               THEN 'interrupted'
+        -- The same team makes the next on-ball action: a failed pass, touch
+        -- or take-on won straight back. The controlled possession broke, so
+        -- the sequence rightly ended, but nothing was conceded.
+        WHEN n.next_onball_team_id = h.possessing_team_id      THEN 'retained'
         ELSE 'turnover'
     END,
 

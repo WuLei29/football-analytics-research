@@ -284,6 +284,21 @@ def segment_sequence(
             pending_index = i
             confirm_run = 0
 
+    # ── terminal zone (16 Sep 2026) ────────────────────────────────────────
+    # A zone entered by the sequence's last event(s) can never be confirmed by
+    # a following event, because there is none. Before this rule a chain that
+    # ended "pass into the final third, shot" was classified entirely by the
+    # zone it came from: 1,031 of 7,257 shot sequences with three or more
+    # events had no attacking phase at all, 995 of them ending in the final
+    # third. The end of the sequence is the confirmation.
+    if pending_zone is not None and pending_index is not None and pending_index > segment_start:
+        segments.append(
+            _build_segment(
+                remaining, segment_start, pending_index, len(segments) + 1, None
+            )
+        )
+        segment_start = pending_index
+
     segments.append(
         _build_segment(
             remaining, segment_start, len(remaining), len(segments) + 1, None

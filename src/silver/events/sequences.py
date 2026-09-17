@@ -132,6 +132,38 @@ FIX_B_REQUIRES_SUCCESS = frozenset({
     'Keeper pick-up', 'Claim',
 })
 
+# ── 16 Sep 2026 rule set (md/GOLD_SEQUENCES.md §6.5) ─────────────────
+#
+# Possession-bearing actions, used for the `next_onball_team` lookahead that
+# the failed take-on rule reads.  Contested members (FIX_B_REQUIRES_SUCCESS)
+# only count when they succeed — a failed tackle proves nothing about who
+# has the ball.
+ON_BALL_EVENTS = frozenset({
+    'Pass', 'Offside Pass', 'Carry', 'Take On', 'Ball recovery', 'Clearance',
+    'Interception', 'Tackle', 'Blocked Pass', 'Keeper pick-up', 'Claim',
+    'Goal', 'Miss', 'Post', 'Attempt Saved', 'Dispossessed',
+})
+
+# The "regain" start rules: every rule in _is_sequence_start that opens a
+# sequence because the ball changed hands.  None of them may fire for the
+# team that already owns the running sequence — a team cannot regain the
+# ball from itself.  Before this gate, an opponent's passive mirror record
+# (the losing half of an aerial pair, a Challenge, a failed tackle) sitting
+# between two of our actions made the next one look like a team change and
+# split one possession into two: 933 passes after an aerial, 599 after a
+# failed tackle, 477 keeper pick-ups after our own back pass.
+REGAIN_RULE_EVENTS = frozenset({
+    'Pass', 'Tackle', 'Blocked Pass', 'Ball recovery', 'Interception',
+    'Claim', 'Keeper pick-up', 'Attempt Saved', 'Clearance',
+})
+
+# Q211 on a Take On: the ball ran away from the dribbler, out of play or to
+# an opponent.  The dribbler's team keeps the ball on 3.1 per cent of these,
+# against 97.9 per cent when the take-on ended in a foul (Q467) and 22 per
+# cent otherwise — it is the one qualifier that settles a failed take-on
+# without looking ahead.
+OVERRUN_QUALIFIER_ID = 211
+
 # Columns required from silver.events for the classifier
 REQUIRED_COLUMNS = [
     'event_id', 'match_id', 'period', 'minute', 'second',
@@ -250,7 +282,31 @@ def preprocess_for_sequences(df: pd.DataFrame) -> pd.DataFrame:
             "assist-based sequence guards will be inactive."
         )
 
+    # ── Failed take-on support: overrun flag + next on-ball team ─────
+    # has_overrun: Take On carrying Q211.
+    # next_onball_team: source_team_id of the next possession-bearing action
+    # in the same match (ON_BALL_EVENTS, contested ones only when they
+    # succeed).  NaN when none follows.  Computed here, after the excluded
+    # event types are dropped, so it never lands on an Attempted Tackle.
+    out['has_overrun'] = (
+        (out['event_type'] == 'Take On')
+        & qualifier_ids_series.apply(lambda qids: OVERRUN_QUALIFIER_ID in qids)
+    )
+    on_ball = out['event_type'].isin(ON_BALL_EVENTS) & ~(
+        out['event_type'].isin(FIX_B_REQUIRES_SUCCESS) & (out['outcome'] != 'success')
+    )
+    out['next_onball_team'] = (
+        out['source_team_id'].where(on_ball)
+        .groupby(out['match_id'])
+        .transform(lambda s: s.shift(-1).bfill())
+    )
+
     return out
+
+
+def _is_missing(value: Any) -> bool:
+    """True for None and float NaN (the lookahead column is NaN at match end)."""
+    return value is None or (isinstance(value, float) and np.isnan(value))
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -274,14 +330,16 @@ def _is_sequence_start(
     Parameters
     ----------
     current_seq_team : source_team_id owning the running sequence, or None.
-        Only read by Fix A.
+        Read by Fix A, by the sandwich guard, by the owner gate and by the
+        assist guard (all four compare the event to the sequence OWNER, not
+        to the previous row).
     fix_a, fix_b : bool
-        Opt-in classifier fixes, both default OFF.  With both off this
-        function returns exactly what it returned before they existed —
-        every new branch is guarded and appended after the original ones.
+        Classifier fixes from md/GOLD_SEQUENCES.md §6.3, both default ON.
+        --no-fix-a / --no-fix-b exist for A/B comparison only.
     """
     evt = row['event_type']
     outcome = row['outcome']
+    team = row['source_team_id']
 
     # ── Corner Awarded can be *part of* a sequence but never starts one
     if evt == 'Corner Awarded':
@@ -296,13 +354,19 @@ def _is_sequence_start(
     #
     # Only suppress when the Ball touch/Error was a genuine sandwich:
     # prev_prev_row must be the same team as the current row (Team A →
-    # Team B touch → Team A pattern).
+    # Team B touch → Team A pattern), AND that team must be the one that
+    # owns the running sequence.  Without the owner check the pattern
+    # "our aerial pair → our failed touch → their pass" read as *their*
+    # sandwich, so the opponent's pass was absorbed into our sequence and
+    # their real possession start was lost (§6.5, 655 passes, 206
+    # recoveries, 90 clearances league-wide).
     if (in_sequence
             and prev_row is not None
             and prev_row['event_type'] in ('Ball touch', 'Error')
-            and prev_row['source_team_id'] != row['source_team_id']
+            and prev_row['source_team_id'] != team
             and prev_prev_row is not None
-            and prev_prev_row['source_team_id'] == row['source_team_id']):
+            and prev_prev_row['source_team_id'] == team
+            and team == current_seq_team):
         return False
 
     # ── Fix 3: Set-piece pass always starts ────────────────────────────
@@ -320,10 +384,29 @@ def _is_sequence_start(
             and evt not in META_EVENTS):
         return True
 
+    # ── Owner gate: a team cannot regain the ball from itself ──────────
+    # Every regain rule below compares the event to the PREVIOUS ROW.  When
+    # that row is an opponent's passive mirror record inside our own running
+    # sequence, the comparison sees a team change that never happened.  The
+    # two restart cases (a pass after Corner Awarded / Offside provoked) are
+    # kept: those are genuine new possessions of the same team.
+    if (in_sequence
+            and team == current_seq_team
+            and evt in REGAIN_RULE_EVENTS
+            and not (evt == 'Pass' and prev_row is not None
+                     and prev_row['event_type'] in ('Corner Awarded', 'Offside provoked'))):
+        return False
+
     # ── Successful Pass — sub-conditions ───────────────────────────────
     if evt == 'Pass' and outcome == 'success':
-        # Fix 2: assist pass must not break the current sequence
-        if _has_value_assist(row):
+        # Fix 2: an assist pass must not break the passer's OWN running
+        # sequence.  It says nothing when no sequence is running, or when the
+        # running one belongs to the opponent — there the pass is the first
+        # action of a new possession and must open it.  Before the owner
+        # check, 350 key passes sat in the opponent's sequence and 328 more
+        # in none, with the shot they created stranded as a one-event
+        # sequence (§6.5).
+        if _has_value_assist(row) and in_sequence and team == current_seq_team:
             return False
 
         if prev_row is None:
@@ -391,12 +474,17 @@ def _is_sequence_start(
     # stamped with the wrong team.  Compare to the sequence owner instead.
     #
     # PASSIVE_EVENTS are exempt: they are the opponent-side events that
-    # legitimately live inside someone else's sequence.
+    # legitimately live inside someone else's sequence.  So is a FAILED
+    # contested action (a tackle that did not win the ball, a failed
+    # interception): the same gate Fix B applies, because it carries no
+    # possession.  Without it, letting a failed take-on continue (below)
+    # would open the opponent's sequence on their failed tackle.
     if (fix_a
             and in_sequence
             and current_seq_team is not None
-            and row['source_team_id'] != current_seq_team
-            and evt not in PASSIVE_EVENTS):
+            and team != current_seq_team
+            and evt not in PASSIVE_EVENTS
+            and not (evt in FIX_B_REQUIRES_SUCCESS and outcome != 'success')):
         return True
 
     # ── Fix B: gap closer ──────────────────────────────────────────────
@@ -416,14 +504,22 @@ def _is_sequence_end(
     next_row: Optional[dict],
     prev_row: Optional[dict],
     next_next_row: Optional[dict],
+    current_seq_team: Optional[Any] = None,
 ) -> bool:
     """
     Determine whether the current event closes the active possession sequence.
 
     Conditions are evaluated in priority order.
+
+    Parameters
+    ----------
+    current_seq_team : source_team_id owning the running sequence.  Read by
+        the two sandwich exemptions (Fix 6, Fix 7): a deflection only keeps
+        the sequence alive when the team on both sides of it is the owner.
     """
     evt = row['event_type']
     outcome = row['outcome']
+    team = row['source_team_id']
 
     # ── Fix 8: Corner Awarded always ends the sequence it belongs to ───
     if evt == 'Corner Awarded':
@@ -442,10 +538,12 @@ def _is_sequence_end(
         # Fix 2: assist pass must not end the sequence
         if _has_value_assist(row):
             return False
-        # Fix 6: Ball touch / Error sandwich — deflection, possession kept
+        # Fix 6: Ball touch / Error sandwich — deflection, possession kept.
+        # Only for the sequence owner (§6.5).
         if next_row is not None and next_row['event_type'] in ('Ball touch', 'Error'):
             if (next_next_row is not None
-                    and next_next_row['source_team_id'] == row['source_team_id']):
+                    and next_next_row['source_team_id'] == team
+                    and team == current_seq_team):
                 return False
         return True
 
@@ -454,11 +552,15 @@ def _is_sequence_end(
         return True
 
     # ── Unsuccessful Ball touch / Error — Fix 7: sandwich exemption ────
+    # A failed touch is a deflection (the sequence goes on) only when the
+    # team on both sides of it OWNS the sequence.  The owner's own failed
+    # touch between two opponent events is the moment possession was lost.
     if evt in ('Ball touch', 'Error') and outcome == 'failure':
         if (prev_row is not None and next_row is not None
                 and prev_row['source_team_id'] == next_row['source_team_id']
-                and prev_row['source_team_id'] != row['source_team_id']):
-            return False  # deflection — sequence continues for other team
+                and prev_row['source_team_id'] != team
+                and prev_row['source_team_id'] == current_seq_team):
+            return False  # deflection — sequence continues for the owner
         return True
 
     # ── Offside Pass (any outcome) ─────────────────────────────────────
@@ -487,9 +589,20 @@ def _is_sequence_end(
         if next_row is None or next_row['source_team_id'] != row['source_team_id']:
             return True
 
-    # ── Unsuccessful Take On (except when fouled immediately after) ────
+    # ── Unsuccessful Take On: the ball is loose, not lost ──────────────
+    # Opta's own definition of the paired Tackle is "outcome 1 = win and
+    # retain possession or out of play, 0 = win tackle but not possession",
+    # so a failed take-on says the dribbler was stopped, not where the ball
+    # went.  Measured: after a failed take-on the dribbler's team makes the
+    # next on-ball action 56.5 per cent of the time when the tackle failed
+    # and 36.6 per cent when it succeeded.  The possession therefore ends
+    # only when the NEXT on-ball action is the opponent's.  Q211 (overrun)
+    # is the exception that needs no lookahead: 3.1 per cent retention.
     if evt == 'Take On' and outcome == 'failure':
-        if next_row is not None and next_row['event_type'] == 'Foul':
+        if row.get('has_overrun', False):
+            return True
+        nxt = row.get('next_onball_team')
+        if not _is_missing(nxt) and nxt == team:
             return False
         return True
 
@@ -526,10 +639,11 @@ def classify_possession_sequences(
     match_id_column : str
         Column holding the match identifier.
     fix_a, fix_b : bool
-        Opt-in classifier fixes (md/GOLD_SEQUENCES.md §6.3), both default
-        OFF.  With both off the output is bit-identical to the shipped
-        classifier.  Both are strictly additive — they can only open extra
-        sequences, never suppress an existing one.
+        Classifier fixes from md/GOLD_SEQUENCES.md §6.3, both default ON.
+        Turning either off reproduces the pre-16-Aug-2026 behaviour for A/B
+        comparison only.  The 16 Sep 2026 rule set (§6.5: sandwich owner
+        checks, owner gate, failed take-on lookahead, assist guard scope) is
+        always on.
 
     Returns
     -------
@@ -647,7 +761,10 @@ def classify_possession_sequences(
             seq_event_nums[idx] = current_event_num
 
         # ── Check sequence end ────────────────────────────────────────
-        if in_sequence and _is_sequence_end(row, next_row, prev_row, next_next_row):
+        if in_sequence and _is_sequence_end(
+            row, next_row, prev_row, next_next_row,
+            current_seq_team=current_seq_team,
+        ):
             seq_ends[idx]     = True
             in_sequence       = False
             current_seq_id    = None
@@ -859,7 +976,7 @@ def populate_silver_sequences(
     batch_size : int
         Number of matches to load into memory at a time.
     fix_a, fix_b : bool
-        Opt-in classifier fixes, both default OFF (md/GOLD_SEQUENCES.md §6.3).
+        Classifier fixes, both default ON (md/GOLD_SEQUENCES.md §6.3).
 
     Returns
     -------
@@ -989,6 +1106,12 @@ if __name__ == "__main__":
         help="Specific match IDs to process (default: auto-discover unprocessed)",
     )
     parser.add_argument(
+        "--all", action="store_true",
+        help="Re-classify EVERY match in silver.events (auto-discovery only "
+             "finds matches with no sequence_id). Use after a rule change; "
+             "follow with the full gold rebuild.",
+    )
+    parser.add_argument(
         "--limit", type=int, default=None,
         help="Max number of matches to process (only used with auto-discovery)",
     )
@@ -1027,9 +1150,15 @@ if __name__ == "__main__":
 
     conn = psycopg2.connect(dsn)
     try:
+        match_ids = args.match_ids
+        if args.all:
+            with conn.cursor() as cur:
+                cur.execute("SELECT DISTINCT match_id FROM silver.events ORDER BY 1")
+                match_ids = [r[0] for r in cur.fetchall()]
+            log.info("--all: re-classifying %d matches", len(match_ids))
         stats = populate_silver_sequences(
             conn,
-            match_ids=args.match_ids,
+            match_ids=match_ids,
             limit=args.limit,
             batch_size=args.batch_size,
             fix_a=args.fix_a,

@@ -76,9 +76,11 @@ Sequences that do not match any of the previous criteria stated before.
 
 When the ball briefly enters a new zone but returns to the previous zone (e.g. a pass into zone 2 that gets played back to zone 1), the phase should **not** change. The current phase is maintained.
 
-**Rule:** A zone transition is only confirmed when the ball *stays* in the new zone for at least 3  events, so it can be classified in stablished possesion or fast-break. If not, it will be considered of part of the current phase. Few events in a new zone followed by an immediate return to the previous zone does not trigger a phase change — it is absorbed into the current phase.
+**Rule:** A zone transition is only confirmed when the ball *stays* in the new zone for **2 consecutive events** (`ZONE_CONFIRM_EVENTS` in `src/gold/phases.py`), so it can be classified as established possession or fast-break. If not, it is considered part of the current phase. A single event in a new zone followed by an immediate return to the previous zone does not trigger a phase change — it is absorbed into the current phase.
 
-**Implementation hint:** The state machine should use a "pending zone change" buffer. When the ball enters a new zone, mark it as pending. If the next event is still in the new zone, confirm the transition. If it returns to the previous zone, discard the pending change and continue the current phase.
+**Terminal zone (16 Sep 2026):** a zone entered by the sequence's last event(s) can never be confirmed by a following event, because there is none. The end of the sequence counts as the confirmation: a chain that ends "pass into the final third, shot" gets an attacking segment for the shot. Before this rule 1,031 of 7,257 shot sequences with 3+ events had no attacking phase at all.
+
+**Implementation hint:** The state machine should use a "pending zone change" buffer. When the ball enters a new zone, mark it as pending. If the next event is still in the new zone, confirm the transition. If it returns to the previous zone, discard the pending change and continue the current phase. If the sequence ends while a change is pending, confirm it.
 
 ### 3.2 Single-Event Sequences
 

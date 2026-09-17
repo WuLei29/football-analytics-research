@@ -64,4 +64,15 @@ def calculate_xt(df: pd.DataFrame) -> pd.DataFrame:
         df.loc[mask, "end_zone_value_xt"] - df.loc[mask, "start_zone_value_xt"]
     )
 
+    # A FAILED action earns no threat. Until 16 Sep 2026 a failed pass was
+    # credited with the full zone gain of its intended destination, so a
+    # hopeful long ball into the box that was cut out scored as if it had
+    # arrived: failed passes averaged +0.027 xT against +0.003 for completed
+    # ones, and 64 per cent of the top-12 sequences on the match pages drew
+    # most of their xT from a pass that never got there. Karun Singh's
+    # convention is that only completed moves carry the gain; the start and
+    # end zone values are still stored so the intent remains analysable.
+    failed = mask & (df["outcome"] != "success")
+    df.loc[failed, "xt"] = 0.0
+
     return df

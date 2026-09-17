@@ -455,6 +455,34 @@ counterpress AS (
     GROUP BY match_id, team_id
 ),
 
+-- ── possession clock: start-to-next-start (§4.5.0, 16 Sep 2026) ────────────
+-- A team holds the ball from the start of its sequence until the start of the
+-- next sequence of EITHER team in the same period, or the end of the period.
+-- The previous definition summed each sequence's own first-to-last-event span
+-- with a one-second floor, which covered only 46-48 pct of the clock and left
+-- every gap between sequences unattributed: the two definitions differ by 4.2
+-- points on average and up to 15 on a single match. This one is the standard
+-- "ball in play" attribution; the whole period clock is shared out, so the two
+-- teams' possession_duration_sec sum to the period length.
+seq_clock AS (
+    SELECT s.sequence_id,
+           GREATEST(
+               COALESCE(lead(s.start_minute * 60 + s.start_second) OVER w,
+                        pe.period_end_clock)
+               - (s.start_minute * 60 + s.start_second),
+               0)::real AS held_sec
+    FROM gold.sequences s
+    JOIN (
+        SELECT match_id, period, max(minute * 60 + second) AS period_end_clock
+        FROM silver.events
+        WHERE (%(match_ids)s::int[] IS NULL OR match_id = ANY (%(match_ids)s::int[]))
+        GROUP BY match_id, period
+    ) pe USING (match_id, period)
+    WHERE (%(match_ids)s::int[] IS NULL OR s.match_id = ANY (%(match_ids)s::int[]))
+    WINDOW w AS (PARTITION BY s.match_id, s.period
+                 ORDER BY s.start_minute, s.start_second, s.start_event_id)
+),
+
 -- ── sequence-level aggregation, one row per (match, team) ──────────────────
 sequence_agg AS (
     SELECT
@@ -462,13 +490,10 @@ sequence_agg AS (
         count(*)::smallint                              AS sequences,
         COALESCE(sum(s.pass_count), 0)::smallint        AS sequence_passes_total,
         COALESCE(sum(s.duration_seconds), 0)::real      AS sequence_duration_total,
-        -- THE ONE-SECOND FLOOR (§4.5.0). duration_seconds is 0 on 31 pct of
-        -- sequences because the clock has one-second resolution, and the loss
-        -- is not symmetric: it falls on clearances and recoveries, which
-        -- flatters the pressing side. Without the floor, possession_pct is
-        -- measurably wrong.
-        COALESCE(sum(GREATEST(s.duration_seconds, 1.0)), 0)::real
-                                                        AS possession_duration_sec,
+        -- Start-to-next-start, from seq_clock above. The one-second floor that
+        -- lived here until 16 Sep 2026 is no longer needed: a zero-length
+        -- sequence still holds the clock until the next one starts.
+        COALESCE(sum(sc.held_sec), 0)::real             AS possession_duration_sec,
         count(*) FILTER (WHERE s.pass_count >= 10)::smallint AS long_sequences,
         count(*) FILTER (WHERE s.outcome IN ('goal','shot_saved','shot_blocked',
                                              'shot_off_target','shot_woodwork')
@@ -500,6 +525,7 @@ sequence_agg AS (
         -- that died in their own third are this team's build-up disruption.
         count(*) FILTER (WHERE s.end_third = 1)::smallint AS sequences_ended_own_third
     FROM gold.sequences s
+    JOIN seq_clock sc USING (sequence_id)
     WHERE (%(match_ids)s::int[] IS NULL OR s.match_id = ANY (%(match_ids)s::int[]))
     GROUP BY s.match_id, s.team_id
 )

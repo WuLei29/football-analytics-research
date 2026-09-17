@@ -280,7 +280,35 @@ These project-specific skills are registered and should be consulted automatical
 
 ## Current State
 
-> Last updated: 5 September 2026
+> Last updated: 16 September 2026
+
+### Sequence review applied (16 Sep 2026)
+
+A full review of the sequence path (classifier → gold → phases → export → web)
+produced one rule set and four gold changes, all applied and rebuilt over the
+458 matches. Full record with before/after tables: **`md/GOLD_SEQUENCES.md §6.5`**.
+
+- **Classifier** (`sequences.py`, always on, no flag): the sandwich exemptions,
+  the regain start rules and the assist guard are now **owner-relative** (a team
+  cannot regain the ball from itself; an opponent's mirror record between two of
+  our actions is not a team change); a **failed take-on ends the possession only
+  when the next on-ball action is the opponent's** (Opta: a failed paired tackle
+  means "won the tackle but not the ball"; Q211 overrun always ends). 155,050 →
+  150,990 sequences; opponent on-ball events inside a sequence 1,147 → 0;
+  every assist now in its own team's chain. `--all` re-classifies every match.
+- **xT** (`xt.py`): a failed pass or carry earns **0**. It used to get the full
+  zone gain of its intended destination, which decided the "best sequences"
+  ranking on the match pages (64% of the top 12 drew most of their xT from a
+  pass that never arrived).
+- **`gold.sequences`**: `end_x`/`end_y` from the possessing team's last action
+  (the last event's coordinates are in the opponent's frame when it is theirs);
+  four new `outcome` values — `retained`, `corner_conceded`, `foul_committed`,
+  `interrupted` — split out of `turnover`; DDL constraint updated in
+  `sql/ddl/gold_sequences.sql` (idempotent ALTER).
+- **Phases** (`phases.py`): the zone a sequence ends in confirms itself, so a
+  chain ending "pass into the final third, shot" gets its attacking segment.
+- **Possession** (`build_team_match_stats.sql`): start-to-next-start clock
+  attribution replaces the one-second-floor duration sum (`GOLD_LAYER.md §4.5.0`).
 
 ### Done
 - Silver schema fully designed and operational for La Liga — all 10 tables
@@ -304,9 +332,9 @@ Built and populated over all 458 matches:
 
 | Table | Rows |
 |---|---|
-| `gold.sequences` | 155,050 |
-| `gold.sequence_players` | 450,833 |
-| `gold.sequence_phase_segments` | 234,952 |
+| `gold.sequences` | 150,990 |
+| `gold.sequence_players` | 448,269 |
+| `gold.sequence_phase_segments` | 248,675 |
 | `gold.team_match_stats` | 916 |
 | `gold.team_season_stats` | 60 |
 | `gold.player_match_stats` | 14,394 |
@@ -356,7 +384,8 @@ re-classified.** Diagnosis, worked examples and full before/after in
 `md/GOLD_SEQUENCES.md §6`. The before/after table below is that 427-match
 snapshot and is kept as the historical record; the 2026/27 matches loaded on
 5 Sep 2026 were classified with the same fixes, bringing the current totals to
-**458 matches / 884,330 events with a `sequence_id` / 155,050 sequences**.
+**458 matches / 887,040 events with a `sequence_id` / 150,990 sequences** after the
+16 Sep 2026 rule set (§6.5).
 
 - **Fix 0 — determinism.** The classifier was **non-deterministic**: 11,766
   events share a `json_index` with another event in the same match (6,026
@@ -386,7 +415,8 @@ old behaviour for A/B comparison only — never for a production backfill.
 
 The last two rows are the intended price of Fix B — recording brief possessions
 that were previously invisible. Two consequences downstream: `possession_pct`
-**must** use the one-second floor (`GOLD_LAYER.md §4.5.0`), and style clustering
+is clock-based, start-to-next-start, since 16 Sep 2026 (`GOLD_LAYER.md §4.5.0`;
+the one-second floor it replaced is no longer needed), and style clustering
 must filter `event_count >= 3` (§4.1.9), which now drops ~40% of rows.
 
 Pre-fix snapshot kept in `silver.sequences_backup_20260816` (901,805 rows) —
@@ -399,4 +429,4 @@ sequence; do not "fix" that.
 ### Future Scope
 - Segunda Division (zero schema changes needed)
 - Web visualisation on top of gold layer
-- Sequence & phase clustering (unsupervised ML)
+- Sequence & phase clustering (unsupervised ML) — proposal and roadmaps in `md/SEQUENCE_CLUSTERING.md`

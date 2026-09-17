@@ -162,9 +162,12 @@ CREATE TABLE IF NOT EXISTS gold.sequences (
     next_event_type         VARCHAR(40),
     next_event_team_id      INT REFERENCES silver.teams(team_id),
     outcome                 VARCHAR(18) NOT NULL
+        CONSTRAINT sequences_outcome_check
         CHECK (outcome IN ('goal','shot_saved','shot_blocked','shot_off_target',
                            'shot_woodwork','corner_won','foul_won','offside',
-                           'ball_out','keeper_collected','period_end','turnover')),
+                           'ball_out','keeper_collected','corner_conceded',
+                           'foul_committed','period_end','interrupted',
+                           'retained','turnover')),
 
     -- ── spatial (§4.1.4) ───────────────────────────────────────────────────
     start_x                 REAL,
@@ -379,6 +382,18 @@ CREATE TABLE IF NOT EXISTS gold.sequence_players (
 
     PRIMARY KEY (sequence_id, player_id)
 );
+
+-- Amendment (16 Sep 2026, GOLD_SEQUENCES §6.5): four outcome values were added
+-- (corner_conceded, foul_committed, interrupted, retained). CREATE TABLE IF NOT
+-- EXISTS above no-ops on an existing database, so the CHECK is re-created
+-- explicitly. Idempotent: drops and re-adds the same constraint.
+ALTER TABLE gold.sequences DROP CONSTRAINT IF EXISTS sequences_outcome_check;
+ALTER TABLE gold.sequences ADD CONSTRAINT sequences_outcome_check
+    CHECK (outcome IN ('goal','shot_saved','shot_blocked','shot_off_target',
+                       'shot_woodwork','corner_won','foul_won','offside',
+                       'ball_out','keeper_collected','corner_conceded',
+                       'foul_committed','period_end','interrupted',
+                       'retained','turnover'));
 
 -- Amendment (§4.1.2a): the decisive-action columns were added after this file
 -- was first applied. CREATE TABLE IF NOT EXISTS above no-ops on a database that
