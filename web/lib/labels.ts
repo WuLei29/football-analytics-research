@@ -72,6 +72,44 @@ export const provenance = {
 } as const;
 
 /* --------------------------------------------------------------------------
+ * Metric definitions.
+ *
+ * The two action-value metrics a reader can choose between (the sequence
+ * browser today, the lab later). `short` is the one-line answer shown on
+ * hover; `long` is the paragraph under it. Wherever a selector offers xT and
+ * VAEP it must draw these, so the two are never explained two different ways.
+ * ------------------------------------------------------------------------ */
+
+export type SequenceMetric = "xt" | "vaep";
+
+export const metricDefinitions: Record<
+  SequenceMetric,
+  { abbr: string; name: string; short: string; long: string }
+> = {
+  xt: {
+    abbr: "xT",
+    name: "Amenaza esperada",
+    short: "Cuánto acerca a la portería la acción ejecutada.",
+    long:
+      "Cada zona del campo tiene un valor según la probabilidad de marcar " +
+      "desde ella. Un pase o una conducción vale la diferencia entre la zona " +
+      "de llegada y la de salida. Mide la construcción del juego, no el " +
+      "remate: un tiro o una entrada no suman xT.",
+  },
+  vaep: {
+    abbr: "VAEP",
+    name: "Valor de la acción",
+    short: "Cuánto aumenta la acción la probabilidad de la jugada de acabar en gol.",
+    long:
+      "Un modelo estima, antes y después de cada acción, la probabilidad de " +
+      "marcar y de encajar en las próximas diez. El VAEP es la diferencia. " +
+      "Valora tiros, regates y acciones defensivas además de pases, y tiene " +
+      "en cuenta el contexto (marcador, minuto, acciones anteriores). Un gol " +
+      "vale mucho, así que las secuencias que acaban en gol suben arriba.",
+  },
+};
+
+/* --------------------------------------------------------------------------
  * Metric names.
  *
  * The keys are the ones the export writes; see `md/WEB_DATA.md` §5.1 for the
@@ -85,10 +123,11 @@ export const kpiLabels: Record<string, string> = {
   points: "Puntos",
   xg_difference: "Diferencia de xG",
   possession_pct: "Posesión",
-  ppda: "PPDA",
+  goals_for: "Goles a favor",
   set_piece_goals_for: "Goles a balón parado",
   // secondary values
   points_per_match: "por partido",
+  goals_per_match: "por partido",
   xg_difference_per_match: "por partido",
   set_piece_goal_share: "de los goles",
 };
@@ -104,7 +143,7 @@ export const profileCardLabels = {
 /** The 24 team-profile metrics, in the design's card order. */
 export const metricLabels: Record<string, string> = {
   // Defensa
-  duels_won: "Duelos ganados",
+  ppda: "PPDA",
   aerials_won: "Duelos aéreos ganados",
   aerial_win_rate: "% duelos aéreos",
   tackles_won: "Entradas ganadas",
@@ -136,7 +175,7 @@ export const metricLabels: Record<string, string> = {
 /** The four player-leader boxes on screen 01. */
 export const leaderLabels: Record<string, string> = {
   goals: "Goles",
-  xt_per_90: "xT por 90",
+  vaep_per_90: "VAEP por 90",
   progressive_passes: "Pases progresivos",
   carries_into_final_third: "Conducciones al último tercio",
 };
@@ -203,6 +242,43 @@ export function defensiveActionType(key: string): string {
 }
 
 /**
+ * `sequences[].actions[].type` — `silver.events.event_type` as a snake_case
+ * key (WEB_DATA §7.3). Only the types that occur inside a possession chain
+ * need a word; anything else falls through `label` as `⟨key⟩`.
+ */
+const sequenceActionTypeLabels: Record<string, string> = {
+  pass: "Pase",
+  offside_pass: "Pase en fuera de juego",
+  carry: "Conducción",
+  take_on: "Regate",
+  goal: "Gol",
+  attempt_saved: "Tiro a puerta",
+  miss: "Tiro fuera",
+  post: "Tiro al palo",
+  clearance: "Despeje",
+  ball_recovery: "Recuperación",
+  interception: "Intercepción",
+  tackle: "Entrada",
+  blocked_pass: "Pase bloqueado",
+  claim: "Blocaje",
+  keeper_pick_up: "Recogida del portero",
+  punch: "Despeje de puños",
+  keeper_sweeper: "Salida del portero",
+  ball_touch: "Toque",
+  dispossessed: "Pérdida",
+  foul: "Falta",
+  aerial: "Duelo aéreo",
+  challenge: "Duelo",
+  shield_ball_opp: "Protección del balón",
+  good_skill: "Recurso técnico",
+  corner_awarded: "Córner concedido",
+};
+
+export function sequenceActionType(key: string): string {
+  return label(sequenceActionTypeLabels, key);
+}
+
+/**
  * `gold.sequences.primary_phase` — the eleven phases of the `phases-of-play`
  * vocabulary plus `chaotic`, which is the classifier saying "none matched"
  * (GOLD_LAYER §4.1.6). Keys are the column's own values, so the export ships
@@ -235,7 +311,11 @@ const sequenceOutcomeLabels: Record<string, string> = {
   offside: "Fuera de juego",
   ball_out: "Balón fuera",
   keeper_collected: "Atrapa el portero",
+  corner_conceded: "Córner en contra",
+  foul_committed: "Falta cometida",
   period_end: "Fin del periodo",
+  interrupted: "Interrupción",
+  retained: "Recuperada al instante",
   turnover: "Pérdida",
 };
 
@@ -264,6 +344,8 @@ export const viz = {
     shotOff: "Fuera",
     progressivePass: "Pase progresivo",
     carry: "Conducción",
+    clearance: "Despeje",
+    otherAction: "Otra acción · pasa el cursor para leerla",
     regain: "Recuperación",
     duelLost: "Duelo perdido",
     low: "Bajo",
@@ -502,10 +584,14 @@ export const match = {
   defenceCaption: (n: number) => `Las ${n} más adelantadas, y la línea media`,
   defenceLine: (metres: string) => `LÍNEA DEF. ${metres} M`,
 
-  sequencesHeading: "Jugadas por xT",
-  sequencesCaption: (n: number) =>
+  /** The block title follows the metric the list is sorted by. */
+  sequencesHeading: (metric: SequenceMetric) =>
+    `Jugadas por ${metricDefinitions[metric].abbr} (${metricDefinitions[metric].name})`,
+  sequencesCaption: (n: number, metric: SequenceMetric) =>
     `Las ${n} secuencias de posesión de tres o más acciones, de más a menos ` +
-    `amenaza. Elige una para leerla en detalle.`,
+    `${metric === "xt" ? "amenaza" : "valor"}. Elige una para leerla en detalle.`,
+  /** The xT / VAEP toggle beside the title. */
+  sequencesSortLabel: "Ordenar por",
   sequencesEmpty: "No hay secuencias de tres o más acciones en este partido.",
   sequenceDetailHeading: "La jugada, en detalle",
   /** A row of the sequence list: "SEC-04 · 23 min". */
@@ -524,7 +610,21 @@ export const match = {
   backToList: "Todos los partidos",
 } as const;
 
-/** The fourteen match totals, in the design order (WEB_DATA.md §7.2). */
+/** The match dropdown in the header of screen 02 (`MatchPicker`). */
+export const matchPicker = {
+  label: "Cambiar de partido",
+  /** "J3 · 14 sept · L Valencia 2–1" — one line per match, newest first. */
+  option: (
+    matchday: number,
+    date: string,
+    venue: string,
+    opponent: string,
+    goalsFor: number,
+    goalsAgainst: number,
+  ) => `J${matchday} · ${date} · ${venue} ${opponent} ${goalsFor}–${goalsAgainst}`,
+} as const;
+
+/** The eighteen match totals, in the design order (WEB_DATA.md §7.2). */
 export const matchTotalLabels: Record<string, string> = {
   possession_pct: "Posesión",
   xg: "xG",
@@ -532,11 +632,15 @@ export const matchTotalLabels: Record<string, string> = {
   shots_on_target: "Tiros a puerta",
   big_chances: "Ocasiones claras",
   passes_completed: "Pases completados",
+  pass_completion_pct: "% acierto en pases",
   final_third_entries: "Entradas al último tercio",
+  crosses_completed: "Centros completados",
   xt_created: "xT generado",
   yellow_cards: "Tarjetas amarillas",
   red_cards: "Tarjetas rojas",
   fouls_committed: "Faltas cometidas",
+  duels_won: "Duelos ganados",
+  recoveries: "Recuperaciones",
   corners: "Córners",
   xg_open_play: "xG en juego abierto",
   xg_set_piece: "xG a balón parado",

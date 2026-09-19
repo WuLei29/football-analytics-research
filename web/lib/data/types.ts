@@ -185,7 +185,7 @@ export interface OverviewKpi {
   key: string;
   value: number;
   unit: string | null;
-  /** Rank among `peer_n` clubs, 1 = best (PPDA is ranked ascending). */
+  /** Rank among `peer_n` clubs, 1 = best (the export sets the direction). */
   rank: number | null;
   peer_n: number;
   /** The small italic note under the value, when the design has one. */
@@ -308,8 +308,15 @@ export interface MatchHeader {
   away: MatchSide;
 }
 
-/** xT per minute, both sides positive. The site draws `away` downwards. */
+/**
+ * xT per (period, minute), both sides positive. The site draws `away`
+ * downwards. Bins arrive in PLAYING order — every first-half minute, then
+ * every second-half minute — and the chart places them by position: the clock
+ * restarts at 45 for the second half, so "minute 46" exists twice in a match
+ * with stoppage time and the minute alone cannot be an x coordinate.
+ */
 export interface MomentumBinData {
+  period: 1 | 2;
   minute: number;
   home: number;
   away: number;
@@ -317,6 +324,7 @@ export interface MomentumBinData {
 
 /** A vertical rule on the momentum chart. `label_key` is translated here. */
 export interface MomentumMarkerData {
+  period: 1 | 2;
   minute: number;
   type: "goal" | "sub" | "card" | "period";
   /** Null on half time, which belongs to neither side. */
@@ -411,7 +419,9 @@ export interface MatchDefence {
 
 /** One action of a chain, for the detailed sequence view (§7.3). */
 export interface MatchSequenceAction {
-  kind: "pass" | "cross" | "carry" | "take_on" | "shot" | "other";
+  kind: "pass" | "cross" | "carry" | "take_on" | "shot" | "clearance" | "other";
+  /** `silver.events.event_type` as a snake_case key, e.g. `ball_recovery`. */
+  type: string;
   x: number;
   y: number;
   /** Null on a point event: a take-on, a shot, anything with no destination. */

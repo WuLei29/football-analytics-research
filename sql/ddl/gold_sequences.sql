@@ -322,6 +322,14 @@ CREATE INDEX IF NOT EXISTS sequences_season_zones_idx
 -- Pattern mining over the zone path
 CREATE INDEX IF NOT EXISTS sequences_zone_path_idx
     ON gold.sequences USING GIN (zone_path);
+-- FK back-references into silver.events.  Without these, every DELETE of an
+-- event row sequentially scans this table to check nothing points at it: a
+-- full DELETE FROM silver.events ran 15 minutes without finishing on 19 Sep
+-- 2026 for that reason alone.  (TRUNCATE skips the check; DELETE does not.)
+CREATE INDEX IF NOT EXISTS sequences_start_event_idx
+    ON gold.sequences (start_event_id);
+CREATE INDEX IF NOT EXISTS sequences_end_event_idx
+    ON gold.sequences (end_event_id);
 
 
 -- ───────────────────────────────────────────────────────────────────────────
@@ -448,3 +456,8 @@ CREATE TABLE IF NOT EXISTS gold.sequence_phase_segments (
 
 CREATE INDEX IF NOT EXISTS sequence_phase_segments_type_idx
     ON gold.sequence_phase_segments (phase_type);
+-- FK back-references into silver.events — same reason as on gold.sequences.
+CREATE INDEX IF NOT EXISTS sequence_phase_segments_start_event_idx
+    ON gold.sequence_phase_segments (start_event_id);
+CREATE INDEX IF NOT EXISTS sequence_phase_segments_end_event_idx
+    ON gold.sequence_phase_segments (end_event_id);

@@ -31,7 +31,7 @@
 import { useState, type ReactNode } from "react";
 
 import { dec } from "@/lib/format";
-import { sequenceOutcome, sequencePhase, viz } from "@/lib/labels";
+import { sequenceActionType, sequenceOutcome, sequencePhase, viz } from "@/lib/labels";
 import type { Orientation } from "@/lib/viz/pitch";
 
 import { SequenceDetail, type SequenceAction } from "./SequenceDetail";
@@ -84,6 +84,15 @@ export function SequenceBrowser({
   const [selected, setSelected] = useState(initialIndex);
   const active = sequences[selected] ?? sequences[0] ?? null;
 
+  /** Hover text of one mark: "Recuperación · Calatrava (22)". */
+  const describe = (a: SequenceAction) => {
+    const who = a.surname
+      ? a.shirt_number !== null ? `${a.surname} (${a.shirt_number})` : a.surname
+      : null;
+    const what = sequenceActionType(a.type);
+    return who ? `${what} · ${who}` : what;
+  };
+
   if (!active) {
     return <p className="label">{viz.sequenceList.empty}</p>;
   }
@@ -91,7 +100,12 @@ export function SequenceBrowser({
   return (
     <div className={`grid gap-4 lg:grid-cols-[2fr_1fr] ${className ?? ""}`}>
       <div>
-        <SequenceDetail actions={active.actions} title={title} orientation={orientation} />
+        <SequenceDetail
+          actions={active.actions}
+          title={title}
+          orientation={orientation}
+          describe={describe}
+        />
         {/* The legend gets a wrapper of its own rather than sitting beside the
             pitch as a sibling. It arrives from a server component through the
             Flight payload as a lazy node, which React cannot mark as

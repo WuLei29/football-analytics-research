@@ -25,6 +25,16 @@
  *                                                           with the player
  *   take-on  a single team-colour dot                     — a point event
  *   shot     arrow to the goal centre, team colour        — where it was aimed
+ *   clearance dashed line + arrowhead                     — the ball travels,
+ *                                                           nobody meant it to
+ *                                                           arrive anywhere
+ *   other    a hollow ring                                — a recovery, a
+ *                                                           block, a claim:
+ *                                                           named by `describe`
+ *
+ * Every mark carries a `<title>` built by the optional `describe` prop, so a
+ * ring or a dot can be read on hover. The prop exists because this file holds
+ * no Spanish: the caller translates `type`.
  *
  * Line STYLE carries the action type and colour is kept for team identity, so
  * the chart still obeys the one rule that survives from v1: inside a pitch
@@ -48,7 +58,9 @@ import { Pitch } from "./Pitch";
 
 /** One entry of `sequences[].actions` (WEB_DATA §7). */
 export interface SequenceAction {
-  kind: "pass" | "cross" | "carry" | "take_on" | "shot" | "other";
+  kind: "pass" | "cross" | "carry" | "take_on" | "shot" | "clearance" | "other";
+  /** `silver.events.event_type` as a snake_case key, e.g. `ball_recovery`. */
+  type: string;
   x: number;
   y: number;
   /** Absent on point events (a take-on, a failed touch). */
@@ -72,6 +84,8 @@ interface SequenceDetailProps {
   /** Radius of the numbered player circle, in pitch units. */
   nodeRadius?: number;
   className?: string;
+  /** Hover text for one action — the caller's translation of `type` plus the player. */
+  describe?: (action: SequenceAction) => string;
 }
 
 /** Pitch-unit radii, from espanyol-viz-design references/web-translation.md §4. */
@@ -86,6 +100,7 @@ export function SequenceDetail({
   title,
   nodeRadius = 1.9,
   className,
+  describe,
 }: SequenceDetailProps) {
   const at = (x: number, y: number) => project(orientation, x, y);
   /** An action's destination, falling back to its origin for point events. */
@@ -131,6 +146,21 @@ export function SequenceDetail({
                   markerEnd="url(#viz-arrow-faint)"
                 />
               );
+            case "clearance":
+              return (
+                <line
+                  key={i}
+                  x1={from.x}
+                  y1={from.y}
+                  x2={to.x}
+                  y2={to.y}
+                  stroke="var(--color-mid)"
+                  strokeWidth={0.35}
+                  strokeOpacity={faded}
+                  strokeDasharray="2 1"
+                  markerEnd="url(#viz-arrow-faint)"
+                />
+              );
             case "carry":
               return (
                 <line
@@ -173,6 +203,7 @@ export function SequenceDetail({
           const end = endOf(action);
           const to = at(end.x, end.y);
 
+          const label = describe?.(action);
           if (action.kind === "take_on") {
             return (
               <circle
@@ -182,11 +213,31 @@ export function SequenceDetail({
                 r={TAKE_ON_DOT}
                 fill="var(--color-blue)"
                 fillOpacity={0.7}
-              />
+              >
+                {label && <title>{label}</title>}
+              </circle>
+            );
+          }
+          if (action.kind === "other") {
+            // A point event with no travel: a ring rather than a dot, so it
+            // is not mistaken for the origin of a line that was never drawn.
+            return (
+              <circle
+                key={i}
+                cx={from.x}
+                cy={from.y}
+                r={EVENT_DOT * 1.6}
+                fill="var(--color-card)"
+                stroke="var(--color-mid)"
+                strokeWidth={0.3}
+              >
+                {label && <title>{label}</title>}
+              </circle>
             );
           }
           return (
             <g key={i}>
+              {label && <title>{label}</title>}
               <circle
                 cx={from.x}
                 cy={from.y}

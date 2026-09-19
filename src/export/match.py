@@ -95,37 +95,55 @@ def _match_block(match: dict[str, Any], stats: dict[int, dict[str, Any]],
 # ---------------------------------------------------------------------------
 
 def _momentum(rows: list[dict[str, Any]], markers: list[dict[str, Any]],
-              home_id: int, away_id: int, length_min: int,
-              ) -> dict[str, Any]:
-    """One bin per minute, zero-filled, both sides positive.
+              home_id: int, away_id: int) -> dict[str, Any]:
+    """One bin per (period, minute) in playing order, zero-filled, both sides
+    positive.
 
     The site draws the away side below the axis and applies the 5-minute
     rolling window itself (handoff, screen 02 block 2), so the export ships
     the raw per-minute sum: a file that had already been smoothed could not be
     re-smoothed with a different window.
+
+    Bins are keyed by period AND minute because the match clock restarts at
+    45 for the second half: a first half that ran to 47' and a second half
+    that starts at 45' both have minutes 45-47. The bins are laid out as the
+    match was played — every first-half minute, then every second-half
+    minute — and the site places them by position, so 47' of the first half
+    is drawn before 45' of the second. `match_length_min` is deliberately not
+    the axis: it is the SUM of the two halves (97 on a 47 + 50 match), and no
+    single minute number on the clock ever reaches it.
     """
-    by_minute: dict[int, dict[str, float]] = {}
+    by_key: dict[tuple[int, int], dict[str, float]] = {}
     for row in rows:
-        minute = int(row["minute"])
-        bin_ = by_minute.setdefault(minute, {"home": 0.0, "away": 0.0})
-        key = "home" if int(row["team_id"]) == home_id else "away"
-        bin_[key] += float(row["xt"] or 0.0)
+        key = (int(row["period"]), int(row["minute"]))
+        bin_ = by_key.setdefault(key, {"home": 0.0, "away": 0.0})
+        team = "home" if int(row["team_id"]) == home_id else "away"
+        bin_[team] += float(row["xt"] or 0.0)
 
-    # Stoppage time can carry the clock past match_length_min in the event
-    # stream; the axis must cover whatever exists.
-    last = max([length_min or 0, *by_minute.keys()], default=0)
+    # Each half runs at least its regulation length, and as far as its last
+    # event if stoppage time carried the clock past it. The End event of the
+    # half (typeId 30) is the authority when present; it is the last event of
+    # the half, so an xT-less final minute still gets its bin.
+    half_end = {1: 45, 2: 90}
+    for (period, minute) in by_key:
+        half_end[period] = max(half_end[period], minute)
+    for row in markers:
+        if row["type_id"] == 30 and int(row["period"]) in half_end:
+            half_end[int(row["period"])] = max(half_end[int(row["period"])],
+                                               int(row["minute"]))
 
-    return {
-        "bins": [
-            {
+    bins: list[dict[str, Any]] = []
+    for period, first in ((1, 1), (2, 45)):
+        for minute in range(first, half_end[period] + 1):
+            values = by_key.get((period, minute), {})
+            bins.append({
+                "period": period,
                 "minute": minute,
-                "home": r_value(by_minute.get(minute, {}).get("home", 0.0)),
-                "away": r_value(by_minute.get(minute, {}).get("away", 0.0)),
-            }
-            for minute in range(1, last + 1)
-        ],
-        "markers": _markers(markers, home_id, away_id),
-    }
+                "home": r_value(values.get("home", 0.0)),
+                "away": r_value(values.get("away", 0.0)),
+            })
+
+    return {"bins": bins, "markers": _markers(markers, home_id, away_id)}
 
 
 def _markers(rows: list[dict[str, Any]], home_id: int, away_id: int
@@ -165,6 +183,7 @@ def _markers(rows: list[dict[str, Any]], home_id: int, away_id: int
             side = None
 
         out.append({
+            "period": as_int(row["period"]),
             "minute": as_int(row["minute"]),
             "type": kind,
             "side": side,
@@ -172,6 +191,10 @@ def _markers(rows: list[dict[str, Any]], home_id: int, away_id: int
             "player_id": as_int(row["player_id"]) if kind != "period" else None,
             "name": row["player_name"] if kind != "period" else None,
         })
+
+    # Markers outside the two halves (period 14 is the post-match End event)
+    # have no bin to sit on.
+    out = [m for m in out if m["period"] in (1, 2)]
 
     # One half-time rule, even if both period-1 End events are present (there
     # is one per team).
@@ -394,7 +417,7 @@ def _defence(rows: list[dict[str, Any]], line_x: Any) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 def action_kind(event_type: str, is_cross: Any) -> str:
-    """One of the six kinds the detailed sequence view draws (§7.3)."""
+    """One of the seven kinds the detailed sequence view draws (§7.3)."""
     if event_type in SHOT_TYPES:
         return "shot"
     if event_type == "Carry":
@@ -403,7 +426,19 @@ def action_kind(event_type: str, is_cross: Any) -> str:
         return "take_on"
     if event_type in ("Pass", "Offside Pass"):
         return "cross" if is_cross else "pass"
+    if event_type == "Clearance":
+        # The one non-pass action with a destination of its own (Q140/141). It
+        # shipped as `other` until 19 Sep 2026, so a 32 m clearance drew as a
+        # dot and the carry that picked it up started in mid-air.
+        return "clearance"
     return "other"
+
+
+def action_type(event_type: str) -> str:
+    """`event_type` as a snake_case key the site can translate: `Ball recovery`
+    -> `ball_recovery`. Every action ships one, so an `other` dot can be named
+    in a tooltip rather than left as an unexplained point."""
+    return event_type.lower().replace("-", " ").replace(" ", "_")
 
 
 def simplify(points: list[list[float]], max_waypoints: int) -> list[list[float]]:
@@ -439,7 +474,7 @@ def _actions(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
         kind = action_kind(event["event_type"], event["is_cross"])
         # A point event has no destination: a take-on happens where it happens,
         # and a shot's end is the goalmouth, which is a different frame.
-        has_end = kind in ("pass", "cross", "carry")
+        has_end = kind in ("pass", "cross", "carry", "clearance")
 
         result = event["spadl_result_id"]
         if result is not None:
@@ -449,6 +484,7 @@ def _actions(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
         out.append({
             "kind": kind,
+            "type": action_type(event["event_type"]),
             "x": r_coord(event["x"]),
             "y": r_coord(event["y"]),
             "end_x": r_coord(event["end_x"]) if has_end else None,
@@ -578,7 +614,7 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
         "momentum": _momentum(
             db.fetch_momentum(conn, match_id),
             db.fetch_match_markers(conn, match_id),
-            home_id, away_id, int(match["match_length_min"] or 0),
+            home_id, away_id,
         ),
         "network": _network(
             db.fetch_network_nodes(conn, match_id, team_id),

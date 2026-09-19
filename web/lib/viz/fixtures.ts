@@ -264,25 +264,41 @@ export const demoRollingXt: RollingPoint[] = demoRollingXgd.map((p, i) => ({
   value: Number((p.value * 0.34 + Math.cos(i / 6) * 0.06).toFixed(3)),
 }));
 
+/**
+ * A 47 + 49 minute match, laid out as the export does: first half 1–47, then
+ * second half 45–93. The overlap (45, 46, 47 appear in both halves) is the
+ * point — it is what the chart has to place correctly.
+ */
 export const demoMomentumBins: MomentumBin[] = (() => {
   const random = rng(60613);
-  return Array.from({ length: demoMatch.lengthMin }, (_, i) => {
-    const minute = i + 1;
-    const swing = Math.sin(minute / 11) * 0.5 + 0.5;
-    return {
-      minute,
-      home: Number((random() * 0.09 * (0.5 + swing)).toFixed(4)),
-      away: Number((random() * 0.09 * (1.5 - swing)).toFixed(4)),
-    };
-  });
+  const halves: { period: 1 | 2; first: number; last: number }[] = [
+    { period: 1, first: 1, last: 47 },
+    { period: 2, first: 45, last: 93 },
+  ];
+  return halves.flatMap(({ period, first, last }) =>
+    Array.from({ length: last - first + 1 }, (_, i) => {
+      const minute = first + i;
+      const played = period === 1 ? minute : minute + 3; // running clock, for the shape only
+      const swing = Math.sin(played / 11) * 0.5 + 0.5;
+      return {
+        period,
+        minute,
+        home: Number((random() * 0.09 * (0.5 + swing)).toFixed(4)),
+        away: Number((random() * 0.09 * (1.5 - swing)).toFixed(4)),
+      };
+    }),
+  );
 })();
 
 export const demoMomentumMarkers: Omit<MomentumMarker, "label">[] = [
-  { minute: 23, type: "goal", side: "home" },
-  { minute: 45, type: "period", side: null },
-  { minute: 58, type: "goal", side: "away" },
-  { minute: 64, type: "sub", side: "home" },
-  { minute: 88, type: "goal", side: "home" },
+  { period: 1, minute: 23, type: "goal", side: "home" },
+  { period: 1, minute: 46, type: "goal", side: "away" }, // first-half stoppage
+  { period: 1, minute: 47, type: "period", side: null },
+  { period: 2, minute: 58, type: "goal", side: "away" },
+  { period: 2, minute: 64, type: "sub", side: "home" },
+  { period: 2, minute: 64, type: "sub", side: "home" },
+  { period: 2, minute: 88, type: "goal", side: "home" },
+  { period: 2, minute: 88, type: "sub", side: "home" },
 ];
 
 /* --------------------------------------------------------------------------
@@ -299,14 +315,14 @@ export const demoMomentumMarkers: Omit<MomentumMarker, "label">[] = [
  * ------------------------------------------------------------------------ */
 
 export const demoSequenceActions: SequenceAction[] = [
-  { kind: "pass", x: 38, y: 22, end_x: 48, end_y: 15, player_id: 3, surname: "Cabrera", shirt_number: 4, outcome: "success" },
-  { kind: "carry", x: 48, y: 15, end_x: 56, end_y: 18, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
-  { kind: "pass", x: 56, y: 18, end_x: 64, end_y: 34, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
-  { kind: "pass", x: 64, y: 34, end_x: 72, end_y: 11, player_id: 7, surname: "Expósito", shirt_number: 8, outcome: "success" },
-  { kind: "take_on", x: 72, y: 11, end_x: null, end_y: null, player_id: 8, surname: "Dolan", shirt_number: 11, outcome: "success" },
-  { kind: "carry", x: 72, y: 11, end_x: 84, end_y: 8, player_id: 8, surname: "Dolan", shirt_number: 11, outcome: "success" },
-  { kind: "cross", x: 84, y: 8, end_x: 95, end_y: 33, player_id: 8, surname: "Dolan", shirt_number: 11, outcome: "success" },
-  { kind: "shot", x: 95, y: 33, end_x: null, end_y: null, player_id: 11, surname: "Puado", shirt_number: 10, outcome: "success" },
+  { kind: "pass", type: "pass", x: 38, y: 22, end_x: 48, end_y: 15, player_id: 3, surname: "Cabrera", shirt_number: 4, outcome: "success" },
+  { kind: "carry", type: "carry", x: 48, y: 15, end_x: 56, end_y: 18, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
+  { kind: "pass", type: "pass", x: 56, y: 18, end_x: 64, end_y: 34, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
+  { kind: "pass", type: "pass", x: 64, y: 34, end_x: 72, end_y: 11, player_id: 7, surname: "Expósito", shirt_number: 8, outcome: "success" },
+  { kind: "take_on", type: "take_on", x: 72, y: 11, end_x: null, end_y: null, player_id: 8, surname: "Dolan", shirt_number: 11, outcome: "success" },
+  { kind: "carry", type: "carry", x: 72, y: 11, end_x: 84, end_y: 8, player_id: 8, surname: "Dolan", shirt_number: 11, outcome: "success" },
+  { kind: "cross", type: "pass", x: 84, y: 8, end_x: 95, end_y: 33, player_id: 8, surname: "Dolan", shirt_number: 11, outcome: "success" },
+  { kind: "shot", type: "goal", x: 95, y: 33, end_x: null, end_y: null, player_id: 11, surname: "Puado", shirt_number: 10, outcome: "success" },
 ];
 
 /**
@@ -345,10 +361,10 @@ export const demoSequenceEntries: SequenceEntry[] = [
     xt: 0.062,
     vaep: 0.074,
     actions: [
-      { kind: "pass", x: 41, y: 47, end_x: 57, end_y: 44, player_id: 7, surname: "Expósito", shirt_number: 8, outcome: "success" },
-      { kind: "carry", x: 57, y: 44, end_x: 71, end_y: 47, player_id: 10, surname: "Milla", shirt_number: 24, outcome: "success" },
-      { kind: "pass", x: 71, y: 47, end_x: 89, end_y: 38, player_id: 10, surname: "Milla", shirt_number: 24, outcome: "success" },
-      { kind: "shot", x: 89, y: 38, end_x: null, end_y: null, player_id: 11, surname: "Puado", shirt_number: 10, outcome: "fail" },
+      { kind: "pass", type: "pass", x: 41, y: 47, end_x: 57, end_y: 44, player_id: 7, surname: "Expósito", shirt_number: 8, outcome: "success" },
+      { kind: "carry", type: "carry", x: 57, y: 44, end_x: 71, end_y: 47, player_id: 10, surname: "Milla", shirt_number: 24, outcome: "success" },
+      { kind: "pass", type: "pass", x: 71, y: 47, end_x: 89, end_y: 38, player_id: 10, surname: "Milla", shirt_number: 24, outcome: "success" },
+      { kind: "shot", type: "goal", x: 89, y: 38, end_x: null, end_y: null, player_id: 11, surname: "Puado", shirt_number: 10, outcome: "fail" },
     ],
   },
   {
@@ -362,9 +378,9 @@ export const demoSequenceEntries: SequenceEntry[] = [
     xt: 0.041,
     vaep: 0.263,
     actions: [
-      { kind: "cross", x: 105, y: 68, end_x: 94, end_y: 31, player_id: 10, surname: "Milla", shirt_number: 24, outcome: "success" },
-      { kind: "pass", x: 94, y: 31, end_x: 98, end_y: 36, player_id: 4, surname: "Calero", shirt_number: 5, outcome: "success" },
-      { kind: "shot", x: 98, y: 36, end_x: null, end_y: null, player_id: 12, surname: "Kike García", shirt_number: 9, outcome: "success" },
+      { kind: "cross", type: "pass", x: 105, y: 68, end_x: 94, end_y: 31, player_id: 10, surname: "Milla", shirt_number: 24, outcome: "success" },
+      { kind: "pass", type: "pass", x: 94, y: 31, end_x: 98, end_y: 36, player_id: 4, surname: "Calero", shirt_number: 5, outcome: "success" },
+      { kind: "shot", type: "goal", x: 98, y: 36, end_x: null, end_y: null, player_id: 12, surname: "Kike García", shirt_number: 9, outcome: "success" },
     ],
   },
   {
@@ -378,10 +394,10 @@ export const demoSequenceEntries: SequenceEntry[] = [
     xt: 0.004,
     vaep: -0.018,
     actions: [
-      { kind: "pass", x: 8, y: 34, end_x: 21, end_y: 25, player_id: 1, surname: "Dmitrović", shirt_number: 1, outcome: "success" },
-      { kind: "carry", x: 21, y: 25, end_x: 27, end_y: 22, player_id: 3, surname: "Cabrera", shirt_number: 4, outcome: "success" },
-      { kind: "pass", x: 27, y: 22, end_x: 34, end_y: 12, player_id: 3, surname: "Cabrera", shirt_number: 4, outcome: "success" },
-      { kind: "pass", x: 34, y: 12, end_x: 52, end_y: 9, player_id: 2, surname: "El Hilali", shirt_number: 2, outcome: "fail" },
+      { kind: "pass", type: "pass", x: 8, y: 34, end_x: 21, end_y: 25, player_id: 1, surname: "Dmitrović", shirt_number: 1, outcome: "success" },
+      { kind: "carry", type: "carry", x: 21, y: 25, end_x: 27, end_y: 22, player_id: 3, surname: "Cabrera", shirt_number: 4, outcome: "success" },
+      { kind: "pass", type: "pass", x: 27, y: 22, end_x: 34, end_y: 12, player_id: 3, surname: "Cabrera", shirt_number: 4, outcome: "success" },
+      { kind: "pass", type: "pass", x: 34, y: 12, end_x: 52, end_y: 9, player_id: 2, surname: "El Hilali", shirt_number: 2, outcome: "fail" },
     ],
   },
   {
@@ -395,8 +411,8 @@ export const demoSequenceEntries: SequenceEntry[] = [
     xt: 0.011,
     vaep: 0.006,
     actions: [
-      { kind: "pass", x: 12, y: 34, end_x: 62, end_y: 58, player_id: 1, surname: "Dmitrović", shirt_number: 1, outcome: "success" },
-      { kind: "pass", x: 62, y: 58, end_x: 78, end_y: 67, player_id: 9, surname: "Terrats", shirt_number: 14, outcome: "fail" },
+      { kind: "pass", type: "pass", x: 12, y: 34, end_x: 62, end_y: 58, player_id: 1, surname: "Dmitrović", shirt_number: 1, outcome: "success" },
+      { kind: "pass", type: "pass", x: 62, y: 58, end_x: 78, end_y: 67, player_id: 9, surname: "Terrats", shirt_number: 14, outcome: "fail" },
     ],
   },
   {
@@ -410,9 +426,9 @@ export const demoSequenceEntries: SequenceEntry[] = [
     xt: 0.033,
     vaep: 0.048,
     actions: [
-      { kind: "carry", x: 68, y: 20, end_x: 74, end_y: 24, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
-      { kind: "pass", x: 74, y: 24, end_x: 82, end_y: 30, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
-      { kind: "take_on", x: 82, y: 30, end_x: null, end_y: null, player_id: 11, surname: "Puado", shirt_number: 10, outcome: "fail" },
+      { kind: "carry", type: "carry", x: 68, y: 20, end_x: 74, end_y: 24, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
+      { kind: "pass", type: "pass", x: 74, y: 24, end_x: 82, end_y: 30, player_id: 6, surname: "Lozano", shirt_number: 21, outcome: "success" },
+      { kind: "take_on", type: "take_on", x: 82, y: 30, end_x: null, end_y: null, player_id: 11, surname: "Puado", shirt_number: 10, outcome: "fail" },
     ],
   },
   {
@@ -426,11 +442,11 @@ export const demoSequenceEntries: SequenceEntry[] = [
     xt: 0.096,
     vaep: 0.134,
     actions: [
-      { kind: "pass", x: 55, y: 40, end_x: 66, end_y: 52, player_id: 7, surname: "Expósito", shirt_number: 8, outcome: "success" },
-      { kind: "take_on", x: 66, y: 52, end_x: null, end_y: null, player_id: 13, surname: "Roberto Fernández", shirt_number: 19, outcome: "success" },
-      { kind: "carry", x: 66, y: 52, end_x: 79, end_y: 56, player_id: 13, surname: "Roberto Fernández", shirt_number: 19, outcome: "success" },
-      { kind: "cross", x: 79, y: 56, end_x: 93, end_y: 36, player_id: 13, surname: "Roberto Fernández", shirt_number: 19, outcome: "success" },
-      { kind: "shot", x: 93, y: 36, end_x: null, end_y: null, player_id: 12, surname: "Kike García", shirt_number: 9, outcome: "success" },
+      { kind: "pass", type: "pass", x: 55, y: 40, end_x: 66, end_y: 52, player_id: 7, surname: "Expósito", shirt_number: 8, outcome: "success" },
+      { kind: "take_on", type: "take_on", x: 66, y: 52, end_x: null, end_y: null, player_id: 13, surname: "Roberto Fernández", shirt_number: 19, outcome: "success" },
+      { kind: "carry", type: "carry", x: 66, y: 52, end_x: 79, end_y: 56, player_id: 13, surname: "Roberto Fernández", shirt_number: 19, outcome: "success" },
+      { kind: "cross", type: "pass", x: 79, y: 56, end_x: 93, end_y: 36, player_id: 13, surname: "Roberto Fernández", shirt_number: 19, outcome: "success" },
+      { kind: "shot", type: "goal", x: 93, y: 36, end_x: null, end_y: null, player_id: 12, surname: "Kike García", shirt_number: 9, outcome: "success" },
     ],
   },
 ];

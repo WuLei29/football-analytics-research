@@ -17,6 +17,9 @@ No DB access. No parsing. Pure transformation.
 import pandas as pd
 from typing import Any, Dict, Optional
 
+# The four shot outcomes the parser emits (Opta typeIds 13-16).
+SHOT_EVENTS = frozenset({"Miss", "Post", "Attempt Saved", "Goal"})
+
 
 # ── Carry row factory ──────────────────────────────────────────────────────────
 
@@ -38,11 +41,13 @@ def _carry_row(
     h_a: Optional[str],
 ) -> Dict:
     
-    avg_minute = (event1["minute"] + event2["minute"]) / 2
-    avg_second = (event1["second"] + event2["second"]) / 2
-    if avg_second >= 60:
-        avg_minute += 1
-        avg_second -= 60
+    # Midpoint on the full clock.  Averaging minute and second separately put
+    # a carry between 55:57 and 56:00 at 55:29 (fixed 19 Sep 2026).
+    mid_seconds = (
+        (event1["minute"] * 60 + event1["second"])
+        + (event2["minute"] * 60 + event2["second"])
+    ) / 2
+    avg_minute, avg_second = divmod(mid_seconds, 60)
 
     e1_idx = event1.get("json_index")
     e2_idx = event2.get("json_index")
@@ -81,13 +86,20 @@ def _carry_row(
     }
 
 
+# Shortest ball movement that counts as a carry, in metres (coordinates are
+# already converted by the parser when this module runs).  Below it the gap
+# between one event's end and the next one's start is coordinate rounding,
+# not a player moving with the ball: 54,104 of the 255,795 carries loaded
+# before 19 Sep 2026 were under a metre and drew as blobs on the sequence view.
+MIN_CARRY_DISTANCE_M = 1.0
+
+
 def _coords_mismatch(e1: pd.Series, e2: pd.Series) -> bool:
-    """True when the end coords of e1 don't match the start coords of e2."""
+    """True when the ball moved at least MIN_CARRY_DISTANCE_M between e1's end and e2's start."""
     try:
-        return (
-            abs(e1["end_x"] - e2["x"]) > 0.01
-            or abs(e1["end_y"] - e2["y"]) > 0.01
-        )
+        dx = e1["end_x"] - e2["x"]
+        dy = e1["end_y"] - e2["y"]
+        return (dx * dx + dy * dy) ** 0.5 >= MIN_CARRY_DISTANCE_M
     except (TypeError, KeyError):
         return False
 
@@ -149,30 +161,36 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
             )
 
         # ── Never create carry ────────────────────────────────────────────────
-        if nxt_type in ("BallTouch", "BallRecovery", "Aerial", "CornerAwarded"):
+        # Event names are the parser's (Opta descriptions: 'Ball recovery',
+        # 'Keeper pick-up', 'Attempt Saved' ...).  Until 19 Sep 2026 this block
+        # and the rules below compared against 'BallRecovery', 'KeeperPickup',
+        # 'Shot', 'MissedShot', 'SavedShot' — names this pipeline never emits —
+        # so no carry was ever synthesised after a recovery or a keeper pick-up,
+        # nor before a shot.
+        if nxt_type in ("Ball touch", "Ball recovery", "Aerial", "Corner Awarded"):
             continue
         if cur_type in ("Foul", "Card"):
             continue
-        if cur_type == "MissedShot" and nxt_type == "BallTouch":
+        if cur_type == "Miss" and nxt_type == "Ball touch":
             continue
 
         create_carry = False
 
         # ── Tackle ────────────────────────────────────────────────────────────
         if cur_type == "Tackle":
-            if nxt_type == "BallRecovery" and cur["source_player_id"] != nxt["source_player_id"]:
+            if nxt_type == "Ball recovery" and cur["source_player_id"] != nxt["source_player_id"]:
                 continue
             if nxt_type == "Pass" and cur["source_player_id"] == nxt["source_player_id"] and same_team and mismatch:
                 create_carry = True
 
         # ── Pass ──────────────────────────────────────────────────────────────
         if cur_type == "Pass" and same_team and mismatch and cur.get("outcome") == "success":
-            if nxt_type in ("Pass", "Shot", "MissedShot", "SavedShot", "Dispossessed", "Foul"):
+            if nxt_type == "Pass" or nxt_type in SHOT_EVENTS or nxt_type in ("Dispossessed", "Foul"):
                 create_carry = True
 
         # ── Ball recoveries / keeper / interceptions ──────────────────────────
-        if cur_type in ("BallRecovery", "KeeperPickup", "Interception", "Claim"):
-            if same_team and mismatch and nxt_type in ("Pass", "Shot", "MissedShot", "SavedShot"):
+        if cur_type in ("Ball recovery", "Keeper pick-up", "Interception", "Claim"):
+            if same_team and mismatch and (nxt_type == "Pass" or nxt_type in SHOT_EVENTS):
                 create_carry = True
 
         # ── Clearance ─────────────────────────────────────────────────────────

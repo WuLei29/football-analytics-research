@@ -2,7 +2,7 @@
  * /{equipo}/partido/{match_id} — screen 02, the match analysis.
  *
  * Renders: the eight blocks of the design in order — header, momentum, pass
- * network beside the fourteen totals, both-team shot map beside the xT
+ * eighteen totals beside the pass network, both-team shot map beside the xT
  * surface, progression beside the defensive actions, the sequence browser,
  * the four player boxes, and the reading of the match when one is written.
  * Data:  `matches/{match_id}.json` only (md/WEB_DATA.md §2.1), read at build
@@ -21,6 +21,7 @@
 
 import Link from "next/link";
 
+import { MatchPicker } from "@/components/match/MatchPicker";
 import { MatchPlayers } from "@/components/match/MatchPlayers";
 import { MatchTotals } from "@/components/match/MatchTotals";
 import { Footer } from "@/components/shell/Footer";
@@ -33,7 +34,7 @@ import { Legend, Ramp } from "@/components/viz/Legend";
 import { Momentum } from "@/components/viz/Momentum";
 import { PassNetwork } from "@/components/viz/PassNetwork";
 import { ProgressionArrows } from "@/components/viz/ProgressionArrows";
-import { SequenceBrowser } from "@/components/viz/SequenceBrowser";
+import { MatchSequences } from "@/components/match/MatchSequences";
 import { ShotMap } from "@/components/viz/ShotMap";
 import { VizDefs } from "@/components/viz/VizDefs";
 import { ZoneHeatmap } from "@/components/viz/ZoneHeatmap";
@@ -107,7 +108,7 @@ export default async function MatchPage({ params }: PageProps) {
   const matchId = Number(match_id);
 
   const manifest = await getManifest();
-  const { season } = await findMatch(equipo, matchId);
+  const { season, overview } = await findMatch(equipo, matchId);
   const file = await getMatch(equipo, season, matchId);
 
   const { match: header, momentum, network, totals, shots, xt_zones, progression, defence } = file;
@@ -126,6 +127,7 @@ export default async function MatchPage({ params }: PageProps) {
   const markers = momentum.markers
     .filter((m) => m.type !== "card")
     .map((m) => ({
+      period: m.period,
       minute: m.minute,
       type: m.type,
       side: m.side,
@@ -156,6 +158,12 @@ export default async function MatchPage({ params }: PageProps) {
         }}
         meta={
           <div className="flex flex-col items-start gap-1 md:items-end">
+            {/* The way from one match to the next without the list page:
+                every match of the season, newest first (review of 11 Sep
+                2026). Reads the same rows the list page does. */}
+            <div className="mb-1">
+              <MatchPicker team={equipo} matches={overview.matches} current={matchId} />
+            </div>
             <span className="font-display text-h2card font-bold">
               {header.away.short_name}
             </span>
@@ -200,8 +208,23 @@ export default async function MatchPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* --- Block 3: pass network beside the fourteen totals ------------- */}
-      <section className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,306px)_minmax(0,1fr)]">
+      {/* --- Block 3: the eighteen totals beside the pass network ------- */}
+      {/* Swapped from the design on 14 Sep 2026: totals left, network right. */}
+      <section className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,306px)]">
+        <div className="card">
+          <SectionHead
+            title={copy.totalsHeading}
+            caption={copy.totalsCaption}
+            rule="ink"
+            as="h3"
+          />
+          <MatchTotals
+            totals={totals}
+            abbr={{ home: header.home.abbr, away: header.away.abbr }}
+            teamSide={teamSide}
+          />
+        </div>
+
         <div className="card">
           <SectionHead
             title={copy.networkHeading}
@@ -217,20 +240,6 @@ export default async function MatchPage({ params }: PageProps) {
             />
           </div>
           <p className="label mt-2">{viz.legend.nodeSize}</p>
-        </div>
-
-        <div className="card">
-          <SectionHead
-            title={copy.totalsHeading}
-            caption={copy.totalsCaption}
-            rule="ink"
-            as="h3"
-          />
-          <MatchTotals
-            totals={totals}
-            abbr={{ home: header.home.abbr, away: header.away.abbr }}
-            teamSide={teamSide}
-          />
         </div>
       </section>
 
@@ -362,51 +371,42 @@ export default async function MatchPage({ params }: PageProps) {
       {/* --- Block 6: the sequence browser -------------------------------- */}
       {/* The demo's layout, verbatim: one detailed pitch, and beside it the
           list of every sequence of the match with three or more actions,
-          best xT first as the export ordered them. The file's `rank` (the
-          design's "twelve best") is not used here — the list IS the ranking.
-          The marks legend is built here so the component holds no Spanish. */}
-      <section className="mt-8">
-        <SectionHead
-          title={copy.sequencesHeading}
-          caption={copy.sequencesCaption(file.sequences.length)}
-        />
-        <div className="card mt-4">
-          {file.sequences.length > 0 ? (
-            <SequenceBrowser
-              sequences={file.sequences.map((s) => ({
-                sequence_id: s.sequence_id,
-                primary_phase: s.primary_phase ?? "chaotic",
-                outcome: s.outcome ?? "turnover",
-                start_minute: s.minute,
-                start_second: s.second,
-                duration_s: s.duration_s,
-                event_count: s.events,
-                xt: s.xt ?? 0,
-                vaep: s.vaep ?? 0,
-                actions: s.actions,
-              }))}
-              title={copy.sequencesHeading}
-              legend={
-                <div className="mt-2">
-                  <Legend
-                    items={[
-                      { outline: "var(--color-blue)", text: viz.legend.participants },
-                      { swatch: "var(--color-blue)", text: viz.legend.finisher },
-                      { bar: "var(--color-mid)", text: viz.legend.pass },
-                      { dotted: "var(--color-mid)", text: viz.legend.carry },
-                      { curved: "var(--color-gold)", text: viz.legend.cross },
-                      { swatch: "var(--color-blue)", text: viz.legend.takeOn },
-                      { bar: "var(--color-blue)", text: viz.legend.shot },
-                    ]}
-                  />
-                </div>
-              }
+          best xT first as the export ordered them, or best VAEP first when
+          the reader flips the toggle (`MatchSequences` owns that choice and
+          re-sorts). The file's `rank` (the design's "twelve best") is not
+          used here — the list IS the ranking. The marks legend is built here
+          so the component holds no Spanish. */}
+      <MatchSequences
+        sequences={file.sequences.map((s) => ({
+          sequence_id: s.sequence_id,
+          primary_phase: s.primary_phase ?? "chaotic",
+          outcome: s.outcome ?? "turnover",
+          start_minute: s.minute,
+          start_second: s.second,
+          duration_s: s.duration_s,
+          event_count: s.events,
+          xt: s.xt ?? 0,
+          vaep: s.vaep ?? 0,
+          actions: s.actions,
+        }))}
+        legend={
+          <div className="mt-2">
+            <Legend
+              items={[
+                { outline: "var(--color-blue)", text: viz.legend.participants },
+                { swatch: "var(--color-blue)", text: viz.legend.finisher },
+                { bar: "var(--color-mid)", text: viz.legend.pass },
+                { dotted: "var(--color-mid)", text: viz.legend.carry },
+                { dashed: "var(--color-mid)", text: viz.legend.clearance },
+                { curved: "var(--color-gold)", text: viz.legend.cross },
+                { swatch: "var(--color-blue)", text: viz.legend.takeOn },
+                { bar: "var(--color-blue)", text: viz.legend.shot },
+                { outline: "var(--color-mid)", text: viz.legend.otherAction },
+              ]}
             />
-          ) : (
-            <p className="dek">{copy.sequencesEmpty}</p>
-          )}
-        </div>
-      </section>
+          </div>
+        }
+      />
 
       {/* --- Block 7: the four player boxes, both teams ------------------- */}
       <section className="mt-8">

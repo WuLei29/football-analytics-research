@@ -550,9 +550,13 @@ SELECT
           OR COALESCE(n.foul_won_after, FALSE)                 THEN 'foul_won'
         WHEN h.end_event_type = 'Offside Pass'
           OR n.next_event_type = 'Offside Pass'                THEN 'offside'
-        WHEN n.next_event_team_id IS DISTINCT FROM h.possessing_team_id
-             AND (n.next_raw_data->'qualifier' @> '[{"qualifierId": 107}]'
-               OR n.next_raw_data->'qualifier' @> '[{"qualifierId": 124}]')
+        -- Whoever takes the restart, the ball left the pitch. Until 19 Sep
+        -- 2026 this required the OPPONENT to take it; a same-team throw-in or
+        -- goal kick could not follow a sequence then (the classifier absorbed
+        -- it, GOLD_SEQUENCES.md §6.6), and once it could, 1,539 of them fell
+        -- through to `retained`.
+        WHEN n.next_raw_data->'qualifier' @> '[{"qualifierId": 107}]'
+          OR n.next_raw_data->'qualifier' @> '[{"qualifierId": 124}]'
                                                                THEN 'ball_out'
         WHEN h.end_event_type IN ('Claim','Keeper pick-up')
              AND h.end_team_id IS DISTINCT FROM h.possessing_team_id

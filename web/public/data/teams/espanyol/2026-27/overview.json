@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T23:14:09Z",
+  "generated_at": "2026-09-19T23:37:44Z",
   "kpis": [
     {
       "key": "points",
@@ -26,18 +26,21 @@
     {
       "key": "possession_pct",
       "peer_n": 20,
-      "rank": 14,
+      "rank": 11,
       "secondary": null,
       "unit": "%",
-      "value": 45.6
+      "value": 48.8
     },
     {
-      "key": "ppda",
+      "key": "goals_for",
       "peer_n": 20,
-      "rank": 13,
-      "secondary": null,
+      "rank": 5,
+      "secondary": {
+        "key": "goals_per_match",
+        "value": 1.7
+      },
       "unit": null,
-      "value": 16.3
+      "value": 5
     },
     {
       "key": "set_piece_goals_for",
@@ -101,42 +104,14 @@
       "unit": null
     },
     {
-      "key": "xt_per_90",
+      "key": "vaep_per_90",
       "rows": [
         {
-          "name": "Rafel Bauzà",
-          "player_id": 2372,
-          "position_group": "W",
-          "shirt_number": 26,
-          "value": 0.67
-        },
-        {
-          "name": "Javi Hernández",
-          "player_id": 2355,
-          "position_group": "MID",
-          "shirt_number": 28,
-          "value": 0.56
-        },
-        {
-          "name": "O. El Hilali",
-          "player_id": 2363,
-          "position_group": "RB",
-          "shirt_number": 23,
-          "value": 0.51
-        },
-        {
-          "name": "T. Dolan",
-          "player_id": 2374,
-          "position_group": "W",
-          "shirt_number": 24,
-          "value": 0.45
-        },
-        {
-          "name": "Edu Expósito",
-          "player_id": 2366,
-          "position_group": "MID",
-          "shirt_number": 8,
-          "value": 0.3
+          "name": "Roberto Fernández",
+          "player_id": 2359,
+          "position_group": "ST",
+          "shirt_number": 9,
+          "value": 0.57
         },
         {
           "name": "Cala",
@@ -144,6 +119,34 @@
           "position_group": "W",
           "shirt_number": 22,
           "value": 0.29
+        },
+        {
+          "name": "Roger Hinojo",
+          "player_id": 2375,
+          "position_group": "LB",
+          "shirt_number": 21,
+          "value": 0.26
+        },
+        {
+          "name": "T. Dolan",
+          "player_id": 2374,
+          "position_group": "W",
+          "shirt_number": 24,
+          "value": 0.25
+        },
+        {
+          "name": "Unai Núñez",
+          "player_id": 2339,
+          "position_group": "CB",
+          "shirt_number": 14,
+          "value": 0.18
+        },
+        {
+          "name": "Javi Hernández",
+          "player_id": 2355,
+          "position_group": "MID",
+          "shirt_number": 28,
+          "value": 0.14
         }
       ],
       "unit": null
@@ -211,6 +214,13 @@
           "player_id": 4785,
           "position_group": "W",
           "shirt_number": 22,
+          "value": 7
+        },
+        {
+          "name": "Edu Expósito",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
           "value": 5
         },
         {
@@ -228,18 +238,11 @@
           "value": 4
         },
         {
-          "name": "Edu Expósito",
-          "player_id": 2366,
-          "position_group": "MID",
-          "shirt_number": 8,
-          "value": 4
-        },
-        {
           "name": "Roberto Fernández",
           "player_id": 2359,
           "position_group": "ST",
           "shirt_number": 9,
-          "value": 2
+          "value": 3
         }
       ],
       "unit": null
@@ -260,8 +263,8 @@
       "result": "W",
       "xg_against": 0.18,
       "xg_for": 2.1,
-      "xt_against": 3.121,
-      "xt_for": 3.572
+      "xt_against": 0.77,
+      "xt_for": 1.116
     },
     {
       "date": "2026-08-22",
@@ -277,8 +280,8 @@
       "result": "L",
       "xg_against": 2.42,
       "xg_for": 0.86,
-      "xt_against": 4.203,
-      "xt_for": 3.034
+      "xt_against": 1.86,
+      "xt_for": 0.75
     },
     {
       "date": "2026-08-29",
@@ -294,8 +297,8 @@
       "result": "L",
       "xg_against": 2.49,
       "xg_for": 0.66,
-      "xt_against": 4.286,
-      "xt_for": 2.201
+      "xt_against": 1.096,
+      "xt_for": 0.961
     }
   ],
   "record": {

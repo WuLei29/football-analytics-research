@@ -1,6 +1,6 @@
 {
   "competition_name": "Primera División",
-  "generated_at": "2026-09-10T23:14:09Z",
+  "generated_at": "2026-09-19T23:37:44Z",
   "league_complete": true,
   "matchdays_scheduled": 38,
   "profile": {
@@ -8,9 +8,9 @@
       {
         "card": "defensive",
         "decimals": 1,
-        "invert": false,
-        "key": "duels_won",
-        "kind": "count",
+        "invert": true,
+        "key": "ppda",
+        "kind": "rate",
         "scale": "raw"
       },
       {
@@ -213,13 +213,9 @@
             "p": 20,
             "v": 14.9
           },
-          "duels_won": {
-            "p": 25,
-            "v": 20.3
-          },
           "field_tilt": {
             "p": 100,
-            "v": 72.9
+            "v": 72.4
           },
           "fouls_committed": {
             "p": 100,
@@ -243,11 +239,15 @@
           },
           "possession_pct": {
             "p": 100,
-            "v": 68.0
+            "v": 62.4
+          },
+          "ppda": {
+            "p": 100,
+            "v": 10.3
           },
           "progressive_carries": {
             "p": 95,
-            "v": 17.3
+            "v": 20.6
           },
           "progressive_passes": {
             "p": 15,
@@ -279,7 +279,7 @@
           },
           "touches_in_box": {
             "p": 100,
-            "v": 40.3
+            "v": 40.5
           },
           "xg_fast_break": {
             "p": 85,
@@ -314,13 +314,9 @@
             "p": 25,
             "v": 15.3
           },
-          "duels_won": {
-            "p": 10,
-            "v": 19.1
-          },
           "field_tilt": {
             "p": 95,
-            "v": 64.3
+            "v": 64.6
           },
           "fouls_committed": {
             "p": 95,
@@ -344,11 +340,15 @@
           },
           "possession_pct": {
             "p": 95,
-            "v": 58.9
+            "v": 58.4
+          },
+          "ppda": {
+            "p": 65,
+            "v": 13.8
           },
           "progressive_carries": {
             "p": 100,
-            "v": 17.6
+            "v": 21.1
           },
           "progressive_passes": {
             "p": 25,
@@ -380,7 +380,7 @@
           },
           "touches_in_box": {
             "p": 95,
-            "v": 38.8
+            "v": 39.7
           },
           "xg_fast_break": {
             "p": 90,
@@ -415,13 +415,9 @@
             "p": 10,
             "v": 12.4
           },
-          "duels_won": {
-            "p": 20,
-            "v": 20.1
-          },
           "field_tilt": {
             "p": 15,
-            "v": 41.3
+            "v": 41.6
           },
           "fouls_committed": {
             "p": 70,
@@ -444,12 +440,16 @@
             "v": 45.1
           },
           "possession_pct": {
-            "p": 20,
-            "v": 44.8
+            "p": 35,
+            "v": 48.0
+          },
+          "ppda": {
+            "p": 5,
+            "v": 17.9
           },
           "progressive_carries": {
             "p": 75,
-            "v": 11.0
+            "v": 13.6
           },
           "progressive_passes": {
             "p": 10,
@@ -480,8 +480,8 @@
             "v": 19.5
           },
           "touches_in_box": {
-            "p": 85,
-            "v": 28.2
+            "p": 80,
+            "v": 28.1
           },
           "xg_fast_break": {
             "p": 100,
@@ -516,10 +516,6 @@
             "p": 85,
             "v": 20.5
           },
-          "duels_won": {
-            "p": 80,
-            "v": 24.4
-          },
           "field_tilt": {
             "p": 80,
             "v": 53.4
@@ -545,12 +541,16 @@
             "v": 47.4
           },
           "possession_pct": {
-            "p": 80,
-            "v": 52.2
+            "p": 85,
+            "v": 52.1
+          },
+          "ppda": {
+            "p": 55,
+            "v": 14.3
           },
           "progressive_carries": {
-            "p": 80,
-            "v": 12.1
+            "p": 85,
+            "v": 14.6
           },
           "progressive_passes": {
             "p": 75,
@@ -582,7 +582,7 @@
           },
           "touches_in_box": {
             "p": 90,
-            "v": 32.8
+            "v": 32.1
           },
           "xg_fast_break": {
             "p": 80,
@@ -617,10 +617,6 @@
             "p": 15,
             "v": 14.8
           },
-          "duels_won": {
-            "p": 35,
-            "v": 21.3
-          },
           "field_tilt": {
             "p": 70,
             "v": 50.8
@@ -646,12 +642,16 @@
             "v": 48.3
           },
           "possession_pct": {
-            "p": 60,
-            "v": 49.6
+            "p": 75,
+            "v": 51.0
+          },
+          "ppda": {
+            "p": 30,
+            "v": 15.9
           },
           "progressive_carries": {
-            "p": 55,
-            "v": 10.3
+            "p": 60,
+            "v": 13.1
           },
           "progressive_passes": {
             "p": 20,
@@ -683,7 +683,7 @@
           },
           "touches_in_box": {
             "p": 75,
-            "v": 26.4
+            "v": 26.2
           },
           "xg_fast_break": {
             "p": 100,
@@ -718,13 +718,9 @@
             "p": 5,
             "v": 11.4
           },
-          "duels_won": {
-            "p": 5,
-            "v": 15.6
-          },
           "field_tilt": {
             "p": 40,
-            "v": 45.8
+            "v": 45.5
           },
           "fouls_committed": {
             "p": 75,
@@ -747,12 +743,16 @@
             "v": 49.2
           },
           "possession_pct": {
-            "p": 55,
-            "v": 49.4
+            "p": 50,
+            "v": 49.0
+          },
+          "ppda": {
+            "p": 30,
+            "v": 15.9
           },
           "progressive_carries": {
-            "p": 85,
-            "v": 12.2
+            "p": 80,
+            "v": 14.1
           },
           "progressive_passes": {
             "p": 30,
@@ -783,8 +783,8 @@
             "v": 17.0
           },
           "touches_in_box": {
-            "p": 30,
-            "v": 22.1
+            "p": 25,
+            "v": 21.9
           },
           "xg_fast_break": {
             "p": 40,
@@ -819,13 +819,9 @@
             "p": 65,
             "v": 18.7
           },
-          "duels_won": {
-            "p": 100,
-            "v": 28.1
-          },
           "field_tilt": {
             "p": 30,
-            "v": 44.8
+            "v": 45.0
           },
           "fouls_committed": {
             "p": 5,
@@ -849,11 +845,15 @@
           },
           "possession_pct": {
             "p": 5,
-            "v": 40.9
+            "v": 44.3
+          },
+          "ppda": {
+            "p": 60,
+            "v": 14.0
           },
           "progressive_carries": {
             "p": 5,
-            "v": 4.7
+            "v": 5.7
           },
           "progressive_passes": {
             "p": 100,
@@ -885,7 +885,7 @@
           },
           "touches_in_box": {
             "p": 5,
-            "v": 16.8
+            "v": 16.5
           },
           "xg_fast_break": {
             "p": 10,
@@ -920,13 +920,9 @@
             "p": 80,
             "v": 20.3
           },
-          "duels_won": {
-            "p": 35,
-            "v": 21.3
-          },
           "field_tilt": {
             "p": 65,
-            "v": 50.3
+            "v": 50.4
           },
           "fouls_committed": {
             "p": 40,
@@ -949,12 +945,16 @@
             "v": 46.4
           },
           "possession_pct": {
-            "p": 85,
-            "v": 52.7
+            "p": 65,
+            "v": 50.2
+          },
+          "ppda": {
+            "p": 90,
+            "v": 11.7
           },
           "progressive_carries": {
-            "p": 40,
-            "v": 9.4
+            "p": 50,
+            "v": 12.2
           },
           "progressive_passes": {
             "p": 85,
@@ -985,8 +985,8 @@
             "v": 16.7
           },
           "touches_in_box": {
-            "p": 25,
-            "v": 21.8
+            "p": 35,
+            "v": 22.5
           },
           "xg_fast_break": {
             "p": 70,
@@ -1021,13 +1021,9 @@
             "p": 60,
             "v": 18.3
           },
-          "duels_won": {
-            "p": 40,
-            "v": 21.5
-          },
           "field_tilt": {
             "p": 45,
-            "v": 46.2
+            "v": 46.4
           },
           "fouls_committed": {
             "p": 65,
@@ -1050,12 +1046,16 @@
             "v": 48.1
           },
           "possession_pct": {
-            "p": 50,
-            "v": 48.8
+            "p": 45,
+            "v": 48.5
+          },
+          "ppda": {
+            "p": 30,
+            "v": 15.9
           },
           "progressive_carries": {
-            "p": 30,
-            "v": 9.2
+            "p": 45,
+            "v": 11.8
           },
           "progressive_passes": {
             "p": 40,
@@ -1122,13 +1122,9 @@
             "p": 50,
             "v": 17.3
           },
-          "duels_won": {
-            "p": 85,
-            "v": 24.6
-          },
           "field_tilt": {
             "p": 55,
-            "v": 49.2
+            "v": 49.1
           },
           "fouls_committed": {
             "p": 20,
@@ -1152,11 +1148,15 @@
           },
           "possession_pct": {
             "p": 70,
-            "v": 51.2
+            "v": 50.7
+          },
+          "ppda": {
+            "p": 85,
+            "v": 12.2
           },
           "progressive_carries": {
-            "p": 50,
-            "v": 9.6
+            "p": 40,
+            "v": 11.7
           },
           "progressive_passes": {
             "p": 45,
@@ -1187,8 +1187,8 @@
             "v": 18.7
           },
           "touches_in_box": {
-            "p": 60,
-            "v": 25.1
+            "p": 65,
+            "v": 25.2
           },
           "xg_fast_break": {
             "p": 40,
@@ -1223,13 +1223,9 @@
             "p": 95,
             "v": 21.2
           },
-          "duels_won": {
-            "p": 55,
-            "v": 23.4
-          },
           "field_tilt": {
             "p": 25,
-            "v": 43.9
+            "v": 44.2
           },
           "fouls_committed": {
             "p": 25,
@@ -1253,11 +1249,15 @@
           },
           "possession_pct": {
             "p": 10,
-            "v": 41.7
+            "v": 45.4
+          },
+          "ppda": {
+            "p": 50,
+            "v": 15.3
           },
           "progressive_carries": {
-            "p": 20,
-            "v": 8.0
+            "p": 15,
+            "v": 9.9
           },
           "progressive_passes": {
             "p": 90,
@@ -1289,7 +1289,7 @@
           },
           "touches_in_box": {
             "p": 20,
-            "v": 21.1
+            "v": 21.2
           },
           "xg_fast_break": {
             "p": 60,
@@ -1324,13 +1324,9 @@
             "p": 100,
             "v": 24.2
           },
-          "duels_won": {
-            "p": 65,
-            "v": 24.0
-          },
           "field_tilt": {
             "p": 90,
-            "v": 61.4
+            "v": 61.5
           },
           "fouls_committed": {
             "p": 30,
@@ -1353,12 +1349,16 @@
             "v": 49.7
           },
           "possession_pct": {
-            "p": 45,
-            "v": 47.9
+            "p": 25,
+            "v": 47.6
+          },
+          "ppda": {
+            "p": 75,
+            "v": 13.3
           },
           "progressive_carries": {
-            "p": 65,
-            "v": 10.9
+            "p": 70,
+            "v": 13.3
           },
           "progressive_passes": {
             "p": 95,
@@ -1389,8 +1389,8 @@
             "v": 19.7
           },
           "touches_in_box": {
-            "p": 80,
-            "v": 27.9
+            "p": 85,
+            "v": 28.2
           },
           "xg_fast_break": {
             "p": 10,
@@ -1425,13 +1425,9 @@
             "p": 35,
             "v": 16.0
           },
-          "duels_won": {
-            "p": 60,
-            "v": 23.5
-          },
           "field_tilt": {
             "p": 85,
-            "v": 54.5
+            "v": 53.7
           },
           "fouls_committed": {
             "p": 45,
@@ -1455,11 +1451,15 @@
           },
           "possession_pct": {
             "p": 90,
-            "v": 57.3
+            "v": 53.8
+          },
+          "ppda": {
+            "p": 95,
+            "v": 11.3
           },
           "progressive_carries": {
-            "p": 75,
-            "v": 11.0
+            "p": 70,
+            "v": 13.3
           },
           "progressive_passes": {
             "p": 50,
@@ -1491,7 +1491,7 @@
           },
           "touches_in_box": {
             "p": 45,
-            "v": 23.2
+            "v": 23.0
           },
           "xg_fast_break": {
             "p": 25,
@@ -1526,13 +1526,9 @@
             "p": 75,
             "v": 20.0
           },
-          "duels_won": {
-            "p": 90,
-            "v": 26.2
-          },
           "field_tilt": {
             "p": 50,
-            "v": 46.8
+            "v": 47.0
           },
           "fouls_committed": {
             "p": 10,
@@ -1555,12 +1551,16 @@
             "v": 51.1
           },
           "possession_pct": {
-            "p": 25,
-            "v": 46.7
+            "p": 20,
+            "v": 46.5
+          },
+          "ppda": {
+            "p": 70,
+            "v": 13.4
           },
           "progressive_carries": {
             "p": 25,
-            "v": 8.3
+            "v": 10.7
           },
           "progressive_passes": {
             "p": 55,
@@ -1591,8 +1591,8 @@
             "v": 18.6
           },
           "touches_in_box": {
-            "p": 35,
-            "v": 22.4
+            "p": 30,
+            "v": 22.3
           },
           "xg_fast_break": {
             "p": 25,
@@ -1627,13 +1627,9 @@
             "p": 40,
             "v": 16.5
           },
-          "duels_won": {
-            "p": 95,
-            "v": 26.3
-          },
           "field_tilt": {
             "p": 75,
-            "v": 52.8
+            "v": 52.7
           },
           "fouls_committed": {
             "p": 15,
@@ -1656,12 +1652,16 @@
             "v": 46.1
           },
           "possession_pct": {
-            "p": 65,
-            "v": 49.7
+            "p": 60,
+            "v": 49.2
+          },
+          "ppda": {
+            "p": 80,
+            "v": 12.3
           },
           "progressive_carries": {
-            "p": 35,
-            "v": 9.3
+            "p": 40,
+            "v": 11.7
           },
           "progressive_passes": {
             "p": 60,
@@ -1728,13 +1728,9 @@
             "p": 90,
             "v": 20.9
           },
-          "duels_won": {
-            "p": 70,
-            "v": 24.2
-          },
           "field_tilt": {
             "p": 35,
-            "v": 45.6
+            "v": 45.4
           },
           "fouls_committed": {
             "p": 40,
@@ -1757,12 +1753,16 @@
             "v": 47.0
           },
           "possession_pct": {
-            "p": 30,
-            "v": 46.9
+            "p": 45,
+            "v": 48.5
+          },
+          "ppda": {
+            "p": 40,
+            "v": 15.6
           },
           "progressive_carries": {
-            "p": 60,
-            "v": 10.8
+            "p": 55,
+            "v": 12.9
           },
           "progressive_passes": {
             "p": 70,
@@ -1793,8 +1793,8 @@
             "v": 18.8
           },
           "touches_in_box": {
-            "p": 70,
-            "v": 25.3
+            "p": 65,
+            "v": 25.2
           },
           "xg_fast_break": {
             "p": 60,
@@ -1829,13 +1829,9 @@
             "p": 70,
             "v": 19.3
           },
-          "duels_won": {
-            "p": 55,
-            "v": 23.4
-          },
           "field_tilt": {
             "p": 20,
-            "v": 42.0
+            "v": 42.1
           },
           "fouls_committed": {
             "p": 60,
@@ -1858,12 +1854,16 @@
             "v": 48.0
           },
           "possession_pct": {
-            "p": 40,
-            "v": 47.7
+            "p": 60,
+            "v": 49.2
+          },
+          "ppda": {
+            "p": 35,
+            "v": 15.8
           },
           "progressive_carries": {
-            "p": 15,
-            "v": 7.9
+            "p": 20,
+            "v": 10.1
           },
           "progressive_passes": {
             "p": 80,
@@ -1895,7 +1895,7 @@
           },
           "touches_in_box": {
             "p": 20,
-            "v": 21.1
+            "v": 21.2
           },
           "xg_fast_break": {
             "p": 60,
@@ -1930,13 +1930,9 @@
             "p": 55,
             "v": 17.6
           },
-          "duels_won": {
-            "p": 45,
-            "v": 22.4
-          },
           "field_tilt": {
             "p": 10,
-            "v": 40.6
+            "v": 40.8
           },
           "fouls_committed": {
             "p": 60,
@@ -1960,11 +1956,15 @@
           },
           "possession_pct": {
             "p": 15,
-            "v": 42.7
+            "v": 46.2
+          },
+          "ppda": {
+            "p": 30,
+            "v": 15.9
           },
           "progressive_carries": {
             "p": 10,
-            "v": 7.7
+            "v": 9.4
           },
           "progressive_passes": {
             "p": 65,
@@ -1996,7 +1996,7 @@
           },
           "touches_in_box": {
             "p": 40,
-            "v": 22.9
+            "v": 22.7
           },
           "xg_fast_break": {
             "p": 75,
@@ -2031,13 +2031,9 @@
             "p": 30,
             "v": 15.7
           },
-          "duels_won": {
-            "p": 15,
-            "v": 19.9
-          },
           "field_tilt": {
             "p": 60,
-            "v": 50.0
+            "v": 49.6
           },
           "fouls_committed": {
             "p": 85,
@@ -2060,12 +2056,16 @@
             "v": 43.6
           },
           "possession_pct": {
-            "p": 75,
-            "v": 52.0
+            "p": 80,
+            "v": 51.4
+          },
+          "ppda": {
+            "p": 10,
+            "v": 16.5
           },
           "progressive_carries": {
             "p": 90,
-            "v": 16.1
+            "v": 19.0
           },
           "progressive_passes": {
             "p": 5,
@@ -2096,8 +2096,8 @@
             "v": 21.6
           },
           "touches_in_box": {
-            "p": 65,
-            "v": 25.2
+            "p": 70,
+            "v": 25.5
           },
           "xg_fast_break": {
             "p": 60,
@@ -2132,13 +2132,9 @@
             "p": 45,
             "v": 17.2
           },
-          "duels_won": {
-            "p": 75,
-            "v": 24.3
-          },
           "field_tilt": {
             "p": 5,
-            "v": 38.2
+            "v": 38.4
           },
           "fouls_committed": {
             "p": 50,
@@ -2161,12 +2157,16 @@
             "v": 47.0
           },
           "possession_pct": {
-            "p": 35,
-            "v": 47.3
+            "p": 30,
+            "v": 47.9
+          },
+          "ppda": {
+            "p": 50,
+            "v": 15.3
           },
           "progressive_carries": {
-            "p": 45,
-            "v": 9.5
+            "p": 40,
+            "v": 11.7
           },
           "progressive_passes": {
             "p": 35,
@@ -2277,7 +2277,7 @@
       "slug": null,
       "team_id": 20,
       "won": 22,
-      "xg_against": 46.5,
+      "xg_against": 46.4,
       "xg_difference": 15.3,
       "xg_for": 61.8
     },
@@ -2334,7 +2334,7 @@
       "slug": null,
       "team_id": 6,
       "won": 14,
-      "xg_against": 51.5,
+      "xg_against": 51.4,
       "xg_difference": -7.1,
       "xg_for": 44.4
     },
@@ -2373,8 +2373,8 @@
       "team_id": 15,
       "won": 12,
       "xg_against": 50.1,
-      "xg_difference": 2.4,
-      "xg_for": 52.5
+      "xg_difference": 2.3,
+      "xg_for": 52.4
     },
     {
       "abbr": "VAL",
@@ -2410,7 +2410,7 @@
       "slug": null,
       "team_id": 17,
       "won": 11,
-      "xg_against": 52.9,
+      "xg_against": 52.8,
       "xg_difference": -3.9,
       "xg_for": 49.0
     },
@@ -2431,7 +2431,7 @@
       "won": 12,
       "xg_against": 55.9,
       "xg_difference": -8.3,
-      "xg_for": 47.6
+      "xg_for": 47.5
     },
     {
       "abbr": "ATH",

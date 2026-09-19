@@ -280,7 +280,34 @@ These project-specific skills are registered and should be consulted automatical
 
 ## Current State
 
-> Last updated: 16 September 2026
+> Last updated: 19 September 2026
+
+### Sequence review, second pass (19 Sep 2026)
+
+Seven chains flagged by eye on the deployed match pages were traced to the raw
+events; full record in **`md/GOLD_SEQUENCES.md §6.6`**. Two data defects, both
+fixed and rebuilt over the 458 matches (events → sequences → gold → export):
+
+- **`carries.py` matched event names this pipeline never emits** (`BallRecovery`,
+  `Shot`, `MissedShot`…), so no carry was ever synthesised after a ball
+  recovery or keeper pick-up, nor before a shot. Also fixed: the carry clock
+  averaged minute and second separately; and carries under **1 m** (21% of
+  them, coordinate rounding) are no longer created (`MIN_CARRY_DISTANCE_M`).
+  255,795 → **227,047** carries; non-carry rows unchanged.
+- **Set-piece passes now open a sequence before the sandwich guard is
+  consulted**, and **Q124 (goal kick)** joins Q5/Q6/Q107. 1,018 throw-ins and
+  209 goal kicks had been absorbed into the possession the ball had left.
+  150,990 → **152,217** sequences; every other event partitions identically.
+- Gold: `ball_out` no longer requires the opponent to take the restart.
+  Export/web: `Clearance` is its own action kind with a destination; every
+  action ships a `type` key that the sequence view names on hover.
+- **`sequence_id`s renumber on every full rebuild** (per-team counter). Quote
+  kick-off time, not the id, when reporting a chain.
+- Pre-rebuild snapshot: `silver.events_backup_20260919` (970,623 rows) — drop
+  it once satisfied. The events pipeline has **no delete step**: to re-run it
+  over loaded matches, `TRUNCATE silver.events, gold.sequences,
+  gold.sequence_players, gold.sequence_phase_segments` first (not `DELETE` —
+  see §6.6 on why that ran for 15 minutes).
 
 ### Sequence review applied (16 Sep 2026)
 
@@ -315,7 +342,7 @@ produced one rule set and four gold changes, all applied and rebuilt over the
 - **Seasons loaded: 2024/25 (47 matches), 2025/26 (380), 2026/27 (31 and counting) — 458 total.** 2026/27 was loaded on 5 Sep 2026 through matchday 3 plus one early matchday-6 fixture; re-run the full order in "How to Run Pipelines" to pick up later matchdays
 - Data ingestion pipelines built for matches, lineups, squads, teams, players, events (carries + xT + SPADL mapping)
 - SPADL columns (`spadl_type_id`, `spadl_result_id`, `spadl_bodypart_id`) added to `silver.events`; backfill via `python -m src.silver.events.spadl`
-- **VAEP is live.** `vaep_value` / `vaep_offensive` / `vaep_defensive` are populated across all 458 matches (840,540 of 970,623 events; the rest are action types SPADL does not map). The previously shipped model was degenerate (`scores` AUC excluding goal actions **0.5222** — a coin flip; it had learned "was this a successful shot?"). It was retrained from scratch in a companion repo, Platt-calibrated on held-out Opta, and integrated on 11 Aug 2026: **0.7465** AUC excluding goal actions, `corr(vaep_offensive, xt)` **−0.1942 → +0.2605**. Backfill via `python -m src.silver.events.vaep`; consult the **`vaep-model`** skill before touching `vaep.py`, `_build_features` or `models/vaep/*.json`
+- **VAEP is live.** `vaep_value` / `vaep_offensive` / `vaep_defensive` are populated across all 458 matches (811,792 of 941,875 events; the rest are action types SPADL does not map). The previously shipped model was degenerate (`scores` AUC excluding goal actions **0.5222** — a coin flip; it had learned "was this a successful shot?"). It was retrained from scratch in a companion repo, Platt-calibrated on held-out Opta, and integrated on 11 Aug 2026: **0.7465** AUC excluding goal actions, `corr(vaep_offensive, xt)` **−0.1942 → +0.2605**. Backfill via `python -m src.silver.events.vaep`; consult the **`vaep-model`** skill before touching `vaep.py`, `_build_features` or `models/vaep/*.json`
 - Possession sequence classifier implemented (`sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number`)
 - Squad diff strategy live with `squad_snapshot_log` audit table
 - Shot enrichment columns: `shot_play_pattern` (7-value enum from Q22/23/24/25/26/160/9) and `first_time` (bool from Q328)
@@ -332,9 +359,9 @@ Built and populated over all 458 matches:
 
 | Table | Rows |
 |---|---|
-| `gold.sequences` | 150,990 |
-| `gold.sequence_players` | 448,269 |
-| `gold.sequence_phase_segments` | 248,675 |
+| `gold.sequences` | 152,217 |
+| `gold.sequence_players` | 449,415 |
+| `gold.sequence_phase_segments` | 244,417 |
 | `gold.team_match_stats` | 916 |
 | `gold.team_season_stats` | 60 |
 | `gold.player_match_stats` | 14,394 |
@@ -384,8 +411,8 @@ re-classified.** Diagnosis, worked examples and full before/after in
 `md/GOLD_SEQUENCES.md §6`. The before/after table below is that 427-match
 snapshot and is kept as the historical record; the 2026/27 matches loaded on
 5 Sep 2026 were classified with the same fixes, bringing the current totals to
-**458 matches / 887,040 events with a `sequence_id` / 150,990 sequences** after the
-16 Sep 2026 rule set (§6.5).
+**458 matches / 858,297 events with a `sequence_id` / 152,217 sequences** after the
+19 Sep 2026 pass (§6.6).
 
 - **Fix 0 — determinism.** The classifier was **non-deterministic**: 11,766
   events share a `json_index` with another event in the same match (6,026

@@ -70,10 +70,11 @@ BACKFILL_EVENTS = frozenset({
 EXCLUDED_PERIODS = frozenset({14, 16})
 
 # Qualifier IDs for set-piece passes (always start a sequence)
-#   Q5  = Free kick taken
-#   Q6  = Corner taken
+#   Q5   = Free kick taken
+#   Q6   = Corner taken
 #   Q107 = Throw-in
-SET_PIECE_QUALIFIER_IDS = frozenset({5, 6, 107})
+#   Q124 = Goal kick (added 19 Sep 2026 — see the set-piece rule below)
+SET_PIECE_QUALIFIER_IDS = frozenset({5, 6, 107, 124})
 
 # Qualifier IDs for dead-ball goals (only these goals can start a sequence)
 #   Q9 = Penalty
@@ -345,6 +346,19 @@ def _is_sequence_start(
     if evt == 'Corner Awarded':
         return False
 
+    # ── Fix 3: Set-piece pass always starts ────────────────────────────
+    # Evaluated BEFORE the sandwich guard.  A restart from a dead ball is a
+    # new possession whatever preceded it; until 19 Sep 2026 the guard ran
+    # first, and the pattern "our pass → their Ball touch → ball out → our
+    # throw-in / goal kick" read as a continuation, so 1,018 throw-ins and
+    # 209 goal kicks were absorbed into the possession the ball had left.
+    # The `Out` event that would have separated them (typeId 5) is dropped
+    # by the parser.  Read-only A/B over 458 matches: the only change is
+    # those restarts opening a sequence; no other event moves, no coverage
+    # is lost or gained, no sequence end is displaced.
+    if row.get('is_set_piece_pass', False):
+        return True
+
     # ── Sandwich continuation guard ────────────────────────────────────
     # If we're inside an active sequence and the previous event was a
     # Ball touch or Error from the OTHER team that didn't end the sequence
@@ -368,10 +382,6 @@ def _is_sequence_start(
             and prev_prev_row['source_team_id'] == team
             and team == current_seq_team):
         return False
-
-    # ── Fix 3: Set-piece pass always starts ────────────────────────────
-    if row.get('is_set_piece_pass', False):
-        return True
 
     # ── Fix 5: Dead-ball goal starts (penalty / direct free kick) ──────
     if evt == 'Goal' and row.get('is_dead_ball_goal', False):

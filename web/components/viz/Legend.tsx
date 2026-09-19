@@ -29,8 +29,10 @@ export interface LegendItem {
   outline?: string;
   /** A 14x2 rule — a pass, an arrow, a series. */
   bar?: string;
-  /** A dashed rule — the carry mark. */
+  /** A dotted rule — the carry mark. */
   dotted?: string;
+  /** A dashed rule — the clearance mark. */
+  dashed?: string;
   /** A curved rule — the cross mark; the colour is its origin dot. */
   curved?: string;
   /** Rotates the swatch 45° — the defensive-action mark. */
@@ -76,13 +78,13 @@ function LegendMarks({ items }: { items: LegendItem[] }) {
     <>
       {items.map((item) => (
         <span key={item.text} className="flex items-center gap-[5px]">
-          {item.dotted ? (
+          {item.dotted || item.dashed ? (
             <span
               style={{
                 display: "inline-block",
                 width: 14,
                 height: 0,
-                borderTop: `2px dotted ${item.dotted}`,
+                borderTop: item.dotted ? `2px dotted ${item.dotted}` : `2px dashed ${item.dashed}`,
               }}
             />
           ) : item.curved ? (
