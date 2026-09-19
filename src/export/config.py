@@ -84,7 +84,11 @@ class ProfileMetric:
 
 PROFILE_METRICS: list[ProfileMetric] = [
     # -- Defensive ----------------------------------------------------------
-    ProfileMetric("duels_won",                    "defensive",   "count"),
+    # PPDA is already a ratio (opponent passes per defensive action) and
+    # fewer is more pressing, so it ships as a rate with the percentile
+    # reversed. It replaced duels_won on 11 Sep 2026, which was the sum of
+    # the two rows below it rather than independent evidence.
+    ProfileMetric("ppda",                         "defensive",   "rate", invert=True),
     ProfileMetric("aerials_won",                  "defensive",   "count"),
     ProfileMetric("aerial_win_rate",              "defensive",   "rate", scale="pct"),
     ProfileMetric("tackles_won",                  "defensive",   "count"),
@@ -127,7 +131,7 @@ PROFILE_CARDS = ["defensive", "possession", "progression", "finishing"]
 class Kpi:
     key: str                   # column on gold.team_season_stats
     unit: str | None
-    higher_is_better: bool     # drives the rank direction; PPDA is the odd one
+    higher_is_better: bool     # drives the rank direction (1 = best)
     scale: str = "raw"         # "pct" for the 0-1 shares gold stores
     decimals: int = 1
     secondary: str | None = None   # key of the derived note value, if any
@@ -144,19 +148,34 @@ KPIS: list[Kpi] = [
     Kpi("xg_difference",      "xG",  True,  decimals=1,
         secondary="xg_difference_per_match"),
     Kpi("possession_pct",     "%",   True,  scale="pct", decimals=1),
-    # Fewer opponent passes per defensive action is more pressing, so PPDA
-    # ranks ascending. Getting this backwards silently inverts the rank chip.
-    Kpi("ppda",               None,  False, decimals=1),
+    # Goals replaced PPDA in the strip on 11 Sep 2026; PPDA moved to the
+    # Defensive profile card. Every strip metric now ranks descending.
+    Kpi("goals_for",          None,  True,  decimals=0,
+        secondary="goals_per_match"),
     Kpi("set_piece_goals_for", None, True,  decimals=0,
         secondary="set_piece_goal_share"),
 ]
 
+@dataclass(frozen=True)
+class LeaderMetric:
+    key: str                   # column on gold.player_season_stats
+    unit: str | None = None
+    # Per-90 rates need the §3.6 minutes floor: without it a 98-minute
+    # third keeper tops the box. Counts rank themselves by volume, so
+    # they need no gate.
+    gated: bool = False
+    # VAEP credits keepers for every save and claim, so a GK per-90 reads
+    # as the best outfield player's; GOLD_LAYER.md warns against reading
+    # it that way. Leave keepers out of that box.
+    exclude_gk: bool = False
+
+
 # Four leader boxes, six rows each, in the design's order.
-LEADER_METRICS: list[tuple[str, str | None]] = [
-    ("goals", None),
-    ("xt_per_90", None),
-    ("progressive_passes", None),
-    ("carries_into_final_third", None),
+LEADER_METRICS: list[LeaderMetric] = [
+    LeaderMetric("goals"),
+    LeaderMetric("vaep_per_90", gated=True, exclude_gk=True),
+    LeaderMetric("progressive_passes"),
+    LeaderMetric("carries_into_final_third"),
 ]
 LEADER_ROWS = 6
 
@@ -186,9 +205,12 @@ class MatchTotal:
     decimals: int = 1
 
 
-# Order is the design's, top to bottom. Three keys differ from their column
-# because the row is labelled from the reader's side of the match, not the
-# table's: `xg` is xg_for, `xt_created` is xt_for, `corners` is corners_for.
+# Order is the design's, top to bottom, plus four rows added on 14 Sep 2026
+# (pass completion, crosses completed, duels won, recoveries), each slotted
+# next to the row it qualifies. Keys differ from their column where the row is
+# labelled from the reader's side of the match, not the table's: `xg` is
+# xg_for, `xt_created` is xt_for, `corners` is corners_for, `recoveries` is
+# ball_recoveries, and `pass_completion_pct` is the 0-1 pass_completion_rate.
 MATCH_TOTALS: list[MatchTotal] = [
     MatchTotal("possession_pct",      "possession_pct", scale="pct"),
     MatchTotal("xg",                  "xg_for",                decimals=2),
@@ -196,11 +218,15 @@ MATCH_TOTALS: list[MatchTotal] = [
     MatchTotal("shots_on_target",     "shots_on_target",       decimals=0),
     MatchTotal("big_chances",         "big_chances",           decimals=0),
     MatchTotal("passes_completed",    "passes_completed",      decimals=0),
+    MatchTotal("pass_completion_pct", "pass_completion_rate", scale="pct"),
     MatchTotal("final_third_entries", "final_third_entries",   decimals=0),
+    MatchTotal("crosses_completed",   "crosses_completed",     decimals=0),
     MatchTotal("xt_created",          "xt_for",                decimals=3),
     MatchTotal("yellow_cards",        "yellow_cards",          decimals=0),
     MatchTotal("red_cards",           "red_cards",             decimals=0),
     MatchTotal("fouls_committed",     "fouls_committed",       decimals=0),
+    MatchTotal("duels_won",           "duels_won",             decimals=0),
+    MatchTotal("recoveries",          "ball_recoveries",       decimals=0),
     MatchTotal("corners",             "corners_for",           decimals=0),
     MatchTotal("xg_open_play",        "xg_open_play",          decimals=2),
     MatchTotal("xg_set_piece",        "xg_set_piece",          decimals=2),

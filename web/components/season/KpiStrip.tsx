@@ -10,9 +10,9 @@
  * Two things the data has already settled, and this component must not
  * second-guess:
  *
- *   - **Rank direction.** PPDA ranks ascending (fewer opponent passes per
- *     defensive action is more pressing) and the export has already applied
- *     that. A rank here is always "1 is best", so the chip logic is one rule.
+ *   - **Rank direction.** The export ranks each metric in its own direction
+ *     (`higher_is_better` in `src/export/config.py`). A rank here is always
+ *     "1 is best", so the chip logic is one rule.
  *   - **Scaling.** `possession_pct` arrives as 41.7, not 0.417 (§5.1).
  *
  * The chip turns green in the top six, which is the design's rule and reads
@@ -55,8 +55,8 @@ export function KpiStrip({ kpis }: { kpis: OverviewKpi[] }) {
           </div>
 
           <p className="font-display text-kpi font-bold">
-            {/* Points and set-piece goals are counts; everything else has a
-                decimal. `decimals` is not in the file, so the integer test is
+            {/* Points, goals and set-piece goals are counts; everything else
+                has a decimal. `decimals` is not in the file, so the integer test is
                 the rule — and it is the same one the export applied. */}
             {orEmpty(kpi.value, (v) => (Number.isInteger(v) ? num(v) : dec(v, 1)))}
             {kpi.unit ? (

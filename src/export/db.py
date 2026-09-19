@@ -187,7 +187,7 @@ TEAM_SEASON_COLUMNS = [
     "matches_played", "matchdays_scheduled", "last_matchday_played",
     "wins", "draws", "losses", "points", "points_per_match", "league_position",
     "goals_for", "goals_against", "goal_difference", "form_last_5",
-    "xg_for", "xg_against", "xg_difference", "possession_pct", "ppda",
+    "xg_for", "xg_against", "xg_difference", "possession_pct",
     "set_piece_goals_for",
 ]
 
@@ -249,9 +249,15 @@ def fetch_team_matches(conn, cs_id: int, team_id: int) -> list[dict[str, Any]]:
     return _rows(conn, TEAM_MATCHES_SQL, {"cs_id": cs_id, "team_id": team_id})
 
 
-def fetch_leaders(conn, cs_id: int, team_id: int, metric: str, limit: int
+def fetch_leaders(conn, cs_id: int, team_id: int, metric: str, limit: int,
+                  min_minutes: float = 0, exclude_gk: bool = False,
                   ) -> list[dict[str, Any]]:
     """Top `limit` players of one club by `metric` (§6 leader boxes).
+
+    `min_minutes` is the §3.6 floor, applied to per-90 boxes only, and
+    `exclude_gk` drops keepers from a box where their number is not
+    comparable (VAEP). Both default to "everyone", which is what the count
+    boxes want.
 
     Ties break on minutes played then name, so a refresh that changes nothing
     does not reshuffle the box.
@@ -273,9 +279,12 @@ def fetch_leaders(conn, cs_id: int, team_id: int, metric: str, limit: int
             WHERE pss.competition_season_id = %(cs_id)s
               AND pss.team_id = %(team_id)s
               AND pss.{metric} IS NOT NULL
+              AND pss.minutes_played >= %(min_minutes)s
+              {"AND pss.primary_position_group <> 'GK'" if exclude_gk else ""}
             ORDER BY pss.{metric} DESC, pss.minutes_played DESC, pss.player_name
             LIMIT %(limit)s""",
-        {"cs_id": cs_id, "team_id": team_id, "limit": limit},
+        {"cs_id": cs_id, "team_id": team_id, "limit": limit,
+         "min_minutes": min_minutes},
     )
 
 
@@ -342,9 +351,10 @@ def fetch_team_match_ids(conn, cs_id: int, team_id: int) -> list[int]:
 # the defensive line the pitch draws and the goals the header prints.
 MATCH_TOTAL_COLUMNS = [
     "possession_pct", "xg_for", "shots", "shots_on_target", "big_chances",
-    "passes_completed", "final_third_entries", "xt_for", "yellow_cards",
-    "red_cards", "fouls_committed", "corners_for", "xg_open_play",
-    "xg_set_piece",
+    "passes_completed", "pass_completion_rate", "final_third_entries",
+    "crosses_completed", "xt_for", "yellow_cards", "red_cards",
+    "fouls_committed", "duels_won", "ball_recoveries", "corners_for",
+    "xg_open_play", "xg_set_piece",
 ]
 MATCH_EXTRA_COLUMNS = ["defensive_line_height", "goals_for", "goals_against"]
 
@@ -371,32 +381,45 @@ def fetch_match_team_stats(conn, match_id: int) -> list[dict[str, Any]]:
 
 MOMENTUM_SQL = """
 SELECT team_id,
+       period,
        greatest(minute, 1) AS minute,
        sum(xt)             AS xt
 FROM silver.events
-WHERE match_id = %(match_id)s AND xt IS NOT NULL
-GROUP BY team_id, greatest(minute, 1)
+WHERE match_id = %(match_id)s AND xt IS NOT NULL AND period IN (1, 2)
+GROUP BY team_id, period, greatest(minute, 1)
 """
 
 
 def fetch_momentum(conn, match_id: int) -> list[dict[str, Any]]:
-    """xT per team per minute. Minute 0 is folded into minute 1.
+    """xT per team per (period, minute). Minute 0 is folded into minute 1.
 
     The stream's clock starts at 0 (kick-off is second 0 of minute 0) and the
     chart's first bin is minute 1, so those few events belong to the opening
     bin rather than to a bin the axis never draws.
+
+    The period is part of the key because the clock does NOT run through:
+    the second half starts again at minute 45, so a first half with three
+    minutes of stoppage has minutes 45-47 twice in the same match. Grouping
+    by minute alone stacked the end of one half onto the start of the other.
     """
     return _rows(conn, MOMENTUM_SQL, {"match_id": match_id})
 
 
+# Every name the site prints comes from `silver.players.match_name` — the
+# provider's short display form ("Pere Milla"), the one column that is filled
+# for every player and never drifts. `silver.events.player_name` is a copy
+# taken at load time and disagrees with it on ~17k rows (accents, mostly), so
+# the event queries join `players` rather than read the copy.
 MARKERS_SQL = """
-SELECT event_id, minute, period, type_id, event_type, team_id,
-       player_id, player_name,
-       raw_data -> 'qualifier' AS qualifiers
-FROM silver.events
-WHERE match_id = %(match_id)s
-  AND (event_type = 'Goal' OR type_id IN (17, 19, 30))
-ORDER BY minute, json_index, event_id
+SELECT e.event_id, e.minute, e.period, e.type_id, e.event_type, e.team_id,
+       e.player_id,
+       COALESCE(p.match_name, e.player_name) AS player_name,
+       e.raw_data -> 'qualifier' AS qualifiers
+FROM silver.events e
+LEFT JOIN silver.players p ON p.player_id = e.player_id
+WHERE e.match_id = %(match_id)s
+  AND (e.event_type = 'Goal' OR e.type_id IN (17, 19, 30))
+ORDER BY e.period, e.minute, e.json_index, e.event_id
 """
 
 
@@ -484,26 +507,27 @@ def fetch_network_edges(conn, match_id: int, team_id: int,
 # option of moving to spadl_bodypart_id open). Q82 is what separates a save
 # from a block: both arrive as 'Attempt Saved'.
 SHOTS_SQL = """
-SELECT event_id,
-       team_id,
-       player_id,
-       player_name,
-       minute,
-       event_type,
-       x, y, xg,
-       shot_play_pattern,
-       first_time,
-       goal_mouth_y,
-       goal_mouth_z,
-       raw_data -> 'qualifier' @> '[{"qualifierId": 82}]'  AS blocked,
-       raw_data -> 'qualifier' @> '[{"qualifierId": 214}]' AS big_chance,
-       raw_data -> 'qualifier' @> '[{"qualifierId": 15}]'  AS headed,
-       raw_data -> 'qualifier' @> '[{"qualifierId": 20}]'  AS right_foot,
-       raw_data -> 'qualifier' @> '[{"qualifierId": 72}]'  AS left_foot
-FROM silver.events
-WHERE match_id = %(match_id)s
-  AND event_type IN ('Goal', 'Attempt Saved', 'Miss', 'Post')
-ORDER BY minute, json_index, event_id
+SELECT e.event_id,
+       e.team_id,
+       e.player_id,
+       COALESCE(p.match_name, e.player_name) AS player_name,
+       e.minute,
+       e.event_type,
+       e.x, e.y, e.xg,
+       e.shot_play_pattern,
+       e.first_time,
+       e.goal_mouth_y,
+       e.goal_mouth_z,
+       e.raw_data -> 'qualifier' @> '[{"qualifierId": 82}]'  AS blocked,
+       e.raw_data -> 'qualifier' @> '[{"qualifierId": 214}]' AS big_chance,
+       e.raw_data -> 'qualifier' @> '[{"qualifierId": 15}]'  AS headed,
+       e.raw_data -> 'qualifier' @> '[{"qualifierId": 20}]'  AS right_foot,
+       e.raw_data -> 'qualifier' @> '[{"qualifierId": 72}]'  AS left_foot
+FROM silver.events e
+LEFT JOIN silver.players p ON p.player_id = e.player_id
+WHERE e.match_id = %(match_id)s
+  AND e.event_type IN ('Goal', 'Attempt Saved', 'Miss', 'Post')
+ORDER BY e.period, e.minute, e.json_index, e.event_id
 """
 
 
@@ -582,14 +606,16 @@ def fetch_progression(conn, match_id: int, team_id: int, limit: int
 # The highest defensive actions, which is what the block is about: the shape of
 # the press, read against the average line.
 DEFENCE_SQL = """
-SELECT event_type, x, y, outcome, minute, player_name
-FROM silver.events
-WHERE match_id = %(match_id)s
-  AND team_id = %(team_id)s
-  AND event_type IN ('Tackle', 'Interception', 'Ball recovery',
-                     'Challenge', 'Blocked Pass', 'Clearance')
-  AND x IS NOT NULL
-ORDER BY x DESC
+SELECT e.event_type, e.x, e.y, e.outcome, e.minute,
+       COALESCE(p.match_name, e.player_name) AS player_name
+FROM silver.events e
+LEFT JOIN silver.players p ON p.player_id = e.player_id
+WHERE e.match_id = %(match_id)s
+  AND e.team_id = %(team_id)s
+  AND e.event_type IN ('Tackle', 'Interception', 'Ball recovery',
+                       'Challenge', 'Blocked Pass', 'Clearance')
+  AND e.x IS NOT NULL
+ORDER BY e.x DESC
 LIMIT %(limit)s
 """
 

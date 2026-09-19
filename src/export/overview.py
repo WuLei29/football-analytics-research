@@ -17,7 +17,8 @@ from datetime import datetime
 from typing import Any
 
 from . import db
-from .config import KPIS, LEADER_METRICS, LEADER_ROWS, Kpi, TeamConfig
+from .config import (KPIS, LEADER_METRICS, LEADER_ROWS, Kpi, TeamConfig,
+                     min_minutes_for)
 from .io import Writer, as_int, r, r_rate, r_value, r_xg
 from .seasons import SeasonMeta
 
@@ -31,10 +32,11 @@ ROLLING_WINDOW = 5
 def rank_of(values: list[float], value: float, higher_is_better: bool) -> int:
     """1-based rank among the clubs of the season, ties sharing a rank.
 
-    PPDA is the metric that makes this a parameter rather than a constant:
-    fewer opponent passes per defensive action means more pressing, so it
-    ranks ascending. Hard-coding "higher is better" would silently invert its
-    chip on screen 01.
+    `higher_is_better` is a parameter rather than a constant so a metric
+    like PPDA (fewer opponent passes per defensive action means more
+    pressing) can rank ascending. No strip metric needs it since goals
+    replaced PPDA on 11 Sep 2026, but hard-coding the direction would
+    silently invert the chip the day one does.
     """
     if higher_is_better:
         better = sum(1 for x in values if x > value)
@@ -51,6 +53,8 @@ def _secondary(kpi: Kpi, season_row: dict[str, Any]) -> dict[str, Any] | None:
     played = season_row["matches_played"] or 0
     if kpi.secondary == "points_per_match":
         value = season_row["points_per_match"]
+    elif kpi.secondary == "goals_per_match":
+        value = (float(season_row["goals_for"]) / played) if played else None
     elif kpi.secondary == "xg_difference_per_match":
         value = (float(season_row["xg_difference"]) / played) if played else None
     elif kpi.secondary == "set_piece_goal_share":
@@ -145,13 +149,17 @@ def rolling(matches: list[dict[str, Any]], window: int = ROLLING_WINDOW
 # Player leaders (§6)
 # ---------------------------------------------------------------------------
 
-def _leaders(conn, cs_id: int, team_id: int) -> list[dict[str, Any]]:
+def _leaders(conn, cs_id: int, team_id: int, played: int) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
-    for metric, unit in LEADER_METRICS:
-        rows = db.fetch_leaders(conn, cs_id, team_id, metric, LEADER_ROWS)
+    for metric in LEADER_METRICS:
+        rows = db.fetch_leaders(
+            conn, cs_id, team_id, metric.key, LEADER_ROWS,
+            min_minutes=min_minutes_for(played) if metric.gated else 0,
+            exclude_gk=metric.exclude_gk,
+        )
         out.append({
-            "key": metric,
-            "unit": unit,
+            "key": metric.key,
+            "unit": metric.unit,
             "rows": [
                 {
                     "player_id": as_int(row["player_id"]),
@@ -210,7 +218,7 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
         # the match-list page is all of it; neither is duplicated here.
         "matches": matches,
         "rolling": {"window": ROLLING_WINDOW, "points": rolling(matches)},
-        "leaders": _leaders(conn, cs_id, team_cfg.team_id),
+        "leaders": _leaders(conn, cs_id, team_cfg.team_id, played),
     }
     writer.write(
         f"teams/{team_cfg.slug}/{season.slug}/overview.json", payload, generated_at

@@ -1,9 +1,10 @@
 /**
  * RollingArea — a five-match rolling difference, diverging around zero.
  *
- * Renders: the green area above zero, the red area below, the series line, a
- * tick ladder fitted to the data, and a strip of matchday labels in HTML under
- * the chart.
+ * Renders: the blue area above zero, the warm-grey area below (the momentum
+ * chart's pair, so the two diverging figures of the site read as one), the
+ * series line, a tick ladder fitted to the data, and a strip of matchday
+ * labels in HTML under the chart.
  * Props: `points` (one per matchday, already averaged by the export),
  * `axisLabel`, `xCaption`, `height` (viewBox height) and `labelEvery`.
  * Data:  `teams/{team}/{season}/overview.json` -> `rolling.points`
@@ -122,8 +123,11 @@ export function RollingArea({
 
         {/* Green above, red below: the sign is the reading, and the page's
             blue is kept for the club. */}
-        <path d={divergingAreaPath(series, zeroY, 1)} fill="rgba(30,122,77,.22)" />
-        <path d={divergingAreaPath(series, zeroY, -1)} fill="rgba(168,58,44,.20)" />
+        {/* Same fills as Momentum.tsx: club blue for the good side, warm grey
+            for the bad. A green/red pair was tried on 10 Sep 2026 and reverted
+            the next day — it read as a verdict rather than a trend. */}
+        <path d={divergingAreaPath(series, zeroY, 1)} fill="rgba(11,76,158,.28)" />
+        <path d={divergingAreaPath(series, zeroY, -1)} fill="rgba(154,141,126,.35)" />
         <path d={linePath(series)} fill="none" stroke="var(--color-ink)" strokeWidth={1.6} />
 
         <line

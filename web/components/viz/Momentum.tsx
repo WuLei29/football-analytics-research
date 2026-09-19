@@ -2,14 +2,22 @@
  * Momentum — who was threatening, minute by minute, over one match.
  *
  * Renders: the published team's xT above the axis in blue, the opponent's
- * below in grey, a labelled vertical rule per goal, card and period end, a
- * substitution icon per minute with a change in it, minute ticks, and both
- * team names.
- * Props: `bins` (one per minute), `markers`, `teamSide`, the two team names,
- * and the rolling `windowMinutes`.
+ * below in grey, a vertical rule per goal ending in a ball glyph, a labelled
+ * rule at half time, a substitution icon per minute with a change in it,
+ * minute ticks, and both team names.
+ * Props: `bins` (one per period-minute, in playing order), `markers`,
+ * `teamSide`, the two team names, and the rolling `windowMinutes`.
  * Data:  `matches/{match_id}.json` -> `momentum` (md/WEB_DATA.md §7): per-minute
  *        `sum(xt)` per team from `silver.events`, zero-filled, both sides
  *        positive.
+ *
+ * The x axis is the POSITION of a bin, not its minute. The match clock
+ * restarts at 45 for the second half, so a first half that ran to 47' and a
+ * second half that starts at 45' both contain minutes 45, 46 and 47. Keyed by
+ * minute, the end of one half lands on top of the start of the other; keyed
+ * by `(period, minute)` and laid out in the order the file gives them, 47' of
+ * the first half is drawn before 45' of the second, and half time sits exactly
+ * between the two. Every marker and tick is resolved to a bin the same way.
  *
  * The export ships raw per-minute sums and leaves the smoothing to the site
  * (WEB_DATA §7.1), which is why the window is a prop: the file is the data,
@@ -23,6 +31,12 @@
  * The line starts at minute `windowMinutes`, because a trailing five-minute mean does
  * not exist before the fifth minute. Drawing zeros there would invent a calm
  * opening the data does not describe.
+ *
+ * Goals are a rule ending in a ball glyph — the published team's at the top,
+ * the opponent's at the bottom — and no text. "GOL 46'" next to "DESCANSO 47'"
+ * next to a substitution's "×2" is three labels on one square centimetre; the
+ * ball reads at a glance and the minute is on the axis below. Only half time
+ * keeps a label, because it is the one marker that is not an icon.
  *
  * Substitutions are NOT drawn as labelled rules. A real match has seven to
  * ten of them, in pairs and triples at the same minute, and "CAMBIO 67'" three
@@ -42,6 +56,7 @@ import { divergingAreaPath, rollingMean } from "@/lib/viz/scale";
 
 /** One entry of `momentum.bins` (WEB_DATA §7). Both sides are positive. */
 export interface MomentumBin {
+  period: 1 | 2;
   minute: number;
   home: number;
   away: number;
@@ -49,6 +64,7 @@ export interface MomentumBin {
 
 /** One entry of `momentum.markers`, with its label already translated. */
 export interface MomentumMarker {
+  period: 1 | 2;
   minute: number;
   type: "goal" | "sub" | "card" | "period";
   side: "home" | "away" | null;
@@ -77,7 +93,15 @@ const VIEW = { width: 1180, height: 268, zeroY: 120 };
 const AMPLITUDE = 92;
 /** Handoff: gridlines at these four y values. */
 const GRIDLINES = [30, 60, 180, 210];
-const MINUTE_TICKS = [15, 30, 45, 60, 75, 90];
+/** Axis ticks, each pinned to the half it belongs to: 45' is the first half's. */
+const MINUTE_TICKS: { period: 1 | 2; minute: number }[] = [
+  { period: 1, minute: 15 },
+  { period: 1, minute: 30 },
+  { period: 1, minute: 45 },
+  { period: 2, minute: 60 },
+  { period: 2, minute: 75 },
+  { period: 2, minute: 90 },
+];
 
 /** Per marker type: colour, dash pattern (handoff, screen 02 block 2). */
 const MARKER_STYLE = {
@@ -96,15 +120,44 @@ const SUB_OPACITY = 0.55;
  * icon with a count rather than three rules on top of each other.
  */
 function groupSubs(markers: MomentumMarker[]) {
-  const groups = new Map<string, { minute: number; side: MomentumMarker["side"]; count: number }>();
+  const groups = new Map<string, { period: 1 | 2; minute: number; side: MomentumMarker["side"]; count: number }>();
   for (const m of markers) {
     if (m.type !== "sub") continue;
-    const key = `${m.minute}-${m.side}`;
+    const key = `${m.period}-${m.minute}-${m.side}`;
     const g = groups.get(key);
     if (g) g.count += 1;
-    else groups.set(key, { minute: m.minute, side: m.side, count: 1 });
+    else groups.set(key, { period: m.period, minute: m.minute, side: m.side, count: 1 });
   }
   return [...groups.values()];
+}
+
+/**
+ * The goal glyph: a ball 12 units across, centred on (0, 0) — a circle with
+ * the central pentagon filled and one seam from each of its corners to the
+ * edge. Drawn with the marker colour so it inherits the side, like the sub
+ * icon.
+ */
+const BALL = { r: 5.6, pentagon: 2.3 };
+const BALL_CORNERS = Array.from({ length: 5 }, (_, i) => {
+  const a = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+  return { cos: Math.cos(a), sin: Math.sin(a) };
+});
+
+function BallIcon({ x, y, color }: { x: number; y: number; color: string }) {
+  const at = (c: { cos: number; sin: number }, r: number) =>
+    [(c.cos * r).toFixed(2), (c.sin * r).toFixed(2)] as const;
+  const pentagon = BALL_CORNERS.map((c) => at(c, BALL.pentagon).join(",")).join(" ");
+  return (
+    <g transform={`translate(${x} ${y})`} stroke={color} strokeWidth={1.2} strokeLinejoin="round">
+      <circle r={BALL.r} fill="var(--color-card)" />
+      <polygon points={pentagon} fill={color} />
+      {BALL_CORNERS.map((c, i) => {
+        const [x1, y1] = at(c, BALL.pentagon);
+        const [x2, y2] = at(c, BALL.r);
+        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />;
+      })}
+    </g>
+  );
 }
 
 /**
@@ -132,8 +185,27 @@ export function Momentum({
   pxPerUnit,
   className,
 }: MomentumProps) {
-  const lastMinute = bins.length ? bins[bins.length - 1].minute : 90;
-  const xAt = (minute: number) => ((minute - 1) / Math.max(1, lastMinute - 1)) * VIEW.width;
+  // x is the bin's position in the file, not its minute (see the header).
+  const xAtIndex = (index: number) => (index / Math.max(1, bins.length - 1)) * VIEW.width;
+  const indexOf = (period: 1 | 2, minute: number) =>
+    bins.findIndex((b) => b.period === period && b.minute === minute);
+  // A marker on a minute with no bin (a goal logged at 48' when the half's
+  // last bin is 47', say) snaps to the nearest bin of its half.
+  const xAt = (period: 1 | 2, minute: number) => {
+    const exact = indexOf(period, minute);
+    if (exact >= 0) return xAtIndex(exact);
+    let best = -1;
+    bins.forEach((b, i) => {
+      if (b.period !== period) return;
+      if (best < 0 || Math.abs(b.minute - minute) < Math.abs(bins[best].minute - minute)) best = i;
+    });
+    return best >= 0 ? xAtIndex(best) : 0;
+  };
+  // Half time is the gap between the last bin of one half and the first of
+  // the next, whatever minute either of them carries.
+  const firstSecondHalf = bins.findIndex((b) => b.period === 2);
+  const halfTimeX =
+    firstSecondHalf > 0 ? (xAtIndex(firstSecondHalf - 1) + xAtIndex(firstSecondHalf)) / 2 : null;
 
   // Net threat, from the published team's point of view.
   const net = bins.map((b) => (teamSide === "home" ? b.home - b.away : b.away - b.home));
@@ -151,13 +223,19 @@ export function Momentum({
   const peak = values.reduce((max, p) => Math.max(max, Math.abs(p.value)), 0);
   const scale = pxPerUnit ?? (peak > 0 ? AMPLITUDE / peak : 200);
 
-  const series = values.map((p) => ({
-    x: xAt(p.minute),
+  const series = values.map((p, i) => ({
+    // `values` is `bins` minus the first `windowMinutes - 1` entries (the ones
+    // the trailing mean cannot fill), so the bin index is offset by that much.
+    x: xAtIndex(i + (windowMinutes - 1)),
     y: VIEW.zeroY - p.value * scale,
   }));
 
   const subs = groupSubs(markers);
-  const labelled = markers.filter((m) => m.type !== "sub");
+  const goals = markers.filter((m) => m.type === "goal");
+  const halfTime = markers.find((m) => m.type === "period");
+  // A goal and a substitution on the same minute and side would put the two
+  // glyphs on top of each other; the sub icon moves inward to make room.
+  const goalSlots = new Set(goals.map((g) => `${g.period}-${g.minute}-${g.side}`));
 
   // A marker belongs to whoever it happened to; a period end to nobody.
   const colorOf = (side: MomentumMarker["side"]) =>
@@ -191,17 +269,18 @@ export function Momentum({
 
       {/* Substitutions first, so a goal on the same minute draws over them. */}
       {subs.map((sub) => {
-        const x = xAt(sub.minute);
+        const x = xAt(sub.period, sub.minute);
         const color = colorOf(sub.side);
         const atTop = sub.side === teamSide;
-        const iconY = atTop ? RULE.top + 6 : RULE.bottom - 6;
+        const inset = goalSlots.has(`${sub.period}-${sub.minute}-${sub.side}`) ? 14 : 0;
+        const iconY = atTop ? RULE.top + 6 + inset : RULE.bottom - 6 - inset;
         return (
-          <g key={`sub-${sub.minute}-${sub.side}`} opacity={SUB_OPACITY}>
+          <g key={`sub-${sub.period}-${sub.minute}-${sub.side}`} opacity={SUB_OPACITY}>
             <line
               x1={x}
-              y1={atTop ? RULE.top + 13 : RULE.top}
+              y1={atTop ? iconY + 7 : RULE.top}
               x2={x}
-              y2={atTop ? RULE.bottom : RULE.bottom - 13}
+              y2={atTop ? RULE.bottom : iconY - 7}
               stroke={color}
               strokeWidth={1}
               strokeDasharray={MARKER_STYLE.sub.dash}
@@ -223,48 +302,67 @@ export function Momentum({
         );
       })}
 
-      {labelled.map((marker, i) => {
-        const x = xAt(marker.minute);
-        const color = colorOf(marker.side);
-        // Past x = 900 the label would run off the right edge, so it flips.
-        const flip = x > 900;
+      {/* Half time: one labelled rule in the gap between the halves. The label
+          prints the marker's own minute (47' on a half with two added), the
+          position is the gap. */}
+      {halfTime && halfTimeX !== null && (
+        <g>
+          <line
+            x1={halfTimeX}
+            y1={RULE.top}
+            x2={halfTimeX}
+            y2={RULE.bottom}
+            stroke={colorOf(null)}
+            strokeWidth={1}
+            strokeDasharray={MARKER_STYLE.period.dash}
+          />
+          <text
+            x={halfTimeX + 4}
+            y={244}
+            fontFamily="var(--font-mono)"
+            fontSize={9.5}
+            fontWeight={600}
+            fill={colorOf(null)}
+          >
+            {halfTime.label}
+          </text>
+        </g>
+      )}
+
+      {/* Goals: a solid rule from the ball to the far edge of the plot. */}
+      {goals.map((goal, i) => {
+        const x = xAt(goal.period, goal.minute);
+        const color = colorOf(goal.side);
+        const atTop = goal.side === teamSide;
+        const iconY = atTop ? RULE.top + 6 : RULE.bottom - 6;
         return (
-          <g key={`${marker.minute}-${marker.type}-${i}`}>
+          <g key={`goal-${goal.period}-${goal.minute}-${i}`}>
+            <title>{goal.label}</title>
             <line
               x1={x}
-              y1={RULE.top}
+              y1={atTop ? iconY + BALL.r : RULE.top}
               x2={x}
-              y2={RULE.bottom}
+              y2={atTop ? RULE.bottom : iconY - BALL.r}
               stroke={color}
               strokeWidth={1}
-              strokeDasharray={MARKER_STYLE[marker.type].dash}
+              strokeDasharray={MARKER_STYLE.goal.dash}
             />
-            <text
-              x={flip ? x - 4 : x + 4}
-              y={marker.side === teamSide ? 20 : 244}
-              textAnchor={flip ? "end" : "start"}
-              fontFamily="var(--font-mono)"
-              fontSize={9.5}
-              fontWeight={600}
-              fill={color}
-            >
-              {marker.label}
-            </text>
+            <BallIcon x={x} y={iconY} color={color} />
           </g>
         );
       })}
 
-      {MINUTE_TICKS.filter((m) => m <= lastMinute).map((m) => (
+      {MINUTE_TICKS.filter((t) => indexOf(t.period, t.minute) >= 0).map((t) => (
         <text
-          key={m}
-          x={xAt(m)}
+          key={`${t.period}-${t.minute}`}
+          x={xAt(t.period, t.minute)}
           y={262}
           textAnchor="middle"
           fontFamily="var(--font-mono)"
           fontSize={9}
           fill="var(--color-faint)"
         >
-          {m}&#39;
+          {t.minute}&#39;
         </text>
       ))}
 

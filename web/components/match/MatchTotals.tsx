@@ -1,9 +1,9 @@
 /**
- * MatchTotals — the fourteen stat rows of screen 02, block 3.
+ * MatchTotals — the eighteen stat rows of screen 02, block 3.
  *
  * Renders: a two-column grid of rows. Each row is [home value] [centred mono
  * label] [away value] over a 7px rounded track filled to the home share.
- * Props: `totals` (the fourteen rows in the export order) and the two
+ * Props: `totals` (the eighteen rows in the export order) and the two
  * `abbr`eviations, plus `teamSide` so the published club is the blue one.
  * Data:  `matches/{match_id}.json` -> `totals[]` (md/WEB_DATA.md §7.2), from
  *        both rows of `gold.team_match_stats`.
@@ -21,9 +21,21 @@ import { dec, num, orEmpty } from "@/lib/format";
 import { label, matchTotalLabels } from "@/lib/labels";
 import type { MatchTotal } from "@/lib/data/types";
 
+/**
+ * Decimal places per row, for the rows that are not plain counts. xT is the
+ * one value small enough to need three; the two shares are printed to one,
+ * as the export rounds them; everything else (the xG rows) reads to two,
+ * whatever its size — "0.66", not "0.660".
+ */
+const PLACES: Record<string, 1 | 2 | 3> = {
+  xt_created: 3,
+  possession_pct: 1,
+  pass_completion_pct: 1,
+};
+
 /** Values that are counts print as integers; the rest keep their decimals. */
-function print(value: number | null): string {
-  return orEmpty(value, (v) => (Number.isInteger(v) ? num(v) : dec(v, v < 1 ? 3 : 2)));
+function print(key: string, value: number | null): string {
+  return orEmpty(value, (v) => (Number.isInteger(v) ? num(v) : dec(v, PLACES[key] ?? 2)));
 }
 
 export function MatchTotals({
@@ -63,7 +75,7 @@ export function MatchTotals({
                   className="font-display text-[17px] font-bold"
                   style={{ color: teamSide === "home" ? teamColor : oppColor }}
                 >
-                  {print(total.home)}
+                  {print(total.key, total.home)}
                 </span>
 
                 <span className="label flex-1 text-center">
@@ -74,7 +86,7 @@ export function MatchTotals({
                   className="font-display text-[17px] font-bold"
                   style={{ color: teamSide === "away" ? teamColor : oppColor }}
                 >
-                  {print(total.away)}
+                  {print(total.key, total.away)}
                 </span>
               </div>
 
