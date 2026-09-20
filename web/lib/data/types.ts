@@ -422,15 +422,23 @@ export interface MatchSequenceAction {
   kind: "pass" | "cross" | "carry" | "take_on" | "shot" | "clearance" | "other";
   /** `silver.events.event_type` as a snake_case key, e.g. `ball_recovery`. */
   type: string;
+  /** Match clock of the action (20 Sep 2026). */
+  minute: number | null;
+  second: number | null;
   x: number;
   y: number;
-  /** Null on a point event: a take-on, a shot, anything with no destination. */
+  /**
+   * Null on a point event: a take-on, anything with no destination. On a shot
+   * (20 Sep 2026) it is the goal line at the goalmouth y, in metres.
+   */
   end_x: number | null;
   end_y: number | null;
   player_id: number | null;
   surname: string | null;
   shirt_number: number | null;
   outcome: "success" | "fail";
+  /** Only present on a shot. */
+  xg?: number | null;
 }
 
 /**
@@ -453,7 +461,14 @@ export interface MatchSequence {
   /** Zone id of `gold.pitch_zones` (30-zone grid), not the 12 x 8 grid. */
   start_zone: number | null;
   start_trigger: string | null;
+  /**
+   * `start_trigger` with a `pass` start refined into its restart — `throw_in`,
+   * `free_kick`, `goal_kick`, `corner`, `kick_off` (20 Sep 2026, §7.3).
+   */
+  start_kind: string | null;
   outcome: string | null;
+  /** How a `turnover` lost the ball, from the last action; null otherwise. */
+  end_action: string | null;
   primary_phase: string | null;
   final_third_entry: boolean;
   penalty_box_entry: boolean;

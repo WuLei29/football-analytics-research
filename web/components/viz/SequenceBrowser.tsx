@@ -31,10 +31,21 @@
 import { useState, type ReactNode } from "react";
 
 import { dec } from "@/lib/format";
-import { sequenceActionType, sequenceOutcome, sequencePhase, viz } from "@/lib/labels";
+import {
+  sequenceActionType,
+  sequenceEnding,
+  sequencePhase,
+  sequenceTrigger,
+  viz,
+} from "@/lib/labels";
 import type { Orientation } from "@/lib/viz/pitch";
 
-import { SequenceDetail, type SequenceAction } from "./SequenceDetail";
+import {
+  SequenceDetail,
+  type ActionRole,
+  type ActionTooltip,
+  type SequenceAction,
+} from "./SequenceDetail";
 
 /**
  * One entry of `sequences[]`: the `gold.sequences` header plus its actions.
@@ -50,6 +61,13 @@ export interface SequenceEntry {
   primary_phase: string;
   /** `gold.sequences.outcome`, e.g. `"shot_saved"`. */
   outcome: string;
+  /**
+   * How the chain began and, on a `turnover`, how it lost the ball — the
+   * export's `start_kind` and `end_action` (WEB_DATA §7.3). Optional so the
+   * demo fixtures need neither.
+   */
+  start_kind?: string | null;
+  end_action?: string | null;
   start_minute: number;
   start_second: number;
   duration_s: number;
@@ -84,13 +102,31 @@ export function SequenceBrowser({
   const [selected, setSelected] = useState(initialIndex);
   const active = sequences[selected] ?? sequences[0] ?? null;
 
-  /** Hover text of one mark: "Recuperación · Calatrava (22)". */
-  const describe = (a: SequenceAction) => {
+  /**
+   * The hover card of one mark. Title "Recuperación · Calatrava (22)"; then
+   * the clock and the outcome; then, on the chain's first or last action, how
+   * it began ("Inicio · Saque de banda") or ended ("Final · Pérdida · pase
+   * largo fallado"). The words live here so `SequenceDetail` holds no Spanish.
+   */
+  const describe = (a: SequenceAction, role: ActionRole): ActionTooltip => {
+    const t = viz.sequenceTooltip;
     const who = a.surname
       ? a.shirt_number !== null ? `${a.surname} (${a.shirt_number})` : a.surname
       : null;
     const what = sequenceActionType(a.type);
-    return who ? `${what} · ${who}` : what;
+
+    const clock =
+      a.minute != null ? `${a.minute}'${String(a.second ?? 0).padStart(2, "0")}"` : null;
+    const result = a.outcome === "success" ? t.success : t.fail;
+    const xg = a.kind === "shot" && a.xg != null ? `${dec(a.xg, 2)} xG` : null;
+    const lines = [[clock, result, xg].filter(Boolean).join(" · ")];
+
+    if (role === "start" && active?.start_kind) {
+      lines.push(t.startedBy(sequenceTrigger(active.start_kind)));
+    } else if (role === "end" && active) {
+      lines.push(t.endedBy(sequenceEnding(active.outcome, active.end_action)));
+    }
+    return { title: who ? `${what} · ${who}` : what, lines };
   };
 
   if (!active) {
@@ -221,7 +257,7 @@ function SequenceRow({
             marginTop: 1,
           }}
         >
-          {sequenceOutcome(sequence.outcome)} ·{" "}
+          {sequenceEnding(sequence.outcome, sequence.end_action)} ·{" "}
           {viz.sequenceList.summary(String(sequence.event_count), dec(sequence.duration_s, 1))}
         </span>
       </button>
@@ -237,6 +273,18 @@ function SequenceRow({
           <Stat label={panel.xt} value={dec(sequence.xt, 3)} />
           <Stat label={panel.vaep} value={dec(sequence.vaep, 3)} />
           <Stat label="ID" value={sequence.sequence_id} />
+          {/* How it began and how it ended — the two facts the 20 Sep 2026
+              review asked for. The ending spans two columns: "Pérdida · pase
+              en profundidad fallado" does not fit one. */}
+          {sequence.start_kind && (
+            <Stat label={panel.trigger} value={sequenceTrigger(sequence.start_kind)} />
+          )}
+          <div className="col-span-2 min-w-0">
+            <dt className="label">{panel.outcome}</dt>
+            <dd className="font-[family-name:var(--font-mono)]" style={{ fontSize: 12 }}>
+              {sequenceEnding(sequence.outcome, sequence.end_action)}
+            </dd>
+          </div>
         </dl>
       )}
     </li>

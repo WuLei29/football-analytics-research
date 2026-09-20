@@ -280,7 +280,24 @@ These project-specific skills are registered and should be consulted automatical
 
 ## Current State
 
-> Last updated: 19 September 2026
+> Last updated: 20 September 2026
+
+### Sequence view, third pass (20 Sep 2026)
+
+Export and renderer only; silver and gold untouched. Record: `md/WEB_DATA.md
+§7.5`. Every match file re-exported.
+
+- **`start_kind`**: a `pass` start refined into `corner` / `throw_in` /
+  `goal_kick` / `kick_off` / `free_kick` from the first pass's qualifiers —
+  28% of all sequences were labelled "Pase". **`end_action`**: how a
+  `turnover` (63% of sequences) lost the ball, from our last action, with
+  failed passes split by sub-type. Both from qualifiers in the export; the
+  gold CASE is the natural next step.
+- **Shots end at `goal_mouth_y`** (present on every shot, off target too),
+  not the goal centre. **`simplify()` is RDP** under the same 6-point budget:
+  mean shape error 9.3 m → 4.1 m.
+- `SequenceDetail`: start halo, end ring, regain diamond, HTML hover card
+  (`ShotMap`'s pattern) with dimming; nodes 1.9 → 1.5.
 
 ### Sequence review, second pass (19 Sep 2026)
 

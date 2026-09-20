@@ -652,13 +652,20 @@ SELECT e.sequence_id,
        e.event_id,
        e.json_index,
        e.event_type,
+       e.minute, e.second,
        e.x, e.y, e.end_x, e.end_y,
        e.outcome,
        e.spadl_result_id,
        e.player_id,
+       e.xg,
+       e.goal_mouth_y,
        COALESCE(p.short_last_name, p.last_name)   AS surname,
        COALESCE(e.jersey_number, ml.shirt_number) AS shirt_number,
-       e.raw_data -> 'qualifier' @> '[{"qualifierId": 2}]' AS is_cross
+       -- Every qualifier id on the event. match.py reads the cross (Q2), the
+       -- pass sub-types (Q1/Q3/Q4) and the restarts (Q5/Q6/Q107/Q124/Q279).
+       COALESCE(ARRAY(SELECT (q ->> 'qualifierId')::int
+                      FROM jsonb_array_elements(e.raw_data -> 'qualifier') q),
+                ARRAY[]::int[])                    AS qualifier_ids
 FROM silver.events e
 LEFT JOIN silver.players p ON p.player_id = e.player_id
 LEFT JOIN silver.match_lineups ml

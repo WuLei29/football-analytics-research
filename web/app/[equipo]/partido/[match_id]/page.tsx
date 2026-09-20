@@ -381,6 +381,8 @@ export default async function MatchPage({ params }: PageProps) {
           sequence_id: s.sequence_id,
           primary_phase: s.primary_phase ?? "chaotic",
           outcome: s.outcome ?? "turnover",
+          start_kind: s.start_kind,
+          end_action: s.end_action,
           start_minute: s.minute,
           start_second: s.second,
           duration_s: s.duration_s,
@@ -401,7 +403,10 @@ export default async function MatchPage({ params }: PageProps) {
                 { curved: "var(--color-gold)", text: viz.legend.cross },
                 { swatch: "var(--color-blue)", text: viz.legend.takeOn },
                 { bar: "var(--color-blue)", text: viz.legend.shot },
+                { swatch: "var(--color-blue)", diamond: true, text: viz.legend.sequenceRegain },
                 { outline: "var(--color-mid)", text: viz.legend.otherAction },
+                { halo: "var(--color-blue)", text: viz.legend.sequenceStart },
+                { outline: "var(--color-ink)", text: viz.legend.sequenceEnd },
               ]}
             />
           </div>

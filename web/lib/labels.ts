@@ -327,6 +327,36 @@ export function sequenceOutcome(key: string): string {
   return label(sequenceOutcomeLabels, key);
 }
 
+/**
+ * `sequences[].end_action` (WEB_DATA §7.3, 20 Sep 2026) — HOW a `turnover`
+ * lost the ball, from the chain's last action. Lower-case phrases: they are
+ * printed after the outcome, "Pérdida · pase largo fallado".
+ */
+const sequenceEndActionLabels: Record<string, string> = {
+  pass: "pase fallado",
+  pass_long: "pase largo fallado",
+  pass_cross: "centro fallado",
+  pass_through: "pase en profundidad fallado",
+  pass_head: "pase de cabeza fallado",
+  clearance: "despeje perdido",
+  take_on: "regate fallado",
+  dispossessed: "robo",
+  touch: "mal control",
+  carry: "conducción perdida",
+  loose_regain: "recuperación sin control",
+  other: "acción fallida",
+};
+
+export function sequenceEndAction(key: string): string {
+  return label(sequenceEndActionLabels, key);
+}
+
+/** Outcome and, when the export has one, how: "Pérdida · pase largo fallado". */
+export function sequenceEnding(outcome: string, endAction: string | null | undefined): string {
+  const what = sequenceOutcome(outcome);
+  return endAction ? `${what} · ${sequenceEndAction(endAction)}` : what;
+}
+
 export const viz = {
   /** Read out in place of the drawing by a screen reader. */
   shotMapTitle: "Mapa de tiros del partido",
@@ -363,6 +393,24 @@ export const viz = {
     cross: "Centro",
     takeOn: "Regate",
     shot: "Tiro",
+    /* The three marks of the 20 Sep 2026 review: where the chain began, where
+       the ball was won, where it ended. */
+    sequenceStart: "Inicio de la jugada",
+    sequenceRegain: "Balón recuperado",
+    sequenceEnd: "Final de la jugada",
+    sequenceHover: "Pasa el cursor por una acción para leerla",
+  },
+
+  /** The hover card of one action in the detailed sequence view. */
+  sequenceTooltip: {
+    start: "Inicio",
+    end: "Final",
+    success: "✓",
+    fail: "✗",
+    /** "Inicio · Saque de banda" — the role, then how the chain began. */
+    startedBy: (trigger: string) => `Inicio · ${trigger}`,
+    /** "Final · Pérdida · pase largo fallado". */
+    endedBy: (ending: string) => `Final · ${ending}`,
   },
 
   /** The panel beside the sequence pitch: what `gold.sequences` says about it. */
@@ -370,7 +418,9 @@ export const viz = {
     heading: "La jugada",
     phase: "Fase",
     outcome: "Desenlace",
-    start: "Inicio",
+    /** The clock. "Inicio" is how the chain began (`trigger`). */
+    start: "Minuto",
+    trigger: "Inicio",
     duration: "Duración",
     events: "Acciones",
     xt: "xT",
@@ -674,8 +724,10 @@ const sequenceTriggerLabels: Record<string, string> = {
   corner: "Córner",
   free_kick: "Falta",
   kick_off: "Saque inicial",
-  keeper: "Portero",
+  keeper: "Recogida del portero",
   keeper_pickup: "Atrapada del portero",
+  rebound: "Rechace",
+  drop_ball: "Balón a tierra",
   penalty: "Penalti",
   ball_touch: "Toque",
   challenge: "Duelo",
@@ -683,9 +735,16 @@ const sequenceTriggerLabels: Record<string, string> = {
   error: "Error",
   offside: "Fuera de juego",
   period_start: "Inicio del periodo",
+  other: "Otra acción",
   unknown: "Sin determinar",
 };
 
+/**
+ * Also the words for `sequences[].start_kind` (WEB_DATA §7.3, 20 Sep 2026):
+ * the same trigger vocabulary, with a `pass` start refined by the export into
+ * the restart it really is — `throw_in`, `free_kick`, `goal_kick`, `corner`,
+ * `kick_off`. Those keys were here before anything produced them.
+ */
 export function sequenceTrigger(key: string): string {
   return label(sequenceTriggerLabels, key);
 }

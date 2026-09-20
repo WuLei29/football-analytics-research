@@ -37,6 +37,8 @@ export interface LegendItem {
   curved?: string;
   /** Rotates the swatch 45° — the defensive-action mark. */
   diamond?: boolean;
+  /** A larger, heavier ring — the "start of the chain" halo. */
+  halo?: string;
   text: string;
 }
 
@@ -85,6 +87,16 @@ function LegendMarks({ items }: { items: LegendItem[] }) {
                 width: 14,
                 height: 0,
                 borderTop: item.dotted ? `2px dotted ${item.dotted}` : `2px dashed ${item.dashed}`,
+              }}
+            />
+          ) : item.halo ? (
+            <span
+              style={{
+                display: "inline-block",
+                width: 11,
+                height: 11,
+                borderRadius: "50%",
+                border: `1.5px solid ${item.halo}`,
               }}
             />
           ) : item.curved ? (

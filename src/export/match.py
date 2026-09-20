@@ -416,7 +416,47 @@ def _defence(rows: list[dict[str, Any]], line_x: Any) -> dict[str, Any]:
 # sequences (§7.1, §7.3)
 # ---------------------------------------------------------------------------
 
-def action_kind(event_type: str, is_cross: Any) -> str:
+# Opta qualifier ids the sequence block reads (opta-events-reference §qualifiers).
+Q_LONG_BALL, Q_CROSS, Q_HEAD_PASS, Q_THROUGH_BALL = 1, 2, 3, 4
+Q_FREE_KICK, Q_CORNER, Q_THROW_IN, Q_GOAL_KICK, Q_KICK_OFF = 5, 6, 107, 124, 279
+
+# Opta's goalmouth frame (Q102) is the pitch-width 0-100 scale with the posts
+# at 45.2 and 54.8, so 9.6 units span the 7.32 m goal. Low goal_mouth_y is the
+# RIGHT flank -- the same side as low `y` in metres (GOLD_LAYER §4.6.0).
+GOAL_MOUTH_M_PER_UNIT = 7.32 / 9.6
+GOAL_CENTRE_Y = PITCH_Y / 2
+
+# How a sequence-ending action lost the ball, by our LAST action, keyed for
+# `lib/labels.ts`. Only shipped when gold's `outcome` is the coarse `turnover`
+# (63 % of all sequences); every other outcome already says what happened.
+END_ACTION_BY_TYPE = {
+    "Clearance": "clearance",
+    "Take On": "take_on",
+    "Dispossessed": "dispossessed",
+    "Ball touch": "touch",
+    "Carry": "carry",
+    # A duel or pick-up won, then the ball lost before a controlled action.
+    "Interception": "loose_regain",
+    "Blocked Pass": "loose_regain",
+    "Aerial": "loose_regain",
+    "Tackle": "loose_regain",
+    "Ball recovery": "loose_regain",
+    "Challenge": "loose_regain",
+}
+
+# The set-piece restarts hiding inside gold's `start_trigger = 'pass'` (28 % of
+# all sequences), in precedence order -- a corner is also a "free kick taken"
+# in some feeds, so the more specific qualifier is tested first.
+RESTART_QUALIFIERS = (
+    (Q_CORNER, "corner"),
+    (Q_THROW_IN, "throw_in"),
+    (Q_GOAL_KICK, "goal_kick"),
+    (Q_KICK_OFF, "kick_off"),
+    (Q_FREE_KICK, "free_kick"),
+)
+
+
+def action_kind(event_type: str, qualifier_ids: list[int]) -> str:
     """One of the seven kinds the detailed sequence view draws (§7.3)."""
     if event_type in SHOT_TYPES:
         return "shot"
@@ -425,7 +465,7 @@ def action_kind(event_type: str, is_cross: Any) -> str:
     if event_type == "Take On":
         return "take_on"
     if event_type in ("Pass", "Offside Pass"):
-        return "cross" if is_cross else "pass"
+        return "cross" if Q_CROSS in qualifier_ids else "pass"
     if event_type == "Clearance":
         # The one non-pass action with a destination of its own (Q140/141). It
         # shipped as `other` until 19 Sep 2026, so a 32 m clearance drew as a
@@ -442,39 +482,119 @@ def action_type(event_type: str) -> str:
 
 
 def simplify(points: list[list[float]], max_waypoints: int) -> list[list[float]]:
-    """Start, end, and up to `max_waypoints` evenly sampled points between.
+    """Start, end, and the `max_waypoints` inner points that carry the shape.
 
     The exposure rule of WEB_PLAN.md §6: a trace, not the chain's events. The
     full event list of a sequence ships separately in `actions`, which is
     scoped to one match and is what the detailed view reads.
+
+    Ramer-Douglas-Peucker under a point budget (20 Sep 2026): the kept set
+    starts as {start, end} and grows by the point furthest from the polyline
+    through the points kept so far, until the budget is spent or nothing is
+    further than `RDP_STOP_M` from it. Even sampling, which this replaced,
+    spent its six points along a straight build-up and lost the switch of
+    flank in a chain that turned; here a straight stretch costs nothing.
     """
     if len(points) <= max_waypoints + 2:
         return points
-    inner = points[1:-1]
-    step = len(inner) / max_waypoints
-    sampled = [inner[min(int(i * step), len(inner) - 1)] for i in range(max_waypoints)]
-    return [points[0], *sampled, points[-1]]
+    kept = [0, len(points) - 1]
+    while len(kept) < max_waypoints + 2:
+        best_d, best_i, best_slot = RDP_STOP_M, -1, -1
+        for slot in range(len(kept) - 1):
+            a, b = points[kept[slot]], points[kept[slot + 1]]
+            for i in range(kept[slot] + 1, kept[slot + 1]):
+                d = _point_to_segment(points[i], a, b)
+                if d > best_d:
+                    best_d, best_i, best_slot = d, i, slot
+        if best_i < 0:
+            break
+        kept.insert(best_slot + 1, best_i)
+    return [points[i] for i in kept]
+
+
+# Below this distance from the simplified line a point adds nothing the eye
+# can see at the traces' scale (a full pitch in ~600 px is ~0.2 m per px).
+RDP_STOP_M = 0.25
+
+
+def _point_to_segment(p: list[float], a: list[float], b: list[float]) -> float:
+    """Perpendicular distance from `p` to segment `ab`, clamped to its ends."""
+    ax, ay = a
+    dx, dy = b[0] - ax, b[1] - ay
+    length2 = dx * dx + dy * dy
+    if length2 == 0:
+        return ((p[0] - ax) ** 2 + (p[1] - ay) ** 2) ** 0.5
+    t = max(0.0, min(1.0, ((p[0] - ax) * dx + (p[1] - ay) * dy) / length2))
+    cx, cy = ax + t * dx, ay + t * dy
+    return ((p[0] - cx) ** 2 + (p[1] - cy) ** 2) ** 0.5
 
 
 def _sequence_points(events: list[dict[str, Any]]) -> list[list[float]]:
     points = [[r_coord(e["x"]), r_coord(e["y"])] for e in events]
     # End the polyline where the ball ended rather than at the last touch, so
     # a chain that finishes with a shot reaches the goal.
-    last = events[-1]
-    if last["end_x"] is not None and last["end_y"] is not None:
-        tail = [r_coord(last["end_x"]), r_coord(last["end_y"])]
-        if tail != points[-1]:
-            points.append(tail)
+    tail = _action_end(events[-1])
+    if tail is not None and tail != points[-1]:
+        points.append(tail)
     return points
+
+
+def _action_end(event: dict[str, Any]) -> list[float] | None:
+    """Where the ball went: `end_x/end_y` for a pass, cross, carry or
+    clearance; the goal line at `goal_mouth_y` for a shot (20 Sep 2026 --
+    every shot used to be drawn to the goal centre, although Opta records
+    where it crossed the line, on target or not); nothing for a point event."""
+    kind = action_kind(event["event_type"], event["qualifier_ids"])
+    if kind == "shot":
+        gm = event["goal_mouth_y"]
+        y = GOAL_CENTRE_Y if gm is None else GOAL_CENTRE_Y + (float(gm) - 50.0) * GOAL_MOUTH_M_PER_UNIT
+        return [PITCH_X, r_coord(max(0.0, min(PITCH_Y, y)))]
+    if kind in ("pass", "cross", "carry", "clearance"):
+        if event["end_x"] is None or event["end_y"] is None:
+            return None
+        return [r_coord(event["end_x"]), r_coord(event["end_y"])]
+    return None
+
+
+def start_kind(start_trigger: str | None, first: dict[str, Any]) -> str | None:
+    """`gold.sequences.start_trigger`, with a `pass` start refined into the
+    restart it really is (corner, throw-in, goal kick, kick-off, free kick)
+    from the first action's qualifiers. Open-play passes stay `pass`."""
+    if start_trigger == "pass" and first["event_type"] == "Pass":
+        ids = first["qualifier_ids"]
+        for qualifier, kind in RESTART_QUALIFIERS:
+            if qualifier in ids:
+                return kind
+    return start_trigger
+
+
+def end_action(outcome: str | None, last: dict[str, Any]) -> str | None:
+    """How a `turnover` lost the ball, from our last action (§7.3). A failed
+    pass is split by its sub-type; null on every other outcome."""
+    if outcome != "turnover":
+        return None
+    event_type = last["event_type"]
+    if event_type in ("Pass", "Offside Pass"):
+        ids = last["qualifier_ids"]
+        if Q_CROSS in ids:
+            return "pass_cross"
+        if Q_THROUGH_BALL in ids:
+            return "pass_through"
+        if Q_LONG_BALL in ids:
+            return "pass_long"
+        if Q_HEAD_PASS in ids:
+            return "pass_head"
+        return "pass"
+    return END_ACTION_BY_TYPE.get(event_type, "other")
 
 
 def _actions(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for event in events:
-        kind = action_kind(event["event_type"], event["is_cross"])
-        # A point event has no destination: a take-on happens where it happens,
-        # and a shot's end is the goalmouth, which is a different frame.
-        has_end = kind in ("pass", "cross", "carry", "clearance")
+        kind = action_kind(event["event_type"], event["qualifier_ids"])
+        # A point event (take-on, recovery, block) has no destination. A shot's
+        # is the goal line at its goalmouth y, converted to metres.
+        end = _action_end(event)
 
         result = event["spadl_result_id"]
         if result is not None:
@@ -482,18 +602,23 @@ def _actions(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
         else:
             outcome = "success" if event["outcome"] == "success" else "fail"
 
-        out.append({
+        action = {
             "kind": kind,
             "type": action_type(event["event_type"]),
+            "minute": as_int(event["minute"]),
+            "second": as_int(event["second"]),
             "x": r_coord(event["x"]),
             "y": r_coord(event["y"]),
-            "end_x": r_coord(event["end_x"]) if has_end else None,
-            "end_y": r_coord(event["end_y"]) if has_end else None,
+            "end_x": end[0] if end else None,
+            "end_y": end[1] if end else None,
             "player_id": as_int(event["player_id"]),
             "surname": event["surname"],
             "shirt_number": as_int(event["shirt_number"]),
             "outcome": outcome,
-        })
+        }
+        if kind == "shot":
+            action["xg"] = r_value(event["xg"])
+        out.append(action)
     return out
 
 
@@ -533,7 +658,9 @@ def _sequences(rows: list[dict[str, Any]], events: list[dict[str, Any]]
             "vaep": r_value(row["vaep"]),
             "start_zone": as_int(row["start_zone"]),
             "start_trigger": row["start_trigger"],
+            "start_kind": start_kind(row["start_trigger"], chain[0]),
             "outcome": row["outcome"],
+            "end_action": end_action(row["outcome"], chain[-1]),
             "primary_phase": row["primary_phase"],
             "final_third_entry": bool(row["final_third_entry"]),
             "penalty_box_entry": bool(row["penalty_box_entry"]),
