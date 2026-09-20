@@ -6,8 +6,8 @@
  * Renders: a horizontal pitch with every action of a single sequence drawn in
  * its own mark — passes, crosses, carries, take-ons, regains and the shot —
  * plus a numbered circle for each player who touched the ball, with the final
- * actor inverted; a ring around where the chain began and a ring where the
- * ball ended; and an HTML tooltip on hover naming the hovered action.
+ * actor inverted; a ring around where the chain began; and an HTML tooltip
+ * on hover naming the hovered action.
  * Props: `actions` (ordered), `title`, `orientation`, node sizing overrides,
  *        `describe` (the caller's words for the tooltip).
  * Data:  `matches/{match_id}.json` -> `sequences[].actions` (md/WEB_DATA.md
@@ -49,17 +49,15 @@
  *   start     a team-colour ring around the first mark    — where the chain
  *                                                            began; the tooltip
  *                                                            says how
- *   end       a ring where the ball finished              — the last action's
- *                                                            destination; on a
- *                                                            shot it sits on
- *                                                            the goal line
  *
- * The start and end rings were added on 20 Sep 2026 after the review pass:
- * the moment possession is regained is the key tactical event of a chain, and
- * it was drawn as the same grey ring as any other point event. A regain that
- * happens mid-chain (a failed pass won straight back) keeps the diamond but
- * not the ring, so the two questions "where did we win it" and "where did it
- * start" get different answers when they should.
+ * The start ring was added on 20 Sep 2026 after the review pass: the moment
+ * possession is regained is the key tactical event of a chain, and it was
+ * drawn as the same grey ring as any other point event. A regain that happens
+ * mid-chain (a failed pass won straight back) keeps the diamond but not the
+ * ring, so the two questions "where did we win it" and "where did it start"
+ * get different answers when they should. Where the ball ENDED has no mark of
+ * its own: the last arrowhead plus the hover card say it, and a ring there
+ * was tried and taken out the same day as clutter.
  *
  * Hover is an HTML tooltip, not an SVG `<title>` (20 Sep 2026): the native
  * one waits a second and cannot carry two lines. The pattern is `ShotMap`'s —
@@ -149,8 +147,6 @@ const EVENT_DOT = 0.36;
 const TAKE_ON_DOT = 0.55;
 /** Half-diagonal of the regain diamond. */
 const REGAIN_DIAMOND = 0.75;
-/** The ring where the ball ended. */
-const END_RING = 1.05;
 /** Goal centre — only where a shot shipped without an `end_y`. */
 const GOAL = { x: 105, y: 34 };
 
@@ -204,7 +200,6 @@ export function SequenceDetail({
     i === 0 ? "start" : i === actions.length - 1 ? "end" : null;
 
   const first = actions[0];
-  const last = actions[actions.length - 1];
   const hoveredAction = hovered !== null ? actions[hovered] : null;
 
   return (
@@ -362,22 +357,6 @@ export function SequenceDetail({
             );
           })}
         </g>
-
-        {/* z 4 — where the ball ended. On a shot this is the goal line at the
-            goalmouth y, so a ring on the line IS the shot's placement. Drawn
-            before the player nodes so the finisher's circle sits over it when
-            the chain ends where it was last touched. */}
-        {last && (
-          <circle
-            cx={at(endOf(last).x, endOf(last).y).x}
-            cy={at(endOf(last).x, endOf(last).y).y}
-            r={END_RING}
-            fill="none"
-            stroke="var(--color-ink)"
-            strokeWidth={0.4}
-            opacity={opacityOf(actions.length - 1)}
-          />
-        )}
 
         {/* z 6 — the players, one node per consecutive block of touches. */}
         <g>

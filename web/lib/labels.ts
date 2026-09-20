@@ -393,20 +393,15 @@ export const viz = {
     cross: "Centro",
     takeOn: "Regate",
     shot: "Tiro",
-    /* The three marks of the 20 Sep 2026 review: where the chain began, where
-       the ball was won, where it ended. */
+    /* The two marks of the 20 Sep 2026 review: where the chain began, where
+       the ball was won. The instruction sits under the legend in italics. */
     sequenceStart: "Inicio de la jugada",
     sequenceRegain: "Balón recuperado",
-    sequenceEnd: "Final de la jugada",
-    sequenceHover: "Pasa el cursor por una acción para leerla",
+    sequenceHover: "Pasa el cursor por una acción para leerla.",
   },
 
   /** The hover card of one action in the detailed sequence view. */
   sequenceTooltip: {
-    start: "Inicio",
-    end: "Final",
-    success: "✓",
-    fail: "✗",
     /** "Inicio · Saque de banda" — the role, then how the chain began. */
     startedBy: (trigger: string) => `Inicio · ${trigger}`,
     /** "Final · Pérdida · pase largo fallado". */

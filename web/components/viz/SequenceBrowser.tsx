@@ -104,7 +104,7 @@ export function SequenceBrowser({
 
   /**
    * The hover card of one mark. Title "Recuperación · Calatrava (22)"; then
-   * the clock and the outcome; then, on the chain's first or last action, how
+   * the clock (and xG on a shot); then, on the chain's first or last action, how
    * it began ("Inicio · Saque de banda") or ended ("Final · Pérdida · pase
    * largo fallado"). The words live here so `SequenceDetail` holds no Spanish.
    */
@@ -117,9 +117,8 @@ export function SequenceBrowser({
 
     const clock =
       a.minute != null ? `${a.minute}'${String(a.second ?? 0).padStart(2, "0")}"` : null;
-    const result = a.outcome === "success" ? t.success : t.fail;
     const xg = a.kind === "shot" && a.xg != null ? `${dec(a.xg, 2)} xG` : null;
-    const lines = [[clock, result, xg].filter(Boolean).join(" · ")];
+    const lines = [[clock, xg].filter(Boolean).join(" · ")];
 
     if (role === "start" && active?.start_kind) {
       lines.push(t.startedBy(sequenceTrigger(active.start_kind)));

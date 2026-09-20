@@ -395,7 +395,8 @@ export default async function MatchPage({ params }: PageProps) {
           <div className="mt-2">
             <Legend
               items={[
-                { outline: "var(--color-blue)", text: viz.legend.participants },
+                { halo: "var(--color-blue)", text: viz.legend.sequenceStart },
+                { swatch: "var(--color-blue)", diamond: true, text: viz.legend.sequenceRegain },
                 { swatch: "var(--color-blue)", text: viz.legend.finisher },
                 { bar: "var(--color-mid)", text: viz.legend.pass },
                 { dotted: "var(--color-mid)", text: viz.legend.carry },
@@ -403,12 +404,15 @@ export default async function MatchPage({ params }: PageProps) {
                 { curved: "var(--color-gold)", text: viz.legend.cross },
                 { swatch: "var(--color-blue)", text: viz.legend.takeOn },
                 { bar: "var(--color-blue)", text: viz.legend.shot },
-                { swatch: "var(--color-blue)", diamond: true, text: viz.legend.sequenceRegain },
-                { outline: "var(--color-mid)", text: viz.legend.otherAction },
-                { halo: "var(--color-blue)", text: viz.legend.sequenceStart },
-                { outline: "var(--color-ink)", text: viz.legend.sequenceEnd },
               ]}
             />
+            {/* An instruction, not a mark: italic, sentence case. */}
+            <p
+              className="label mt-1"
+              style={{ letterSpacing: 0, textTransform: "none", fontStyle: "italic" }}
+            >
+              {viz.legend.sequenceHover}
+            </p>
           </div>
         }
       />
