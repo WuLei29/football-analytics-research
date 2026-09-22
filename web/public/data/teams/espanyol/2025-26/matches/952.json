@@ -138,20 +138,20 @@
         "y": 16.1
       },
       {
-        "minute": 85,
-        "outcome": "won",
-        "player": "Antoniu Roca",
-        "type": "tackle",
-        "x": 63.6,
-        "y": 64.2
-      },
-      {
         "minute": 82,
         "outcome": "lost",
         "player": "Antoniu Roca",
         "type": "challenge",
         "x": 63.6,
         "y": 64.7
+      },
+      {
+        "minute": 85,
+        "outcome": "won",
+        "player": "Antoniu Roca",
+        "type": "tackle",
+        "x": 63.6,
+        "y": 64.2
       },
       {
         "minute": 95,
@@ -258,25 +258,25 @@
         "y": 65.0
       },
       {
-        "minute": 67,
-        "outcome": "won",
-        "player": "Fernando Calero",
-        "type": "ball_recovery",
-        "x": 41.9,
-        "y": 7.3
-      },
-      {
         "minute": 21,
         "outcome": "won",
         "player": "Carlos Romero",
         "type": "ball_recovery",
         "x": 41.9,
         "y": 62.6
+      },
+      {
+        "minute": 67,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "ball_recovery",
+        "x": 41.9,
+        "y": 7.3
       }
     ],
     "line_x": 37.0
   },
-  "generated_at": "2026-09-20T15:48:05Z",
+  "generated_at": "2026-09-22T01:00:34Z",
   "match": {
     "away": {
       "abbr": "LEV",
@@ -324,7 +324,7 @@
         "period": 1
       },
       {
-        "away": 0.005,
+        "away": 0.003,
         "home": 0.019,
         "minute": 4,
         "period": 1
@@ -402,8 +402,8 @@
         "period": 1
       },
       {
-        "away": -0.002,
-        "home": 0.018,
+        "away": -0.004,
+        "home": 0.024,
         "minute": 17,
         "period": 1
       },
@@ -481,7 +481,7 @@
       },
       {
         "away": -0.001,
-        "home": 0.011,
+        "home": 0.017,
         "minute": 30,
         "period": 1
       },
@@ -558,7 +558,7 @@
         "period": 1
       },
       {
-        "away": 0.009,
+        "away": 0.007,
         "home": 0.058,
         "minute": 43,
         "period": 1
@@ -859,7 +859,7 @@
       },
       {
         "away": 0.001,
-        "home": 0.0,
+        "home": 0.006,
         "minute": 90,
         "period": 2
       },
@@ -1187,9 +1187,9 @@
         "player_id": 2363,
         "shirt_number": 23,
         "surname": "El Hilali",
-        "touches": 76,
-        "x": 52.3,
-        "y": 10.7
+        "touches": 77,
+        "x": 52.6,
+        "y": 10.6
       },
       {
         "player_id": 2358,
@@ -1203,9 +1203,9 @@
         "player_id": 2366,
         "shirt_number": 8,
         "surname": "Expósito",
-        "touches": 89,
-        "x": 50.2,
-        "y": 42.8
+        "touches": 90,
+        "x": 50.3,
+        "y": 43.0
       },
       {
         "player_id": 2349,
@@ -1227,8 +1227,8 @@
         "player_id": 2370,
         "shirt_number": 16,
         "surname": "Ngonge",
-        "touches": 40,
-        "x": 60.7,
+        "touches": 41,
+        "x": 61.1,
         "y": 10.9
       },
       {
@@ -1259,9 +1259,9 @@
         "player_id": 2346,
         "shirt_number": 11,
         "surname": "Milla",
-        "touches": 49,
-        "x": 56.7,
-        "y": 53.5
+        "touches": 50,
+        "x": 57.2,
+        "y": 53.6
       }
     ],
     "side": "home"
@@ -1483,21 +1483,21 @@
   "progression": [
     {
       "completed": true,
-      "end_x": 98.0,
-      "end_y": 31.9,
-      "kind": "pass",
-      "x": 71.6,
-      "xt": 0.233,
-      "y": 10.4
-    },
-    {
-      "completed": true,
       "end_x": 96.4,
       "end_y": 34.3,
       "kind": "pass",
       "x": 75.9,
       "xt": 0.233,
       "y": 13.1
+    },
+    {
+      "completed": true,
+      "end_x": 98.0,
+      "end_y": 31.9,
+      "kind": "pass",
+      "x": 71.6,
+      "xt": 0.233,
+      "y": 10.4
     },
     {
       "completed": true,
@@ -1600,19 +1600,19 @@
     },
     {
       "completed": true,
-      "end_x": 95.0,
-      "end_y": 18.0,
+      "end_x": 95.3,
+      "end_y": 17.8,
       "kind": "pass",
-      "x": 90.9,
+      "x": 91.0,
       "xt": 0.02,
       "y": 0.0
     },
     {
       "completed": true,
-      "end_x": 95.3,
-      "end_y": 17.8,
+      "end_x": 95.0,
+      "end_y": 18.0,
       "kind": "pass",
-      "x": 91.0,
+      "x": 90.9,
       "xt": 0.02,
       "y": 0.0
     },
@@ -1889,6 +1889,7 @@
       "ends_in_shot": true,
       "events": 9,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 90,
       "outcome": "shot_off_target",
       "passes": 3,
@@ -2004,6 +2005,7 @@
       "ends_in_shot": true,
       "events": 4,
       "final_third_entry": true,
+      "kind": "fast",
       "minute": 2,
       "outcome": "shot_saved",
       "passes": 2,
@@ -2484,6 +2486,7 @@
       "ends_in_shot": false,
       "events": 31,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 52,
       "outcome": "turnover",
       "passes": 17,
@@ -2640,6 +2643,7 @@
       "ends_in_shot": false,
       "events": 7,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 35,
       "outcome": "offside",
       "passes": 5,
@@ -2741,6 +2745,7 @@
       "ends_in_shot": true,
       "events": 3,
       "final_third_entry": true,
+      "kind": "free_kick",
       "minute": 39,
       "outcome": "shot_saved",
       "passes": 1,
@@ -2868,6 +2873,7 @@
       "ends_in_shot": true,
       "events": 6,
       "final_third_entry": true,
+      "kind": "throw_in",
       "minute": 76,
       "outcome": "shot_off_target",
       "passes": 3,
@@ -3104,6 +3110,7 @@
       "ends_in_shot": false,
       "events": 13,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 40,
       "outcome": "corner_won",
       "passes": 8,
@@ -3289,6 +3296,7 @@
       "ends_in_shot": true,
       "events": 9,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 43,
       "outcome": "shot_blocked",
       "passes": 2,
@@ -3455,6 +3463,7 @@
       "ends_in_shot": false,
       "events": 8,
       "final_third_entry": true,
+      "kind": "direct_long",
       "minute": 75,
       "outcome": "turnover",
       "passes": 5,
@@ -3653,6 +3662,7 @@
       "ends_in_shot": false,
       "events": 10,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 80,
       "outcome": "turnover",
       "passes": 5,
@@ -4005,6 +4015,7 @@
       "ends_in_shot": false,
       "events": 21,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 67,
       "outcome": "foul_committed",
       "passes": 11,
@@ -4231,6 +4242,7 @@
       "ends_in_shot": false,
       "events": 12,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 58,
       "outcome": "turnover",
       "passes": 8,
@@ -4429,6 +4441,7 @@
       "ends_in_shot": false,
       "events": 10,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 70,
       "outcome": "turnover",
       "passes": 5,
@@ -4739,6 +4752,7 @@
       "ends_in_shot": false,
       "events": 18,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 60,
       "outcome": "turnover",
       "passes": 11,
@@ -4839,6 +4853,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "throw_in",
       "minute": 43,
       "outcome": "turnover",
       "passes": 2,
@@ -5021,6 +5036,7 @@
       "ends_in_shot": false,
       "events": 10,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 42,
       "outcome": "retained",
       "passes": 6,
@@ -5205,6 +5221,7 @@
       "ends_in_shot": false,
       "events": 9,
       "final_third_entry": true,
+      "kind": "fast",
       "minute": 95,
       "outcome": "turnover",
       "passes": 3,
@@ -5431,6 +5448,7 @@
       "ends_in_shot": false,
       "events": 12,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 23,
       "outcome": "turnover",
       "passes": 7,
@@ -5685,6 +5703,7 @@
       "ends_in_shot": false,
       "events": 14,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 17,
       "outcome": "turnover",
       "passes": 7,
@@ -5734,819 +5753,6 @@
       "vaep": 0.011,
       "xg": null,
       "xt": 0.018
-    },
-    {
-      "actions": [
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 53,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 20,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "ball_recovery",
-          "x": 37.6,
-          "y": 34.1
-        },
-        {
-          "end_x": 36.3,
-          "end_y": 34.1,
-          "kind": "carry",
-          "minute": 53,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 21,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "carry",
-          "x": 37.6,
-          "y": 34.1
-        },
-        {
-          "end_x": 57.6,
-          "end_y": 34.3,
-          "kind": "pass",
-          "minute": 53,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 21,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "pass",
-          "x": 36.3,
-          "y": 34.1
-        },
-        {
-          "end_x": 68.0,
-          "end_y": 24.8,
-          "kind": "carry",
-          "minute": 53,
-          "outcome": "success",
-          "player_id": 2353,
-          "second": 23,
-          "shirt_number": 19,
-          "surname": "García",
-          "type": "carry",
-          "x": 57.6,
-          "y": 34.3
-        },
-        {
-          "end_x": 80.9,
-          "end_y": 10.8,
-          "kind": "pass",
-          "minute": 53,
-          "outcome": "success",
-          "player_id": 2353,
-          "second": 24,
-          "shirt_number": 19,
-          "surname": "García",
-          "type": "pass",
-          "x": 68.0,
-          "y": 24.8
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "take_on",
-          "minute": 53,
-          "outcome": "fail",
-          "player_id": 2370,
-          "second": 27,
-          "shirt_number": 16,
-          "surname": "Ngonge",
-          "type": "take_on",
-          "x": 87.1,
-          "y": 12.2
-        }
-      ],
-      "duration_s": 7.0,
-      "end_action": "take_on",
-      "ends_in_shot": false,
-      "events": 6,
-      "final_third_entry": true,
-      "minute": 53,
-      "outcome": "turnover",
-      "passes": 2,
-      "penalty_box_entry": false,
-      "period": 2,
-      "points": [
-        [
-          37.6,
-          34.1
-        ],
-        [
-          37.6,
-          34.1
-        ],
-        [
-          36.3,
-          34.1
-        ],
-        [
-          57.6,
-          34.3
-        ],
-        [
-          68.0,
-          24.8
-        ],
-        [
-          87.1,
-          12.2
-        ]
-      ],
-      "primary_phase": "midblock",
-      "rank": null,
-      "second": 20,
-      "sequence_id": "952_home_096",
-      "start_kind": "recovery",
-      "start_trigger": "recovery",
-      "start_zone": 33,
-      "vaep": 0.005,
-      "xg": null,
-      "xt": 0.017
-    },
-    {
-      "actions": [
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 4,
-          "outcome": "success",
-          "player_id": 2346,
-          "second": 8,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "interception",
-          "x": 61.5,
-          "y": 45.9
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 4,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 9,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "ball_recovery",
-          "x": 71.3,
-          "y": 50.9
-        },
-        {
-          "end_x": 90.8,
-          "end_y": 55.5,
-          "kind": "carry",
-          "minute": 4,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 11,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "carry",
-          "x": 71.3,
-          "y": 50.9
-        },
-        {
-          "end_x": 97.4,
-          "end_y": 30.7,
-          "kind": "cross",
-          "minute": 4,
-          "outcome": "fail",
-          "player_id": 2366,
-          "second": 12,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "pass",
-          "x": 90.8,
-          "y": 55.5
-        }
-      ],
-      "duration_s": 4.0,
-      "end_action": "pass_cross",
-      "ends_in_shot": false,
-      "events": 4,
-      "final_third_entry": true,
-      "minute": 4,
-      "outcome": "turnover",
-      "passes": 1,
-      "penalty_box_entry": true,
-      "period": 1,
-      "points": [
-        [
-          61.5,
-          45.9
-        ],
-        [
-          71.3,
-          50.9
-        ],
-        [
-          71.3,
-          50.9
-        ],
-        [
-          90.8,
-          55.5
-        ],
-        [
-          97.4,
-          30.7
-        ]
-      ],
-      "primary_phase": "fast_attacking",
-      "rank": null,
-      "second": 8,
-      "sequence_id": "952_home_012",
-      "start_kind": "interception",
-      "start_trigger": "interception",
-      "start_zone": 44,
-      "vaep": 0.02,
-      "xg": null,
-      "xt": 0.017
-    },
-    {
-      "actions": [
-        {
-          "end_x": 6.7,
-          "end_y": 47.6,
-          "kind": "pass",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2373,
-          "second": 13,
-          "shirt_number": 13,
-          "surname": "Dmitrovic",
-          "type": "pass",
-          "x": 1.8,
-          "y": 35.6
-        },
-        {
-          "end_x": 38.3,
-          "end_y": 63.6,
-          "kind": "pass",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 15,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "pass",
-          "x": 6.7,
-          "y": 47.6
-        },
-        {
-          "end_x": 39.9,
-          "end_y": 62.9,
-          "kind": "carry",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2346,
-          "second": 16,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "carry",
-          "x": 38.3,
-          "y": 63.6
-        },
-        {
-          "end_x": 46.0,
-          "end_y": 49.4,
-          "kind": "pass",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2346,
-          "second": 17,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "pass",
-          "x": 39.9,
-          "y": 62.9
-        },
-        {
-          "end_x": 49.0,
-          "end_y": 45.0,
-          "kind": "carry",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 19,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "carry",
-          "x": 46.0,
-          "y": 49.4
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "take_on",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 20,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "take_on",
-          "x": 49.0,
-          "y": 45.0
-        },
-        {
-          "end_x": 54.1,
-          "end_y": 39.8,
-          "kind": "carry",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 21,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "carry",
-          "x": 49.0,
-          "y": 45.0
-        },
-        {
-          "end_x": 66.6,
-          "end_y": 20.8,
-          "kind": "pass",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 21,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "pass",
-          "x": 54.1,
-          "y": 39.8
-        },
-        {
-          "end_x": 78.6,
-          "end_y": 20.7,
-          "kind": "carry",
-          "minute": 47,
-          "outcome": "success",
-          "player_id": 2370,
-          "second": 24,
-          "shirt_number": 16,
-          "surname": "Ngonge",
-          "type": "carry",
-          "x": 66.6,
-          "y": 20.8
-        },
-        {
-          "end_x": 105.0,
-          "end_y": 48.8,
-          "kind": "pass",
-          "minute": 47,
-          "outcome": "fail",
-          "player_id": 2370,
-          "second": 26,
-          "shirt_number": 16,
-          "surname": "Ngonge",
-          "type": "pass",
-          "x": 78.6,
-          "y": 20.7
-        }
-      ],
-      "duration_s": 13.0,
-      "end_action": null,
-      "ends_in_shot": false,
-      "events": 10,
-      "final_third_entry": true,
-      "minute": 47,
-      "outcome": "ball_out",
-      "passes": 5,
-      "penalty_box_entry": true,
-      "period": 2,
-      "points": [
-        [
-          1.8,
-          35.6
-        ],
-        [
-          6.7,
-          47.6
-        ],
-        [
-          38.3,
-          63.6
-        ],
-        [
-          39.9,
-          62.9
-        ],
-        [
-          46.0,
-          49.4
-        ],
-        [
-          66.6,
-          20.8
-        ],
-        [
-          78.6,
-          20.7
-        ],
-        [
-          105.0,
-          48.8
-        ]
-      ],
-      "primary_phase": "midblock",
-      "rank": null,
-      "second": 13,
-      "sequence_id": "952_home_090",
-      "start_kind": "goal_kick",
-      "start_trigger": "pass",
-      "start_zone": 13,
-      "vaep": 0.002,
-      "xg": null,
-      "xt": 0.015
-    },
-    {
-      "actions": [
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 69,
-          "outcome": "success",
-          "player_id": 2373,
-          "second": 4,
-          "shirt_number": 13,
-          "surname": "Dmitrovic",
-          "type": "claim",
-          "x": 4.0,
-          "y": 31.9
-        },
-        {
-          "end_x": 16.5,
-          "end_y": 34.5,
-          "kind": "carry",
-          "minute": 69,
-          "outcome": "success",
-          "player_id": 2373,
-          "second": 7,
-          "shirt_number": 13,
-          "surname": "Dmitrovic",
-          "type": "carry",
-          "x": 4.0,
-          "y": 31.9
-        },
-        {
-          "end_x": 35.5,
-          "end_y": 40.6,
-          "kind": "pass",
-          "minute": 69,
-          "outcome": "success",
-          "player_id": 2373,
-          "second": 9,
-          "shirt_number": 13,
-          "surname": "Dmitrovic",
-          "type": "pass",
-          "x": 16.5,
-          "y": 34.5
-        },
-        {
-          "end_x": 50.0,
-          "end_y": 43.9,
-          "kind": "carry",
-          "minute": 69,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 10,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "carry",
-          "x": 35.5,
-          "y": 40.6
-        },
-        {
-          "end_x": 73.2,
-          "end_y": 46.2,
-          "kind": "pass",
-          "minute": 69,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 11,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "pass",
-          "x": 50.0,
-          "y": 43.9
-        },
-        {
-          "end_x": 72.0,
-          "end_y": 47.5,
-          "kind": "carry",
-          "minute": 69,
-          "outcome": "success",
-          "player_id": 2345,
-          "second": 13,
-          "shirt_number": 20,
-          "surname": "Roca",
-          "type": "carry",
-          "x": 73.2,
-          "y": 46.2
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 69,
-          "outcome": "fail",
-          "player_id": 2345,
-          "second": 14,
-          "shirt_number": 20,
-          "surname": "Roca",
-          "type": "foul",
-          "x": 72.0,
-          "y": 47.5
-        }
-      ],
-      "duration_s": 10.0,
-      "end_action": null,
-      "ends_in_shot": false,
-      "events": 7,
-      "final_third_entry": true,
-      "minute": 69,
-      "outcome": "foul_won",
-      "passes": 2,
-      "penalty_box_entry": false,
-      "period": 2,
-      "points": [
-        [
-          4.0,
-          31.9
-        ],
-        [
-          4.0,
-          31.9
-        ],
-        [
-          16.5,
-          34.5
-        ],
-        [
-          35.5,
-          40.6
-        ],
-        [
-          50.0,
-          43.9
-        ],
-        [
-          73.2,
-          46.2
-        ],
-        [
-          72.0,
-          47.5
-        ]
-      ],
-      "primary_phase": "fast_buildup",
-      "rank": null,
-      "second": 4,
-      "sequence_id": "952_home_121",
-      "start_kind": "keeper",
-      "start_trigger": "keeper",
-      "start_zone": 13,
-      "vaep": 0.02,
-      "xg": null,
-      "xt": 0.015
-    },
-    {
-      "actions": [
-        {
-          "end_x": 30.6,
-          "end_y": 35.0,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2358,
-          "second": 13,
-          "shirt_number": 22,
-          "surname": "Romero",
-          "type": "pass",
-          "x": 38.0,
-          "y": 56.7
-        },
-        {
-          "end_x": 32.1,
-          "end_y": 48.0,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2349,
-          "second": 15,
-          "shirt_number": 5,
-          "surname": "Calero",
-          "type": "pass",
-          "x": 30.6,
-          "y": 35.0
-        },
-        {
-          "end_x": 30.4,
-          "end_y": 48.6,
-          "kind": "carry",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 18,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "carry",
-          "x": 32.1,
-          "y": 48.0
-        },
-        {
-          "end_x": 38.7,
-          "end_y": 46.9,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 20,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "pass",
-          "x": 30.4,
-          "y": 48.6
-        },
-        {
-          "end_x": 25.4,
-          "end_y": 51.0,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 21,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "pass",
-          "x": 38.7,
-          "y": 46.9
-        },
-        {
-          "end_x": 30.6,
-          "end_y": 51.5,
-          "kind": "carry",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 23,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "carry",
-          "x": 25.4,
-          "y": 51.0
-        },
-        {
-          "end_x": 54.1,
-          "end_y": 45.8,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2360,
-          "second": 24,
-          "shirt_number": 6,
-          "surname": "Cabrera",
-          "type": "pass",
-          "x": 30.6,
-          "y": 51.5
-        },
-        {
-          "end_x": 48.8,
-          "end_y": 49.6,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2346,
-          "second": 26,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "pass",
-          "x": 53.9,
-          "y": 44.9
-        },
-        {
-          "end_x": 62.5,
-          "end_y": 46.5,
-          "kind": "carry",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 28,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "carry",
-          "x": 48.8,
-          "y": 49.6
-        },
-        {
-          "end_x": 70.5,
-          "end_y": 8.6,
-          "kind": "pass",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 29,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "pass",
-          "x": 62.5,
-          "y": 46.5
-        },
-        {
-          "end_x": 75.4,
-          "end_y": 19.0,
-          "kind": "carry",
-          "minute": 25,
-          "outcome": "success",
-          "player_id": 2370,
-          "second": 34,
-          "shirt_number": 16,
-          "surname": "Ngonge",
-          "type": "carry",
-          "x": 70.5,
-          "y": 8.6
-        },
-        {
-          "end_x": 105.0,
-          "end_y": 31.8,
-          "kind": "shot",
-          "minute": 25,
-          "outcome": "fail",
-          "player_id": 2370,
-          "second": 39,
-          "shirt_number": 16,
-          "surname": "Ngonge",
-          "type": "attempt_saved",
-          "x": 75.4,
-          "xg": 0.009,
-          "y": 19.0
-        }
-      ],
-      "duration_s": 26.0,
-      "end_action": null,
-      "ends_in_shot": true,
-      "events": 12,
-      "final_third_entry": true,
-      "minute": 25,
-      "outcome": "shot_saved",
-      "passes": 7,
-      "penalty_box_entry": false,
-      "period": 1,
-      "points": [
-        [
-          38.0,
-          56.7
-        ],
-        [
-          30.6,
-          35.0
-        ],
-        [
-          30.4,
-          48.6
-        ],
-        [
-          38.7,
-          46.9
-        ],
-        [
-          25.4,
-          51.0
-        ],
-        [
-          62.5,
-          46.5
-        ],
-        [
-          70.5,
-          8.6
-        ],
-        [
-          105.0,
-          31.8
-        ]
-      ],
-      "primary_phase": "buildup",
-      "rank": null,
-      "second": 13,
-      "sequence_id": "952_home_050",
-      "start_kind": "free_kick",
-      "start_trigger": "pass",
-      "start_zone": 35,
-      "vaep": 0.009,
-      "xg": 0.009,
-      "xt": 0.012
     },
     {
       "actions": [
@@ -6915,6 +6121,20 @@
           "y": 24.8
         },
         {
+          "end_x": 84.0,
+          "end_y": 4.4,
+          "kind": "carry",
+          "minute": 30,
+          "outcome": "success",
+          "player_id": 2363,
+          "second": 42,
+          "shirt_number": 23,
+          "surname": "El Hilali",
+          "type": "carry",
+          "x": 76.2,
+          "y": 2.7
+        },
+        {
           "end_x": null,
           "end_y": null,
           "kind": "take_on",
@@ -6946,8 +6166,9 @@
       "duration_s": 44.0,
       "end_action": "pass_cross",
       "ends_in_shot": false,
-      "events": 28,
+      "events": 29,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 30,
       "outcome": "turnover",
       "passes": 14,
@@ -6979,8 +6200,8 @@
           57.2
         ],
         [
-          84.0,
-          4.4
+          76.2,
+          2.7
         ],
         [
           101.8,
@@ -6994,9 +6215,1114 @@
       "start_kind": "recovery",
       "start_trigger": "recovery",
       "start_zone": 21,
-      "vaep": 0.008,
+      "vaep": 0.009,
       "xg": null,
-      "xt": 0.011
+      "xt": 0.017
+    },
+    {
+      "actions": [
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 53,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 20,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "ball_recovery",
+          "x": 37.6,
+          "y": 34.1
+        },
+        {
+          "end_x": 36.3,
+          "end_y": 34.1,
+          "kind": "carry",
+          "minute": 53,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 21,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "carry",
+          "x": 37.6,
+          "y": 34.1
+        },
+        {
+          "end_x": 57.6,
+          "end_y": 34.3,
+          "kind": "pass",
+          "minute": 53,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 21,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "pass",
+          "x": 36.3,
+          "y": 34.1
+        },
+        {
+          "end_x": 68.0,
+          "end_y": 24.8,
+          "kind": "carry",
+          "minute": 53,
+          "outcome": "success",
+          "player_id": 2353,
+          "second": 23,
+          "shirt_number": 19,
+          "surname": "García",
+          "type": "carry",
+          "x": 57.6,
+          "y": 34.3
+        },
+        {
+          "end_x": 80.9,
+          "end_y": 10.8,
+          "kind": "pass",
+          "minute": 53,
+          "outcome": "success",
+          "player_id": 2353,
+          "second": 24,
+          "shirt_number": 19,
+          "surname": "García",
+          "type": "pass",
+          "x": 68.0,
+          "y": 24.8
+        },
+        {
+          "end_x": 87.1,
+          "end_y": 12.2,
+          "kind": "carry",
+          "minute": 53,
+          "outcome": "success",
+          "player_id": 2370,
+          "second": 26,
+          "shirt_number": 16,
+          "surname": "Ngonge",
+          "type": "carry",
+          "x": 80.9,
+          "y": 10.8
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "take_on",
+          "minute": 53,
+          "outcome": "fail",
+          "player_id": 2370,
+          "second": 27,
+          "shirt_number": 16,
+          "surname": "Ngonge",
+          "type": "take_on",
+          "x": 87.1,
+          "y": 12.2
+        }
+      ],
+      "duration_s": 7.0,
+      "end_action": "take_on",
+      "ends_in_shot": false,
+      "events": 7,
+      "final_third_entry": true,
+      "kind": "counter_attack",
+      "minute": 53,
+      "outcome": "turnover",
+      "passes": 2,
+      "penalty_box_entry": false,
+      "period": 2,
+      "points": [
+        [
+          37.6,
+          34.1
+        ],
+        [
+          37.6,
+          34.1
+        ],
+        [
+          36.3,
+          34.1
+        ],
+        [
+          57.6,
+          34.3
+        ],
+        [
+          68.0,
+          24.8
+        ],
+        [
+          80.9,
+          10.8
+        ],
+        [
+          87.1,
+          12.2
+        ]
+      ],
+      "primary_phase": "midblock",
+      "rank": null,
+      "second": 20,
+      "sequence_id": "952_home_096",
+      "start_kind": "recovery",
+      "start_trigger": "recovery",
+      "start_zone": 33,
+      "vaep": 0.007,
+      "xg": null,
+      "xt": 0.017
+    },
+    {
+      "actions": [
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 4,
+          "outcome": "success",
+          "player_id": 2346,
+          "second": 8,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "interception",
+          "x": 61.5,
+          "y": 45.9
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 4,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 9,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "ball_recovery",
+          "x": 71.3,
+          "y": 50.9
+        },
+        {
+          "end_x": 90.8,
+          "end_y": 55.5,
+          "kind": "carry",
+          "minute": 4,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 11,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "carry",
+          "x": 71.3,
+          "y": 50.9
+        },
+        {
+          "end_x": 97.4,
+          "end_y": 30.7,
+          "kind": "cross",
+          "minute": 4,
+          "outcome": "fail",
+          "player_id": 2366,
+          "second": 12,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "pass",
+          "x": 90.8,
+          "y": 55.5
+        }
+      ],
+      "duration_s": 4.0,
+      "end_action": "pass_cross",
+      "ends_in_shot": false,
+      "events": 4,
+      "final_third_entry": true,
+      "kind": "fast",
+      "minute": 4,
+      "outcome": "turnover",
+      "passes": 1,
+      "penalty_box_entry": true,
+      "period": 1,
+      "points": [
+        [
+          61.5,
+          45.9
+        ],
+        [
+          71.3,
+          50.9
+        ],
+        [
+          71.3,
+          50.9
+        ],
+        [
+          90.8,
+          55.5
+        ],
+        [
+          97.4,
+          30.7
+        ]
+      ],
+      "primary_phase": "fast_attacking",
+      "rank": null,
+      "second": 8,
+      "sequence_id": "952_home_012",
+      "start_kind": "interception",
+      "start_trigger": "interception",
+      "start_zone": 44,
+      "vaep": 0.02,
+      "xg": null,
+      "xt": 0.017
+    },
+    {
+      "actions": [
+        {
+          "end_x": 6.7,
+          "end_y": 47.6,
+          "kind": "pass",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2373,
+          "second": 13,
+          "shirt_number": 13,
+          "surname": "Dmitrovic",
+          "type": "pass",
+          "x": 1.8,
+          "y": 35.6
+        },
+        {
+          "end_x": 38.3,
+          "end_y": 63.6,
+          "kind": "pass",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 15,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "pass",
+          "x": 6.7,
+          "y": 47.6
+        },
+        {
+          "end_x": 39.9,
+          "end_y": 62.9,
+          "kind": "carry",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2346,
+          "second": 16,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "carry",
+          "x": 38.3,
+          "y": 63.6
+        },
+        {
+          "end_x": 46.0,
+          "end_y": 49.4,
+          "kind": "pass",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2346,
+          "second": 17,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "pass",
+          "x": 39.9,
+          "y": 62.9
+        },
+        {
+          "end_x": 49.0,
+          "end_y": 45.0,
+          "kind": "carry",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 19,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "carry",
+          "x": 46.0,
+          "y": 49.4
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "take_on",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 20,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "take_on",
+          "x": 49.0,
+          "y": 45.0
+        },
+        {
+          "end_x": 54.1,
+          "end_y": 39.8,
+          "kind": "carry",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 21,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "carry",
+          "x": 49.0,
+          "y": 45.0
+        },
+        {
+          "end_x": 66.6,
+          "end_y": 20.8,
+          "kind": "pass",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 21,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "pass",
+          "x": 54.1,
+          "y": 39.8
+        },
+        {
+          "end_x": 78.6,
+          "end_y": 20.7,
+          "kind": "carry",
+          "minute": 47,
+          "outcome": "success",
+          "player_id": 2370,
+          "second": 24,
+          "shirt_number": 16,
+          "surname": "Ngonge",
+          "type": "carry",
+          "x": 66.6,
+          "y": 20.8
+        },
+        {
+          "end_x": 105.0,
+          "end_y": 48.8,
+          "kind": "pass",
+          "minute": 47,
+          "outcome": "fail",
+          "player_id": 2370,
+          "second": 26,
+          "shirt_number": 16,
+          "surname": "Ngonge",
+          "type": "pass",
+          "x": 78.6,
+          "y": 20.7
+        }
+      ],
+      "duration_s": 13.0,
+      "end_action": null,
+      "ends_in_shot": false,
+      "events": 10,
+      "final_third_entry": true,
+      "kind": "positional",
+      "minute": 47,
+      "outcome": "ball_out",
+      "passes": 5,
+      "penalty_box_entry": true,
+      "period": 2,
+      "points": [
+        [
+          1.8,
+          35.6
+        ],
+        [
+          6.7,
+          47.6
+        ],
+        [
+          38.3,
+          63.6
+        ],
+        [
+          39.9,
+          62.9
+        ],
+        [
+          46.0,
+          49.4
+        ],
+        [
+          66.6,
+          20.8
+        ],
+        [
+          78.6,
+          20.7
+        ],
+        [
+          105.0,
+          48.8
+        ]
+      ],
+      "primary_phase": "midblock",
+      "rank": null,
+      "second": 13,
+      "sequence_id": "952_home_090",
+      "start_kind": "goal_kick",
+      "start_trigger": "pass",
+      "start_zone": 13,
+      "vaep": 0.002,
+      "xg": null,
+      "xt": 0.015
+    },
+    {
+      "actions": [
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 69,
+          "outcome": "success",
+          "player_id": 2373,
+          "second": 4,
+          "shirt_number": 13,
+          "surname": "Dmitrovic",
+          "type": "claim",
+          "x": 4.0,
+          "y": 31.9
+        },
+        {
+          "end_x": 16.5,
+          "end_y": 34.5,
+          "kind": "carry",
+          "minute": 69,
+          "outcome": "success",
+          "player_id": 2373,
+          "second": 7,
+          "shirt_number": 13,
+          "surname": "Dmitrovic",
+          "type": "carry",
+          "x": 4.0,
+          "y": 31.9
+        },
+        {
+          "end_x": 35.5,
+          "end_y": 40.6,
+          "kind": "pass",
+          "minute": 69,
+          "outcome": "success",
+          "player_id": 2373,
+          "second": 9,
+          "shirt_number": 13,
+          "surname": "Dmitrovic",
+          "type": "pass",
+          "x": 16.5,
+          "y": 34.5
+        },
+        {
+          "end_x": 50.0,
+          "end_y": 43.9,
+          "kind": "carry",
+          "minute": 69,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 10,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "carry",
+          "x": 35.5,
+          "y": 40.6
+        },
+        {
+          "end_x": 73.2,
+          "end_y": 46.2,
+          "kind": "pass",
+          "minute": 69,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 11,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "pass",
+          "x": 50.0,
+          "y": 43.9
+        },
+        {
+          "end_x": 72.0,
+          "end_y": 47.5,
+          "kind": "carry",
+          "minute": 69,
+          "outcome": "success",
+          "player_id": 2345,
+          "second": 13,
+          "shirt_number": 20,
+          "surname": "Roca",
+          "type": "carry",
+          "x": 73.2,
+          "y": 46.2
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 69,
+          "outcome": "fail",
+          "player_id": 2345,
+          "second": 14,
+          "shirt_number": 20,
+          "surname": "Roca",
+          "type": "foul",
+          "x": 72.0,
+          "y": 47.5
+        }
+      ],
+      "duration_s": 10.0,
+      "end_action": null,
+      "ends_in_shot": false,
+      "events": 7,
+      "final_third_entry": true,
+      "kind": "fast",
+      "minute": 69,
+      "outcome": "foul_won",
+      "passes": 2,
+      "penalty_box_entry": false,
+      "period": 2,
+      "points": [
+        [
+          4.0,
+          31.9
+        ],
+        [
+          4.0,
+          31.9
+        ],
+        [
+          16.5,
+          34.5
+        ],
+        [
+          35.5,
+          40.6
+        ],
+        [
+          50.0,
+          43.9
+        ],
+        [
+          73.2,
+          46.2
+        ],
+        [
+          72.0,
+          47.5
+        ]
+      ],
+      "primary_phase": "fast_buildup",
+      "rank": null,
+      "second": 4,
+      "sequence_id": "952_home_121",
+      "start_kind": "keeper",
+      "start_trigger": "keeper",
+      "start_zone": 13,
+      "vaep": 0.02,
+      "xg": null,
+      "xt": 0.015
+    },
+    {
+      "actions": [
+        {
+          "end_x": 65.9,
+          "end_y": 63.7,
+          "kind": "pass",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2373,
+          "second": 43,
+          "shirt_number": 13,
+          "surname": "Dmitrovic",
+          "type": "pass",
+          "x": 19.7,
+          "y": 37.1
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2358,
+          "second": 48,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "aerial",
+          "x": 65.9,
+          "y": 63.7
+        },
+        {
+          "end_x": 67.3,
+          "end_y": 64.1,
+          "kind": "pass",
+          "minute": 89,
+          "outcome": "fail",
+          "player_id": 2358,
+          "second": 48,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "pass",
+          "x": 65.9,
+          "y": 63.7
+        },
+        {
+          "end_x": 72.8,
+          "end_y": 59.0,
+          "kind": "pass",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 52,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "pass",
+          "x": 60.9,
+          "y": 57.3
+        },
+        {
+          "end_x": 67.9,
+          "end_y": 56.2,
+          "kind": "pass",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2359,
+          "second": 53,
+          "shirt_number": 9,
+          "surname": "Fernández",
+          "type": "pass",
+          "x": 72.7,
+          "y": 59.4
+        },
+        {
+          "end_x": 67.4,
+          "end_y": 54.1,
+          "kind": "carry",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2345,
+          "second": 54,
+          "shirt_number": 20,
+          "surname": "Roca",
+          "type": "carry",
+          "x": 67.9,
+          "y": 56.2
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "take_on",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2345,
+          "second": 54,
+          "shirt_number": 20,
+          "surname": "Roca",
+          "type": "take_on",
+          "x": 67.4,
+          "y": 54.1
+        },
+        {
+          "end_x": 69.3,
+          "end_y": 57.5,
+          "kind": "carry",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2345,
+          "second": 54,
+          "shirt_number": 20,
+          "surname": "Roca",
+          "type": "carry",
+          "x": 67.4,
+          "y": 54.1
+        },
+        {
+          "end_x": 75.1,
+          "end_y": 64.9,
+          "kind": "pass",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2345,
+          "second": 54,
+          "shirt_number": 20,
+          "surname": "Roca",
+          "type": "pass",
+          "x": 69.3,
+          "y": 57.5
+        },
+        {
+          "end_x": 67.6,
+          "end_y": 63.0,
+          "kind": "carry",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2358,
+          "second": 56,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "carry",
+          "x": 75.1,
+          "y": 64.9
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "take_on",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2358,
+          "second": 57,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "take_on",
+          "x": 67.6,
+          "y": 63.0
+        },
+        {
+          "end_x": 65.2,
+          "end_y": 65.3,
+          "kind": "carry",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2358,
+          "second": 58,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "carry",
+          "x": 67.6,
+          "y": 63.0
+        },
+        {
+          "end_x": 61.0,
+          "end_y": 61.3,
+          "kind": "pass",
+          "minute": 89,
+          "outcome": "success",
+          "player_id": 2358,
+          "second": 59,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "pass",
+          "x": 65.2,
+          "y": 65.3
+        },
+        {
+          "end_x": 73.3,
+          "end_y": 66.1,
+          "kind": "carry",
+          "minute": 90,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 2,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "carry",
+          "x": 61.0,
+          "y": 61.3
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "take_on",
+          "minute": 90,
+          "outcome": "fail",
+          "player_id": 2366,
+          "second": 4,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "take_on",
+          "x": 73.3,
+          "y": 66.1
+        }
+      ],
+      "duration_s": 21.0,
+      "end_action": "take_on",
+      "ends_in_shot": false,
+      "events": 15,
+      "final_third_entry": true,
+      "kind": "direct_long",
+      "minute": 89,
+      "outcome": "turnover",
+      "passes": 6,
+      "penalty_box_entry": false,
+      "period": 2,
+      "points": [
+        [
+          19.7,
+          37.1
+        ],
+        [
+          65.9,
+          63.7
+        ],
+        [
+          60.9,
+          57.3
+        ],
+        [
+          72.7,
+          59.4
+        ],
+        [
+          67.4,
+          54.1
+        ],
+        [
+          75.1,
+          64.9
+        ],
+        [
+          61.0,
+          61.3
+        ],
+        [
+          73.3,
+          66.1
+        ]
+      ],
+      "primary_phase": "midblock",
+      "rank": null,
+      "second": 43,
+      "sequence_id": "952_home_155",
+      "start_kind": "free_kick",
+      "start_trigger": "pass",
+      "start_zone": 23,
+      "vaep": -0.005,
+      "xg": null,
+      "xt": 0.012
+    },
+    {
+      "actions": [
+        {
+          "end_x": 30.6,
+          "end_y": 35.0,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2358,
+          "second": 13,
+          "shirt_number": 22,
+          "surname": "Romero",
+          "type": "pass",
+          "x": 38.0,
+          "y": 56.7
+        },
+        {
+          "end_x": 32.1,
+          "end_y": 48.0,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2349,
+          "second": 15,
+          "shirt_number": 5,
+          "surname": "Calero",
+          "type": "pass",
+          "x": 30.6,
+          "y": 35.0
+        },
+        {
+          "end_x": 30.4,
+          "end_y": 48.6,
+          "kind": "carry",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 18,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "carry",
+          "x": 32.1,
+          "y": 48.0
+        },
+        {
+          "end_x": 38.7,
+          "end_y": 46.9,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 20,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "pass",
+          "x": 30.4,
+          "y": 48.6
+        },
+        {
+          "end_x": 25.4,
+          "end_y": 51.0,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 21,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "pass",
+          "x": 38.7,
+          "y": 46.9
+        },
+        {
+          "end_x": 30.6,
+          "end_y": 51.5,
+          "kind": "carry",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 23,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "carry",
+          "x": 25.4,
+          "y": 51.0
+        },
+        {
+          "end_x": 54.1,
+          "end_y": 45.8,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2360,
+          "second": 24,
+          "shirt_number": 6,
+          "surname": "Cabrera",
+          "type": "pass",
+          "x": 30.6,
+          "y": 51.5
+        },
+        {
+          "end_x": 48.8,
+          "end_y": 49.6,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2346,
+          "second": 26,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "pass",
+          "x": 53.9,
+          "y": 44.9
+        },
+        {
+          "end_x": 62.5,
+          "end_y": 46.5,
+          "kind": "carry",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 28,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "carry",
+          "x": 48.8,
+          "y": 49.6
+        },
+        {
+          "end_x": 70.5,
+          "end_y": 8.6,
+          "kind": "pass",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2366,
+          "second": 29,
+          "shirt_number": 8,
+          "surname": "Expósito",
+          "type": "pass",
+          "x": 62.5,
+          "y": 46.5
+        },
+        {
+          "end_x": 75.4,
+          "end_y": 19.0,
+          "kind": "carry",
+          "minute": 25,
+          "outcome": "success",
+          "player_id": 2370,
+          "second": 34,
+          "shirt_number": 16,
+          "surname": "Ngonge",
+          "type": "carry",
+          "x": 70.5,
+          "y": 8.6
+        },
+        {
+          "end_x": 105.0,
+          "end_y": 31.8,
+          "kind": "shot",
+          "minute": 25,
+          "outcome": "fail",
+          "player_id": 2370,
+          "second": 39,
+          "shirt_number": 16,
+          "surname": "Ngonge",
+          "type": "attempt_saved",
+          "x": 75.4,
+          "xg": 0.009,
+          "y": 19.0
+        }
+      ],
+      "duration_s": 26.0,
+      "end_action": null,
+      "ends_in_shot": true,
+      "events": 12,
+      "final_third_entry": true,
+      "kind": "positional",
+      "minute": 25,
+      "outcome": "shot_saved",
+      "passes": 7,
+      "penalty_box_entry": false,
+      "period": 1,
+      "points": [
+        [
+          38.0,
+          56.7
+        ],
+        [
+          30.6,
+          35.0
+        ],
+        [
+          30.4,
+          48.6
+        ],
+        [
+          38.7,
+          46.9
+        ],
+        [
+          25.4,
+          51.0
+        ],
+        [
+          62.5,
+          46.5
+        ],
+        [
+          70.5,
+          8.6
+        ],
+        [
+          105.0,
+          31.8
+        ]
+      ],
+      "primary_phase": "buildup",
+      "rank": null,
+      "second": 13,
+      "sequence_id": "952_home_050",
+      "start_kind": "free_kick",
+      "start_trigger": "pass",
+      "start_zone": 35,
+      "vaep": 0.009,
+      "xg": 0.009,
+      "xt": 0.012
     },
     {
       "actions": [
@@ -7090,6 +7416,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 44,
       "outcome": "corner_won",
       "passes": 4,
@@ -7270,6 +7597,7 @@
       "ends_in_shot": false,
       "events": 9,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 84,
       "outcome": "turnover",
       "passes": 5,
@@ -7622,6 +7950,7 @@
       "ends_in_shot": false,
       "events": 21,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 63,
       "outcome": "turnover",
       "passes": 9,
@@ -7778,6 +8107,7 @@
       "ends_in_shot": false,
       "events": 7,
       "final_third_entry": true,
+      "kind": "direct_long",
       "minute": 64,
       "outcome": "turnover",
       "passes": 4,
@@ -7948,6 +8278,7 @@
       "ends_in_shot": false,
       "events": 8,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 94,
       "outcome": "turnover",
       "passes": 6,
@@ -8132,6 +8463,7 @@
       "ends_in_shot": false,
       "events": 9,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 21,
       "outcome": "turnover",
       "passes": 5,
@@ -8260,6 +8592,7 @@
       "ends_in_shot": false,
       "events": 5,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 19,
       "outcome": "turnover",
       "passes": 3,
@@ -8352,6 +8685,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "fast",
       "minute": 20,
       "outcome": "offside",
       "passes": 1,
@@ -8590,6 +8924,7 @@
       "ends_in_shot": false,
       "events": 14,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 22,
       "outcome": "foul_won",
       "passes": 7,
@@ -8704,6 +9039,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 77,
       "outcome": "ball_out",
       "passes": 4,
@@ -8745,254 +9081,135 @@
     {
       "actions": [
         {
-          "end_x": 65.9,
-          "end_y": 63.7,
-          "kind": "pass",
-          "minute": 89,
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 17,
           "outcome": "success",
-          "player_id": 2373,
-          "second": 43,
-          "shirt_number": 13,
-          "surname": "Dmitrovic",
-          "type": "pass",
-          "x": 19.7,
-          "y": 37.1
+          "player_id": 2346,
+          "second": 54,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "tackle",
+          "x": 87.6,
+          "y": 61.1
         },
         {
           "end_x": null,
           "end_y": null,
           "kind": "other",
-          "minute": 89,
+          "minute": 17,
           "outcome": "success",
-          "player_id": 2358,
-          "second": 48,
-          "shirt_number": 22,
-          "surname": "Romero",
-          "type": "aerial",
-          "x": 65.9,
-          "y": 63.7
+          "player_id": 2346,
+          "second": 55,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "ball_recovery",
+          "x": 93.8,
+          "y": 59.2
         },
         {
-          "end_x": 67.3,
-          "end_y": 64.1,
-          "kind": "pass",
-          "minute": 89,
-          "outcome": "fail",
-          "player_id": 2358,
-          "second": 48,
-          "shirt_number": 22,
-          "surname": "Romero",
-          "type": "pass",
-          "x": 65.9,
-          "y": 63.7
-        },
-        {
-          "end_x": 72.8,
-          "end_y": 59.0,
-          "kind": "pass",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2366,
-          "second": 52,
-          "shirt_number": 8,
-          "surname": "Expósito",
-          "type": "pass",
-          "x": 60.9,
-          "y": 57.3
-        },
-        {
-          "end_x": 67.9,
-          "end_y": 56.2,
-          "kind": "pass",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2359,
-          "second": 53,
-          "shirt_number": 9,
-          "surname": "Fernández",
-          "type": "pass",
-          "x": 72.7,
-          "y": 59.4
-        },
-        {
-          "end_x": 67.4,
-          "end_y": 54.1,
+          "end_x": 97.0,
+          "end_y": 58.9,
           "kind": "carry",
-          "minute": 89,
+          "minute": 17,
           "outcome": "success",
-          "player_id": 2345,
-          "second": 54,
-          "shirt_number": 20,
-          "surname": "Roca",
-          "type": "carry",
-          "x": 67.9,
-          "y": 56.2
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "take_on",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2345,
-          "second": 54,
-          "shirt_number": 20,
-          "surname": "Roca",
-          "type": "take_on",
-          "x": 67.4,
-          "y": 54.1
-        },
-        {
-          "end_x": 69.3,
-          "end_y": 57.5,
-          "kind": "carry",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2345,
-          "second": 54,
-          "shirt_number": 20,
-          "surname": "Roca",
-          "type": "carry",
-          "x": 67.4,
-          "y": 54.1
-        },
-        {
-          "end_x": 75.1,
-          "end_y": 64.9,
-          "kind": "pass",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2345,
-          "second": 54,
-          "shirt_number": 20,
-          "surname": "Roca",
-          "type": "pass",
-          "x": 69.3,
-          "y": 57.5
-        },
-        {
-          "end_x": 67.6,
-          "end_y": 63.0,
-          "kind": "carry",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2358,
-          "second": 56,
-          "shirt_number": 22,
-          "surname": "Romero",
-          "type": "carry",
-          "x": 75.1,
-          "y": 64.9
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "take_on",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2358,
+          "player_id": 2346,
           "second": 57,
-          "shirt_number": 22,
-          "surname": "Romero",
-          "type": "take_on",
-          "x": 67.6,
-          "y": 63.0
-        },
-        {
-          "end_x": 65.2,
-          "end_y": 65.3,
-          "kind": "carry",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2358,
-          "second": 58,
-          "shirt_number": 22,
-          "surname": "Romero",
+          "shirt_number": 11,
+          "surname": "Milla",
           "type": "carry",
-          "x": 67.6,
-          "y": 63.0
-        },
-        {
-          "end_x": 61.0,
-          "end_y": 61.3,
-          "kind": "pass",
-          "minute": 89,
-          "outcome": "success",
-          "player_id": 2358,
-          "second": 59,
-          "shirt_number": 22,
-          "surname": "Romero",
-          "type": "pass",
-          "x": 65.2,
-          "y": 65.3
+          "x": 93.8,
+          "y": 59.2
         },
         {
           "end_x": null,
           "end_y": null,
           "kind": "take_on",
-          "minute": 90,
+          "minute": 17,
           "outcome": "fail",
-          "player_id": 2366,
-          "second": 4,
-          "shirt_number": 8,
-          "surname": "Expósito",
+          "player_id": 2346,
+          "second": 59,
+          "shirt_number": 11,
+          "surname": "Milla",
           "type": "take_on",
-          "x": 73.3,
-          "y": 66.1
+          "x": 97.0,
+          "y": 58.9
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "take_on",
+          "minute": 18,
+          "outcome": "fail",
+          "player_id": 2346,
+          "second": 1,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "take_on",
+          "x": 102.7,
+          "y": 58.8
+        },
+        {
+          "end_x": null,
+          "end_y": null,
+          "kind": "other",
+          "minute": 18,
+          "outcome": "fail",
+          "player_id": 2346,
+          "second": 3,
+          "shirt_number": 11,
+          "surname": "Milla",
+          "type": "foul",
+          "x": 102.2,
+          "y": 59.2
         }
       ],
-      "duration_s": 21.0,
-      "end_action": "take_on",
+      "duration_s": 9.0,
+      "end_action": null,
       "ends_in_shot": false,
-      "events": 14,
+      "events": 6,
       "final_third_entry": true,
-      "minute": 89,
-      "outcome": "turnover",
-      "passes": 6,
+      "kind": "fast",
+      "minute": 17,
+      "outcome": "foul_won",
+      "passes": 0,
       "penalty_box_entry": false,
-      "period": 2,
+      "period": 1,
       "points": [
         [
-          19.7,
-          37.1
+          87.6,
+          61.1
         ],
         [
-          65.9,
-          63.7
+          93.8,
+          59.2
         ],
         [
-          60.9,
-          57.3
+          93.8,
+          59.2
         ],
         [
-          72.7,
-          59.4
+          97.0,
+          58.9
         ],
         [
-          67.4,
-          54.1
+          102.7,
+          58.8
         ],
         [
-          75.1,
-          64.9
-        ],
-        [
-          65.2,
-          65.3
-        ],
-        [
-          73.3,
-          66.1
+          102.2,
+          59.2
         ]
       ],
-      "primary_phase": "midblock",
+      "primary_phase": "fast_attacking",
       "rank": null,
-      "second": 43,
-      "sequence_id": "952_home_155",
-      "start_kind": "free_kick",
-      "start_trigger": "pass",
-      "start_zone": 23,
-      "vaep": -0.005,
+      "second": 54,
+      "sequence_id": "952_home_038",
+      "start_kind": "tackle",
+      "start_trigger": "tackle",
+      "start_zone": 55,
+      "vaep": -0.003,
       "xg": null,
       "xt": 0.006
     },
@@ -9130,6 +9347,7 @@
       "ends_in_shot": false,
       "events": 9,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 81,
       "outcome": "turnover",
       "passes": 4,
@@ -9286,6 +9504,7 @@
       "ends_in_shot": false,
       "events": 7,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 4,
       "outcome": "turnover",
       "passes": 2,
@@ -9382,6 +9601,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "fast",
       "minute": 58,
       "outcome": "ball_out",
       "passes": 1,
@@ -9620,6 +9840,7 @@
       "ends_in_shot": false,
       "events": 14,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 8,
       "outcome": "turnover",
       "passes": 10,
@@ -9762,6 +9983,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 66,
       "outcome": "turnover",
       "passes": 3,
@@ -9868,6 +10090,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 22,
       "outcome": "turnover",
       "passes": 3,
@@ -9956,6 +10179,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 34,
       "outcome": "ball_out",
       "passes": 2,
@@ -10208,6 +10432,7 @@
       "ends_in_shot": false,
       "events": 15,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 65,
       "outcome": "turnover",
       "passes": 10,
@@ -10406,6 +10631,7 @@
       "ends_in_shot": false,
       "events": 10,
       "final_third_entry": true,
+      "kind": "buildup",
       "minute": 39,
       "outcome": "turnover",
       "passes": 5,
@@ -10548,6 +10774,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 71,
       "outcome": "turnover",
       "passes": 5,
@@ -10686,6 +10913,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 8,
       "outcome": "turnover",
       "passes": 2,
@@ -10950,6 +11178,7 @@
       "ends_in_shot": false,
       "events": 15,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 34,
       "outcome": "turnover",
       "passes": 9,
@@ -11064,6 +11293,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": true,
+      "kind": "fast",
       "minute": 54,
       "outcome": "turnover",
       "passes": 2,
@@ -11236,6 +11466,7 @@
       "ends_in_shot": false,
       "events": 9,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 45,
       "outcome": "foul_won",
       "passes": 5,
@@ -11378,6 +11609,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 47,
       "outcome": "foul_committed",
       "passes": 1,
@@ -11624,6 +11856,7 @@
       "ends_in_shot": false,
       "events": 14,
       "final_third_entry": true,
+      "kind": "buildup",
       "minute": 12,
       "outcome": "offside",
       "passes": 8,
@@ -11738,6 +11971,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 72,
       "outcome": "foul_won",
       "passes": 2,
@@ -11826,6 +12060,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 86,
       "outcome": "foul_committed",
       "passes": 1,
@@ -11924,6 +12159,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": true,
+      "kind": "buildup",
       "minute": 6,
       "outcome": "turnover",
       "passes": 2,
@@ -12012,6 +12248,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "direct_long",
       "minute": 78,
       "outcome": "turnover",
       "passes": 2,
@@ -12096,6 +12333,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "direct_long",
       "minute": 92,
       "outcome": "turnover",
       "passes": 1,
@@ -12180,6 +12418,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 1,
       "outcome": "foul_won",
       "passes": 1,
@@ -12274,6 +12513,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 10,
       "outcome": "foul_won",
       "passes": 2,
@@ -12386,6 +12626,7 @@
       "ends_in_shot": false,
       "events": 5,
       "final_third_entry": true,
+      "kind": "buildup",
       "minute": 54,
       "outcome": "turnover",
       "passes": 3,
@@ -12478,6 +12719,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 83,
       "outcome": "interrupted",
       "passes": 1,
@@ -12688,6 +12930,7 @@
       "ends_in_shot": false,
       "events": 12,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 0,
       "outcome": "turnover",
       "passes": 8,
@@ -12886,6 +13129,7 @@
       "ends_in_shot": false,
       "events": 10,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 1,
       "outcome": "turnover",
       "passes": 7,
@@ -12986,6 +13230,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 19,
       "outcome": "ball_out",
       "passes": 2,
@@ -13070,6 +13315,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 43,
       "outcome": "turnover",
       "passes": 3,
@@ -13196,6 +13442,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 56,
       "outcome": "foul_won",
       "passes": 4,
@@ -13306,6 +13553,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": true,
+      "kind": "high_transition",
       "minute": 35,
       "outcome": "turnover",
       "passes": 1,
@@ -13394,6 +13642,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": true,
+      "kind": "direct_long",
       "minute": 39,
       "outcome": "turnover",
       "passes": 1,
@@ -13576,6 +13825,7 @@
       "ends_in_shot": false,
       "events": 10,
       "final_third_entry": true,
+      "kind": "buildup",
       "minute": 45,
       "outcome": "offside",
       "passes": 6,
@@ -13690,6 +13940,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 62,
       "outcome": "turnover",
       "passes": 2,
@@ -13792,6 +14043,7 @@
       "ends_in_shot": false,
       "events": 4,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 63,
       "outcome": "turnover",
       "passes": 1,
@@ -13826,7 +14078,7 @@
       "start_kind": "tackle",
       "start_trigger": "tackle",
       "start_zone": 15,
-      "vaep": -0.002,
+      "vaep": -0.0,
       "xg": null,
       "xt": 0.0
     },
@@ -13880,6 +14132,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": false,
+      "kind": "direct_long",
       "minute": 77,
       "outcome": "turnover",
       "passes": 1,
@@ -13992,6 +14245,7 @@
       "ends_in_shot": false,
       "events": 5,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 90,
       "outcome": "turnover",
       "passes": 4,
@@ -14112,6 +14366,7 @@
       "ends_in_shot": false,
       "events": 5,
       "final_third_entry": true,
+      "kind": "buildup",
       "minute": 94,
       "outcome": "turnover",
       "passes": 2,
@@ -14204,6 +14459,7 @@
       "ends_in_shot": false,
       "events": 3,
       "final_third_entry": false,
+      "kind": "fast",
       "minute": 26,
       "outcome": "turnover",
       "passes": 1,
@@ -14354,6 +14610,7 @@
       "ends_in_shot": false,
       "events": 8,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 14,
       "outcome": "turnover",
       "passes": 5,
@@ -14566,6 +14823,7 @@
       "ends_in_shot": false,
       "events": 11,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 10,
       "outcome": "ball_out",
       "passes": 6,
@@ -14722,6 +14980,7 @@
       "ends_in_shot": false,
       "events": 7,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 36,
       "outcome": "turnover",
       "passes": 5,
@@ -14850,6 +15109,7 @@
       "ends_in_shot": false,
       "events": 5,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 57,
       "outcome": "turnover",
       "passes": 4,
@@ -15012,6 +15272,7 @@
       "ends_in_shot": false,
       "events": 8,
       "final_third_entry": false,
+      "kind": "buildup",
       "minute": 34,
       "outcome": "turnover",
       "passes": 6,
@@ -15294,6 +15555,7 @@
       "ends_in_shot": false,
       "events": 16,
       "final_third_entry": false,
+      "kind": "positional",
       "minute": 45,
       "outcome": "turnover",
       "passes": 11,
@@ -15436,6 +15698,7 @@
       "ends_in_shot": false,
       "events": 6,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 45,
       "outcome": "turnover",
       "passes": 2,
@@ -15616,6 +15879,7 @@
       "ends_in_shot": false,
       "events": 9,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 55,
       "outcome": "turnover",
       "passes": 6,
@@ -15772,6 +16036,7 @@
       "ends_in_shot": false,
       "events": 7,
       "final_third_entry": true,
+      "kind": "positional",
       "minute": 60,
       "outcome": "foul_committed",
       "passes": 5,
@@ -15821,122 +16086,6 @@
       "vaep": 0.001,
       "xg": null,
       "xt": -0.024
-    },
-    {
-      "actions": [
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 17,
-          "outcome": "success",
-          "player_id": 2346,
-          "second": 54,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "tackle",
-          "x": 87.6,
-          "y": 61.1
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 17,
-          "outcome": "success",
-          "player_id": 2346,
-          "second": 55,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "ball_recovery",
-          "x": 93.8,
-          "y": 59.2
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "take_on",
-          "minute": 17,
-          "outcome": "fail",
-          "player_id": 2346,
-          "second": 59,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "take_on",
-          "x": 97.0,
-          "y": 58.9
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "take_on",
-          "minute": 18,
-          "outcome": "fail",
-          "player_id": 2346,
-          "second": 1,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "take_on",
-          "x": 102.7,
-          "y": 58.8
-        },
-        {
-          "end_x": null,
-          "end_y": null,
-          "kind": "other",
-          "minute": 18,
-          "outcome": "fail",
-          "player_id": 2346,
-          "second": 3,
-          "shirt_number": 11,
-          "surname": "Milla",
-          "type": "foul",
-          "x": 102.2,
-          "y": 59.2
-        }
-      ],
-      "duration_s": 9.0,
-      "end_action": null,
-      "ends_in_shot": false,
-      "events": 5,
-      "final_third_entry": true,
-      "minute": 17,
-      "outcome": "foul_won",
-      "passes": 0,
-      "penalty_box_entry": false,
-      "period": 1,
-      "points": [
-        [
-          87.6,
-          61.1
-        ],
-        [
-          93.8,
-          59.2
-        ],
-        [
-          97.0,
-          58.9
-        ],
-        [
-          102.7,
-          58.8
-        ],
-        [
-          102.2,
-          59.2
-        ]
-      ],
-      "primary_phase": "fast_attacking",
-      "rank": null,
-      "second": 54,
-      "sequence_id": "952_home_038",
-      "start_kind": "tackle",
-      "start_trigger": "tackle",
-      "start_zone": 55,
-      "vaep": -0.003,
-      "xg": null,
-      "xt": null
     }
   ],
   "shots": [
@@ -16277,8 +16426,8 @@
       "key": "crosses_completed"
     },
     {
-      "away": 0.594,
-      "home": 1.366,
+      "away": 0.588,
+      "home": 1.384,
       "key": "xt_created"
     },
     {
@@ -16572,7 +16721,7 @@
       {
         "cx": 6,
         "cy": 7,
-        "xt": 0.004
+        "xt": 0.011
       },
       {
         "cx": 7,
@@ -16617,7 +16766,7 @@
       {
         "cx": 8,
         "cy": 0,
-        "xt": 0.106
+        "xt": 0.112
       },
       {
         "cx": 8,
@@ -16683,6 +16832,11 @@
         "cx": 10,
         "cy": 2,
         "xt": 0.039
+      },
+      {
+        "cx": 10,
+        "cy": 6,
+        "xt": 0.006
       },
       {
         "cx": 10,
@@ -16773,11 +16927,11 @@
         "zone_id": 44
       },
       {
-        "value": 0.004,
+        "value": 0.01,
         "zone_id": 45
       },
       {
-        "value": 0.598,
+        "value": 0.604,
         "zone_id": 51
       },
       {
@@ -16805,7 +16959,7 @@
         "zone_id": 62
       },
       {
-        "value": -0.021,
+        "value": -0.016,
         "zone_id": 65
       }
     ],

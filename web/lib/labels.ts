@@ -323,6 +323,29 @@ export function sequencePhase(key: string): string {
   return label(sequencePhaseLabels, key);
 }
 
+/**
+ * `sequences[].kind` (WEB_DATA §7.6, 21 Sep 2026) — the title of a list row.
+ * A priority ladder the export walks over the gold phase flags: how the ball
+ * was won, then the restart it came from, then a long ball, then where the
+ * possession settled. `primary_phase` (the biggest segment) stays in the file
+ * but no longer names the row.
+ */
+const sequenceKindLabels: Record<string, string> = {
+  counter_attack: "Contraataque",
+  high_transition: "Transición rápida",
+  corner: "Córner",
+  throw_in: "Saque de banda directo",
+  free_kick: "Falta al área",
+  direct_long: "Juego directo",
+  positional: "Ataque posicional",
+  buildup: "Salida de balón",
+  fast: "Ataque rápido",
+};
+
+export function sequenceKind(key: string): string {
+  return label(sequenceKindLabels, key);
+}
+
 export function sequenceOutcome(key: string): string {
   return label(sequenceOutcomeLabels, key);
 }

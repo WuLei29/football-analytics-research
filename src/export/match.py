@@ -24,6 +24,7 @@ Two conventions carry most of the risk in this file, both from §3:
 from __future__ import annotations
 
 import logging
+import math
 from datetime import datetime
 from typing import Any
 
@@ -455,6 +456,11 @@ RESTART_QUALIFIERS = (
     (Q_FREE_KICK, "free_kick"),
 )
 
+# The restarts `phases.py` can open a set-piece phase from (its
+# qualifies_as_set_piece reads the same `sequence_type`), so `has_set_piece`
+# never fires on any other value; the guard is belt and braces.
+SET_PIECE_KINDS = ("corner", "throw_in", "free_kick")
+
 
 def action_kind(event_type: str, qualifier_ids: list[int]) -> str:
     """One of the seven kinds the detailed sequence view draws (§7.3)."""
@@ -568,6 +574,72 @@ def start_kind(start_trigger: str | None, first: dict[str, Any]) -> str | None:
     return start_trigger
 
 
+# `has_direct_long` (phases.py) fires on one qualifying ball ANYWHERE in the
+# sequence -- 7,285 of 19,017 flagged chains had it at event 6+, averaging
+# 12.2 events and 7.1 passes, which titled a settled possession "Juego
+# directo" for a single mid-chain switch of play. As a *title* that
+# overreaches, so `kind` recomputes the same test (dx/angle mirrored from
+# sequence_phases.py) but only over the team's own first three events -- the
+# classifier's own established-possession threshold (TEMPO_THRESHOLD),
+# so a long ball only earns the title if it happens before the chain could
+# count as settled. 7,097 of those 19,017 keep it (measured 22 Sep 2026).
+DIRECT_LONG_MIN_DX_M = 32.0
+DIRECT_LONG_MAX_ANGLE_DEG = 30.0
+DIRECT_LONG_EVENT_WINDOW = 3
+
+
+def _is_direct_long_event(event: dict[str, Any]) -> bool:
+    """One ball >= 32 m forward within 30 deg of the goal axis."""
+    if event["event_type"] not in ("Pass", "Carry"):
+        return False
+    x, end_x = event["x"], event["end_x"]
+    if x is None or end_x is None:
+        return False
+    dx = end_x - x
+    if dx < DIRECT_LONG_MIN_DX_M:
+        return False
+    y, end_y = event["y"], event["end_y"]
+    dy = abs(end_y - y) if y is not None and end_y is not None else 0.0
+    return dy <= dx * math.tan(math.radians(DIRECT_LONG_MAX_ANGLE_DEG))
+
+
+def is_early_direct_long(chain: list[dict[str, Any]]) -> bool:
+    """Whether the chain opened with a direct long ball (§7.6, 22 Sep 2026).
+
+    `chain` is already the possessing team's own events, ordered by
+    (json_index, event_id) -- the same events gold's has_direct_long scans,
+    just windowed to the first three.
+    """
+    return any(_is_direct_long_event(e) for e in chain[:DIRECT_LONG_EVENT_WINDOW])
+
+
+def sequence_kind(row: dict[str, Any], chain: list[dict[str, Any]]) -> str:
+    """The one word for the chain in a list row (§7.6, 21/22 Sep 2026).
+
+    A priority ladder over the gold phase flags, most defining first. How the
+    ball was won outranks everything (a counter-attack is a counter-attack
+    whatever it did next); a set piece is named by the restart it started
+    from; then a long ball in its opening events; then where the possession
+    settled -- the middle or final third beats the own third, so a chain that
+    built up and then established itself upfield is `positional`, and
+    `buildup` is one that never got past its own third. `fast` is what is
+    left: no established segment at all.
+    """
+    if row["has_counter_attack"]:
+        return "counter_attack"
+    if row["has_high_transition"]:
+        return "high_transition"
+    if row["has_set_piece"] and row["sequence_type"] in SET_PIECE_KINDS:
+        return row["sequence_type"]
+    if is_early_direct_long(chain):
+        return "direct_long"
+    if row["has_midblock"] or row["has_attacking"]:
+        return "positional"
+    if row["has_buildup"]:
+        return "buildup"
+    return "fast"
+
+
 def end_action(outcome: str | None, last: dict[str, Any]) -> str | None:
     """How a `turnover` lost the ball, from our last action (§7.3). A failed
     pass is split by its sub-type; null on every other outcome."""
@@ -662,6 +734,7 @@ def _sequences(rows: list[dict[str, Any]], events: list[dict[str, Any]]
             "outcome": row["outcome"],
             "end_action": end_action(row["outcome"], chain[-1]),
             "primary_phase": row["primary_phase"],
+            "kind": sequence_kind(row, chain),
             "final_third_entry": bool(row["final_third_entry"]),
             "penalty_box_entry": bool(row["penalty_box_entry"]),
             "ends_in_shot": int(row["shot_count"] or 0) > 0,

@@ -34,6 +34,7 @@ import { dec } from "@/lib/format";
 import {
   sequenceActionType,
   sequenceEnding,
+  sequenceKind,
   sequencePhase,
   sequenceTrigger,
   viz,
@@ -59,6 +60,13 @@ export interface SequenceEntry {
   sequence_id: string;
   /** `gold.sequences.primary_phase`, e.g. `"fast_attacking"`. */
   primary_phase: string;
+  /**
+   * The row's title — the export's priority ladder over the phase flags
+   * (WEB_DATA §7.6): `counter_attack`, `high_transition`, `corner`,
+   * `throw_in`, `free_kick`, `direct_long`, `positional`, `buildup`, `fast`.
+   * Optional so files exported before 21 Sep 2026 fall back to the phase.
+   */
+  kind?: string | null;
   /** `gold.sequences.outcome`, e.g. `"shot_saved"`. */
   outcome: string;
   /**
@@ -233,7 +241,9 @@ function SequenceRow({
               whiteSpace: "nowrap",
             }}
           >
-            {sequencePhase(sequence.primary_phase)}
+            {sequence.kind
+              ? sequenceKind(sequence.kind)
+              : sequencePhase(sequence.primary_phase)}
           </span>
           <span
             style={{

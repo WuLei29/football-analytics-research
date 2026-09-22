@@ -3,7 +3,7 @@
     "season": "2026-27",
     "team": "espanyol"
   },
-  "generated_at": "2026-09-19T23:37:44Z",
+  "generated_at": "2026-09-22T00:44:19Z",
   "schema_version": 1,
   "seasons": [
     {
@@ -12,13 +12,13 @@
       "competition_season_id": 9,
       "first_match_date": "2026-08-15",
       "label": "2026/2027",
-      "last_matchday_loaded": 6,
+      "last_matchday_loaded": 7,
       "league_complete": false,
-      "matchdays_complete": 3,
+      "matchdays_complete": 5,
       "matchdays_scheduled": 38,
       "num_teams": 20,
       "slug": "2026-27",
-      "through_match_date": "2026-09-03",
+      "through_match_date": "2026-09-20",
       "tier_level": 1
     },
     {
@@ -49,7 +49,7 @@
       "seasons": [
         {
           "is_final": false,
-          "matches_played": 3,
+          "matches_played": 7,
           "slug": "2026-27"
         },
         {

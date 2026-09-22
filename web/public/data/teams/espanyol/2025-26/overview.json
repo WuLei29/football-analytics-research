@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-19T23:37:44Z",
+  "generated_at": "2026-09-22T00:44:19Z",
   "kpis": [
     {
       "key": "points",
@@ -203,39 +203,39 @@
       "key": "carries_into_final_third",
       "rows": [
         {
-          "name": "Carlos Romero",
-          "player_id": 2358,
-          "position_group": "LB",
-          "shirt_number": 22,
-          "value": 59
-        },
-        {
           "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
-          "value": 55
+          "value": 62
+        },
+        {
+          "name": "Carlos Romero",
+          "player_id": 2358,
+          "position_group": "LB",
+          "shirt_number": 22,
+          "value": 60
         },
         {
           "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
-          "value": 43
-        },
-        {
-          "name": "Urko González de Zárate",
-          "player_id": 2073,
-          "position_group": "MID",
-          "shirt_number": 4,
-          "value": 21
+          "value": 45
         },
         {
           "name": "Jofre Carreras",
           "player_id": 2357,
           "position_group": "W",
           "shirt_number": 17,
-          "value": 21
+          "value": 25
+        },
+        {
+          "name": "Urko González de Zárate",
+          "player_id": 2073,
+          "position_group": "MID",
+          "shirt_number": 4,
+          "value": 22
         },
         {
           "name": "Pere Milla",
@@ -263,8 +263,8 @@
       "result": "W",
       "xg_against": 1.09,
       "xg_for": 1.17,
-      "xt_against": 1.648,
-      "xt_for": 1.483
+      "xt_against": 1.65,
+      "xt_for": 1.531
     },
     {
       "date": "2025-08-24",
@@ -280,8 +280,8 @@
       "result": "D",
       "xg_against": 0.94,
       "xg_for": 1.66,
-      "xt_against": 1.585,
-      "xt_for": 0.908
+      "xt_against": 1.603,
+      "xt_for": 1.143
     },
     {
       "date": "2025-08-31",
@@ -297,8 +297,8 @@
       "result": "W",
       "xg_against": 1.43,
       "xg_for": 1.07,
-      "xt_against": 2.076,
-      "xt_for": 1.297
+      "xt_against": 2.087,
+      "xt_for": 1.296
     },
     {
       "date": "2025-09-15",
@@ -314,8 +314,8 @@
       "result": "W",
       "xg_against": 2.36,
       "xg_for": 2.06,
-      "xt_against": 2.34,
-      "xt_for": 1.131
+      "xt_against": 2.384,
+      "xt_for": 1.141
     },
     {
       "date": "2025-09-20",
@@ -331,8 +331,8 @@
       "result": "L",
       "xg_against": 2.01,
       "xg_for": 1.15,
-      "xt_against": 1.44,
-      "xt_for": 1.157
+      "xt_against": 1.469,
+      "xt_for": 1.228
     },
     {
       "date": "2025-09-23",
@@ -348,8 +348,8 @@
       "result": "D",
       "xg_against": 0.75,
       "xg_for": 2.72,
-      "xt_against": 1.125,
-      "xt_for": 2.694
+      "xt_against": 1.133,
+      "xt_for": 2.709
     },
     {
       "date": "2025-09-26",
@@ -365,8 +365,8 @@
       "result": "D",
       "xg_against": 0.76,
       "xg_for": 1.21,
-      "xt_against": 1.373,
-      "xt_for": 1.457
+      "xt_against": 1.371,
+      "xt_for": 1.466
     },
     {
       "date": "2025-10-05",
@@ -382,8 +382,8 @@
       "result": "L",
       "xg_against": 1.01,
       "xg_for": 2.39,
-      "xt_against": 1.259,
-      "xt_for": 1.93
+      "xt_against": 1.283,
+      "xt_for": 2.016
     },
     {
       "date": "2025-10-17",
@@ -399,8 +399,8 @@
       "result": "W",
       "xg_against": 0.81,
       "xg_for": 4.46,
-      "xt_against": 1.23,
-      "xt_for": 2.604
+      "xt_against": 1.272,
+      "xt_for": 2.616
     },
     {
       "date": "2025-10-25",
@@ -416,8 +416,8 @@
       "result": "W",
       "xg_against": 1.09,
       "xg_for": 2.89,
-      "xt_against": 1.199,
-      "xt_for": 1.945
+      "xt_against": 1.198,
+      "xt_for": 1.956
     },
     {
       "date": "2025-11-02",
@@ -433,8 +433,8 @@
       "result": "L",
       "xg_against": 1.57,
       "xg_for": 1.01,
-      "xt_against": 1.107,
-      "xt_for": 2.268
+      "xt_against": 1.108,
+      "xt_for": 2.328
     },
     {
       "date": "2025-11-08",
@@ -450,8 +450,8 @@
       "result": "L",
       "xg_against": 1.92,
       "xg_for": 0.79,
-      "xt_against": 1.107,
-      "xt_for": 1.616
+      "xt_against": 1.105,
+      "xt_for": 1.623
     },
     {
       "date": "2025-11-24",
@@ -467,8 +467,8 @@
       "result": "W",
       "xg_against": 2.14,
       "xg_for": 0.9,
-      "xt_against": 1.699,
-      "xt_for": 0.837
+      "xt_against": 1.69,
+      "xt_for": 0.9
     },
     {
       "date": "2025-11-30",
@@ -484,8 +484,8 @@
       "result": "W",
       "xg_against": 0.69,
       "xg_for": 0.39,
-      "xt_against": 0.985,
-      "xt_for": 0.761
+      "xt_against": 1.027,
+      "xt_for": 0.783
     },
     {
       "date": "2025-12-07",
@@ -501,8 +501,8 @@
       "result": "W",
       "xg_against": 0.35,
       "xg_for": 1.23,
-      "xt_against": 0.904,
-      "xt_for": 1.198
+      "xt_against": 0.905,
+      "xt_for": 1.23
     },
     {
       "date": "2025-12-13",
@@ -518,8 +518,8 @@
       "result": "W",
       "xg_against": 0.24,
       "xg_for": 0.57,
-      "xt_against": 0.818,
-      "xt_for": 0.789
+      "xt_against": 0.826,
+      "xt_for": 0.81
     },
     {
       "date": "2025-12-22",
@@ -535,8 +535,8 @@
       "result": "W",
       "xg_against": 1.83,
       "xg_for": 1.0,
-      "xt_against": 1.604,
-      "xt_for": 1.389
+      "xt_against": 1.621,
+      "xt_for": 1.401
     },
     {
       "date": "2026-01-03",
@@ -552,8 +552,8 @@
       "result": "L",
       "xg_against": 2.11,
       "xg_for": 1.55,
-      "xt_against": 2.009,
-      "xt_for": 1.35
+      "xt_against": 2.044,
+      "xt_for": 1.364
     },
     {
       "date": "2026-01-11",
@@ -569,8 +569,8 @@
       "result": "D",
       "xg_against": 0.88,
       "xg_for": 1.48,
-      "xt_against": 1.033,
-      "xt_for": 1.333
+      "xt_against": 1.034,
+      "xt_for": 1.347
     },
     {
       "date": "2026-01-16",
@@ -586,8 +586,8 @@
       "result": "L",
       "xg_against": 1.94,
       "xg_for": 0.85,
-      "xt_against": 1.052,
-      "xt_for": 1.533
+      "xt_against": 1.159,
+      "xt_for": 1.551
     },
     {
       "date": "2026-01-24",
@@ -603,8 +603,8 @@
       "result": "L",
       "xg_against": 2.04,
       "xg_for": 1.48,
-      "xt_against": 1.132,
-      "xt_for": 1.237
+      "xt_against": 1.149,
+      "xt_for": 1.325
     },
     {
       "date": "2026-01-30",
@@ -618,10 +618,10 @@
       "opponent_short_name": "Alavés",
       "opponent_team_id": 1,
       "result": "L",
-      "xg_against": 1.04,
+      "xg_against": 1.05,
       "xg_for": 0.77,
-      "xt_against": 1.274,
-      "xt_for": 1.448
+      "xt_against": 1.273,
+      "xt_for": 1.453
     },
     {
       "date": "2026-02-09",
@@ -637,8 +637,8 @@
       "result": "L",
       "xg_against": 0.96,
       "xg_for": 0.49,
-      "xt_against": 1.332,
-      "xt_for": 1.279
+      "xt_against": 1.361,
+      "xt_for": 1.305
     },
     {
       "date": "2026-02-14",
@@ -654,8 +654,8 @@
       "result": "D",
       "xg_against": 2.37,
       "xg_for": 0.97,
-      "xt_against": 2.34,
-      "xt_for": 1.032
+      "xt_against": 2.295,
+      "xt_for": 1.036
     },
     {
       "date": "2026-02-21",
@@ -671,8 +671,8 @@
       "result": "L",
       "xg_against": 2.53,
       "xg_for": 0.97,
-      "xt_against": 2.522,
-      "xt_for": 0.701
+      "xt_against": 2.539,
+      "xt_for": 0.728
     },
     {
       "date": "2026-03-01",
@@ -688,8 +688,8 @@
       "result": "D",
       "xg_against": 1.93,
       "xg_for": 0.64,
-      "xt_against": 1.502,
-      "xt_for": 0.667
+      "xt_against": 1.498,
+      "xt_for": 0.684
     },
     {
       "date": "2026-03-09",
@@ -705,8 +705,8 @@
       "result": "D",
       "xg_against": 0.6,
       "xg_for": 1.23,
-      "xt_against": 0.829,
-      "xt_for": 1.878
+      "xt_against": 0.834,
+      "xt_for": 1.982
     },
     {
       "date": "2026-03-15",
@@ -722,8 +722,8 @@
       "result": "L",
       "xg_against": 2.93,
       "xg_for": 0.61,
-      "xt_against": 2.349,
-      "xt_for": 0.787
+      "xt_against": 2.346,
+      "xt_for": 0.792
     },
     {
       "date": "2026-03-21",
@@ -739,8 +739,8 @@
       "result": "L",
       "xg_against": 1.39,
       "xg_for": 1.04,
-      "xt_against": 1.04,
-      "xt_for": 2.636
+      "xt_against": 1.05,
+      "xt_for": 2.648
     },
     {
       "date": "2026-04-04",
@@ -756,8 +756,8 @@
       "result": "D",
       "xg_against": 1.82,
       "xg_for": 0.29,
-      "xt_against": 1.744,
-      "xt_for": 0.701
+      "xt_against": 1.827,
+      "xt_for": 0.682
     },
     {
       "date": "2026-04-11",
@@ -773,8 +773,8 @@
       "result": "L",
       "xg_against": 2.96,
       "xg_for": 1.36,
-      "xt_against": 1.828,
-      "xt_for": 1.55
+      "xt_against": 1.833,
+      "xt_for": 1.586
     },
     {
       "date": "2026-04-27",
@@ -790,8 +790,8 @@
       "result": "D",
       "xg_against": 1.01,
       "xg_for": 0.7,
-      "xt_against": 0.594,
-      "xt_for": 1.366
+      "xt_against": 0.588,
+      "xt_for": 1.384
     },
     {
       "date": "2026-04-23",
@@ -807,8 +807,8 @@
       "result": "L",
       "xg_against": 1.19,
       "xg_for": 1.68,
-      "xt_against": 1.901,
-      "xt_for": 1.216
+      "xt_against": 1.917,
+      "xt_for": 1.228
     },
     {
       "date": "2026-05-03",
@@ -824,8 +824,8 @@
       "result": "L",
       "xg_against": 1.65,
       "xg_for": 1.01,
-      "xt_against": 1.295,
-      "xt_for": 1.663
+      "xt_against": 1.404,
+      "xt_for": 1.662
     },
     {
       "date": "2026-05-09",
@@ -841,7 +841,7 @@
       "result": "L",
       "xg_against": 1.44,
       "xg_for": 0.76,
-      "xt_against": 1.098,
+      "xt_against": 1.078,
       "xt_for": 0.88
     },
     {
@@ -858,8 +858,8 @@
       "result": "W",
       "xg_against": 0.87,
       "xg_for": 0.7,
-      "xt_against": 0.975,
-      "xt_for": 1.184
+      "xt_against": 0.976,
+      "xt_for": 1.19
     },
     {
       "date": "2026-05-17",
@@ -875,8 +875,8 @@
       "result": "W",
       "xg_against": 2.14,
       "xg_for": 0.76,
-      "xt_against": 2.829,
-      "xt_for": 0.716
+      "xt_against": 2.874,
+      "xt_for": 0.727
     },
     {
       "date": "2026-05-23",
@@ -892,8 +892,8 @@
       "result": "D",
       "xg_against": 1.1,
       "xg_for": 1.52,
-      "xt_against": 0.838,
-      "xt_for": 1.243
+      "xt_against": 0.835,
+      "xt_for": 1.281
     }
   ],
   "record": {
@@ -912,67 +912,67 @@
       {
         "matchday": 5,
         "xg_difference": -0.144,
-        "xt_difference": -0.623
+        "xt_difference": -0.571
       },
       {
         "matchday": 6,
         "xg_difference": 0.234,
-        "xt_difference": -0.276
+        "xt_difference": -0.232
       },
       {
         "matchday": 7,
         "xg_difference": 0.18,
-        "xt_difference": -0.124
+        "xt_difference": -0.121
       },
       {
         "matchday": 8,
         "xg_difference": 0.528,
-        "xt_difference": 0.166
+        "xt_difference": 0.184
       },
       {
         "matchday": 9,
         "xg_difference": 1.318,
-        "xt_difference": 0.683
+        "xt_difference": 0.701
       },
       {
         "matchday": 10,
         "xg_difference": 1.85,
-        "xt_difference": 0.889
+        "xt_difference": 0.901
       },
       {
         "matchday": 11,
         "xg_difference": 1.344,
-        "xt_difference": 0.807
+        "xt_difference": 0.83
       },
       {
         "matchday": 12,
         "xg_difference": 1.028,
-        "xt_difference": 0.892
+        "xt_difference": 0.915
       },
       {
         "matchday": 13,
         "xg_difference": 0.504,
-        "xt_difference": 0.586
+        "xt_difference": 0.61
       },
       {
         "matchday": 14,
         "xg_difference": -0.286,
-        "xt_difference": 0.266
+        "xt_difference": 0.292
       },
       {
         "matchday": 15,
         "xg_difference": -0.47,
-        "xt_difference": 0.176
+        "xt_difference": 0.206
       },
       {
         "matchday": 16,
         "xg_difference": -0.292,
-        "xt_difference": -0.062
+        "xt_difference": -0.041
       },
       {
         "matchday": 17,
         "xg_difference": -0.232,
-        "xt_difference": -0.207
+        "xt_difference": -0.189
       },
       {
         "matchday": 18,
@@ -982,102 +982,102 @@
       {
         "matchday": 19,
         "xg_difference": 0.084,
-        "xt_difference": -0.062
+        "xt_difference": -0.056
       },
       {
         "matchday": 20,
         "xg_difference": -0.31,
-        "xt_difference": -0.024
+        "xt_difference": -0.042
       },
       {
         "matchday": 21,
         "xg_difference": -0.488,
-        "xt_difference": 0.002
+        "xt_difference": -0.004
       },
       {
         "matchday": 22,
-        "xg_difference": -0.376,
-        "xt_difference": 0.08
+        "xg_difference": -0.378,
+        "xt_difference": 0.076
       },
       {
         "matchday": 23,
-        "xg_difference": -0.358,
+        "xg_difference": -0.36,
         "xt_difference": 0.201
       },
       {
         "matchday": 24,
-        "xg_difference": -0.758,
-        "xt_difference": -0.12
+        "xg_difference": -0.76,
+        "xt_difference": -0.113
       },
       {
         "matchday": 25,
-        "xg_difference": -0.852,
-        "xt_difference": -0.581
+        "xg_difference": -0.854,
+        "xt_difference": -0.554
       },
       {
         "matchday": 26,
-        "xg_difference": -0.998,
-        "xt_difference": -0.769
+        "xg_difference": -1.0,
+        "xt_difference": -0.752
       },
       {
         "matchday": 27,
         "xg_difference": -0.818,
-        "xt_difference": -0.594
+        "xt_difference": -0.558
       },
       {
         "matchday": 28,
         "xg_difference": -1.188,
-        "xt_difference": -0.895
+        "xt_difference": -0.858
       },
       {
         "matchday": 29,
         "xg_difference": -0.978,
-        "xt_difference": -0.315
+        "xt_difference": -0.287
       },
       {
         "matchday": 30,
         "xg_difference": -0.972,
-        "xt_difference": -0.159
+        "xt_difference": -0.153
       },
       {
         "matchday": 31,
         "xg_difference": -1.034,
-        "xt_difference": -0.048
+        "xt_difference": -0.04
       },
       {
         "matchday": 32,
         "xg_difference": -1.222,
-        "xt_difference": -0.103
+        "xt_difference": -0.11
       },
       {
         "matchday": 33,
         "xg_difference": -0.66,
-        "xt_difference": 0.072
+        "xt_difference": 0.063
       },
       {
         "matchday": 34,
         "xg_difference": -0.718,
-        "xt_difference": -0.173
+        "xt_difference": -0.205
       },
       {
         "matchday": 35,
         "xg_difference": -0.548,
-        "xt_difference": -0.008
+        "xt_difference": -0.016
       },
       {
         "matchday": 36,
         "xg_difference": -0.262,
-        "xt_difference": 0.089
+        "xt_difference": 0.076
       },
       {
         "matchday": 37,
         "xg_difference": -0.476,
-        "xt_difference": -0.488
+        "xt_difference": -0.512
       },
       {
         "matchday": 38,
         "xg_difference": -0.49,
-        "xt_difference": -0.27
+        "xt_difference": -0.285
       }
     ],
     "window": 5

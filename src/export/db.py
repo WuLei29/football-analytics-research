@@ -630,7 +630,10 @@ SEQUENCES_SQL = """
 SELECT sequence_id, period, start_minute, start_second, duration_seconds,
        event_count, pass_count, shot_count, xt, xg, vaep,
        start_zone, start_trigger, outcome, primary_phase,
-       final_third_entry, penalty_box_entry
+       final_third_entry, penalty_box_entry,
+       sequence_type,
+       has_counter_attack, has_high_transition, has_set_piece, has_direct_long,
+       has_buildup, has_midblock, has_attacking
 FROM gold.sequences
 WHERE match_id = %(match_id)s
   AND team_id = %(team_id)s

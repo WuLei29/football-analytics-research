@@ -1,6 +1,6 @@
 {
   "competition_name": "Primera División",
-  "generated_at": "2026-09-19T23:37:44Z",
+  "generated_at": "2026-09-22T00:44:19Z",
   "league_complete": true,
   "matchdays_scheduled": 38,
   "profile": {
@@ -215,7 +215,7 @@
           },
           "field_tilt": {
             "p": 100,
-            "v": 72.4
+            "v": 72.3
           },
           "fouls_committed": {
             "p": 100,
@@ -247,7 +247,7 @@
           },
           "progressive_carries": {
             "p": 95,
-            "v": 20.6
+            "v": 22.1
           },
           "progressive_passes": {
             "p": 15,
@@ -279,7 +279,7 @@
           },
           "touches_in_box": {
             "p": 100,
-            "v": 40.5
+            "v": 40.7
           },
           "xg_fast_break": {
             "p": 85,
@@ -316,7 +316,7 @@
           },
           "field_tilt": {
             "p": 95,
-            "v": 64.6
+            "v": 64.7
           },
           "fouls_committed": {
             "p": 95,
@@ -348,7 +348,7 @@
           },
           "progressive_carries": {
             "p": 100,
-            "v": 21.1
+            "v": 23.3
           },
           "progressive_passes": {
             "p": 25,
@@ -380,7 +380,7 @@
           },
           "touches_in_box": {
             "p": 95,
-            "v": 39.7
+            "v": 40.0
           },
           "xg_fast_break": {
             "p": 90,
@@ -417,7 +417,7 @@
           },
           "field_tilt": {
             "p": 15,
-            "v": 41.6
+            "v": 41.7
           },
           "fouls_committed": {
             "p": 70,
@@ -448,8 +448,8 @@
             "v": 17.9
           },
           "progressive_carries": {
-            "p": 75,
-            "v": 13.6
+            "p": 80,
+            "v": 14.7
           },
           "progressive_passes": {
             "p": 10,
@@ -481,7 +481,7 @@
           },
           "touches_in_box": {
             "p": 80,
-            "v": 28.1
+            "v": 28.2
           },
           "xg_fast_break": {
             "p": 100,
@@ -550,7 +550,7 @@
           },
           "progressive_carries": {
             "p": 85,
-            "v": 14.6
+            "v": 15.2
           },
           "progressive_passes": {
             "p": 75,
@@ -582,7 +582,7 @@
           },
           "touches_in_box": {
             "p": 90,
-            "v": 32.1
+            "v": 32.3
           },
           "xg_fast_break": {
             "p": 80,
@@ -619,7 +619,7 @@
           },
           "field_tilt": {
             "p": 70,
-            "v": 50.8
+            "v": 50.7
           },
           "fouls_committed": {
             "p": 90,
@@ -650,8 +650,8 @@
             "v": 15.9
           },
           "progressive_carries": {
-            "p": 60,
-            "v": 13.1
+            "p": 55,
+            "v": 13.7
           },
           "progressive_passes": {
             "p": 20,
@@ -720,7 +720,7 @@
           },
           "field_tilt": {
             "p": 40,
-            "v": 45.5
+            "v": 45.6
           },
           "fouls_committed": {
             "p": 75,
@@ -752,7 +752,7 @@
           },
           "progressive_carries": {
             "p": 80,
-            "v": 14.1
+            "v": 14.7
           },
           "progressive_passes": {
             "p": 30,
@@ -784,7 +784,7 @@
           },
           "touches_in_box": {
             "p": 25,
-            "v": 21.9
+            "v": 22.2
           },
           "xg_fast_break": {
             "p": 40,
@@ -821,7 +821,7 @@
           },
           "field_tilt": {
             "p": 30,
-            "v": 45.0
+            "v": 44.9
           },
           "fouls_committed": {
             "p": 5,
@@ -853,7 +853,7 @@
           },
           "progressive_carries": {
             "p": 5,
-            "v": 5.7
+            "v": 6.0
           },
           "progressive_passes": {
             "p": 100,
@@ -953,8 +953,8 @@
             "v": 11.7
           },
           "progressive_carries": {
-            "p": 50,
-            "v": 12.2
+            "p": 45,
+            "v": 12.6
           },
           "progressive_passes": {
             "p": 85,
@@ -1054,8 +1054,8 @@
             "v": 15.9
           },
           "progressive_carries": {
-            "p": 45,
-            "v": 11.8
+            "p": 30,
+            "v": 12.3
           },
           "progressive_passes": {
             "p": 40,
@@ -1087,7 +1087,7 @@
           },
           "touches_in_box": {
             "p": 55,
-            "v": 23.6
+            "v": 23.7
           },
           "xg_fast_break": {
             "p": 40,
@@ -1156,7 +1156,7 @@
           },
           "progressive_carries": {
             "p": 40,
-            "v": 11.7
+            "v": 12.5
           },
           "progressive_passes": {
             "p": 45,
@@ -1188,7 +1188,7 @@
           },
           "touches_in_box": {
             "p": 65,
-            "v": 25.2
+            "v": 25.5
           },
           "xg_fast_break": {
             "p": 40,
@@ -1225,7 +1225,7 @@
           },
           "field_tilt": {
             "p": 25,
-            "v": 44.2
+            "v": 44.4
           },
           "fouls_committed": {
             "p": 25,
@@ -1256,8 +1256,8 @@
             "v": 15.3
           },
           "progressive_carries": {
-            "p": 15,
-            "v": 9.9
+            "p": 20,
+            "v": 10.8
           },
           "progressive_passes": {
             "p": 90,
@@ -1289,7 +1289,7 @@
           },
           "touches_in_box": {
             "p": 20,
-            "v": 21.2
+            "v": 21.4
           },
           "xg_fast_break": {
             "p": 60,
@@ -1358,7 +1358,7 @@
           },
           "progressive_carries": {
             "p": 70,
-            "v": 13.3
+            "v": 14.5
           },
           "progressive_passes": {
             "p": 95,
@@ -1390,7 +1390,7 @@
           },
           "touches_in_box": {
             "p": 85,
-            "v": 28.2
+            "v": 28.3
           },
           "xg_fast_break": {
             "p": 10,
@@ -1458,8 +1458,8 @@
             "v": 11.3
           },
           "progressive_carries": {
-            "p": 70,
-            "v": 13.3
+            "p": 60,
+            "v": 13.8
           },
           "progressive_passes": {
             "p": 50,
@@ -1491,7 +1491,7 @@
           },
           "touches_in_box": {
             "p": 45,
-            "v": 23.0
+            "v": 23.2
           },
           "xg_fast_break": {
             "p": 25,
@@ -1528,7 +1528,7 @@
           },
           "field_tilt": {
             "p": 50,
-            "v": 47.0
+            "v": 46.9
           },
           "fouls_committed": {
             "p": 10,
@@ -1560,7 +1560,7 @@
           },
           "progressive_carries": {
             "p": 25,
-            "v": 10.7
+            "v": 11.4
           },
           "progressive_passes": {
             "p": 55,
@@ -1629,7 +1629,7 @@
           },
           "field_tilt": {
             "p": 75,
-            "v": 52.7
+            "v": 52.6
           },
           "fouls_committed": {
             "p": 15,
@@ -1660,8 +1660,8 @@
             "v": 12.3
           },
           "progressive_carries": {
-            "p": 40,
-            "v": 11.7
+            "p": 35,
+            "v": 12.4
           },
           "progressive_passes": {
             "p": 60,
@@ -1692,7 +1692,7 @@
             "v": 17.9
           },
           "touches_in_box": {
-            "p": 55,
+            "p": 50,
             "v": 23.6
           },
           "xg_fast_break": {
@@ -1761,8 +1761,8 @@
             "v": 15.6
           },
           "progressive_carries": {
-            "p": 55,
-            "v": 12.9
+            "p": 65,
+            "v": 14.0
           },
           "progressive_passes": {
             "p": 70,
@@ -1793,8 +1793,8 @@
             "v": 18.8
           },
           "touches_in_box": {
-            "p": 65,
-            "v": 25.2
+            "p": 60,
+            "v": 25.4
           },
           "xg_fast_break": {
             "p": 60,
@@ -1862,8 +1862,8 @@
             "v": 15.8
           },
           "progressive_carries": {
-            "p": 20,
-            "v": 10.1
+            "p": 15,
+            "v": 10.6
           },
           "progressive_passes": {
             "p": 80,
@@ -1894,8 +1894,8 @@
             "v": 16.2
           },
           "touches_in_box": {
-            "p": 20,
-            "v": 21.2
+            "p": 15,
+            "v": 21.3
           },
           "xg_fast_break": {
             "p": 60,
@@ -1932,7 +1932,7 @@
           },
           "field_tilt": {
             "p": 10,
-            "v": 40.8
+            "v": 40.7
           },
           "fouls_committed": {
             "p": 60,
@@ -1964,7 +1964,7 @@
           },
           "progressive_carries": {
             "p": 10,
-            "v": 9.4
+            "v": 9.8
           },
           "progressive_passes": {
             "p": 65,
@@ -2033,7 +2033,7 @@
           },
           "field_tilt": {
             "p": 60,
-            "v": 49.6
+            "v": 49.7
           },
           "fouls_committed": {
             "p": 85,
@@ -2065,7 +2065,7 @@
           },
           "progressive_carries": {
             "p": 90,
-            "v": 19.0
+            "v": 20.0
           },
           "progressive_passes": {
             "p": 5,
@@ -2097,7 +2097,7 @@
           },
           "touches_in_box": {
             "p": 70,
-            "v": 25.5
+            "v": 25.7
           },
           "xg_fast_break": {
             "p": 60,
@@ -2165,8 +2165,8 @@
             "v": 15.3
           },
           "progressive_carries": {
-            "p": 40,
-            "v": 11.7
+            "p": 50,
+            "v": 12.8
           },
           "progressive_passes": {
             "p": 35,
@@ -2198,7 +2198,7 @@
           },
           "touches_in_box": {
             "p": 10,
-            "v": 18.3
+            "v": 18.4
           },
           "xg_fast_break": {
             "p": 15,
@@ -2487,7 +2487,7 @@
       "team_id": 1,
       "won": 11,
       "xg_against": 45.7,
-      "xg_difference": 2.8,
+      "xg_difference": 2.9,
       "xg_for": 48.6
     },
     {
