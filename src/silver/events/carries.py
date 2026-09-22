@@ -20,6 +20,15 @@ from typing import Any, Dict, Optional
 # The four shot outcomes the parser emits (Opta typeIds 13-16).
 SHOT_EVENTS = frozenset({"Miss", "Post", "Attempt Saved", "Goal"})
 
+# Where a ball-carrier's run can end: the next on-ball action of the same
+# team.  A take-on (any outcome) counts — the player ran with the ball up to
+# the point where the duel started.
+CARRY_DESTINATIONS = SHOT_EVENTS | frozenset({"Pass", "Take On", "Dispossessed", "Foul"})
+
+# Opponent mirror records that sit between two actions of the possessing team
+# without the ball changing hands.  Skipped when pairing consecutive events.
+TRANSPARENT_EVENTS = frozenset({"Challenge"})
+
 
 # ── Carry row factory ──────────────────────────────────────────────────────────
 
@@ -135,15 +144,32 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
     ).reset_index(drop=True)
 
     carries: list[tuple[int, dict]] = []  # (insert_before_index, row_dict)
+    n = len(df)
 
-    for i in range(len(df) - 1):
-        cur  = df.iloc[i]
-        nxt  = df.iloc[i + 1]
+    for i in range(n - 1):
+        cur = df.iloc[i]
+        cur_type = cur["event_type"]
+
+        # A Challenge is the opponent's mirror of a take-on ("failed to win the
+        # ball as the opponent dribbled past"): it is never a carry origin, and
+        # it is skipped when looking for the destination, so a carry can run
+        # Pass -> [Challenge] -> Take On or Take On -> [Challenge] -> Pass.
+        # Until 21 Sep 2026 this was handled by two special-case blocks that
+        # only fired when the Challenge was adjacent to a SUCCESSFUL take-on;
+        # every other take-on (failed, or with the Challenge not adjacent)
+        # got no carry on either side.
+        if cur_type in TRANSPARENT_EVENTS:
+            continue
+        j = i + 1
+        while j < n and df.iloc[j]["event_type"] in TRANSPARENT_EVENTS:
+            j += 1
+        if j >= n:
+            break
+        nxt = df.iloc[j]
 
         # Never synthesise a carry across a period boundary
         if cur["period"] != nxt["period"]:
             continue
-        cur_type = cur["event_type"]
         nxt_type = nxt["event_type"]
         same_team = cur["source_team_id"] == nxt["source_team_id"]
         mismatch  = _coords_mismatch(cur, nxt)
@@ -151,7 +177,6 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
         match_id = int(cur["match_id"])
 
         def make_carry(e1, e2, sx, sy, ex, ey, pid, pname, jnum, tid, period):
-            ti = e1["source_team_id"]
             return _carry_row(
                 e1, e2, sx, sy, ex, ey, pid, pname, jnum, tid, period,
                 match_id,
@@ -168,7 +193,15 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
         # so no carry was ever synthesised after a recovery or a keeper pick-up,
         # nor before a shot.
         if nxt_type in ("Ball touch", "Ball recovery", "Aerial", "Corner Awarded"):
-            continue
+            # One exception: a dribbler who knocks the ball past the defender
+            # and runs onto it is logged as Take On -> Ball recovery by the
+            # same player.  That is a run, and was already a carry before the
+            # 21 Sep 2026 rewrite (17 of 27 carries the rewrite would have
+            # dropped in a 12-match sample).
+            if not (cur_type == "Take On" and cur.get("outcome") == "success"
+                    and nxt_type == "Ball recovery"
+                    and cur["source_player_id"] == nxt["source_player_id"]):
+                continue
         if cur_type in ("Foul", "Card"):
             continue
         if cur_type == "Miss" and nxt_type == "Ball touch":
@@ -180,76 +213,34 @@ def calculate_carries(df: pd.DataFrame) -> pd.DataFrame:
         if cur_type == "Tackle":
             if nxt_type == "Ball recovery" and cur["source_player_id"] != nxt["source_player_id"]:
                 continue
-            if nxt_type == "Pass" and cur["source_player_id"] == nxt["source_player_id"] and same_team and mismatch:
+            if nxt_type in ("Pass", "Take On") and cur["source_player_id"] == nxt["source_player_id"] and same_team and mismatch:
                 create_carry = True
 
         # ── Pass ──────────────────────────────────────────────────────────────
         if cur_type == "Pass" and same_team and mismatch and cur.get("outcome") == "success":
-            if nxt_type == "Pass" or nxt_type in SHOT_EVENTS or nxt_type in ("Dispossessed", "Foul"):
+            if nxt_type in CARRY_DESTINATIONS:
                 create_carry = True
 
         # ── Ball recoveries / keeper / interceptions ──────────────────────────
         if cur_type in ("Ball recovery", "Keeper pick-up", "Interception", "Claim"):
-            if same_team and mismatch and (nxt_type == "Pass" or nxt_type in SHOT_EVENTS):
+            if same_team and mismatch and (nxt_type in ("Pass", "Take On") or nxt_type in SHOT_EVENTS):
                 create_carry = True
 
         # ── Clearance ─────────────────────────────────────────────────────────
-        if cur_type == "Clearance" and nxt_type == "Pass" and same_team and mismatch:
+        if cur_type == "Clearance" and nxt_type in ("Pass", "Take On") and same_team and mismatch:
             create_carry = True
 
-        # ── Challenge unsuccessful → TakeOn successful (opposing teams) ───────
-        if cur_type == "Challenge" and cur.get("outcome") == "failure":
-            if nxt_type == "Take On" and nxt.get("outcome") == "success" and not same_team:
-                if i > 0:
-                    prev = df.iloc[i - 1]
-                    if (prev["source_team_id"] == nxt["source_team_id"]
-                            and _all_coords_valid(prev["end_x"], prev["end_y"], nxt["x"], nxt["y"])
-                            and _coords_mismatch(prev, nxt)):
-                        carries.append((i + 1, make_carry(
-                            prev, nxt, prev["end_x"], prev["end_y"], nxt["x"], nxt["y"],
-                            nxt["source_player_id"], nxt.get("player_name"),
-                            nxt.get("jersey_number"), nxt["source_team_id"], nxt["period"],
-                        )))
-                if i + 2 < len(df):
-                    nxt2 = df.iloc[i + 2]
-                    if (nxt2["source_team_id"] == nxt["source_team_id"]
-                            and _all_coords_valid(nxt["end_x"], nxt["end_y"], nxt2["x"], nxt2["y"])
-                            and _coords_mismatch(nxt, nxt2)):
-                        carries.append((i + 2, make_carry(
-                            nxt, nxt2, nxt["end_x"], nxt["end_y"], nxt2["x"], nxt2["y"],
-                            nxt["source_player_id"], nxt.get("player_name"),
-                            nxt.get("jersey_number"), nxt["source_team_id"], nxt["period"],
-                        )))
-                continue
-
-        # ── TakeOn successful → Challenge unsuccessful (opposing teams) ───────
-        if cur_type == "Take On" and cur.get("outcome") == "success":
-            if nxt_type == "Challenge" and nxt.get("outcome") == "failure" and not same_team:
-                if i > 0:
-                    prev = df.iloc[i - 1]
-                    if (prev["source_team_id"] == cur["source_team_id"]
-                            and _all_coords_valid(prev["end_x"], prev["end_y"], cur["x"], cur["y"])
-                            and _coords_mismatch(prev, cur)):
-                        carries.append((i, make_carry(
-                            prev, cur, prev["end_x"], prev["end_y"], cur["x"], cur["y"],
-                            cur["source_player_id"], cur.get("player_name"),
-                            cur.get("jersey_number"), cur["source_team_id"], cur["period"],
-                        )))
-                if i + 2 < len(df):
-                    nxt2 = df.iloc[i + 2]
-                    if (nxt2["source_team_id"] == cur["source_team_id"]
-                            and _all_coords_valid(cur["end_x"], cur["end_y"], nxt2["x"], nxt2["y"])
-                            and _coords_mismatch(cur, nxt2)):
-                        carries.append((i + 2, make_carry(
-                            cur, nxt2, cur["end_x"], cur["end_y"], nxt2["x"], nxt2["y"],
-                            cur["source_player_id"], cur.get("player_name"),
-                            cur.get("jersey_number"), cur["source_team_id"], cur["period"],
-                        )))
-                continue
+        # ── Take On ───────────────────────────────────────────────────────────
+        # The dribbler keeps the ball after beating the opponent, so a
+        # successful take-on is a carry origin like a completed pass.  A failed
+        # one is not: the ball is lost (or at best contested) at its location.
+        if cur_type == "Take On" and cur.get("outcome") == "success" and same_team and mismatch:
+            if nxt_type in CARRY_DESTINATIONS or nxt_type == "Ball recovery":
+                create_carry = True
 
         # ── Standard carry ────────────────────────────────────────────────────
         if create_carry and _all_coords_valid(cur["end_x"], cur["end_y"], nxt["x"], nxt["y"]):
-            carries.append((i + 1, make_carry(
+            carries.append((j, make_carry(
                 cur, nxt, cur["end_x"], cur["end_y"], nxt["x"], nxt["y"],
                 nxt["source_player_id"], nxt.get("player_name"),
                 nxt.get("jersey_number"), nxt["source_team_id"], nxt["period"],
