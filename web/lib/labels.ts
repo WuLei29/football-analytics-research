@@ -223,13 +223,17 @@ export function shotOutcome(key: string): string {
 
 /**
  * Type of a defensive action, from `defence.actions[].type` (WEB_DATA §7).
- * The keys are the six Opta event types the export selects.
+ * The keys are the seven Opta event types the export selects.
+ *
+ * `challenge` is Opta's "beaten while trying to tackle" -- the defender's
+ * side of a take-on. It reads as "Regate sufrido" rather than "Duelo", which
+ * would now collide with `viz.legend.duelLost` and with the aerial chip.
  */
 const defensiveTypeLabels: Record<string, string> = {
   tackle: "Entrada",
   interception: "Intercepción",
   ball_recovery: "Recuperación",
-  challenge: "Duelo",
+  challenge: "Regate sufrido",
   aerial: "Duelo aéreo",
   blocked_pass: "Pase bloqueado",
   block: "Bloqueo",
@@ -407,6 +411,11 @@ export const viz = {
     selectedChain: "Cadena seleccionada en azul · punto = inicio · anillo = tiro",
     shotArea: "Área ∝ xG · pasa el cursor por un tiro",
     defenceHover: "Pasa el cursor por una acción para ver el minuto y el tipo",
+  defenceFilter: "FILTRAR",
+  defenceFilterAll: "Todas",
+  /** Chip caption: the type name with how many of them the match holds. */
+  defenceChip: (type: string, n: number) => `${type} (${n})`,
+  defenceEmpty: "Ningún tipo seleccionado.",
 
     /* The v1 sequence legend, in its original four terms plus the three marks
        the detailed view also draws (espanyol-viz-design §7 and §8). */
@@ -505,7 +514,7 @@ export const demo = {
     progression: "Progresión",
     progressionDek: "Pases progresivos y conducciones; discontinuo = fallado.",
     defence: "Acciones defensivas",
-    defenceDek: "Las 34 más altas, más la línea defensiva media.",
+    defenceDek: "Todas las acciones del equipo, más la línea defensiva media.",
     sequences: "Secuencias",
     sequencesDek: "Cadenas de posesión. Haz clic para seleccionar una.",
     sequenceDetail: "Jugadas del partido",
@@ -649,7 +658,8 @@ export const match = {
     `Los ${n} pases y conducciones progresivas de más xT`,
 
   defenceHeading: "Acciones defensivas",
-  defenceCaption: (n: number) => `Las ${n} más adelantadas, y la línea media`,
+  defenceCaption: (n: number) =>
+    `Las ${n} acciones defensivas del equipo, y la línea media`,
   defenceLine: (metres: string) => `LÍNEA DEF. ${metres} M`,
 
   /** The block title follows the metric the list is sorted by. */
