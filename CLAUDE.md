@@ -320,11 +320,17 @@ fixed and rebuilt over the 458 matches (events → sequences → gold → export
   action ships a `type` key that the sequence view names on hover.
 - **`sequence_id`s renumber on every full rebuild** (per-team counter). Quote
   kick-off time, not the id, when reporting a chain.
-- Pre-rebuild snapshot: `silver.events_backup_20260919` (970,623 rows) — drop
+- Pre-rebuild snapshot: `silver.events_backup_20260921` (941,875 rows) — drop
   it once satisfied. The events pipeline has **no delete step**: to re-run it
   over loaded matches, `TRUNCATE silver.events, gold.sequences,
   gold.sequence_players, gold.sequence_phase_segments` first (not `DELETE` —
   see §6.6 on why that ran for 15 minutes).
+- **After a full rebuild, `VACUUM (FULL, ANALYZE) silver.events`.** The reload
+  UPDATEs every row several times (SPADL, VAEP, xG, foot preference) and the
+  sequence pass once more, which leaves the heap ~3× its real size (2,525 MB
+  vs 935 MB on 21 Sep 2026) and turned gold's `sequences` step from ~3 minutes
+  into 32. The vacuum takes ~90 s, needs an exclusive lock and roughly the
+  table's size in free disk.
 
 ### Sequence review applied (16 Sep 2026)
 
