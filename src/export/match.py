@@ -30,7 +30,6 @@ from typing import Any
 
 from . import db
 from .config import (
-    DEFENSIVE_ACTIONS,
     MATCH_PLAYER_BOXES,
     MATCH_PLAYER_ROWS,
     MATCH_SEQUENCES,
@@ -829,7 +828,7 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
             db.fetch_progression(conn, match_id, team_id, PROGRESSION_ARROWS)
         ),
         "defence": _defence(
-            db.fetch_defensive_actions(conn, match_id, team_id, DEFENSIVE_ACTIONS),
+            db.fetch_defensive_actions(conn, match_id, team_id),
             stats[team_id]["defensive_line_height"],
         ),
         "sequences": _sequences(sequence_rows, sequence_events),

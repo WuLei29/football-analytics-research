@@ -187,7 +187,8 @@ LEADER_ROWS = 6
 
 NETWORK_MIN_COMBINATIONS = 4
 PROGRESSION_ARROWS = 30
-DEFENSIVE_ACTIONS = 34
+# No cap on defensive actions: the block map exports all ~128 of them, so the
+# dashed average line and the marks describe the same set (db.py DEFENCE_SQL).
 MATCH_SEQUENCES = 12
 SEQUENCE_MAX_WAYPOINTS = 6
 SEQUENCE_MIN_EVENTS = 3     # sequences.json filter (GOLD_LAYER.md §4.1.9)

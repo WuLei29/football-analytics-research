@@ -603,8 +603,22 @@ def fetch_progression(conn, match_id: int, team_id: int, limit: int
                  {"match_id": match_id, "team_id": team_id, "limit": limit})
 
 
-# The highest defensive actions, which is what the block is about: the shape of
-# the press, read against the average line.
+# Every defensive action of the team, which is what the block is about: the
+# shape of the whole block, read against the average line.
+#
+# This used to be `ORDER BY e.x DESC LIMIT 34`. That drew a press, not a block:
+# a team makes ~105 of these a match (median over the 458 loaded), so a third
+# of them reached the page -- and not a random third, the third furthest up the
+# pitch. `defensive_line_height` is averaged over all of them in
+# `gold.team_match_stats`, so the dashed marker sat below the visible cloud and
+# read as a bug. Chronological order now, so overlapping marks stack by time
+# rather than by depth, with `json_index` as the tiebreaker the rest of the
+# pipeline uses.
+#
+# `Aerial` joined the set on 22 Sep 2026. Opta writes a mirror record for
+# both contesting players, so a team's own rows are its aerials won AND lost
+# and the 50/50 split is real, not a sampling artefact -- it is the one type
+# here that is a genuine two-sided duel. Median per team-match 102 -> 128.
 DEFENCE_SQL = """
 SELECT e.event_type, e.x, e.y, e.outcome, e.minute,
        COALESCE(p.match_name, e.player_name) AS player_name
@@ -613,17 +627,15 @@ LEFT JOIN silver.players p ON p.player_id = e.player_id
 WHERE e.match_id = %(match_id)s
   AND e.team_id = %(team_id)s
   AND e.event_type IN ('Tackle', 'Interception', 'Ball recovery',
-                       'Challenge', 'Blocked Pass', 'Clearance')
+                       'Challenge', 'Blocked Pass', 'Clearance', 'Aerial')
   AND e.x IS NOT NULL
-ORDER BY e.x DESC
-LIMIT %(limit)s
+ORDER BY e.minute, e.second, e.json_index
 """
 
 
-def fetch_defensive_actions(conn, match_id: int, team_id: int, limit: int
+def fetch_defensive_actions(conn, match_id: int, team_id: int
                             ) -> list[dict[str, Any]]:
-    return _rows(conn, DEFENCE_SQL,
-                 {"match_id": match_id, "team_id": team_id, "limit": limit})
+    return _rows(conn, DEFENCE_SQL, {"match_id": match_id, "team_id": team_id})
 
 
 SEQUENCES_SQL = """

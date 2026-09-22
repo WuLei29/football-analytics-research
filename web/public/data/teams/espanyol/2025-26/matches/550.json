@@ -2,12 +2,444 @@
   "defence": {
     "actions": [
       {
+        "minute": 1,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 62.9,
+        "y": 7.7
+      },
+      {
+        "minute": 2,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 39.7,
+        "y": 18.8
+      },
+      {
+        "minute": 2,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "blocked_pass",
+        "x": 58.6,
+        "y": 37.5
+      },
+      {
+        "minute": 3,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "clearance",
+        "x": 13.3,
+        "y": 36.9
+      },
+      {
+        "minute": 3,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "ball_recovery",
+        "x": 26.4,
+        "y": 44.8
+      },
+      {
+        "minute": 4,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "interception",
+        "x": 46.0,
+        "y": 33.3
+      },
+      {
+        "minute": 4,
+        "outcome": "won",
+        "player": "O. El Hilali",
+        "type": "ball_recovery",
+        "x": 41.0,
+        "y": 17.7
+      },
+      {
+        "minute": 4,
+        "outcome": "lost",
+        "player": "Edu Expósito",
+        "type": "aerial",
+        "x": 61.6,
+        "y": 21.1
+      },
+      {
+        "minute": 6,
+        "outcome": "lost",
+        "player": "T. Dolan",
+        "type": "aerial",
+        "x": 67.2,
+        "y": 14.8
+      },
+      {
+        "minute": 8,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "aerial",
+        "x": 95.0,
+        "y": 31.1
+      },
+      {
+        "minute": 9,
+        "outcome": "won",
+        "player": "O. El Hilali",
+        "type": "clearance",
+        "x": 16.7,
+        "y": 34.6
+      },
+      {
+        "minute": 9,
+        "outcome": "lost",
+        "player": "Carlos Romero",
+        "type": "aerial",
+        "x": 22.1,
+        "y": 51.2
+      },
+      {
+        "minute": 9,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "clearance",
+        "x": 15.9,
+        "y": 35.8
+      },
+      {
+        "minute": 10,
+        "outcome": "won",
+        "player": "Roberto Fernández",
+        "type": "ball_recovery",
+        "x": 44.2,
+        "y": 44.9
+      },
+      {
+        "minute": 10,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "interception",
+        "x": 23.6,
+        "y": 41.2
+      },
+      {
+        "minute": 10,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "ball_recovery",
+        "x": 28.4,
+        "y": 64.3
+      },
+      {
+        "minute": 10,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "ball_recovery",
+        "x": 17.0,
+        "y": 30.4
+      },
+      {
+        "minute": 12,
+        "outcome": "lost",
+        "player": "Pere Milla",
+        "type": "challenge",
+        "x": 4.6,
+        "y": 56.0
+      },
+      {
+        "minute": 13,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "ball_recovery",
+        "x": 25.1,
+        "y": 43.8
+      },
+      {
+        "minute": 14,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "clearance",
+        "x": 16.0,
+        "y": 31.8
+      },
+      {
+        "minute": 14,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 26.8,
+        "y": 23.5
+      },
+      {
+        "minute": 15,
+        "outcome": "lost",
+        "player": "T. Dolan",
+        "type": "challenge",
+        "x": 43.0,
+        "y": 3.9
+      },
+      {
+        "minute": 15,
+        "outcome": "won",
+        "player": "T. Dolan",
+        "type": "tackle",
+        "x": 34.2,
+        "y": 2.6
+      },
+      {
+        "minute": 15,
+        "outcome": "lost",
+        "player": "T. Dolan",
+        "type": "challenge",
+        "x": 44.2,
+        "y": 4.3
+      },
+      {
+        "minute": 16,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "clearance",
+        "x": 14.3,
+        "y": 32.2
+      },
+      {
+        "minute": 17,
+        "outcome": "lost",
+        "player": "Pere Milla",
+        "type": "challenge",
+        "x": 71.5,
+        "y": 58.8
+      },
+      {
+        "minute": 17,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "clearance",
+        "x": 7.6,
+        "y": 31.8
+      },
+      {
+        "minute": 17,
+        "outcome": "won",
+        "player": "Edu Expósito",
+        "type": "clearance",
+        "x": 25.0,
+        "y": 18.4
+      },
+      {
+        "minute": 18,
+        "outcome": "lost",
+        "player": "Pere Milla",
+        "type": "challenge",
+        "x": 30.0,
+        "y": 46.4
+      },
+      {
+        "minute": 21,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "blocked_pass",
+        "x": 9.6,
+        "y": 48.3
+      },
+      {
+        "minute": 22,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 38.4,
+        "y": 26.2
+      },
+      {
+        "minute": 23,
+        "outcome": "won",
+        "player": "O. El Hilali",
+        "type": "ball_recovery",
+        "x": 34.2,
+        "y": 9.4
+      },
+      {
+        "minute": 24,
+        "outcome": "lost",
+        "player": "Carlos Romero",
+        "type": "tackle",
+        "x": 31.5,
+        "y": 65.3
+      },
+      {
+        "minute": 24,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "interception",
+        "x": 13.8,
+        "y": 43.7
+      },
+      {
+        "minute": 24,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "ball_recovery",
+        "x": 15.6,
+        "y": 35.4
+      },
+      {
+        "minute": 24,
+        "outcome": "lost",
+        "player": "Roberto Fernández",
+        "type": "aerial",
+        "x": 42.6,
+        "y": 38.4
+      },
+      {
+        "minute": 25,
+        "outcome": "lost",
+        "player": "Carlos Romero",
+        "type": "tackle",
+        "x": 63.2,
+        "y": 65.1
+      },
+      {
+        "minute": 27,
+        "outcome": "lost",
+        "player": "Pere Milla",
+        "type": "challenge",
+        "x": 12.2,
+        "y": 60.0
+      },
+      {
+        "minute": 29,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 13.2,
+        "y": 40.9
+      },
+      {
+        "minute": 31,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "ball_recovery",
+        "x": 47.5,
+        "y": 62.8
+      },
+      {
+        "minute": 31,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 48.0,
+        "y": 43.7
+      },
+      {
+        "minute": 32,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "ball_recovery",
+        "x": 32.3,
+        "y": 52.2
+      },
+      {
+        "minute": 33,
+        "outcome": "lost",
+        "player": "O. El Hilali",
+        "type": "tackle",
+        "x": 15.6,
+        "y": 12.0
+      },
+      {
+        "minute": 35,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "interception",
+        "x": 28.4,
+        "y": 46.1
+      },
+      {
+        "minute": 36,
+        "outcome": "lost",
+        "player": "Roberto Fernández",
+        "type": "aerial",
+        "x": 68.4,
+        "y": 29.8
+      },
+      {
+        "minute": 38,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "interception",
+        "x": 46.5,
+        "y": 61.0
+      },
+      {
+        "minute": 38,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "interception",
+        "x": 27.6,
+        "y": 60.2
+      },
+      {
+        "minute": 38,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "ball_recovery",
+        "x": 4.3,
+        "y": 56.6
+      },
+      {
+        "minute": 41,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "aerial",
+        "x": 95.1,
+        "y": 27.1
+      },
+      {
+        "minute": 45,
+        "outcome": "won",
+        "player": "Pere Milla",
+        "type": "aerial",
+        "x": 58.9,
+        "y": 47.1
+      },
+      {
         "minute": 46,
         "outcome": "won",
         "player": "T. Dolan",
         "type": "interception",
         "x": 87.6,
         "y": 3.9
+      },
+      {
+        "minute": 47,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "ball_recovery",
+        "x": 16.5,
+        "y": 51.3
+      },
+      {
+        "minute": 47,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "interception",
+        "x": 6.9,
+        "y": 48.8
+      },
+      {
+        "minute": 47,
+        "outcome": "lost",
+        "player": "Urko González de Zárate",
+        "type": "challenge",
+        "x": 8.4,
+        "y": 44.4
+      },
+      {
+        "minute": 47,
+        "outcome": "won",
+        "player": "O. El Hilali",
+        "type": "ball_recovery",
+        "x": 36.9,
+        "y": 2.0
       },
       {
         "minute": 48,
@@ -26,212 +458,12 @@
         "y": 3.1
       },
       {
-        "minute": 93,
-        "outcome": "won",
-        "player": "Urko González de Zárate",
-        "type": "tackle",
-        "x": 72.9,
-        "y": 7.3
-      },
-      {
-        "minute": 17,
-        "outcome": "lost",
-        "player": "Pere Milla",
-        "type": "challenge",
-        "x": 71.5,
-        "y": 58.8
-      },
-      {
-        "minute": 25,
-        "outcome": "lost",
-        "player": "Carlos Romero",
-        "type": "tackle",
-        "x": 63.2,
-        "y": 65.1
-      },
-      {
-        "minute": 1,
-        "outcome": "won",
-        "player": "Urko González de Zárate",
-        "type": "ball_recovery",
-        "x": 62.9,
-        "y": 7.7
-      },
-      {
-        "minute": 56,
-        "outcome": "won",
-        "player": "O. El Hilali",
-        "type": "interception",
-        "x": 61.2,
-        "y": 32.8
-      },
-      {
-        "minute": 2,
-        "outcome": "won",
-        "player": "Pol Lozano",
-        "type": "blocked_pass",
-        "x": 58.6,
-        "y": 37.5
-      },
-      {
         "minute": 48,
         "outcome": "won",
-        "player": "Carlos Romero",
-        "type": "tackle",
-        "x": 52.8,
-        "y": 61.1
-      },
-      {
-        "minute": 67,
-        "outcome": "won",
-        "player": "T. Dolan",
-        "type": "tackle",
-        "x": 52.3,
-        "y": 59.1
-      },
-      {
-        "minute": 55,
-        "outcome": "won",
-        "player": "Pere Milla",
-        "type": "ball_recovery",
-        "x": 48.8,
-        "y": 38.6
-      },
-      {
-        "minute": 31,
-        "outcome": "won",
-        "player": "Urko González de Zárate",
-        "type": "ball_recovery",
-        "x": 48.0,
-        "y": 43.7
-      },
-      {
-        "minute": 31,
-        "outcome": "won",
-        "player": "Carlos Romero",
-        "type": "ball_recovery",
-        "x": 47.5,
-        "y": 62.8
-      },
-      {
-        "minute": 38,
-        "outcome": "won",
-        "player": "Carlos Romero",
+        "player": "O. El Hilali",
         "type": "interception",
-        "x": 46.5,
-        "y": 61.0
-      },
-      {
-        "minute": 4,
-        "outcome": "won",
-        "player": "Fernando Calero",
-        "type": "interception",
-        "x": 46.0,
-        "y": 33.3
-      },
-      {
-        "minute": 15,
-        "outcome": "lost",
-        "player": "T. Dolan",
-        "type": "challenge",
-        "x": 44.2,
-        "y": 4.3
-      },
-      {
-        "minute": 10,
-        "outcome": "won",
-        "player": "Roberto Fernández",
-        "type": "ball_recovery",
-        "x": 44.2,
-        "y": 44.9
-      },
-      {
-        "minute": 15,
-        "outcome": "lost",
-        "player": "T. Dolan",
-        "type": "challenge",
-        "x": 43.0,
-        "y": 3.9
-      },
-      {
-        "minute": 76,
-        "outcome": "won",
-        "player": "Jofre Carreras",
-        "type": "ball_recovery",
-        "x": 42.4,
-        "y": 64.2
-      },
-      {
-        "minute": 4,
-        "outcome": "won",
-        "player": "O. El Hilali",
-        "type": "ball_recovery",
-        "x": 41.0,
-        "y": 17.7
-      },
-      {
-        "minute": 2,
-        "outcome": "won",
-        "player": "Urko González de Zárate",
-        "type": "ball_recovery",
-        "x": 39.7,
-        "y": 18.8
-      },
-      {
-        "minute": 22,
-        "outcome": "won",
-        "player": "Urko González de Zárate",
-        "type": "ball_recovery",
-        "x": 38.4,
-        "y": 26.2
-      },
-      {
-        "minute": 47,
-        "outcome": "won",
-        "player": "O. El Hilali",
-        "type": "ball_recovery",
-        "x": 36.9,
-        "y": 2.0
-      },
-      {
-        "minute": 85,
-        "outcome": "lost",
-        "player": "L. Cabrera",
-        "type": "challenge",
-        "x": 36.2,
-        "y": 38.6
-      },
-      {
-        "minute": 55,
-        "outcome": "won",
-        "player": "Urko González de Zárate",
-        "type": "ball_recovery",
-        "x": 34.5,
-        "y": 21.1
-      },
-      {
-        "minute": 15,
-        "outcome": "won",
-        "player": "T. Dolan",
-        "type": "tackle",
-        "x": 34.2,
-        "y": 2.6
-      },
-      {
-        "minute": 23,
-        "outcome": "won",
-        "player": "O. El Hilali",
-        "type": "ball_recovery",
-        "x": 34.2,
-        "y": 9.4
-      },
-      {
-        "minute": 32,
-        "outcome": "won",
-        "player": "Carlos Romero",
-        "type": "ball_recovery",
-        "x": 32.3,
-        "y": 52.2
+        "x": 29.5,
+        "y": 15.6
       },
       {
         "minute": 48,
@@ -242,12 +474,20 @@
         "y": 21.2
       },
       {
-        "minute": 24,
-        "outcome": "lost",
+        "minute": 48,
+        "outcome": "won",
         "player": "Carlos Romero",
         "type": "tackle",
-        "x": 31.5,
-        "y": 65.3
+        "x": 52.8,
+        "y": 61.1
+      },
+      {
+        "minute": 49,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "tackle",
+        "x": 4.4,
+        "y": 57.2
       },
       {
         "minute": 49,
@@ -258,12 +498,100 @@
         "y": 57.6
       },
       {
-        "minute": 82,
-        "outcome": "lost",
-        "player": "Ramón Terrats",
-        "type": "challenge",
-        "x": 30.3,
-        "y": 62.8
+        "minute": 49,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "ball_recovery",
+        "x": 10.2,
+        "y": 49.6
+      },
+      {
+        "minute": 50,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "tackle",
+        "x": 12.0,
+        "y": 63.7
+      },
+      {
+        "minute": 50,
+        "outcome": "won",
+        "player": "Pere Milla",
+        "type": "ball_recovery",
+        "x": 6.1,
+        "y": 63.0
+      },
+      {
+        "minute": 51,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 12.6,
+        "y": 10.2
+      },
+      {
+        "minute": 51,
+        "outcome": "won",
+        "player": "Edu Expósito",
+        "type": "aerial",
+        "x": 32.5,
+        "y": 5.0
+      },
+      {
+        "minute": 52,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "clearance",
+        "x": 9.7,
+        "y": 37.2
+      },
+      {
+        "minute": 53,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "clearance",
+        "x": 1.1,
+        "y": 40.2
+      },
+      {
+        "minute": 54,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "tackle",
+        "x": 12.8,
+        "y": 58.9
+      },
+      {
+        "minute": 54,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "ball_recovery",
+        "x": 8.1,
+        "y": 56.4
+      },
+      {
+        "minute": 55,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "ball_recovery",
+        "x": 34.5,
+        "y": 21.1
+      },
+      {
+        "minute": 55,
+        "outcome": "won",
+        "player": "Pere Milla",
+        "type": "ball_recovery",
+        "x": 48.8,
+        "y": 38.6
+      },
+      {
+        "minute": 56,
+        "outcome": "won",
+        "player": "O. El Hilali",
+        "type": "interception",
+        "x": 61.2,
+        "y": 32.8
       },
       {
         "minute": 56,
@@ -272,11 +600,283 @@
         "type": "clearance",
         "x": 30.2,
         "y": 12.2
+      },
+      {
+        "minute": 57,
+        "outcome": "lost",
+        "player": "Roberto Fernández",
+        "type": "aerial",
+        "x": 48.4,
+        "y": 3.3
+      },
+      {
+        "minute": 59,
+        "outcome": "won",
+        "player": "Carlos Romero",
+        "type": "tackle",
+        "x": 20.6,
+        "y": 60.2
+      },
+      {
+        "minute": 59,
+        "outcome": "lost",
+        "player": "Carlos Romero",
+        "type": "tackle",
+        "x": 11.9,
+        "y": 60.2
+      },
+      {
+        "minute": 60,
+        "outcome": "won",
+        "player": "M. Dmitrović",
+        "type": "aerial",
+        "x": 3.7,
+        "y": 36.0
+      },
+      {
+        "minute": 60,
+        "outcome": "won",
+        "player": "T. Dolan",
+        "type": "clearance",
+        "x": 25.0,
+        "y": 50.0
+      },
+      {
+        "minute": 60,
+        "outcome": "lost",
+        "player": "Pere Milla",
+        "type": "challenge",
+        "x": 28.8,
+        "y": 49.9
+      },
+      {
+        "minute": 62,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "ball_recovery",
+        "x": 28.2,
+        "y": 20.3
+      },
+      {
+        "minute": 67,
+        "outcome": "won",
+        "player": "Roberto Fernández",
+        "type": "aerial",
+        "x": 41.6,
+        "y": 65.1
+      },
+      {
+        "minute": 67,
+        "outcome": "won",
+        "player": "T. Dolan",
+        "type": "tackle",
+        "x": 52.3,
+        "y": 59.1
+      },
+      {
+        "minute": 68,
+        "outcome": "lost",
+        "player": "Roberto Fernández",
+        "type": "aerial",
+        "x": 95.5,
+        "y": 27.7
+      },
+      {
+        "minute": 69,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "tackle",
+        "x": 3.8,
+        "y": 18.7
+      },
+      {
+        "minute": 70,
+        "outcome": "won",
+        "player": "Roberto Fernández",
+        "type": "clearance",
+        "x": 4.5,
+        "y": 27.0
+      },
+      {
+        "minute": 70,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "clearance",
+        "x": 4.0,
+        "y": 24.4
+      },
+      {
+        "minute": 70,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "tackle",
+        "x": 22.5,
+        "y": 22.9
+      },
+      {
+        "minute": 71,
+        "outcome": "won",
+        "player": "Pol Lozano",
+        "type": "ball_recovery",
+        "x": 23.6,
+        "y": 27.2
+      },
+      {
+        "minute": 73,
+        "outcome": "won",
+        "player": "O. El Hilali",
+        "type": "tackle",
+        "x": 21.4,
+        "y": 32.4
+      },
+      {
+        "minute": 73,
+        "outcome": "won",
+        "player": "Jofre Carreras",
+        "type": "ball_recovery",
+        "x": 29.6,
+        "y": 25.4
+      },
+      {
+        "minute": 76,
+        "outcome": "won",
+        "player": "Jofre Carreras",
+        "type": "ball_recovery",
+        "x": 42.4,
+        "y": 64.2
+      },
+      {
+        "minute": 78,
+        "outcome": "won",
+        "player": "Kike García",
+        "type": "aerial",
+        "x": 67.2,
+        "y": 41.8
+      },
+      {
+        "minute": 78,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "clearance",
+        "x": 8.7,
+        "y": 44.1
+      },
+      {
+        "minute": 78,
+        "outcome": "won",
+        "player": "T. Dolan",
+        "type": "ball_recovery",
+        "x": 25.3,
+        "y": 43.0
+      },
+      {
+        "minute": 79,
+        "outcome": "won",
+        "player": "Pere Milla",
+        "type": "ball_recovery",
+        "x": 17.7,
+        "y": 61.9
+      },
+      {
+        "minute": 80,
+        "outcome": "lost",
+        "player": "Kike García",
+        "type": "aerial",
+        "x": 78.4,
+        "y": 26.9
+      },
+      {
+        "minute": 82,
+        "outcome": "lost",
+        "player": "Ramón Terrats",
+        "type": "challenge",
+        "x": 30.3,
+        "y": 62.8
+      },
+      {
+        "minute": 82,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "clearance",
+        "x": 13.0,
+        "y": 43.6
+      },
+      {
+        "minute": 84,
+        "outcome": "lost",
+        "player": "Pol Lozano",
+        "type": "tackle",
+        "x": 20.4,
+        "y": 36.4
+      },
+      {
+        "minute": 84,
+        "outcome": "won",
+        "player": "Fernando Calero",
+        "type": "clearance",
+        "x": 18.5,
+        "y": 35.6
+      },
+      {
+        "minute": 84,
+        "outcome": "won",
+        "player": "Jofre Carreras",
+        "type": "ball_recovery",
+        "x": 25.9,
+        "y": 37.8
+      },
+      {
+        "minute": 85,
+        "outcome": "lost",
+        "player": "L. Cabrera",
+        "type": "challenge",
+        "x": 36.2,
+        "y": 38.6
+      },
+      {
+        "minute": 88,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "clearance",
+        "x": 11.0,
+        "y": 32.8
+      },
+      {
+        "minute": 89,
+        "outcome": "lost",
+        "player": "O. El Hilali",
+        "type": "challenge",
+        "x": 20.6,
+        "y": 51.5
+      },
+      {
+        "minute": 91,
+        "outcome": "won",
+        "player": "L. Cabrera",
+        "type": "ball_recovery",
+        "x": 23.0,
+        "y": 13.3
+      },
+      {
+        "minute": 91,
+        "outcome": "lost",
+        "player": "Javi Puado",
+        "type": "aerial",
+        "x": 55.4,
+        "y": 37.4
+      },
+      {
+        "minute": 93,
+        "outcome": "won",
+        "player": "Urko González de Zárate",
+        "type": "tackle",
+        "x": 72.9,
+        "y": 7.3
       }
     ],
     "line_x": 27.7
   },
-  "generated_at": "2026-09-22T01:00:34Z",
+  "generated_at": "2026-09-22T22:43:53Z",
   "match": {
     "away": {
       "abbr": "BAR",
