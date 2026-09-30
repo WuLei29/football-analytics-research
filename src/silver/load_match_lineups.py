@@ -10,8 +10,19 @@ and populates the match_lineups table via a 5-pass ingestion strategy:
   Pass 2b  typeId 19  UPDATE minute_in   (substitute enters)
   Pass 2c  typeId 17  UPDATE minute_out  (straight red card)
   Pass 2d  typeId 17  UPDATE minute_out  (second yellow → red)
+  Pass 2e  typeId 20  UPDATE minute_out  (player retired: injured, no subs left)
+
+Passes 2a/2c/2d/2e only set an exit for a player ON THE PITCH at that moment
+(in the starting XI or already brought on, and not yet taken off). A card shown
+to an unused or already-substituted player changes nothing here; the card
+itself stays in silver.events. Fixed 29 Sep 2026 — rows loaded before that were
+repaired by sql/fixes/20260929_match_lineups_exits.sql.
 
 Idempotent: matches that already have lineup rows are silently skipped.
+--reprocess runs every match again: pass 1 inserts only the rows that are
+missing (ON CONFLICT DO NOTHING, e.g. a player who was not yet in
+silver.players on the first load), and the exit passes only touch rows with
+no exit yet, so existing rows are left exactly as they are.
 Isolated: only the matches/ sub-directory is touched; squads/ and any
           other directories are ignored.
 
@@ -258,15 +269,7 @@ def pass2a_player_off(cur, event: dict, match_id: int, cache: dict):
         log.warning("Pass2a — player not found: %s", src_pid)
         return
 
-    cur.execute(
-        """
-        UPDATE silver.match_lineups
-           SET minute_out  = %s,
-               exit_reason = 'substitution'
-         WHERE match_id = %s AND player_id = %s
-        """,
-        (event["timeMin"], match_id, player_id),
-    )
+    _set_exit(cur, event["timeMin"], "substitution", match_id, player_id)
 
 
 # ── Pass 2b — typeId 19: substitute enters ────────────────────────────────────
@@ -315,19 +318,42 @@ def pass2cd_card(cur, event: dict, match_id: int, cache: dict):
         return
 
     exit_reason = "red_card" if is_red else "second_yellow"
+    _set_exit(cur, event["timeMin"], exit_reason, match_id, player_id)
+
+
+# ── Pass 2e — typeId 20: player retired (injured, no substitutes left) ─────────
+def pass2e_player_retired(cur, event: dict, match_id: int, cache: dict):
+    src_pid = event.get("playerId")
+    if not src_pid:
+        return
+    player_id = cached_player_id(cur, src_pid, cache)
+    if player_id is None:
+        log.warning("Pass2e — player not found: %s", src_pid)
+        return
+    _set_exit(cur, event["timeMin"], "retired", match_id, player_id)
+
+
+def _set_exit(cur, minute: int, exit_reason: str, match_id: int, player_id: int):
+    """Record an exit, but only for a player currently on the pitch.
+
+    Events arrive in order, so minute_in is already set for a substitute who
+    came on earlier, and minute_out for one who already left.
+    """
     cur.execute(
         """
         UPDATE silver.match_lineups
            SET minute_out  = %s,
                exit_reason = %s
          WHERE match_id = %s AND player_id = %s
+           AND minute_out IS NULL
+           AND (starting_xi OR minute_in IS NOT NULL)
         """,
-        (event["timeMin"], exit_reason, match_id, player_id),
+        (minute, exit_reason, match_id, player_id),
     )
 
 
 # ── Per-match orchestrator ─────────────────────────────────────────────────────
-def process_match_file(conn, file_path: Path) -> str:
+def process_match_file(conn, file_path: Path, reprocess: bool = False) -> str:
     """
     Full 5-pass ingestion for one raw match file.
     Returns: 'processed' | 'skipped' | 'error'
@@ -358,7 +384,7 @@ def process_match_file(conn, file_path: Path) -> str:
             return "skipped"
 
         # ── Idempotency guard ─────────────────────────────────────────────────
-        if is_already_processed(cur, match_id):
+        if not reprocess and is_already_processed(cur, match_id):
             log.debug("Already processed — match_id=%s  source=%s", match_id, source_match_id)
             return "skipped"
 
@@ -378,7 +404,7 @@ def process_match_file(conn, file_path: Path) -> str:
         for event in lineup_events:
             total_inserted += pass1_lineup_event(cur, event, match_id, cache)
 
-        if total_inserted == 0:
+        if total_inserted == 0 and not is_already_processed(cur, match_id):
             log.warning(
                 "typeId:34 found but 0 rows inserted for match_id=%s — rolling back",
                 match_id,
@@ -395,6 +421,8 @@ def process_match_file(conn, file_path: Path) -> str:
                 pass2b_player_on(cur, event, match_id, cache)
             elif type_id == 17:
                 pass2cd_card(cur, event, match_id, cache)
+            elif type_id == 20:
+                pass2e_player_retired(cur, event, match_id, cache)
 
     conn.commit()
     log.info(
@@ -440,6 +468,12 @@ def scan_match_files(base_path: Path):
 
 # ── Entry point ────────────────────────────────────────────────────────────────
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Load silver.match_lineups (5-pass strategy)")
+    parser.add_argument("--reprocess", action="store_true",
+                        help="re-run already-loaded matches; adds missing rows only")
+    args = parser.parse_args()
+
     log.info("─── match_lineups loader starting ───────────────────────────────")
     conn = get_connection()
     log.info("Connected to database")
@@ -449,7 +483,7 @@ def main():
     try:
         for file_path in scan_match_files(BASE_DATA_PATH):
             try:
-                result = process_match_file(conn, file_path)
+                result = process_match_file(conn, file_path, reprocess=args.reprocess)
                 counts[result] += 1
             except Exception as exc:
                 conn.rollback()
