@@ -460,7 +460,8 @@ INSERT INTO gold.sequences (
     carry_1_to_1, carry_1_to_2, carry_1_to_3,
     carry_2_to_1, carry_2_to_2, carry_2_to_3,
     carry_3_to_1, carry_3_to_2, carry_3_to_3,
-    pass_channel_flow, carry_channel_flow
+    pass_channel_flow, carry_channel_flow,
+    start_goals_for, start_goals_against, start_players_for, start_players_against
 )
 SELECT
     h.sequence_id,
@@ -645,13 +646,26 @@ SELECT
     a.carry_2_to_1, a.carry_2_to_2, a.carry_2_to_3,
     a.carry_3_to_1, a.carry_3_to_2, a.carry_3_to_3,
 
-    pf.flow, cf.flow
+    pf.flow, cf.flow,
+
+    -- ── game state at the first event, possessing team's side (§4.8) ───────
+    CASE WHEN h.possessing_team_id = h.home_team_id
+         THEN se.home_goals_before   ELSE se.away_goals_before   END,
+    CASE WHEN h.possessing_team_id = h.home_team_id
+         THEN se.away_goals_before   ELSE se.home_goals_before   END,
+    CASE WHEN h.possessing_team_id = h.home_team_id
+         THEN se.home_players_before ELSE se.away_players_before END,
+    CASE WHEN h.possessing_team_id = h.home_team_id
+         THEN se.away_players_before ELSE se.home_players_before END
 FROM hdr h
 JOIN agg a          USING (sequence_id)
 LEFT JOIN nxt n     USING (sequence_id)
 LEFT JOIN zone_paths zp USING (sequence_id)
 LEFT JOIN pass_flow  pf USING (sequence_id)
-LEFT JOIN carry_flow cf USING (sequence_id);
+LEFT JOIN carry_flow cf USING (sequence_id)
+-- Last, with ON: silver.events has its own sequence_id, which would make the
+-- USING joins above ambiguous.
+JOIN silver.events se ON se.event_id = h.start_event_id;
 
 
 -- ───────────────────────────────────────────────────────────────────────────

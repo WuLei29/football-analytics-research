@@ -414,6 +414,17 @@ ALTER TABLE gold.sequence_players
     ADD COLUMN IF NOT EXISTS big_chances     SMALLINT NOT NULL DEFAULT 0,
     ADD COLUMN IF NOT EXISTS xa              REAL;
 
+-- Amendment (27 Sep 2026, §4.8): game state at the sequence's first event,
+-- from the possessing team's side. Read from silver.events.*_before on
+-- start_event_id, so a sequence opened by the kick-off after a goal already
+-- carries the new score. Nullable only because ADD COLUMN cannot backfill;
+-- gate G17 checks there are no NULLs after a build.
+ALTER TABLE gold.sequences
+    ADD COLUMN IF NOT EXISTS start_goals_for       SMALLINT,
+    ADD COLUMN IF NOT EXISTS start_goals_against   SMALLINT,
+    ADD COLUMN IF NOT EXISTS start_players_for     SMALLINT,
+    ADD COLUMN IF NOT EXISTS start_players_against SMALLINT;
+
 
 CREATE INDEX IF NOT EXISTS sequence_players_season_player_idx
     ON gold.sequence_players (competition_season_id, player_id);

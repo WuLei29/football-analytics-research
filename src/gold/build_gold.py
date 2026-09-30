@@ -50,6 +50,7 @@ DDL_FILES = [
     DDL_DIR / "gold_teams.sql",
     DDL_DIR / "gold_players.sql",
     DDL_DIR / "gold_receptions.sql",
+    DDL_DIR / "gold_game_states.sql",
     # Seeded reference data, not a build step: it changes only when a new
     # formation id appears in the data (§5).
     SEED_DIR / "formation_slot_positions.sql",
@@ -58,6 +59,7 @@ DDL_FILES = [
 # The §5 dependency order. Do not reorder.
 STEP_ORDER = [
     "ddl",
+    "game_states",
     "sequences",
     "sequence_phases",
     "team_match_stats",
@@ -96,7 +98,37 @@ def _run_sql_file(cur, path: Path, params: dict | None = None) -> None:
 # Preconditions — §5: "the runner must enforce the order rather than trusting
 # the caller". Each returns an error string, or None when satisfied.
 # ───────────────────────────────────────────────────────────────────────────
+def _check_game_state_columns(cur) -> str | None:
+    # silver.events.*_before are written by the events pipeline's
+    # post-processing (src/silver/events/game_state.py). Missing or partial
+    # columns would give NULL segments and NULL sequence state (§4.8).
+    cur.execute(
+        "SELECT count(*) FROM information_schema.columns "
+        "WHERE table_schema = 'silver' AND table_name = 'events' "
+        "AND column_name = 'home_players_before'"
+    )
+    if cur.fetchone()[0] == 0:
+        return (
+            "silver.events has no game-state columns. Run "
+            "`python -m src.silver.events.game_state` first (§4.8)."
+        )
+    cur.execute(
+        "SELECT count(*) FROM silver.events "
+        "WHERE home_goals_before IS NULL OR home_players_before IS NULL"
+    )
+    n = cur.fetchone()[0]
+    if n:
+        return (
+            f"{n:,} silver.events rows have NULL game state. Run "
+            "`python -m src.silver.events.game_state` first (§4.8)."
+        )
+    return None
+
+
 def _check_sequences(cur) -> str | None:
+    problem = _check_game_state_columns(cur)
+    if problem:
+        return problem
     cur.execute(
         "SELECT count(*) FROM silver.events WHERE sequence_id IS NOT NULL"
     )
@@ -213,6 +245,15 @@ def step_ddl(conn, args) -> str:
     return f"{len(DDL_FILES)} DDL files applied"
 
 
+def step_game_states(conn, args) -> str:
+    params = {"match_ids": args.match_ids}
+    with conn.cursor() as cur:
+        _run_sql_file(cur, SQL_DIR / "build_game_states.sql", params)
+        n = _count(cur, "gold.match_game_states")
+    conn.commit()
+    return f"gold.match_game_states {n:,} rows"
+
+
 def step_sequences(conn, args) -> str:
     params = {"match_ids": args.match_ids}
     with conn.cursor() as cur:
@@ -316,6 +357,7 @@ def step_pass_receptions(conn, args) -> str:
 
 STEPS = {
     "ddl": (step_ddl, None),
+    "game_states": (step_game_states, _check_game_state_columns),
     "sequences": (step_sequences, _check_sequences),
     "sequence_phases": (step_sequence_phases, _check_sequence_phases),
     "team_match_stats": (step_team_match_stats, _check_team_match_stats),
