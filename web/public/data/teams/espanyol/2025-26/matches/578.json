@@ -1020,7 +1020,7 @@
     ],
     "line_x": 42.7
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "GIR",
@@ -1914,14 +1914,14 @@
         "to": 2362
       },
       {
-        "from": 2362,
-        "passes": 8,
-        "to": 2363
-      },
-      {
         "from": 2360,
         "passes": 8,
         "to": 2373
+      },
+      {
+        "from": 2362,
+        "passes": 8,
+        "to": 2363
       },
       {
         "from": 2363,
@@ -1939,19 +1939,14 @@
         "to": 2363
       },
       {
-        "from": 2358,
-        "passes": 6,
-        "to": 2366
-      },
-      {
         "from": 2346,
         "passes": 6,
         "to": 2358
       },
       {
-        "from": 2363,
-        "passes": 5,
-        "to": 2374
+        "from": 2358,
+        "passes": 6,
+        "to": 2366
       },
       {
         "from": 2073,
@@ -1964,9 +1959,14 @@
         "to": 2362
       },
       {
-        "from": 2349,
+        "from": 2363,
+        "passes": 5,
+        "to": 2374
+      },
+      {
+        "from": 2073,
         "passes": 4,
-        "to": 2358
+        "to": 2346
       },
       {
         "from": 2073,
@@ -1984,9 +1984,9 @@
         "to": 2360
       },
       {
-        "from": 2073,
+        "from": 2349,
         "passes": 4,
-        "to": 2346
+        "to": 2358
       }
     ],
     "min_combinations": 4,
@@ -2299,21 +2299,21 @@
   "progression": [
     {
       "completed": true,
-      "end_x": 97.5,
-      "end_y": 29.2,
-      "kind": "pass",
-      "x": 92.4,
-      "xt": 0.223,
-      "y": 6.1
-    },
-    {
-      "completed": true,
       "end_x": 101.7,
       "end_y": 40.5,
       "kind": "pass",
       "x": 89.0,
       "xt": 0.223,
       "y": 4.4
+    },
+    {
+      "completed": true,
+      "end_x": 97.5,
+      "end_y": 29.2,
+      "kind": "pass",
+      "x": 92.4,
+      "xt": 0.223,
+      "y": 6.1
     },
     {
       "completed": true,

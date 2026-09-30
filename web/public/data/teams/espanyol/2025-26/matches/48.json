@@ -948,7 +948,7 @@
     ],
     "line_x": 32.5
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -1713,14 +1713,14 @@
   "network": {
     "edges": [
       {
-        "from": 2349,
+        "from": 2073,
         "passes": 12,
         "to": 2363
       },
       {
-        "from": 2358,
+        "from": 2349,
         "passes": 12,
-        "to": 2360
+        "to": 2363
       },
       {
         "from": 2349,
@@ -1728,9 +1728,9 @@
         "to": 2373
       },
       {
-        "from": 2073,
+        "from": 2358,
         "passes": 12,
-        "to": 2363
+        "to": 2360
       },
       {
         "from": 2358,
@@ -1748,6 +1748,11 @@
         "to": 2374
       },
       {
+        "from": 2073,
+        "passes": 7,
+        "to": 2360
+      },
+      {
         "from": 2349,
         "passes": 7,
         "to": 2360
@@ -1763,11 +1768,6 @@
         "to": 2374
       },
       {
-        "from": 2073,
-        "passes": 7,
-        "to": 2360
-      },
-      {
         "from": 2360,
         "passes": 6,
         "to": 2373
@@ -1775,22 +1775,22 @@
       {
         "from": 2073,
         "passes": 5,
-        "to": 2374
+        "to": 2358
       },
       {
         "from": 2073,
         "passes": 5,
         "to": 2366
+      },
+      {
+        "from": 2073,
+        "passes": 5,
+        "to": 2374
       },
       {
         "from": 2358,
         "passes": 5,
         "to": 2366
-      },
-      {
-        "from": 2073,
-        "passes": 5,
-        "to": 2358
       },
       {
         "from": 2362,
@@ -1798,24 +1798,24 @@
         "to": 2377
       },
       {
-        "from": 2358,
-        "passes": 4,
-        "to": 2373
-      },
-      {
         "from": 2073,
         "passes": 4,
         "to": 2362
       },
       {
-        "from": 2366,
+        "from": 2358,
         "passes": 4,
-        "to": 2377
+        "to": 2359
       },
       {
         "from": 2358,
         "passes": 4,
-        "to": 2359
+        "to": 2373
+      },
+      {
+        "from": 2366,
+        "passes": 4,
+        "to": 2377
       }
     ],
     "min_combinations": 4,
@@ -2272,21 +2272,21 @@
     },
     {
       "completed": true,
-      "end_x": 81.9,
-      "end_y": 51.1,
-      "kind": "carry",
-      "x": 67.5,
-      "xt": 0.011,
-      "y": 57.4
-    },
-    {
-      "completed": true,
       "end_x": 83.5,
       "end_y": 53.7,
       "kind": "pass",
       "x": 65.8,
       "xt": 0.011,
       "y": 58.1
+    },
+    {
+      "completed": true,
+      "end_x": 81.9,
+      "end_y": 51.1,
+      "kind": "carry",
+      "x": 67.5,
+      "xt": 0.011,
+      "y": 57.4
     },
     {
       "completed": true,

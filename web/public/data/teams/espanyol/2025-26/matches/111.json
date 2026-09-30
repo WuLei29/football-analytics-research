@@ -1236,7 +1236,7 @@
     ],
     "line_x": 38.7
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -2083,22 +2083,22 @@
       {
         "from": 2356,
         "passes": 11,
-        "to": 2366
-      },
-      {
-        "from": 2356,
-        "passes": 11,
         "to": 2360
       },
       {
         "from": 2356,
-        "passes": 10,
-        "to": 2362
+        "passes": 11,
+        "to": 2366
       },
       {
         "from": 2346,
         "passes": 10,
         "to": 2366
+      },
+      {
+        "from": 2356,
+        "passes": 10,
+        "to": 2362
       },
       {
         "from": 2362,
@@ -2161,19 +2161,19 @@
         "to": 2362
       },
       {
-        "from": 2360,
-        "passes": 4,
-        "to": 2373
-      },
-      {
-        "from": 2353,
-        "passes": 4,
-        "to": 2373
-      },
-      {
         "from": 2353,
         "passes": 4,
         "to": 2360
+      },
+      {
+        "from": 2353,
+        "passes": 4,
+        "to": 2373
+      },
+      {
+        "from": 2360,
+        "passes": 4,
+        "to": 2373
       }
     ],
     "min_combinations": 4,
@@ -2558,8 +2558,8 @@
     },
     {
       "completed": true,
-      "end_x": 95.2,
-      "end_y": 31.1,
+      "end_x": 94.4,
+      "end_y": 26.9,
       "kind": "pass",
       "x": 104.5,
       "xt": 0.07,
@@ -2567,8 +2567,8 @@
     },
     {
       "completed": true,
-      "end_x": 94.4,
-      "end_y": 26.9,
+      "end_x": 95.2,
+      "end_y": 31.1,
       "kind": "pass",
       "x": 104.5,
       "xt": 0.07,

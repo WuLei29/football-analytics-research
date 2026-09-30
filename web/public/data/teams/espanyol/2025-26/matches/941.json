@@ -820,7 +820,7 @@
     ],
     "line_x": 30.8
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -1685,14 +1685,14 @@
         "to": 2373
       },
       {
-        "from": 2349,
-        "passes": 6,
-        "to": 2373
-      },
-      {
         "from": 2073,
         "passes": 6,
         "to": 2363
+      },
+      {
+        "from": 2349,
+        "passes": 6,
+        "to": 2373
       },
       {
         "from": 2358,
@@ -1715,9 +1715,9 @@
         "to": 2366
       },
       {
-        "from": 2353,
+        "from": 2073,
         "passes": 4,
-        "to": 2363
+        "to": 2349
       },
       {
         "from": 2073,
@@ -1730,9 +1730,9 @@
         "to": 2362
       },
       {
-        "from": 2073,
+        "from": 2353,
         "passes": 4,
-        "to": 2349
+        "to": 2363
       },
       {
         "from": 2358,
@@ -2078,21 +2078,21 @@
     },
     {
       "completed": true,
-      "end_x": 99.5,
-      "end_y": 33.3,
-      "kind": "pass",
-      "x": 95.5,
-      "xt": 0.217,
-      "y": 15.8
-    },
-    {
-      "completed": true,
       "end_x": 97.5,
       "end_y": 28.0,
       "kind": "pass",
       "x": 94.6,
       "xt": 0.217,
       "y": 9.9
+    },
+    {
+      "completed": true,
+      "end_x": 99.5,
+      "end_y": 33.3,
+      "kind": "pass",
+      "x": 95.5,
+      "xt": 0.217,
+      "y": 15.8
     },
     {
       "completed": true,
@@ -2177,15 +2177,6 @@
     },
     {
       "completed": true,
-      "end_x": 90.9,
-      "end_y": 9.0,
-      "kind": "carry",
-      "x": 75.9,
-      "xt": 0.019,
-      "y": 2.3
-    },
-    {
-      "completed": true,
       "end_x": 88.8,
       "end_y": 10.1,
       "kind": "carry",
@@ -2195,12 +2186,12 @@
     },
     {
       "completed": true,
-      "end_x": 95.3,
-      "end_y": 15.5,
-      "kind": "pass",
-      "x": 75.1,
-      "xt": 0.017,
-      "y": 18.0
+      "end_x": 90.9,
+      "end_y": 9.0,
+      "kind": "carry",
+      "x": 75.9,
+      "xt": 0.019,
+      "y": 2.3
     },
     {
       "completed": true,
@@ -2210,6 +2201,15 @@
       "x": 76.1,
       "xt": 0.017,
       "y": 47.3
+    },
+    {
+      "completed": true,
+      "end_x": 95.3,
+      "end_y": 15.5,
+      "kind": "pass",
+      "x": 75.1,
+      "xt": 0.017,
+      "y": 18.0
     },
     {
       "completed": true,

@@ -1236,7 +1236,7 @@
     ],
     "line_x": 22.7
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -2025,12 +2025,12 @@
       {
         "from": 2356,
         "passes": 7,
-        "to": 2373
+        "to": 2363
       },
       {
         "from": 2356,
         "passes": 7,
-        "to": 2363
+        "to": 2373
       },
       {
         "from": 2358,
@@ -2041,11 +2041,6 @@
         "from": 2360,
         "passes": 6,
         "to": 2362
-      },
-      {
-        "from": 2362,
-        "passes": 5,
-        "to": 2363
       },
       {
         "from": 2073,
@@ -2073,13 +2068,8 @@
         "to": 2366
       },
       {
-        "from": 2353,
-        "passes": 4,
-        "to": 2374
-      },
-      {
-        "from": 2353,
-        "passes": 4,
+        "from": 2362,
+        "passes": 5,
         "to": 2363
       },
       {
@@ -2088,14 +2078,24 @@
         "to": 2360
       },
       {
+        "from": 2073,
+        "passes": 4,
+        "to": 2362
+      },
+      {
         "from": 2353,
         "passes": 4,
         "to": 2362
       },
       {
-        "from": 2073,
+        "from": 2353,
         "passes": 4,
-        "to": 2362
+        "to": 2363
+      },
+      {
+        "from": 2353,
+        "passes": 4,
+        "to": 2374
       },
       {
         "from": 2356,
@@ -2512,21 +2512,21 @@
     },
     {
       "completed": true,
-      "end_x": 79.8,
-      "end_y": 62.6,
-      "kind": "carry",
-      "x": 60.1,
-      "xt": 0.013,
-      "y": 66.5
-    },
-    {
-      "completed": true,
       "end_x": 79.2,
       "end_y": 6.5,
       "kind": "pass",
       "x": 57.2,
       "xt": 0.013,
       "y": 0.0
+    },
+    {
+      "completed": true,
+      "end_x": 79.8,
+      "end_y": 62.6,
+      "kind": "carry",
+      "x": 60.1,
+      "xt": 0.013,
+      "y": 66.5
     },
     {
       "completed": true,
@@ -2674,12 +2674,12 @@
     },
     {
       "completed": true,
-      "end_x": 62.7,
-      "end_y": 45.5,
+      "end_x": 68.6,
+      "end_y": 21.1,
       "kind": "pass",
-      "x": 44.2,
+      "x": 49.1,
       "xt": 0.005,
-      "y": 44.1
+      "y": 18.5
     }
   ],
   "schema_version": 1,

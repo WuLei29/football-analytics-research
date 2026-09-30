@@ -1180,7 +1180,7 @@
     ],
     "line_x": 36.5
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -1198,7 +1198,7 @@
       "goals_ht": 1,
       "short_name": "Valencia",
       "team_id": 19,
-      "xg": 2.04
+      "xg": 2.02
     },
     "match_id": 580,
     "match_length_min": 99,
@@ -2044,14 +2044,14 @@
         "to": 2357
       },
       {
-        "from": 2349,
-        "passes": 10,
-        "to": 2358
-      },
-      {
         "from": 2073,
         "passes": 10,
         "to": 2354
+      },
+      {
+        "from": 2349,
+        "passes": 10,
+        "to": 2358
       },
       {
         "from": 2073,
@@ -2064,17 +2064,12 @@
         "to": 2362
       },
       {
-        "from": 2354,
-        "passes": 7,
-        "to": 2362
-      },
-      {
         "from": 2073,
         "passes": 7,
         "to": 2362
       },
       {
-        "from": 2358,
+        "from": 2354,
         "passes": 7,
         "to": 2362
       },
@@ -2084,9 +2079,9 @@
         "to": 2362
       },
       {
-        "from": 2360,
-        "passes": 6,
-        "to": 2373
+        "from": 2358,
+        "passes": 7,
+        "to": 2362
       },
       {
         "from": 2348,
@@ -2095,8 +2090,8 @@
       },
       {
         "from": 2360,
-        "passes": 5,
-        "to": 2362
+        "passes": 6,
+        "to": 2373
       },
       {
         "from": 2073,
@@ -2109,6 +2104,16 @@
         "to": 2358
       },
       {
+        "from": 2360,
+        "passes": 5,
+        "to": 2362
+      },
+      {
+        "from": 2348,
+        "passes": 4,
+        "to": 2357
+      },
+      {
         "from": 2348,
         "passes": 4,
         "to": 2359
@@ -2117,11 +2122,6 @@
         "from": 2358,
         "passes": 4,
         "to": 2373
-      },
-      {
-        "from": 2348,
-        "passes": 4,
-        "to": 2357
       }
     ],
     "min_combinations": 4,
@@ -2366,23 +2366,23 @@
           "abbr": "ESP",
           "components": {
             "xa": 0.309,
-            "xg": 0.61
+            "xg": 0.611
           },
           "name": "Kike García",
           "player_id": 2353,
           "side": "away",
-          "value": 0.919
+          "value": 0.92
         },
         {
           "abbr": "VAL",
           "components": {
             "xa": 0.0,
-            "xg": 0.862
+            "xg": 0.845
           },
           "name": "L. Ramazani",
           "player_id": 2332,
           "side": "home",
-          "value": 0.862
+          "value": 0.845
         },
         {
           "abbr": "VAL",
@@ -2409,13 +2409,13 @@
         {
           "abbr": "VAL",
           "components": {
-            "xa": 0.329,
+            "xa": 0.312,
             "xg": 0.23
           },
           "name": "L. Beltrán",
           "player_id": 2328,
           "side": "home",
-          "value": 0.558
+          "value": 0.542
         },
         {
           "abbr": "VAL",
@@ -2479,21 +2479,21 @@
     },
     {
       "completed": true,
-      "end_x": 94.1,
-      "end_y": 32.1,
-      "kind": "pass",
-      "x": 104.6,
-      "xt": 0.07,
-      "y": 0.3
-    },
-    {
-      "completed": true,
       "end_x": 95.3,
       "end_y": 26.8,
       "kind": "pass",
       "x": 99.0,
       "xt": 0.07,
       "y": 0.0
+    },
+    {
+      "completed": true,
+      "end_x": 94.1,
+      "end_y": 32.1,
+      "kind": "pass",
+      "x": 104.6,
+      "xt": 0.07,
+      "y": 0.3
     },
     {
       "completed": true,
@@ -3583,7 +3583,7 @@
           "surname": "García",
           "type": "attempt_saved",
           "x": 101.8,
-          "xg": 0.028,
+          "xg": 0.03,
           "y": 19.3
         }
       ],
@@ -3640,7 +3640,7 @@
       "start_trigger": "pass",
       "start_zone": 41,
       "vaep": 0.021,
-      "xg": 0.028,
+      "xg": 0.03,
       "xt": 0.05
     },
     {
@@ -19926,7 +19926,7 @@
       "shot_id": 25,
       "side": "away",
       "x": 101.8,
-      "xg": 0.028,
+      "xg": 0.03,
       "y": 19.3
     },
     {
@@ -19943,7 +19943,7 @@
       "shot_id": 26,
       "side": "home",
       "x": 13.8,
-      "xg": 0.072,
+      "xg": 0.055,
       "y": 22.7
     },
     {
@@ -19972,7 +19972,7 @@
     },
     {
       "away": 1.48,
-      "home": 2.04,
+      "home": 2.02,
       "key": "xg"
     },
     {
@@ -20047,7 +20047,7 @@
     },
     {
       "away": 0.28,
-      "home": 1.14,
+      "home": 1.12,
       "key": "xg_open_play"
     },
     {

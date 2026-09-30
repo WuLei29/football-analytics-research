@@ -1148,7 +1148,7 @@
     ],
     "line_x": 39.4
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ELC",
@@ -1156,7 +1156,7 @@
       "goals_ht": 2,
       "short_name": "Elche",
       "team_id": 7,
-      "xg": 0.77
+      "xg": 0.75
     },
     "competition_name": "Primera División",
     "date": "2026-09-18",
@@ -1166,7 +1166,7 @@
       "goals_ht": 0,
       "short_name": "Espanyol",
       "team_id": 8,
-      "xg": 0.86
+      "xg": 0.87
     },
     "match_id": 2060,
     "match_length_min": 101,
@@ -1983,12 +1983,12 @@
       {
         "from": 2339,
         "passes": 21,
-        "to": 2367
+        "to": 2360
       },
       {
         "from": 2339,
         "passes": 21,
-        "to": 2360
+        "to": 2367
       },
       {
         "from": 2130,
@@ -2021,19 +2021,14 @@
         "to": 2375
       },
       {
-        "from": 2366,
-        "passes": 11,
-        "to": 4785
-      },
-      {
         "from": 2073,
         "passes": 11,
         "to": 2339
       },
       {
-        "from": 2339,
-        "passes": 10,
-        "to": 2373
+        "from": 2366,
+        "passes": 11,
+        "to": 4785
       },
       {
         "from": 2130,
@@ -2041,6 +2036,11 @@
         "to": 2366
       },
       {
+        "from": 2339,
+        "passes": 10,
+        "to": 2373
+      },
+      {
         "from": 2073,
         "passes": 8,
         "to": 2366
@@ -2049,6 +2049,11 @@
         "from": 2339,
         "passes": 8,
         "to": 4785
+      },
+      {
+        "from": 2130,
+        "passes": 7,
+        "to": 2355
       },
       {
         "from": 2355,
@@ -2056,9 +2061,9 @@
         "to": 2367
       },
       {
-        "from": 2130,
-        "passes": 7,
-        "to": 2355
+        "from": 2073,
+        "passes": 6,
+        "to": 2130
       },
       {
         "from": 2339,
@@ -2066,19 +2071,9 @@
         "to": 2355
       },
       {
-        "from": 2073,
-        "passes": 6,
-        "to": 2130
-      },
-      {
         "from": 2366,
         "passes": 6,
         "to": 2375
-      },
-      {
-        "from": 2366,
-        "passes": 5,
-        "to": 2373
       },
       {
         "from": 2073,
@@ -2089,6 +2084,11 @@
         "from": 2130,
         "passes": 5,
         "to": 2360
+      },
+      {
+        "from": 2366,
+        "passes": 5,
+        "to": 2373
       },
       {
         "from": 2367,
@@ -2129,7 +2129,7 @@
         "shirt_number": 21,
         "surname": "Hinojo",
         "touches": 47,
-        "x": 50.0,
+        "x": 50.1,
         "y": 54.5
       },
       {
@@ -2347,24 +2347,13 @@
         {
           "abbr": "ESP",
           "components": {
-            "xa": 0.14,
+            "xa": 0.142,
             "xg": 0.105
           },
           "name": "Edu Expósito",
           "player_id": 2366,
           "side": "home",
-          "value": 0.245
-        },
-        {
-          "abbr": "ELC",
-          "components": {
-            "xa": 0.05,
-            "xg": 0.175
-          },
-          "name": "Germán Valera",
-          "player_id": 1989,
-          "side": "away",
-          "value": 0.225
+          "value": 0.247
         },
         {
           "abbr": "ELC",
@@ -2387,6 +2376,17 @@
           "player_id": 4467,
           "side": "away",
           "value": 0.219
+        },
+        {
+          "abbr": "ELC",
+          "components": {
+            "xa": 0.046,
+            "xg": 0.163
+          },
+          "name": "Germán Valera",
+          "player_id": 1989,
+          "side": "away",
+          "value": 0.209
         },
         {
           "abbr": "ESP",
@@ -2479,21 +2479,21 @@
     },
     {
       "completed": true,
-      "end_x": 92.1,
-      "end_y": 34.7,
-      "kind": "pass",
-      "x": 70.6,
-      "xt": 0.084,
-      "y": 18.4
-    },
-    {
-      "completed": true,
       "end_x": 90.3,
       "end_y": 40.4,
       "kind": "pass",
       "x": 78.6,
       "xt": 0.084,
       "y": 43.7
+    },
+    {
+      "completed": true,
+      "end_x": 92.1,
+      "end_y": 34.7,
+      "kind": "pass",
+      "x": 70.6,
+      "xt": 0.084,
+      "y": 18.4
     },
     {
       "completed": true,
@@ -2506,21 +2506,21 @@
     },
     {
       "completed": true,
-      "end_x": 92.9,
-      "end_y": 33.5,
-      "kind": "pass",
-      "x": 90.5,
-      "xt": 0.073,
-      "y": 4.6
-    },
-    {
-      "completed": true,
       "end_x": 95.0,
       "end_y": 32.7,
       "kind": "pass",
       "x": 89.4,
       "xt": 0.073,
       "y": 5.3
+    },
+    {
+      "completed": true,
+      "end_x": 92.9,
+      "end_y": 33.5,
+      "kind": "pass",
+      "x": 90.5,
+      "xt": 0.073,
+      "y": 4.6
     },
     {
       "completed": true,
@@ -2650,12 +2650,12 @@
     },
     {
       "completed": true,
-      "end_x": 91.6,
-      "end_y": 52.7,
-      "kind": "carry",
-      "x": 86.3,
+      "end_x": 88.1,
+      "end_y": 14.9,
+      "kind": "pass",
+      "x": 85.9,
       "xt": 0.013,
-      "y": 60.5
+      "y": 3.5
     },
     {
       "completed": true,
@@ -2668,21 +2668,21 @@
     },
     {
       "completed": true,
+      "end_x": 91.6,
+      "end_y": 52.7,
+      "kind": "carry",
+      "x": 86.3,
+      "xt": 0.013,
+      "y": 60.5
+    },
+    {
+      "completed": true,
       "end_x": 91.0,
       "end_y": 51.4,
       "kind": "carry",
       "x": 85.2,
       "xt": 0.013,
       "y": 62.1
-    },
-    {
-      "completed": true,
-      "end_x": 88.1,
-      "end_y": 14.9,
-      "kind": "pass",
-      "x": 85.9,
-      "xt": 0.013,
-      "y": 3.5
     }
   ],
   "schema_version": 1,
@@ -4895,7 +4895,7 @@
           "surname": "Milla",
           "type": "miss",
           "x": 92.1,
-          "xg": 0.031,
+          "xg": 0.033,
           "y": 34.7
         }
       ],
@@ -4952,7 +4952,7 @@
       "start_trigger": "recovery",
       "start_zone": 43,
       "vaep": 0.038,
-      "xg": 0.031,
+      "xg": 0.033,
       "xt": 0.088
     },
     {
@@ -22994,7 +22994,7 @@
       "shot_id": 27,
       "side": "away",
       "x": 11.1,
-      "xg": 0.175,
+      "xg": 0.163,
       "y": 24.2
     },
     {
@@ -23011,7 +23011,7 @@
       "shot_id": 28,
       "side": "away",
       "x": 23.3,
-      "xg": 0.05,
+      "xg": 0.046,
       "y": 22.4
     },
     {
@@ -23028,7 +23028,7 @@
       "shot_id": 29,
       "side": "home",
       "x": 92.1,
-      "xg": 0.031,
+      "xg": 0.033,
       "y": 34.7
     },
     {
@@ -23045,7 +23045,7 @@
       "shot_id": 30,
       "side": "away",
       "x": 31.1,
-      "xg": 0.021,
+      "xg": 0.02,
       "y": 26.7
     },
     {
@@ -23062,7 +23062,7 @@
       "shot_id": 31,
       "side": "home",
       "x": 91.2,
-      "xg": 0.061,
+      "xg": 0.069,
       "y": 42.8
     },
     {
@@ -23107,8 +23107,8 @@
       "key": "possession_pct"
     },
     {
-      "away": 0.77,
-      "home": 0.86,
+      "away": 0.75,
+      "home": 0.87,
       "key": "xg"
     },
     {
@@ -23183,7 +23183,7 @@
     },
     {
       "away": 0.51,
-      "home": 0.69,
+      "home": 0.7,
       "key": "xg_open_play"
     },
     {

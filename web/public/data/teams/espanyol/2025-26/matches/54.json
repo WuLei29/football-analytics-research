@@ -1132,7 +1132,7 @@
     ],
     "line_x": 38.8
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "VAL",
@@ -1989,14 +1989,14 @@
         "to": 2360
       },
       {
-        "from": 2366,
-        "passes": 11,
-        "to": 2377
-      },
-      {
         "from": 2362,
         "passes": 11,
         "to": 2369
+      },
+      {
+        "from": 2366,
+        "passes": 11,
+        "to": 2377
       },
       {
         "from": 2363,
@@ -2004,24 +2004,14 @@
         "to": 2374
       },
       {
-        "from": 2360,
-        "passes": 8,
-        "to": 2373
-      },
-      {
         "from": 2358,
         "passes": 8,
         "to": 2366
       },
       {
-        "from": 2358,
-        "passes": 7,
-        "to": 2377
-      },
-      {
         "from": 2360,
-        "passes": 7,
-        "to": 2377
+        "passes": 8,
+        "to": 2373
       },
       {
         "from": 2356,
@@ -2029,8 +2019,13 @@
         "to": 2362
       },
       {
-        "from": 2353,
-        "passes": 6,
+        "from": 2358,
+        "passes": 7,
+        "to": 2377
+      },
+      {
+        "from": 2360,
+        "passes": 7,
         "to": 2377
       },
       {
@@ -2039,29 +2034,24 @@
         "to": 2362
       },
       {
+        "from": 2353,
+        "passes": 6,
+        "to": 2377
+      },
+      {
         "from": 2358,
         "passes": 6,
         "to": 2362
       },
       {
-        "from": 2362,
-        "passes": 5,
-        "to": 2374
-      },
-      {
         "from": 2353,
-        "passes": 5,
-        "to": 2374
-      },
-      {
-        "from": 2362,
         "passes": 5,
         "to": 2366
       },
       {
         "from": 2353,
         "passes": 5,
-        "to": 2366
+        "to": 2374
       },
       {
         "from": 2356,
@@ -2074,8 +2064,13 @@
         "to": 2374
       },
       {
-        "from": 2369,
-        "passes": 4,
+        "from": 2362,
+        "passes": 5,
+        "to": 2366
+      },
+      {
+        "from": 2362,
+        "passes": 5,
         "to": 2374
       },
       {
@@ -2097,6 +2092,11 @@
         "from": 2356,
         "passes": 4,
         "to": 2369
+      },
+      {
+        "from": 2369,
+        "passes": 4,
+        "to": 2374
       }
     ],
     "min_combinations": 4,
@@ -2463,21 +2463,21 @@
     },
     {
       "completed": true,
-      "end_x": 97.3,
-      "end_y": 29.0,
-      "kind": "pass",
-      "x": 97.8,
-      "xt": 0.193,
-      "y": 18.6
-    },
-    {
-      "completed": true,
       "end_x": 97.7,
       "end_y": 36.9,
       "kind": "pass",
       "x": 98.7,
       "xt": 0.193,
       "y": 49.6
+    },
+    {
+      "completed": true,
+      "end_x": 97.3,
+      "end_y": 29.0,
+      "kind": "pass",
+      "x": 97.8,
+      "xt": 0.193,
+      "y": 18.6
     },
     {
       "completed": true,
@@ -2652,8 +2652,8 @@
     },
     {
       "completed": true,
-      "end_x": 92.2,
-      "end_y": 18.4,
+      "end_x": 94.4,
+      "end_y": 46.8,
       "kind": "pass",
       "x": 104.5,
       "xt": 0.017,
@@ -2661,8 +2661,8 @@
     },
     {
       "completed": true,
-      "end_x": 94.4,
-      "end_y": 46.8,
+      "end_x": 92.2,
+      "end_y": 18.4,
       "kind": "pass",
       "x": 104.5,
       "xt": 0.017,

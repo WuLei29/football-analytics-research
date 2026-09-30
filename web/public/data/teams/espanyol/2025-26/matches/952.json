@@ -1116,7 +1116,7 @@
     ],
     "line_x": 37.0
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "LEV",
@@ -1923,14 +1923,14 @@
         "to": 2366
       },
       {
-        "from": 2358,
-        "passes": 15,
-        "to": 2360
-      },
-      {
         "from": 2073,
         "passes": 15,
         "to": 2349
+      },
+      {
+        "from": 2358,
+        "passes": 15,
+        "to": 2360
       },
       {
         "from": 2349,
@@ -1948,14 +1948,14 @@
         "to": 2370
       },
       {
-        "from": 2360,
-        "passes": 10,
-        "to": 2366
-      },
-      {
         "from": 2346,
         "passes": 10,
         "to": 2353
+      },
+      {
+        "from": 2360,
+        "passes": 10,
+        "to": 2366
       },
       {
         "from": 2346,
@@ -1998,12 +1998,12 @@
         "to": 2373
       },
       {
-        "from": 2363,
+        "from": 2073,
         "passes": 5,
         "to": 2366
       },
       {
-        "from": 2073,
+        "from": 2363,
         "passes": 5,
         "to": 2366
       },
@@ -2323,21 +2323,21 @@
   "progression": [
     {
       "completed": true,
-      "end_x": 96.4,
-      "end_y": 34.3,
-      "kind": "pass",
-      "x": 75.9,
-      "xt": 0.233,
-      "y": 13.1
-    },
-    {
-      "completed": true,
       "end_x": 98.0,
       "end_y": 31.9,
       "kind": "pass",
       "x": 71.6,
       "xt": 0.233,
       "y": 10.4
+    },
+    {
+      "completed": true,
+      "end_x": 96.4,
+      "end_y": 34.3,
+      "kind": "pass",
+      "x": 75.9,
+      "xt": 0.233,
+      "y": 13.1
     },
     {
       "completed": true,

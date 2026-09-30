@@ -1148,7 +1148,7 @@
     ],
     "line_x": 33.5
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "GET",
@@ -2072,14 +2072,14 @@
         "to": 2366
       },
       {
-        "from": 2366,
-        "passes": 10,
-        "to": 2374
-      },
-      {
         "from": 2356,
         "passes": 10,
         "to": 2358
+      },
+      {
+        "from": 2366,
+        "passes": 10,
+        "to": 2374
       },
       {
         "from": 2073,
@@ -2092,34 +2092,24 @@
         "to": 2366
       },
       {
-        "from": 2363,
-        "passes": 7,
-        "to": 2370
-      },
-      {
         "from": 2356,
         "passes": 7,
         "to": 2373
       },
       {
-        "from": 2356,
-        "passes": 6,
-        "to": 2366
+        "from": 2363,
+        "passes": 7,
+        "to": 2370
       },
       {
-        "from": 2353,
+        "from": 2073,
         "passes": 6,
-        "to": 2363
+        "to": 2360
       },
       {
         "from": 2073,
         "passes": 6,
         "to": 2370
-      },
-      {
-        "from": 2360,
-        "passes": 6,
-        "to": 2374
       },
       {
         "from": 2348,
@@ -2129,6 +2119,16 @@
       {
         "from": 2353,
         "passes": 6,
+        "to": 2363
+      },
+      {
+        "from": 2353,
+        "passes": 6,
+        "to": 2366
+      },
+      {
+        "from": 2356,
+        "passes": 6,
         "to": 2366
       },
       {
@@ -2137,9 +2137,9 @@
         "to": 2373
       },
       {
-        "from": 2073,
+        "from": 2360,
         "passes": 6,
-        "to": 2360
+        "to": 2374
       },
       {
         "from": 2363,
@@ -2521,15 +2521,6 @@
     },
     {
       "completed": true,
-      "end_x": 93.8,
-      "end_y": 32.7,
-      "kind": "pass",
-      "x": 63.8,
-      "xt": 0.091,
-      "y": 3.2
-    },
-    {
-      "completed": true,
       "end_x": 92.3,
       "end_y": 31.3,
       "kind": "pass",
@@ -2545,6 +2536,15 @@
       "x": 69.2,
       "xt": 0.091,
       "y": 8.4
+    },
+    {
+      "completed": true,
+      "end_x": 93.8,
+      "end_y": 32.7,
+      "kind": "pass",
+      "x": 63.8,
+      "xt": 0.091,
+      "y": 3.2
     },
     {
       "completed": true,
@@ -2611,21 +2611,21 @@
     },
     {
       "completed": true,
-      "end_x": 96.1,
-      "end_y": 32.2,
-      "kind": "pass",
-      "x": 93.5,
-      "xt": 0.067,
-      "y": 57.2
-    },
-    {
-      "completed": true,
       "end_x": 95.0,
       "end_y": 31.4,
       "kind": "pass",
       "x": 89.2,
       "xt": 0.067,
       "y": 8.8
+    },
+    {
+      "completed": true,
+      "end_x": 96.1,
+      "end_y": 32.2,
+      "kind": "pass",
+      "x": 93.5,
+      "xt": 0.067,
+      "y": 57.2
     },
     {
       "completed": true,
@@ -2665,21 +2665,21 @@
     },
     {
       "completed": true,
-      "end_x": 95.8,
-      "end_y": 14.9,
-      "kind": "pass",
-      "x": 49.2,
-      "xt": 0.027,
-      "y": 16.7
-    },
-    {
-      "completed": true,
       "end_x": 89.0,
       "end_y": 9.4,
       "kind": "pass",
       "x": 46.0,
       "xt": 0.027,
       "y": 16.0
+    },
+    {
+      "completed": true,
+      "end_x": 95.8,
+      "end_y": 14.9,
+      "kind": "pass",
+      "x": 49.2,
+      "xt": 0.027,
+      "y": 16.7
     },
     {
       "completed": true,

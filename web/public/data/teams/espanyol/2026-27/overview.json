@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T00:44:19Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "kpis": [
     {
       "key": "points",
@@ -363,8 +363,8 @@
       "opponent_short_name": "Elche",
       "opponent_team_id": 7,
       "result": "L",
-      "xg_against": 0.77,
-      "xg_for": 0.86,
+      "xg_against": 0.75,
+      "xg_for": 0.87,
       "xt_against": 1.13,
       "xt_for": 2.784
     }
@@ -394,7 +394,7 @@
       },
       {
         "matchday": 7,
-        "xg_difference": -0.09,
+        "xg_difference": -0.084,
         "xt_difference": 0.664
       }
     ],

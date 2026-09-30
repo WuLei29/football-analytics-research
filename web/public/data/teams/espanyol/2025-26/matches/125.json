@@ -1036,7 +1036,7 @@
     ],
     "line_x": 32.9
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "SEV",
@@ -1044,7 +1044,7 @@
       "goals_ht": 0,
       "short_name": "Sevilla",
       "team_id": 18,
-      "xg": 2.14
+      "xg": 2.12
     },
     "competition_name": "Primera División",
     "date": "2025-11-24",
@@ -1865,12 +1865,12 @@
         "to": 2360
       },
       {
-        "from": 2353,
+        "from": 2346,
         "passes": 7,
         "to": 2363
       },
       {
-        "from": 2346,
+        "from": 2353,
         "passes": 7,
         "to": 2363
       },
@@ -1890,19 +1890,24 @@
         "to": 2373
       },
       {
+        "from": 2346,
+        "passes": 5,
+        "to": 2366
+      },
+      {
         "from": 2349,
         "passes": 5,
         "to": 2360
       },
       {
-        "from": 2353,
-        "passes": 5,
-        "to": 2358
-      },
-      {
         "from": 2349,
         "passes": 5,
         "to": 2366
+      },
+      {
+        "from": 2353,
+        "passes": 5,
+        "to": 2358
       },
       {
         "from": 2360,
@@ -1915,14 +1920,9 @@
         "to": 2374
       },
       {
-        "from": 2346,
-        "passes": 5,
-        "to": 2366
-      },
-      {
-        "from": 2366,
+        "from": 2073,
         "passes": 4,
-        "to": 2374
+        "to": 2358
       },
       {
         "from": 2346,
@@ -1945,9 +1945,9 @@
         "to": 2374
       },
       {
-        "from": 2073,
+        "from": 2366,
         "passes": 4,
-        "to": 2358
+        "to": 2374
       }
     ],
     "min_combinations": 4,
@@ -2191,13 +2191,13 @@
         {
           "abbr": "SEV",
           "components": {
-            "xa": 0.441,
+            "xa": 0.429,
             "xg": 0.25
           },
           "name": "G. Suazo",
           "player_id": 1641,
           "side": "away",
-          "value": 0.691
+          "value": 0.679
         },
         {
           "abbr": "SEV",
@@ -2225,12 +2225,12 @@
           "abbr": "SEV",
           "components": {
             "xa": 0.0,
-            "xg": 0.424
+            "xg": 0.411
           },
           "name": "Marcão",
           "player_id": 1613,
           "side": "away",
-          "value": 0.424
+          "value": 0.411
         },
         {
           "abbr": "SEV",
@@ -2350,19 +2350,19 @@
     },
     {
       "completed": true,
-      "end_x": 90.0,
-      "end_y": 12.3,
+      "end_x": 94.1,
+      "end_y": 10.8,
       "kind": "pass",
-      "x": 76.8,
+      "x": 78.3,
       "xt": 0.019,
       "y": 0.0
     },
     {
       "completed": true,
-      "end_x": 94.1,
-      "end_y": 10.8,
+      "end_x": 90.0,
+      "end_y": 12.3,
       "kind": "pass",
-      "x": 78.3,
+      "x": 76.8,
       "xt": 0.019,
       "y": 0.0
     },
@@ -13275,7 +13275,7 @@
       "shot_id": 28,
       "side": "away",
       "x": 4.1,
-      "xg": 0.315,
+      "xg": 0.303,
       "y": 36.0
     },
     {
@@ -13337,7 +13337,7 @@
       "key": "possession_pct"
     },
     {
-      "away": 2.14,
+      "away": 2.12,
       "home": 0.9,
       "key": "xg"
     },
@@ -13417,7 +13417,7 @@
       "key": "xg_open_play"
     },
     {
-      "away": 0.77,
+      "away": 0.76,
       "home": 0.03,
       "key": "xg_set_piece"
     }

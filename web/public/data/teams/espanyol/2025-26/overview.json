@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T00:44:19Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "kpis": [
     {
       "key": "points",
@@ -465,7 +465,7 @@
       "opponent_short_name": "Sevilla",
       "opponent_team_id": 18,
       "result": "W",
-      "xg_against": 2.14,
+      "xg_against": 2.12,
       "xg_for": 0.9,
       "xt_against": 1.69,
       "xt_for": 0.9
@@ -601,7 +601,7 @@
       "opponent_short_name": "Valencia",
       "opponent_team_id": 19,
       "result": "L",
-      "xg_against": 2.04,
+      "xg_against": 2.02,
       "xg_for": 1.48,
       "xt_against": 1.149,
       "xt_for": 1.325
@@ -635,7 +635,7 @@
       "opponent_short_name": "Villarreal",
       "opponent_team_id": 20,
       "result": "L",
-      "xg_against": 0.96,
+      "xg_against": 0.97,
       "xg_for": 0.49,
       "xt_against": 1.361,
       "xt_for": 1.305
@@ -951,27 +951,27 @@
       },
       {
         "matchday": 13,
-        "xg_difference": 0.504,
+        "xg_difference": 0.508,
         "xt_difference": 0.61
       },
       {
         "matchday": 14,
-        "xg_difference": -0.286,
+        "xg_difference": -0.282,
         "xt_difference": 0.292
       },
       {
         "matchday": 15,
-        "xg_difference": -0.47,
+        "xg_difference": -0.466,
         "xt_difference": 0.206
       },
       {
         "matchday": 16,
-        "xg_difference": -0.292,
+        "xg_difference": -0.288,
         "xt_difference": -0.041
       },
       {
         "matchday": 17,
-        "xg_difference": -0.232,
+        "xg_difference": -0.228,
         "xt_difference": -0.189
       },
       {
@@ -991,37 +991,37 @@
       },
       {
         "matchday": 21,
-        "xg_difference": -0.488,
+        "xg_difference": -0.484,
         "xt_difference": -0.004
       },
       {
         "matchday": 22,
-        "xg_difference": -0.378,
+        "xg_difference": -0.374,
         "xt_difference": 0.076
       },
       {
         "matchday": 23,
-        "xg_difference": -0.36,
+        "xg_difference": -0.358,
         "xt_difference": 0.201
       },
       {
         "matchday": 24,
-        "xg_difference": -0.76,
+        "xg_difference": -0.758,
         "xt_difference": -0.113
       },
       {
         "matchday": 25,
-        "xg_difference": -0.854,
+        "xg_difference": -0.852,
         "xt_difference": -0.554
       },
       {
         "matchday": 26,
-        "xg_difference": -1.0,
+        "xg_difference": -1.002,
         "xt_difference": -0.752
       },
       {
         "matchday": 27,
-        "xg_difference": -0.818,
+        "xg_difference": -0.82,
         "xt_difference": -0.558
       },
       {

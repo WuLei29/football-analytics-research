@@ -1,6 +1,6 @@
 {
   "competition_name": "Primera División",
-  "generated_at": "2026-09-22T00:44:19Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "league_complete": false,
   "matchdays_scheduled": 38,
   "profile": {
@@ -223,7 +223,7 @@
           },
           "npxg_for": {
             "p": 100,
-            "v": 3.05
+            "v": 3.08
           },
           "pass_share_att_third": {
             "p": 65,
@@ -287,11 +287,11 @@
           },
           "xg_open_play": {
             "p": 100,
-            "v": 1.82
+            "v": 1.84
           },
           "xg_per_shot": {
             "p": 100,
-            "v": 0.169
+            "v": 0.17
           },
           "xg_set_piece": {
             "p": 100,
@@ -526,7 +526,7 @@
           },
           "npxg_for": {
             "p": 95,
-            "v": 2.21
+            "v": 2.24
           },
           "pass_share_att_third": {
             "p": 75,
@@ -586,19 +586,19 @@
           },
           "xg_fast_break": {
             "p": 95,
-            "v": 0.45
+            "v": 0.46
           },
           "xg_open_play": {
             "p": 90,
-            "v": 1.27
+            "v": 1.28
           },
           "xg_per_shot": {
             "p": 90,
-            "v": 0.129
+            "v": 0.131
           },
           "xg_set_piece": {
             "p": 95,
-            "v": 0.48
+            "v": 0.49
           }
         },
         "team_id": 16
@@ -828,8 +828,8 @@
             "v": 12.4
           },
           "npxg_for": {
-            "p": 20,
-            "v": 0.81
+            "p": 35,
+            "v": 0.82
           },
           "pass_share_att_third": {
             "p": 5,
@@ -893,11 +893,11 @@
           },
           "xg_open_play": {
             "p": 35,
-            "v": 0.6
+            "v": 0.61
           },
           "xg_per_shot": {
-            "p": 20,
-            "v": 0.079
+            "p": 25,
+            "v": 0.08
           },
           "xg_set_piece": {
             "p": 20,
@@ -1002,7 +1002,7 @@
           },
           "xg_set_piece": {
             "p": 50,
-            "v": 0.23
+            "v": 0.22
           }
         },
         "team_id": 17
@@ -1232,7 +1232,7 @@
             "v": 14.7
           },
           "npxg_for": {
-            "p": 30,
+            "p": 35,
             "v": 0.82
           },
           "pass_share_att_third": {
@@ -1402,7 +1402,7 @@
           },
           "xg_per_shot": {
             "p": 60,
-            "v": 0.099
+            "v": 0.098
           },
           "xg_set_piece": {
             "p": 70,
@@ -1434,7 +1434,7 @@
             "v": 14.0
           },
           "npxg_for": {
-            "p": 30,
+            "p": 35,
             "v": 0.82
           },
           "pass_share_att_third": {
@@ -1738,7 +1738,7 @@
           },
           "npxg_for": {
             "p": 45,
-            "v": 1.04
+            "v": 1.02
           },
           "pass_share_att_third": {
             "p": 30,
@@ -1801,12 +1801,12 @@
             "v": 0.07
           },
           "xg_open_play": {
-            "p": 60,
-            "v": 0.76
+            "p": 55,
+            "v": 0.75
           },
           "xg_per_shot": {
             "p": 80,
-            "v": 0.121
+            "v": 0.119
           },
           "xg_set_piece": {
             "p": 30,
@@ -2008,10 +2008,10 @@
           },
           "xg_per_shot": {
             "p": 50,
-            "v": 0.094
+            "v": 0.093
           },
           "xg_set_piece": {
-            "p": 45,
+            "p": 50,
             "v": 0.22
           }
         },
@@ -2041,7 +2041,7 @@
           },
           "npxg_for": {
             "p": 35,
-            "v": 0.83
+            "v": 0.82
           },
           "pass_share_att_third": {
             "p": 20,
@@ -2109,7 +2109,7 @@
           },
           "xg_per_shot": {
             "p": 10,
-            "v": 0.076
+            "v": 0.075
           },
           "xg_set_piece": {
             "p": 15,
@@ -2209,12 +2209,12 @@
             "v": 0.28
           },
           "xg_per_shot": {
-            "p": 25,
-            "v": 0.08
+            "p": 20,
+            "v": 0.079
           },
           "xg_set_piece": {
             "p": 55,
-            "v": 0.24
+            "v": 0.23
           }
         },
         "team_id": 77
@@ -2239,9 +2239,9 @@
       "slug": null,
       "team_id": 4,
       "won": 7,
-      "xg_against": 6.3,
-      "xg_difference": 19.0,
-      "xg_for": 25.3
+      "xg_against": 6.1,
+      "xg_difference": 19.3,
+      "xg_for": 25.5
     },
     {
       "abbr": "ATM",
@@ -2296,9 +2296,9 @@
       "slug": null,
       "team_id": 16,
       "won": 5,
-      "xg_against": 8.1,
-      "xg_difference": 9.0,
-      "xg_for": 17.0
+      "xg_against": 8.0,
+      "xg_difference": 9.3,
+      "xg_for": 17.3
     },
     {
       "abbr": "SEV",
@@ -2354,8 +2354,8 @@
       "team_id": 76,
       "won": 2,
       "xg_against": 8.3,
-      "xg_difference": -2.6,
-      "xg_for": 5.7
+      "xg_difference": -2.5,
+      "xg_for": 5.8
     },
     {
       "abbr": "RSO",
@@ -2374,7 +2374,7 @@
       "won": 3,
       "xg_against": 10.2,
       "xg_difference": -1.6,
-      "xg_for": 8.6
+      "xg_for": 8.5
     },
     {
       "abbr": "VIL",
@@ -2392,7 +2392,7 @@
       "team_id": 20,
       "won": 2,
       "xg_against": 8.8,
-      "xg_difference": 7.5,
+      "xg_difference": 7.6,
       "xg_for": 16.4
     },
     {
@@ -2411,7 +2411,7 @@
       "team_id": 2,
       "won": 2,
       "xg_against": 6.8,
-      "xg_difference": 2.6,
+      "xg_difference": 2.7,
       "xg_for": 9.5
     },
     {
@@ -2448,8 +2448,8 @@
       "slug": null,
       "team_id": 15,
       "won": 2,
-      "xg_against": 12.3,
-      "xg_difference": -3.0,
+      "xg_against": 12.4,
+      "xg_difference": -3.1,
       "xg_for": 9.4
     },
     {
@@ -2505,9 +2505,9 @@
       "slug": "espanyol",
       "team_id": 8,
       "won": 2,
-      "xg_against": 9.2,
+      "xg_against": 9.1,
       "xg_difference": -0.1,
-      "xg_for": 9.0
+      "xg_for": 9.1
     },
     {
       "abbr": "RAC",
@@ -2524,9 +2524,9 @@
       "slug": null,
       "team_id": 78,
       "won": 2,
-      "xg_against": 14.4,
-      "xg_difference": -5.6,
-      "xg_for": 8.8
+      "xg_against": 14.5,
+      "xg_difference": -5.8,
+      "xg_for": 8.7
     },
     {
       "abbr": "LEV",
@@ -2562,9 +2562,9 @@
       "slug": null,
       "team_id": 7,
       "won": 1,
-      "xg_against": 11.8,
-      "xg_difference": -4.2,
-      "xg_for": 7.7
+      "xg_against": 12.0,
+      "xg_difference": -4.4,
+      "xg_for": 7.6
     },
     {
       "abbr": "VAL",
@@ -2581,9 +2581,9 @@
       "slug": null,
       "team_id": 19,
       "won": 1,
-      "xg_against": 10.6,
-      "xg_difference": -4.9,
-      "xg_for": 5.8
+      "xg_against": 10.7,
+      "xg_difference": -5.0,
+      "xg_for": 5.7
     },
     {
       "abbr": "MAL",
@@ -2600,9 +2600,9 @@
       "slug": null,
       "team_id": 77,
       "won": 0,
-      "xg_against": 11.4,
-      "xg_difference": -5.7,
-      "xg_for": 5.7
+      "xg_against": 11.5,
+      "xg_difference": -5.9,
+      "xg_for": 5.6
     }
   ]
 }

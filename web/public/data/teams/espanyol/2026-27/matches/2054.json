@@ -1004,7 +1004,7 @@
     ],
     "line_x": 37.4
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -1866,14 +1866,14 @@
         "to": 2360
       },
       {
-        "from": 2360,
-        "passes": 8,
-        "to": 2373
-      },
-      {
         "from": 2356,
         "passes": 8,
         "to": 2372
+      },
+      {
+        "from": 2360,
+        "passes": 8,
+        "to": 2373
       },
       {
         "from": 2356,
@@ -1883,20 +1883,10 @@
       {
         "from": 2073,
         "passes": 5,
-        "to": 4777
+        "to": 2355
       },
       {
-        "from": 2359,
-        "passes": 5,
-        "to": 4777
-      },
-      {
-        "from": 2373,
-        "passes": 5,
-        "to": 4777
-      },
-      {
-        "from": 2372,
+        "from": 2073,
         "passes": 5,
         "to": 4777
       },
@@ -1906,14 +1896,19 @@
         "to": 4777
       },
       {
-        "from": 2073,
+        "from": 2359,
         "passes": 5,
-        "to": 2355
+        "to": 4777
       },
       {
-        "from": 4777,
-        "passes": 4,
-        "to": 4794
+        "from": 2372,
+        "passes": 5,
+        "to": 4777
+      },
+      {
+        "from": 2373,
+        "passes": 5,
+        "to": 4777
       },
       {
         "from": 2073,
@@ -1924,6 +1919,11 @@
         "from": 2360,
         "passes": 4,
         "to": 2372
+      },
+      {
+        "from": 4777,
+        "passes": 4,
+        "to": 4794
       }
     ],
     "min_combinations": 4,
@@ -2263,21 +2263,21 @@
     },
     {
       "completed": true,
-      "end_x": 88.9,
-      "end_y": 25.7,
-      "kind": "carry",
-      "x": 79.7,
-      "xt": 0.073,
-      "y": 27.9
-    },
-    {
-      "completed": true,
       "end_x": 90.9,
       "end_y": 29.0,
       "kind": "carry",
       "x": 85.6,
       "xt": 0.073,
       "y": 28.6
+    },
+    {
+      "completed": true,
+      "end_x": 88.9,
+      "end_y": 25.7,
+      "kind": "carry",
+      "x": 79.7,
+      "xt": 0.073,
+      "y": 27.9
     },
     {
       "completed": true,
@@ -2326,21 +2326,21 @@
     },
     {
       "completed": true,
-      "end_x": 90.0,
-      "end_y": 22.8,
-      "kind": "pass",
-      "x": 74.5,
-      "xt": 0.034,
-      "y": 7.9
-    },
-    {
-      "completed": true,
       "end_x": 89.2,
       "end_y": 22.2,
       "kind": "pass",
       "x": 76.2,
       "xt": 0.034,
       "y": 0.0
+    },
+    {
+      "completed": true,
+      "end_x": 90.0,
+      "end_y": 22.8,
+      "kind": "pass",
+      "x": 74.5,
+      "xt": 0.034,
+      "y": 7.9
     },
     {
       "completed": true,

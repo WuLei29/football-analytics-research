@@ -836,7 +836,7 @@
     ],
     "line_x": 35.1
   },
-  "generated_at": "2026-09-22T22:43:53Z",
+  "generated_at": "2026-09-30T01:20:46Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -854,7 +854,7 @@
       "goals_ht": 2,
       "short_name": "Villarreal",
       "team_id": 20,
-      "xg": 0.96
+      "xg": 0.97
     },
     "match_id": 858,
     "match_length_min": 94,
@@ -1675,19 +1675,14 @@
         "to": 2363
       },
       {
-        "from": 2350,
-        "passes": 10,
-        "to": 2374
-      },
-      {
         "from": 2073,
         "passes": 10,
         "to": 2349
       },
       {
-        "from": 2360,
-        "passes": 8,
-        "to": 2362
+        "from": 2350,
+        "passes": 10,
+        "to": 2374
       },
       {
         "from": 2349,
@@ -1695,9 +1690,9 @@
         "to": 2373
       },
       {
-        "from": 2366,
-        "passes": 7,
-        "to": 2374
+        "from": 2360,
+        "passes": 8,
+        "to": 2362
       },
       {
         "from": 2073,
@@ -1706,6 +1701,11 @@
       },
       {
         "from": 2362,
+        "passes": 7,
+        "to": 2374
+      },
+      {
+        "from": 2366,
         "passes": 7,
         "to": 2374
       },
@@ -1735,9 +1735,9 @@
         "to": 2350
       },
       {
-        "from": 2363,
+        "from": 2346,
         "passes": 4,
-        "to": 2374
+        "to": 2363
       },
       {
         "from": 2346,
@@ -1750,9 +1750,9 @@
         "to": 2362
       },
       {
-        "from": 2346,
+        "from": 2363,
         "passes": 4,
-        "to": 2363
+        "to": 2374
       }
     ],
     "min_combinations": 4,
@@ -1996,35 +1996,35 @@
         {
           "abbr": "VIL",
           "components": {
-            "xa": 0.341,
+            "xa": 0.34,
             "xg": 0.29
           },
           "name": "T. Buchanan",
           "player_id": 2167,
           "side": "home",
-          "value": 0.631
+          "value": 0.63
         },
         {
           "abbr": "VIL",
           "components": {
-            "xa": 0.146,
+            "xa": 0.155,
             "xg": 0.343
           },
           "name": "G. Mikautadze",
           "player_id": 2160,
           "side": "home",
-          "value": 0.489
+          "value": 0.498
         },
         {
           "abbr": "VIL",
           "components": {
             "xa": 0.224,
-            "xg": 0.142
+            "xg": 0.152
           },
           "name": "N. Pepe",
           "player_id": 2146,
           "side": "home",
-          "value": 0.367
+          "value": 0.376
         },
         {
           "abbr": "ESP",
@@ -2038,6 +2038,17 @@
           "value": 0.278
         },
         {
+          "abbr": "VIL",
+          "components": {
+            "xa": 0.122,
+            "xg": 0.132
+          },
+          "name": "Alberto Moleiro",
+          "player_id": 2141,
+          "side": "home",
+          "value": 0.254
+        },
+        {
           "abbr": "ESP",
           "components": {
             "xa": 0.0,
@@ -2047,17 +2058,6 @@
           "player_id": 2366,
           "side": "away",
           "value": 0.247
-        },
-        {
-          "abbr": "VIL",
-          "components": {
-            "xa": 0.112,
-            "xg": 0.123
-          },
-          "name": "Alberto Moleiro",
-          "player_id": 2141,
-          "side": "home",
-          "value": 0.235
         }
       ]
     }
@@ -2110,21 +2110,21 @@
     },
     {
       "completed": true,
-      "end_x": 100.2,
-      "end_y": 47.6,
-      "kind": "pass",
-      "x": 87.0,
-      "xt": 0.037,
-      "y": 62.9
-    },
-    {
-      "completed": true,
       "end_x": 103.3,
       "end_y": 21.2,
       "kind": "pass",
       "x": 81.5,
       "xt": 0.037,
       "y": 2.1
+    },
+    {
+      "completed": true,
+      "end_x": 100.2,
+      "end_y": 47.6,
+      "kind": "pass",
+      "x": 87.0,
+      "xt": 0.037,
+      "y": 62.9
     },
     {
       "completed": true,
@@ -17908,7 +17908,7 @@
       "shot_id": 11,
       "side": "home",
       "x": 16.0,
-      "xg": 0.112,
+      "xg": 0.122,
       "y": 28.9
     },
     {
@@ -17925,7 +17925,7 @@
       "shot_id": 12,
       "side": "home",
       "x": 15.2,
-      "xg": 0.073,
+      "xg": 0.082,
       "y": 23.7
     },
     {
@@ -17942,7 +17942,7 @@
       "shot_id": 13,
       "side": "home",
       "x": 24.6,
-      "xg": 0.031,
+      "xg": 0.03,
       "y": 43.5
     },
     {
@@ -17959,7 +17959,7 @@
       "shot_id": 14,
       "side": "home",
       "x": 12.0,
-      "xg": 0.058,
+      "xg": 0.057,
       "y": 19.0
     },
     {
@@ -18073,7 +18073,7 @@
     },
     {
       "away": 0.49,
-      "home": 0.96,
+      "home": 0.97,
       "key": "xg"
     },
     {
@@ -18148,7 +18148,7 @@
     },
     {
       "away": 0.32,
-      "home": 0.9,
+      "home": 0.92,
       "key": "xg_open_play"
     },
     {
