@@ -79,6 +79,22 @@ def main() -> None:
             dry_run=args.dry_run,
         )
 
+        if not args.dry_run:
+            # Scoreline + players on the pitch before each event. Only matches
+            # with NULL state are processed, so this costs new matches only.
+            try:
+                from .game_state import enrich_game_state
+
+                log.info("Post-processing: game state")
+                gs_result = enrich_game_state(conn)
+                log.info(
+                    "Game state complete: %s matches, %d events updated",
+                    gs_result["matches"], gs_result["events_updated"],
+                )
+            except Exception as exc:
+                conn.rollback()
+                log.error("Game state failed (events are loaded): %s", exc)
+
         if not args.dry_run and not args.no_xg:
             try:
                 from ..foot_preference import enrich_foot_preference
