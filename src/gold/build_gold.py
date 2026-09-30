@@ -49,6 +49,7 @@ DDL_FILES = [
     DDL_DIR / "gold_sequences.sql",
     DDL_DIR / "gold_teams.sql",
     DDL_DIR / "gold_players.sql",
+    DDL_DIR / "gold_receptions.sql",
     # Seeded reference data, not a build step: it changes only when a new
     # formation id appears in the data (§5).
     SEED_DIR / "formation_slot_positions.sql",
@@ -64,6 +65,7 @@ STEP_ORDER = [
     "player_match_stats",
     "player_season_stats",
     "player_percentiles",
+    "pass_receptions",
 ]
 
 
@@ -185,6 +187,18 @@ def _check_player_percentiles(cur) -> str | None:
     return None
 
 
+def _check_pass_receptions(cur) -> str | None:
+    # Context (season, opponent, date) is read from the team rows, and the
+    # spell rule reads sequence_id: a reception built before either would be
+    # silently missing rows rather than wrong-looking (§4.7).
+    problem = _check_sequences(cur)
+    if problem:
+        return problem
+    if _count(cur, "gold.team_match_stats") == 0:
+        return "gold.team_match_stats is empty. Run --step team_match_stats first."
+    return None
+
+
 # ───────────────────────────────────────────────────────────────────────────
 # Steps
 # ───────────────────────────────────────────────────────────────────────────
@@ -291,6 +305,15 @@ def step_player_percentiles(conn, args) -> str:
     return f"gold.player_season_percentiles {n:,} rows"
 
 
+def step_pass_receptions(conn, args) -> str:
+    params = {"match_ids": args.match_ids}
+    with conn.cursor() as cur:
+        _run_sql_file(cur, SQL_DIR / "build_pass_receptions.sql", params)
+        n = _count(cur, "gold.pass_receptions")
+    conn.commit()
+    return f"gold.pass_receptions {n:,} rows"
+
+
 STEPS = {
     "ddl": (step_ddl, None),
     "sequences": (step_sequences, _check_sequences),
@@ -300,6 +323,7 @@ STEPS = {
     "player_match_stats": (step_player_match_stats, _check_player_match_stats),
     "player_season_stats": (step_player_season_stats, _check_player_season_stats),
     "player_percentiles": (step_player_percentiles, _check_player_percentiles),
+    "pass_receptions": (step_pass_receptions, _check_pass_receptions),
 }
 
 

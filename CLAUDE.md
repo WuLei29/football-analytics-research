@@ -179,6 +179,7 @@ src/
     build_player_match_stats.sql  #   gold.player_match_stats
     build_player_season_stats.sql #   gold.player_season_stats (+ vaep_rank_in_team pass)
     build_player_percentiles.sql  #   gold.player_season_percentiles
+    build_pass_receptions.sql     #   gold.pass_receptions (receiver, zone, what they did next — §4.7)
   scraper/                        # Opta match file scraper (run as module: python -m src.scraper)
     __main__.py                   #   CLI entry point (--headless flag)
     scraper.py                    #   Playwright browser automation: navigates scoresway.com,
@@ -391,6 +392,7 @@ Built and populated over all 458 matches:
 | `gold.player_season_stats` | 1,464 |
 | `gold.player_season_percentiles` | 9,735 |
 | `gold.formation_slot_positions` | 209 (seeded, generated) |
+| `gold.pass_receptions` | 386,452 (22 Sep 2026, 496 matches) |
 
 ```bash
 # Append to the silver run order every weekend. Full rebuild, ~5 minutes.
@@ -407,6 +409,15 @@ developing a query, not for the weekend run.
 without it `counter_attack_sequences` and `high_transition_sequences` are zero
 league-wide, which looks plausible and is wrong. `build_gold.py` refuses to run
 the team step if `gold.sequence_phase_segments` is empty.
+
+**`gold.pass_receptions` (added 22 Sep 2026)** is one row per completed pass
+with a resolved receiver: the reception point (pass end, `rx_zone_id`) and the
+receiver's *spell* — their unbroken run of actions until a teammate acts or
+the sequence ends — classified by `spell_end`. Opta records no receiver; the
+rule is the next same-team event by `(json_index, event_id)`, skipping opponent
+and administrative rows. Built by the last `build_gold` step
+(`--step pass_receptions`, ~80 s). Definition, measured numbers and gate G16:
+`GOLD_LAYER.md §4.7`.
 
 **Player position comes from the Opta formation slot, not from
 `match_lineups.position`** (which is `SUB` for every substitute) or
