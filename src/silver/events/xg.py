@@ -6,7 +6,8 @@ Two models: open-play (22 features, Platt-calibrated) and free-kick
 (11 features, raw — its shipped calibrator is degenerate, see _load_models).
 Penalties are never modelled (different generative process) — they are assigned
 the fixed Opta value PENALTY_XG. They are also kept in the query so
-score_diff_at_shot is accurate for the shots around them.
+score_diff_at_shot is accurate for the shots around them. Own goals are kept
+for the same reason (credited to the opponent) and never scored.
 
 Artifacts required in models/xg/ (relative to this file):
   06_xgboost_full.json, 07_platt_xgboost_full.joblib, fk_xgboost.json
@@ -64,6 +65,9 @@ _SHOT_PENALTY = 12
 _SHOT_FREEKICK = 13
 _XG_ELIGIBLE = {_SHOT, _SHOT_FREEKICK}
 
+# SPADL result ID
+_RESULT_OWNGOAL = 3
+
 # Opta's fixed xG for a penalty kick. Penalties bypass the model entirely.
 PENALTY_XG = 0.79
 
@@ -116,6 +120,7 @@ SELECT
     e.player_id,
     e.event_type,
     e.spadl_type_id,
+    e.spadl_result_id,
     e.spadl_bodypart_id,
     e.shot_play_pattern,
     e.first_time,
@@ -125,14 +130,14 @@ SELECT
     e.minute,
     e.second,
     e.period,
+    e.json_index,
     e.raw_data,
     p.preferred_foot
 FROM silver.events e
 LEFT JOIN silver.players p ON p.player_id = e.player_id
 WHERE e.spadl_type_id IN (11, 12, 13)
-  AND e.spadl_result_id IS DISTINCT FROM 3
   {match_filter}
-ORDER BY e.match_id, e.period, e.minute, e.second
+ORDER BY e.match_id, e.json_index, e.event_id
 """
 
 _NULL_XG_MATCHES = """
@@ -232,11 +237,17 @@ def _map_columns(df: pd.DataFrame) -> pd.DataFrame:
     out["second"] = df["second"]
     out["minute"] = df["minute"]
     out["spadl_type_id"] = df["spadl_type_id"]
+    out["json_index"] = df["json_index"]
 
     out["location_x"] = df["x"].astype(float)
     out["location_y"] = df["y"].astype(float)
 
-    out["is_goal"] = (df["event_type"] == "Goal").astype(int)
+    # An own goal is a Goal event in the conceding team's name (Opta Q28,
+    # SPADL result 3): it counts for the opponent, and is never scored.
+    out["is_own_goal"] = (df["spadl_result_id"] == _RESULT_OWNGOAL).astype(int)
+    out["is_goal"] = (
+        (df["event_type"] == "Goal") & (out["is_own_goal"] == 0)
+    ).astype(int)
 
     out["shot_type"] = np.where(
         df["spadl_type_id"] == _SHOT_FREEKICK, "Free Kick", "Open Play"
@@ -318,17 +329,20 @@ def _add_contextual(df: pd.DataFrame) -> pd.DataFrame:
 
 def _add_gamestate(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values(
-        ["match_id", "period", "minute", "second"], kind="mergesort"
+        ["match_id", "json_index", "event_id"], kind="mergesort"
     ).reset_index(drop=True)
 
-    team_goals = (
-        df.groupby(["match_id", "team_id"])["is_goal"]
-        .cumsum()
-        .sub(df["is_goal"])
-    )
-    total_goals = (
-        df.groupby("match_id")["is_goal"].cumsum().sub(df["is_goal"])
-    )
+    # All counts exclude the row itself (cumsum - self): the score before it.
+    def _before(keys: list[str], col: str) -> pd.Series:
+        return df.groupby(keys)[col].cumsum().sub(df[col])
+
+    # Goals for this team = its own goals + the opponent's own goals.
+    own_team_goals = _before(["match_id", "team_id"], "is_goal")
+    own_team_ogs = _before(["match_id", "team_id"], "is_own_goal")
+    match_ogs = _before(["match_id"], "is_own_goal")
+    team_goals = own_team_goals + (match_ogs - own_team_ogs)
+    total_goals = _before(["match_id"], "is_goal") + match_ogs
+
     df["score_diff_at_shot"] = (team_goals - (total_goals - team_goals)).astype(int)
     df["is_late_game"] = (df["minute"] > 75).astype(int)
     return df
@@ -359,11 +373,13 @@ def compute_xg(df: pd.DataFrame) -> pd.DataFrame:
     -------
     DataFrame with (event_id, source_event_id, xg) for every scorable shot:
     open-play and free-kick from the models, penalties at the fixed
-    PENALTY_XG value. Own goals are excluded upstream by the query.
+    PENALTY_XG value. Own goals only feed score_diff_at_shot and are dropped
+    before scoring.
     """
     print("Building features ...", flush=True)
     mapped = _map_columns(df)
     featured = _build_features(mapped)
+    featured = featured[featured["is_own_goal"] == 0]
 
     frames: list[pd.DataFrame] = []
 
