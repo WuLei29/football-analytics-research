@@ -294,6 +294,11 @@ Records which players participated in each match, whether they started, at what 
 | 2b | `typeId: 19` (Player on) | — | UPDATE → `minute_in = timeMin`, `formation_position = Q145` |
 | 2c | `typeId: 17` (Card) | Q33 present | UPDATE → `minute_out = timeMin`, `exit_reason = 'red_card'` |
 | 2d | `typeId: 17` (Card) | Q32 present | UPDATE → `minute_out = timeMin`, `exit_reason = 'second_yellow'` |
+| 2e | `typeId: 20` (Player retired) | — | UPDATE → `minute_out = timeMin`, `exit_reason = 'retired'` (injured, no substitutes left) |
+
+**Every exit (2a, 2c, 2d, 2e) applies only to a player on the pitch at that moment**: `minute_out IS NULL AND (starting_xi OR minute_in IS NOT NULL)`. A card shown to an unused substitute, or to a player already substituted off, changes nothing here; the card stays in `events`. Until 29 Sep 2026 cards were applied unconditionally and `Player retired` was ignored, which inflated the minutes of 10 players; the stored rows were repaired by `sql/fixes/20260929_match_lineups_exits.sql`.
+
+**Re-processing loaded matches:** `python src/silver/load_match_lineups.py --reprocess` runs every match again. Pass 1 is `ON CONFLICT DO NOTHING`, so it inserts only rows that are missing, typically a player who was not yet in `silver.players` when the match was first loaded (Pass 1 skips unknown players with a warning). The exit passes only touch rows with no exit yet, so existing rows are unchanged. On 29 Sep 2026 this added 48 rows in 35 matches (13 of those players had played) and changed no existing row.
 
 Pass order matters — Pass 2a (player off) always runs before Pass 2b (player on) so that the outgoing player's row is closed before the incoming substitute's row is opened.
 
@@ -312,7 +317,7 @@ Pass order matters — Pass 2a (player off) always runs before Pass 2b (player o
 | `team_formation` | VARCHAR(15) | Yes | Q130 (typeId 34) | Raw formation ID from provider. No decoding applied — appendix 14 mapping not yet available. Denormalised: repeated for all rows of the same team in the match |
 | `minute_in` | SMALLINT | Yes | Pass 1 / 2b | `0` for starters; `timeMin` of typeId 19 for subs who play; `NULL` for unused subs |
 | `minute_out` | SMALLINT | Yes | Pass 2a / 2c / 2d | `timeMin` of the exit event; `NULL` if played to the end or never entered |
-| `exit_reason` | VARCHAR(15) | Yes | Event type + qualifier | `substitution` / `red_card` / `second_yellow` / `NULL`. Disambiguates why `minute_out` was set — analytically critical for disciplinary records and minutes-played calculations |
+| `exit_reason` | VARCHAR(15) | Yes | Event type + qualifier | `substitution` / `red_card` / `second_yellow` / `retired` / `NULL`. Disambiguates why `minute_out` was set — analytically critical for disciplinary records and minutes-played calculations |
 | `raw_status_flag` | SMALLINT | Yes | Q227 (typeId 34) | Raw qualifier 227 value — meaning unconfirmed (all-zero in observed data); preserved for future decoding |
 | `raw_sub_flag` | SMALLINT | Yes | Q293 (typeId 19) | Raw qualifier 293 value — meaning unconfirmed; preserved for future decoding |
 
@@ -376,6 +381,10 @@ The granular event stream for each match. One row per event, including synthesis
 | `sequence_end` | BOOLEAN | Yes | `true` if this event closes a possession sequence |
 | `sequence_event_number` | SMALLINT | Yes | Position of this event within its sequence (1-based) |
 | `value_assist` | FLOAT | No | Value indicating that the event is an assist. The value matches the 'type_id' column of the event assisted |
+| `home_goals_before` | SMALLINT | Yes | Home side's goals **before** this event. Own goals (Q28) count for the opponent. Populated by `src/silver/events/game_state.py` |
+| `away_goals_before` | SMALLINT | Yes | Away side's goals before this event |
+| `home_players_before` | SMALLINT | Yes | Home players on the pitch before this event: 11 minus dismissals (Q32/Q33 cards and `Player retired`, only for players on the pitch at that moment) |
+| `away_players_before` | SMALLINT | Yes | Away players on the pitch before this event |
 | `raw_data` | JSONB | Yes | Full raw provider payload — `NULL` for synthesised carries. As the model evolves, new attributes can be promoted from here to proper columns without losing historical data |
 | `created_at` | TIMESTAMP | No | Record creation timestamp — DB default `NOW()` |
 
@@ -384,6 +393,8 @@ The granular event stream for each match. One row per event, including synthesis
 > **Synthesised carries:** the pipeline infers carry events between consecutive actions where ball movement occurred without a recorded event. These rows have `source_event_id = NULL`, `provider_event_id = NULL`, `raw_data = NULL`, and `outcome = 'success'`. They are fully first-class rows for all analytical purposes.
 
 > **Sequence columns — two-pass loading:** sequence columns are intentionally `NULL` after the initial event load. They are populated in a dedicated second pass by running `classify_possession_sequences()` on each match, then `UPDATE`-ing the rows in place. The gold layer aggregate `sequences` table is built from these columns.
+
+> **Game-state columns:** the four `*_before` columns hold the state *before* the event, ordered by `(json_index, event_id)`: a Goal row carries the score it was scored at, and the next event the new one. They are written as post-processing by the events pipeline (matches with NULL state only), and the module refuses to commit unless every match ends on its `matches.home_score` / `away_score`. Labels such as winning/losing are derived per team, not stored. Segments and the team-relative view: `gold.match_game_states` / `gold.team_game_states` (`md/GOLD_LAYER.md §4.8`).
 
 > **Ingestion pattern:** `source_event_id` is the natural deduplication key for real events, but carries have no provider UUID. Idempotency is enforced at the match level — if `silver.events` already contains rows for a given `match_id`, that file is skipped entirely.
 

@@ -59,9 +59,10 @@ python -m src.silver.squads --raw-root data/raw
 # 4. Matches, then lineups (5-pass strategy).
 python src/silver/load_matches.py
 python src/silver/load_match_lineups.py
+python src/silver/load_match_lineups.py --reprocess   # re-run loaded matches; adds missing rows only
 
 # 5. Events. This is the FULL pipeline: parse + carries + xT + SPADL + VAEP,
-#    then foot-preference enrichment and xG as post-processing. For a newly
+#    then game state, foot-preference enrichment and xG as post-processing. For a newly
 #    loaded match nothing else needs running — see the note below.
 python -m src.silver.events --raw-root data/raw
 
@@ -98,6 +99,15 @@ python -m src.silver.events.vaep
 python -m src.silver.events.vaep --match-ids 1 2 3
 # NOTE: vaep only discovers matches WHERE vaep_value IS NULL. To re-score after a
 # model change, NULL the three vaep_* columns first or the run silently does nothing.
+
+# Game state (scoreline + players on the pitch before each event). Default:
+# matches with NULL state only. --all recomputes and writes only changed rows.
+python -m src.silver.events.game_state
+python -m src.silver.events.game_state --all
+python -m src.silver.events.game_state --match-ids 1 2 3
+
+# xG. Default: matches with a NULL xg; --match-ids re-scores those matches.
+python -m src.silver.events.xg --match-ids 1 2 3
 ```
 
 **Load order matters**: `competitions -> seasons, competition_seasons -> teams, players -> matches -> match_lineups, events -> sequences`
@@ -158,6 +168,8 @@ src/
       xt.py                       #   Expected Threat calculation (pure transform)
       spadl.py                    #   SPADL mapping + backfill (python -m src.silver.events.spadl)
       vaep.py                     #   VAEP valuation + backfill (python -m src.silver.events.vaep)
+      xg.py                       #   xG model scoring + backfill (python -m src.silver.events.xg)
+      game_state.py               #   Scoreline + players on pitch before each event (GOLD_LAYER §4.8)
       db.py                       #   All SQL operations for events
       sequences.py                #   Possession sequence classifier (state machine)
     squads/                       # Squad pipeline (run as module: python -m src.silver.squads)
@@ -180,6 +192,7 @@ src/
     build_player_season_stats.sql #   gold.player_season_stats (+ vaep_rank_in_team pass)
     build_player_percentiles.sql  #   gold.player_season_percentiles
     build_pass_receptions.sql     #   gold.pass_receptions (receiver, zone, what they did next — §4.7)
+    build_game_states.sql         #   gold.match_game_states (segments of constant score/numbers — §4.8)
   scraper/                        # Opta match file scraper (run as module: python -m src.scraper)
     __main__.py                   #   CLI entry point (--headless flag)
     scraper.py                    #   Playwright browser automation: navigates scoresway.com,
@@ -231,7 +244,7 @@ src/
 - **JSONP format**: strip hash prefix, parse JSON from first `{`, strip trailing `)`
 - **Coordinate system**: provider 0-100 scale -> real pitch metres (X: 0-105, Y: 0-68) in silver
 - **Key typeIds**: `34`=Team set up, `1`=Pass, `16`=Shot, `3`=Take on, `4`=Foul, `17`=Card, `18`=Player off, `19`=Player on, `-1`=Synthesised carry
-- **5-pass lineup strategy**: Pass 1 (34) inserts all; Pass 2a (18) sets `minute_out`; Pass 2b (19) sets `minute_in`; Pass 2c/d (17 + Q33/Q32) sets red card exits. **2a must run before 2b.**
+- **5-pass lineup strategy**: Pass 1 (34) inserts all; Pass 2a (18) sets `minute_out`; Pass 2b (19) sets `minute_in`; Pass 2c/d (17 + Q33/Q32) sets red card exits; Pass 2e (20) sets `retired`. Exits apply only to a player on the pitch. **2a must run before 2b.**
 - **Shot play pattern** (Q22/23/24/25/26/160/9 — mutually exclusive): `regular_play`, `fast_break`, `set_piece`, `from_corner`, `free_kick`, `throw_in_set_piece`, `penalty`. Extracted to `shot_play_pattern` column; NULL for non-shots.
 - **First-time shot** (Q328): boolean `first_time` column; NULL for non-shots.
 - **Foot qualifiers** (Q20=Right foot, Q72=Left foot): appear on passes (typeId 1, 2) and shots (typeId 13, 14, 15, 16). Used by `foot_preference.py` to derive `preferred_foot` (players) and `is_weak_foot` (events).
@@ -281,7 +294,54 @@ These project-specific skills are registered and should be consulted automatical
 
 ## Current State
 
-> Last updated: 20 September 2026
+> Last updated: 29 September 2026
+
+### Game state + xG own-goal fix (27–29 Sep 2026)
+
+Silver columns, one gold table + view, four sequence columns, and a fix to xG.
+Record: `md/GOLD_LAYER.md §4.8` and gate G17.
+
+- **`silver.events.{home,away}_{goals,players}_before`**: the scoreline and
+  players on the pitch *before* each event, by `(json_index, event_id)`.
+  `src/silver/events/game_state.py`, run as events post-processing (NULL-state
+  matches only; `--all` is a 30 s no-op when nothing changed). Own goals (Q28)
+  count for the opponent. A Q32/Q33 card or a `Player retired` removes a player
+  only if they were on the pitch (115 of 136 red cards count). The module
+  refuses to commit unless every match ends on its `silver.matches` score
+  (496/496, and half time 496/496).
+- **`gold.match_game_states`** (2,463 segments of constant state, durations tile
+  every period exactly) and the view **`gold.team_game_states`** (per team,
+  with `score_state` / `numbers_state` labels). `gold.sequences` gained
+  `start_goals_for/against` and `start_players_for/against`. Build step
+  `game_states`, right after `ddl`.
+- **xG fix** (`xg.py`): own goals were filtered out of the shot query, so
+  `score_diff_at_shot` ignored them (451 shots in 37 matches off by 1–2). They
+  now feed the game state and are dropped before scoring; the sort is
+  `json_index, event_id`. The 38 own-goal matches were re-scored (max |Δxg| 0.077,
+  league total 1164.52 → 1164.09) and gold rebuilt.
+- **Gold `sequences` step planner guard**: `build_sequences.sql` opens with
+  `SET LOCAL enable_nestloop = off`. After a `VACUUM (FULL, ANALYZE)` the
+  planner re-scanned the underestimated `poss` CTE inside nested loops, which
+  is quadratic (full build stalled past 20 min; now 184 s). `GOLD_LAYER §9.8`.
+- **Lineup exits fixed (29 Sep 2026)**: pass 2c/d set `minute_out` on every
+  red card, and `Player retired` was ignored. Every exit now applies only to a
+  player on the pitch, and pass **2e** (typeId 20) records `exit_reason =
+  'retired'` (CHECK widened). 20 stored rows repaired by
+  `sql/fixes/20260929_match_lineups_exits.sql`: 4 subbed-then-sent-off, 6
+  retired, 10 bench reds cleared. Gold minutes for the 10 who played: −255 in
+  total. Verified: re-loading all 496 matches with the fixed loader reproduces
+  every repaired row exactly. Gold rebuilt from `player_match_stats`; web
+  export re-run.
+- **48 missing lineup rows added (29 Sep 2026)**: players not yet in
+  `silver.players` when their match was first loaded (pass 1 skips unknown
+  players). New flag `load_match_lineups.py --reprocess` re-runs loaded matches
+  and inserts only missing rows (48 in 35 matches, 13 of them played; 0 existing
+  rows changed). Re-run it after loading squads late.
+- **Export determinism**: four `src/export/db.py` sorts had ties and reshuffled
+  between runs (progression by `xt`, pass-network edges by count, defensive
+  actions by `json_index`, sequences by `xt`); each now ends on a unique key.
+- Full re-run after all of the above: lineups → game state (unchanged) → full
+  gold rebuild → gates → web export.
 
 ### Sequence view, third pass (20 Sep 2026)
 
@@ -379,7 +439,8 @@ The full gold layer is designed in `md/GOLD_LAYER.md`. **The operating manual is
 `GOLD_LAYER.md §9`** — run order, validation gates, documented deviations and
 troubleshooting. Read that before touching anything in `src/gold/`.
 
-Built and populated over all 458 matches:
+Built and populated over all 458 matches (counts below are the 458-match
+snapshot; the 29 Sep 2026 rebuild over 496 matches is in `GOLD_LAYER.md §9.4`):
 
 | Table | Rows |
 |---|---|
@@ -393,6 +454,7 @@ Built and populated over all 458 matches:
 | `gold.player_season_percentiles` | 9,735 |
 | `gold.formation_slot_positions` | 209 (seeded, generated) |
 | `gold.pass_receptions` | 386,452 (22 Sep 2026, 496 matches) |
+| `gold.match_game_states` | 2,463 (29 Sep 2026, 496 matches) + view `gold.team_game_states` |
 
 ```bash
 # Append to the silver run order every weekend. Full rebuild, ~5 minutes.
