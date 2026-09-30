@@ -30,6 +30,16 @@
 --      tiebreaker this build is non-deterministic (Fix 0, 16 Aug 2026).
 -- ═══════════════════════════════════════════════════════════════════════════
 
+-- Planner guard (29 Sep 2026, GOLD_LAYER §9.8). The `poss` CTE joins `ordered`
+-- to `hdr` on (sequence_id, team_id); the planner multiplies the two
+-- selectivities as if independent and estimates ~4k rows for what is ~800k.
+-- Believing that, it re-scans `poss` inside nested loops, which is quadratic:
+-- 30 matches 3 s, 150 matches 285 s, the full build stalled past 20 min on
+-- 27 Sep 2026. Without nested loops: 150 matches 27 s, full build 118 s.
+-- The LATERAL lookups in `nxt` still run as nested loops (they cannot be
+-- anything else). SET LOCAL ends with this step's transaction.
+SET LOCAL enable_nestloop = off;
+
 DELETE FROM gold.sequences
 WHERE %(match_ids)s::int[] IS NULL
    OR match_id = ANY (%(match_ids)s::int[]);
