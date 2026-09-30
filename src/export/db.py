@@ -490,7 +490,7 @@ WHERE team_id = %(team_id)s
   AND next_player <> player_id
 GROUP BY 1, 2
 HAVING count(*) >= %(min_combinations)s
-ORDER BY passes DESC
+ORDER BY passes DESC, 1, 2
 """
 
 
@@ -592,7 +592,9 @@ WHERE match_id = %(match_id)s
   AND event_type IN ('Pass', 'Carry')
   AND x IS NOT NULL AND end_x IS NOT NULL
   AND gold.is_progressive(x, y, end_x, end_y)
-ORDER BY xt DESC NULLS LAST
+-- xT comes from a zone grid, so ties are common: without the tiebreaker the
+-- order, and which tied action makes the LIMIT, changed between runs.
+ORDER BY xt DESC NULLS LAST, json_index, event_id
 LIMIT %(limit)s
 """
 
@@ -629,7 +631,7 @@ WHERE e.match_id = %(match_id)s
   AND e.event_type IN ('Tackle', 'Interception', 'Ball recovery',
                        'Challenge', 'Blocked Pass', 'Clearance', 'Aerial')
   AND e.x IS NOT NULL
-ORDER BY e.minute, e.second, e.json_index
+ORDER BY e.minute, e.second, e.json_index, e.event_id
 """
 
 
@@ -650,7 +652,7 @@ FROM gold.sequences
 WHERE match_id = %(match_id)s
   AND team_id = %(team_id)s
   AND event_count >= %(min_events)s
-ORDER BY xt DESC NULLS LAST, start_minute, start_second
+ORDER BY xt DESC NULLS LAST, start_minute, start_second, start_event_id
 """
 
 
