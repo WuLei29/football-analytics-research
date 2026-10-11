@@ -2,7 +2,7 @@
 
 One entry per chart in the **v1 Streamlit repo**. Its `src/match_viz/`,
 `src/player_viz/`, `src/lab_viz/` and `config/` are in *that* project, not this
-one — see `SKILL.md` §0.
+one — see `v1-design-language.md` §0.
 
 Values are as implemented there. `TC` = team colour from
 `config.yaml → teams_color`. Every chart has `fig.patch` and `ax` set to
@@ -10,7 +10,7 @@ Values are as implemented there. `TC` = team colour from
 
 **Reading this for v2 work:** take the *structure* — which marks, at what sizes,
 in what order, with which summary line — and resolve every colour, face and size
-through the design handoff (`SKILL.md` §0 and §1). Cream reads as `--card`,
+through the design handoff (`v1-design-language.md` §0 and §1). Cream reads as `--card`,
 Arvo as Outfit/Figtree/DM Mono, TC as the handoff's `--blue` for Espanyol.
 
 ---
@@ -103,7 +103,7 @@ Completed passes up to the first substitution.
   `zoom=0.020` offset 0.8 units up-right and `x{n}` in red 8pt when repeated.
 - Goal annotation `"{shortName} {minute}'"` 9pt bold black, 2 units above the mark.
 - Title `(63, 107)` 15pt bold `"Mapa de tiros - {team}"`, logo `(65, 108)` zoom 0.15.
-- Custom inline legend along `y=107` — see SKILL §8.
+- Custom inline legend along `y=107` — see v1-design-language.md §8.
 
 ### `goalmouth_map` — GoalMouthMap.create_goal_mouth_plot
 **Type** goal-frame scatter · **figsize** (12, 8)
@@ -133,7 +133,7 @@ spines removed.
 ### `important_sequences` — ImportantSequences.create_sequences_grid_plot
 **Type** 3-column small multiples · **figsize** `(15, rows * 4.55)` · **kwargs** `team=`
 
-See SKILL §7 "Sequence pitches" for the mark language and §6 for the grid rules.
+See v1-design-language.md §7 "Sequence pitches" for the mark language and §6 for the grid rules.
 Per-pitch title 9pt bold `"{shortName} | {outcome} | ({mm}:{ss})"` at axes
 `(0.03, 0.975)`, `loc='left'`, `pad=2`. `suptitle` 16pt bold at `(0.05, 0.90)`
 `ha='left'`; logo at figure fraction `(0.03, y)` where y is 0.800/0.815/0.820/

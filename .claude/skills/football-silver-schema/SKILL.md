@@ -243,7 +243,7 @@ One row per player per match. Separated from events because it's a squad fact, n
 | team_formation | VARCHAR(15) | Raw Q130 formation ID (denormalised, repeated per team) |
 | minute_in | SMALLINT | 0=starter; timeMin of typeId:19; NULL=unused sub |
 | minute_out | SMALLINT | timeMin of exit event; NULL=played to end or never entered |
-| exit_reason | VARCHAR(15) | `substitution|red_card|second_yellow|NULL` |
+| exit_reason | VARCHAR(15) | `substitution|red_card|second_yellow|retired|NULL` |
 | raw_status_flag | SMALLINT | Q227 value (meaning unknown) |
 | raw_sub_flag | SMALLINT | Q293 value from typeId:19 (meaning unknown) |
 
@@ -259,8 +259,14 @@ One row per player per match. Separated from events because it's a squad fact, n
 | 2b | 19 (Player on) | UPDATE `minute_in=timeMin`, `formation_position=Q145` |
 | 2c | 17 (Card) + Q33 | UPDATE `minute_out=timeMin`, `exit_reason='red_card'` |
 | 2d | 17 (Card) + Q32 | UPDATE `minute_out=timeMin`, `exit_reason='second_yellow'` |
+| 2e | 20 (Player retired) | UPDATE `minute_out=timeMin`, `exit_reason='retired'` (injured, no subs left) |
 
-Pass 2a **must** run before Pass 2b. Events are sorted by `eventId` before processing.
+Pass 2a **must** run before Pass 2b. Exits (2a/2c/2d/2e) apply **only to a player
+on the pitch** at that moment, so a red card to a substituted or bench player sets
+nothing (29 Sep 2026 fix). Events are processed in **JSONP array order**, which is
+the chronological order; `eventId` is not sequential. Pass 1 skips players not yet
+in `silver.players`; after a late squad load, run `load_match_lineups.py
+--reprocess` to insert only the missing rows.
 
 **Minutes played formula** (no re-scan of events needed):
 ```sql
@@ -287,12 +293,16 @@ Key columns (see `opta-events-reference` skill for full detail):
 - `spadl_bodypart_id` - SPADL mapping for bodypart
 - `xg` - xg value of the shots 
 - `vaep_offensive` - VAEP offensive value of the action
-- `vaep_deffensive` - VAEP deffensive value of the action
+- `vaep_defensive` - VAEP defensive value of the action
 - `vaep_value`- VAEP total value of the action
 - `shot_play_pattern`- (Q22/23/24/25/26/160/9 — mutually exclusive): `regular_play`, `fast_break`, `set_piece`, `from_corner`, `free_kick`, `throw_in_set_piece`, `penalty`. Extracted to `shot_play_pattern` column; NULL for non-shots.
 - `first_time` - boolean `first_time` column; NULL for non-shots
 - `is_weak_foot` — BOOLEAN, TRUE when foot qualifier (Q20/Q72) differs from player's `preferred_foot`. NULL for events without foot qualifiers or players without preferred_foot. Populated by `foot_preference.py`, not the main events pipeline
+- `home_goals_before`, `away_goals_before`, `home_players_before`, `away_players_before` — scoreline and players on the pitch **before** the event, by `(json_index, event_id)`. Own goals count for the opponent. Written by `src/silver/events/game_state.py` (GOLD_LAYER §4.8)
 - `raw_data` — full provider JSONB (NULL for carries)
+
+Order event streams by **`(json_index, event_id)`**: about 11.8k events share a
+`json_index` (mostly carries and challenges), so `json_index` alone is non-deterministic.
 
 ---
 

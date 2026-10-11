@@ -198,6 +198,20 @@ src/
     scraper.py                    #   Playwright browser automation: navigates scoresway.com,
                                    #   discovers matchdays/matches, intercepts api.performfeeds.com
                                    #   responses, saves raw JSONP to data/raw/{competition}/{season}/matches/
+  export/                         # Gold -> static JSON for the site (python -m src.export) — md/WEB_DATA.md
+    config.py                     #   teams, seasons, metric registries, percentile gate, caps
+    db.py                         #   every export query (read-only)
+    manifest.py league_table.py overview.py match.py   # one module per published file
+sql/
+  ddl/                            # gold DDL + gold_functions.sql (geometry helpers: zone_id, in_box, is_progressive…)
+  seed/                           # formation_slot_positions
+  fixes/                          # dated one-off data repairs
+web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
+  app/                            #   routes: /[equipo]/temporada, /partidos, /partido/[match_id], /demo
+  components/viz/                 #   pitch + chart layers (inventory: espanyol-viz-design §2)
+  lib/                            #   data loaders + types, labels (Spanish), format, viz geometry
+  public/data/                    #   exported JSON (committed; the deploy artifact)
+  design_handoff_espanyol_analytics/  # visual authority (README.md, README-PLAYER.md, screenshots)
 ```
 
 ### Architectural Patterns
@@ -268,16 +282,25 @@ WHERE cs.source_stage_id = :source_stage_id
 
 ## Skills Available
 
-These project-specific skills are registered and should be consulted automatically:
+Project skills in `.claude/skills/`. Consult them before working in their area:
 
-- **`football-silver-schema`** — full table DDL, FK resolution, idempotency patterns, ingestion strategies. Use when writing or debugging ingestion scripts, silver SQL, or gold table design.
-- **`opta-events-reference`** — full event typeId list, qualifier IDs, JSONP format, coordinate conversion, carry synthesis, sequence columns. Use when working on event pipeline files or event-level SQL.
-- **`phases-of-play`** — possession sequence phase definitions and classification conditions. Use when working on sequence/phase logic.
-- **`pitch-guide`** — language-agnostic pitch drawing primitives (all markings with exact coordinates and angles), the 30-zone grid (6x5), zone assignment logic in Python/SQL/JS. Use when drawing pitches, implementing zone assignment, or building spatial visualisations.
-- **`spadl-mapping`** — full SPADL mapping reference: the three columns added to `silver.events` (`spadl_type_id`, `spadl_result_id`, `spadl_bodypart_id`), Opta event_type → action type decision tree, qualifier-based sub-type detection, result/body-part mapping, always-success/always-fail sets, backfill API, and VAEP downstream contract. Use when working on `spadl.py`, writing SPADL-filtered queries, or building gold-layer VAEP features.
-- **`vaep-model`** — the retrained VAEP model: why the previous production weights were degenerate, the artifact contract (`vaep_model.json` + `metrics.json`, including the load-bearing Platt calibrator), the 148-feature set and the four semantics that are easy to get backwards, the frame convention, the formula and its four guards, the ten acceptance gates with measured values, and a symptom → cause → fix table. Use when working on `vaep.py`, `_build_features`, the VAEP backfill, `models/vaep/*.json`, or debugging the `vaep_*` columns — and **before any feature-set change**, since it must be mirrored in the training repo.
-- **`espanyol-viz-design`** — chart craft carried over from the v1 Streamlit visualisations: the mark vocabulary (filled = success, hollow = failure, shape = event family, size = volume), the z-order ladder as SVG element order, marker-size conversion (matplotlib `s` is area in points²), heatmap ramp construction, per-chart geometry for the shot map, passing network, sequence traces, radar, time series and match summary, and a list of v1 inconsistencies to fix rather than port. Use when building or porting any chart component in `web/` (Phase 4 onwards, `md/WEB_PLAN.md` §5). **Not the visual authority**: colour, typography, spacing, radii and layout come from `web/design_handoff_espanyol_analytics/README.md`, and zones from `pitch-guide` / `gold.pitch_zones` — where they disagree with the skill, they win. Its §0 records the split.
-- **`karpathy-guidelines`** - Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
+| Skill | Use when |
+|---|---|
+| **`football-metrics`** | Any metric name, in a request, brief, legend, percentile card or query. The glossary: one-line definition + where it's computed + what Opta doesn't have. **Design briefs aren't the authority on definitions**; its §8 lists the open conflicts with `README-PLAYER.md`. |
+| **`espanyol-viz-design`** | Building or changing any chart in `web/`. The v2 **chart catalog** (question, data, component to reuse, marks, traps for every chart type) + component inventory. The v1 matplotlib language is in its `references/`. Visual authority stays with the design handoff. |
+| **`new-viz`** | Adding a chart, pitch mode, block or page end to end: definitions → export → fixture/demo → component → page → screenshot check → docs. |
+| **`football-silver-schema`** | Ingestion scripts, silver SQL, FK resolution, idempotency, gold table design. |
+| **`opta-events-reference`** | Event pipeline files, event-level SQL, typeIds, qualifiers, JSONP, carries. |
+| **`phases-of-play`** | Sequence phase classification (`phases.py`, `sequence_phases.py`, phase flags). |
+| **`pitch-guide`** | Pitch drawing primitives, the 30-zone grid, zone assignment in Python/SQL/JS. |
+| **`spadl-mapping`** | `spadl.py`, SPADL-filtered queries, VAEP features. |
+| **`vaep-model`** | `vaep.py`, `_build_features`, `models/vaep/*.json`, `vaep_*` columns. **Read before any feature-set change** (it's mirrored in the training repo). |
+| **`karpathy-guidelines`** | Writing, reviewing or refactoring code: surgical changes, stated assumptions, verifiable success criteria. |
+| **`grill-me`** | The user asks to stress-test a plan or design. |
+
+Path-scoped rules in `.claude/rules/` load automatically when you work in
+`src/silver`, `src/gold` + `sql`, `src/export` or `web/`. They hold the
+traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
 
 ---
 
@@ -288,268 +311,54 @@ These project-specific skills are registered and should be consulted automatical
 - Do not invent column names or table structures — derive from the documented schema or use skills.
 - The `full_name` column on `players` is `GENERATED ALWAYS AS` — never include it in `INSERT` statements.
 - Data files (`data/`) are gitignored; only `.gitkeep` placeholders are tracked.
-- Every time you work with event_data and you want to work with game states or sequental actions, order by json_index column
+- **Order event streams by `(json_index, event_id)`**, never `json_index` alone (ties exist), whenever sequence, game state or "next action" matters.
+- Propose changes before making them; for data-affecting changes, a read-only before/after comparison is how to earn approval.
+
+### Traps that apply everywhere
+
+- **Low `y` is the RIGHT flank** (839:13 right-footers in slot 2). `gold.pitch_zones` is authoritative; the `pitch-guide` skill agrees with it.
+- **`sequence_number` is per team, not per match**, and **`sequence_id` renumbers on every rebuild**. Quote match + kick-off time when reporting a chain.
+- **Every event is in its own team's attacking frame.** Mirror opponent events (`105 − x`, `68 − y`) to compare.
+- **`possession_pct` is clock-based** (start-to-next-start, `GOLD_LAYER.md §4.5.0`).
+- **Style analysis filters `event_count >= 3`.** About 30% of sequences are single-event, by design (Fix B).
+- **`Ball touch` with `outcome = 'success'` is a deflection** and correctly does not end a sequence.
 
 ---
 
 ## Current State
 
-> Last updated: 29 September 2026
+> Last updated: 10 October 2026. **History, measured before/after numbers and
+> the reasons behind every fix: `md/CHANGELOG.md`** (newest first). Add new
+> dated entries there, and keep this section to what is true now.
 
-### Game state + xG own-goal fix (27–29 Sep 2026)
-
-Silver columns, one gold table + view, four sequence columns, and a fix to xG.
-Record: `md/GOLD_LAYER.md §4.8` and gate G17.
-
-- **`silver.events.{home,away}_{goals,players}_before`**: the scoreline and
-  players on the pitch *before* each event, by `(json_index, event_id)`.
-  `src/silver/events/game_state.py`, run as events post-processing (NULL-state
-  matches only; `--all` is a 30 s no-op when nothing changed). Own goals (Q28)
-  count for the opponent. A Q32/Q33 card or a `Player retired` removes a player
-  only if they were on the pitch (115 of 136 red cards count). The module
-  refuses to commit unless every match ends on its `silver.matches` score
-  (496/496, and half time 496/496).
-- **`gold.match_game_states`** (2,463 segments of constant state, durations tile
-  every period exactly) and the view **`gold.team_game_states`** (per team,
-  with `score_state` / `numbers_state` labels). `gold.sequences` gained
-  `start_goals_for/against` and `start_players_for/against`. Build step
-  `game_states`, right after `ddl`.
-- **xG fix** (`xg.py`): own goals were filtered out of the shot query, so
-  `score_diff_at_shot` ignored them (451 shots in 37 matches off by 1–2). They
-  now feed the game state and are dropped before scoring; the sort is
-  `json_index, event_id`. The 38 own-goal matches were re-scored (max |Δxg| 0.077,
-  league total 1164.52 → 1164.09) and gold rebuilt.
-- **Gold `sequences` step planner guard**: `build_sequences.sql` opens with
-  `SET LOCAL enable_nestloop = off`. After a `VACUUM (FULL, ANALYZE)` the
-  planner re-scanned the underestimated `poss` CTE inside nested loops, which
-  is quadratic (full build stalled past 20 min; now 184 s). `GOLD_LAYER §9.8`.
-- **Lineup exits fixed (29 Sep 2026)**: pass 2c/d set `minute_out` on every
-  red card, and `Player retired` was ignored. Every exit now applies only to a
-  player on the pitch, and pass **2e** (typeId 20) records `exit_reason =
-  'retired'` (CHECK widened). 20 stored rows repaired by
-  `sql/fixes/20260929_match_lineups_exits.sql`: 4 subbed-then-sent-off, 6
-  retired, 10 bench reds cleared. Gold minutes for the 10 who played: −255 in
-  total. Verified: re-loading all 496 matches with the fixed loader reproduces
-  every repaired row exactly. Gold rebuilt from `player_match_stats`; web
-  export re-run.
-- **48 missing lineup rows added (29 Sep 2026)**: players not yet in
-  `silver.players` when their match was first loaded (pass 1 skips unknown
-  players). New flag `load_match_lineups.py --reprocess` re-runs loaded matches
-  and inserts only missing rows (48 in 35 matches, 13 of them played; 0 existing
-  rows changed). Re-run it after loading squads late.
-- **Export determinism**: four `src/export/db.py` sorts had ties and reshuffled
-  between runs (progression by `xt`, pass-network edges by count, defensive
-  actions by `json_index`, sequences by `xt`); each now ends on a unique key.
-- Full re-run after all of the above: lineups → game state (unchanged) → full
-  gold rebuild → gates → web export.
-
-### Sequence view, third pass (20 Sep 2026)
-
-Export and renderer only; silver and gold untouched. Record: `md/WEB_DATA.md
-§7.5`. Every match file re-exported.
-
-- **`start_kind`**: a `pass` start refined into `corner` / `throw_in` /
-  `goal_kick` / `kick_off` / `free_kick` from the first pass's qualifiers —
-  28% of all sequences were labelled "Pase". **`end_action`**: how a
-  `turnover` (63% of sequences) lost the ball, from our last action, with
-  failed passes split by sub-type. Both from qualifiers in the export; the
-  gold CASE is the natural next step.
-- **Shots end at `goal_mouth_y`** (present on every shot, off target too),
-  not the goal centre. **`simplify()` is RDP** under the same 6-point budget:
-  mean shape error 9.3 m → 4.1 m.
-- `SequenceDetail`: start halo, end ring, regain diamond, HTML hover card
-  (`ShotMap`'s pattern) with dimming; nodes 1.9 → 1.5.
-
-### Sequence review, second pass (19 Sep 2026)
-
-Seven chains flagged by eye on the deployed match pages were traced to the raw
-events; full record in **`md/GOLD_SEQUENCES.md §6.6`**. Two data defects, both
-fixed and rebuilt over the 458 matches (events → sequences → gold → export):
-
-- **`carries.py` matched event names this pipeline never emits** (`BallRecovery`,
-  `Shot`, `MissedShot`…), so no carry was ever synthesised after a ball
-  recovery or keeper pick-up, nor before a shot. Also fixed: the carry clock
-  averaged minute and second separately; and carries under **1 m** (21% of
-  them, coordinate rounding) are no longer created (`MIN_CARRY_DISTANCE_M`).
-  255,795 → **227,047** carries; non-carry rows unchanged.
-- **Set-piece passes now open a sequence before the sandwich guard is
-  consulted**, and **Q124 (goal kick)** joins Q5/Q6/Q107. 1,018 throw-ins and
-  209 goal kicks had been absorbed into the possession the ball had left.
-  150,990 → **152,217** sequences; every other event partitions identically.
-- Gold: `ball_out` no longer requires the opponent to take the restart.
-  Export/web: `Clearance` is its own action kind with a destination; every
-  action ships a `type` key that the sequence view names on hover.
-- **`sequence_id`s renumber on every full rebuild** (per-team counter). Quote
-  kick-off time, not the id, when reporting a chain.
-- Pre-rebuild snapshot: `silver.events_backup_20260921` (941,875 rows) — drop
-  it once satisfied. The events pipeline has **no delete step**: to re-run it
-  over loaded matches, `TRUNCATE silver.events, gold.sequences,
-  gold.sequence_players, gold.sequence_phase_segments` first (not `DELETE` —
-  see §6.6 on why that ran for 15 minutes).
-- **After a full rebuild, `VACUUM (FULL, ANALYZE) silver.events`.** The reload
-  UPDATEs every row several times (SPADL, VAEP, xG, foot preference) and the
-  sequence pass once more, which leaves the heap ~3× its real size (2,525 MB
-  vs 935 MB on 21 Sep 2026) and turned gold's `sequences` step from ~3 minutes
-  into 32. The vacuum takes ~90 s, needs an exclusive lock and roughly the
-  table's size in free disk.
-
-### Sequence review applied (16 Sep 2026)
-
-A full review of the sequence path (classifier → gold → phases → export → web)
-produced one rule set and four gold changes, all applied and rebuilt over the
-458 matches. Full record with before/after tables: **`md/GOLD_SEQUENCES.md §6.5`**.
-
-- **Classifier** (`sequences.py`, always on, no flag): the sandwich exemptions,
-  the regain start rules and the assist guard are now **owner-relative** (a team
-  cannot regain the ball from itself; an opponent's mirror record between two of
-  our actions is not a team change); a **failed take-on ends the possession only
-  when the next on-ball action is the opponent's** (Opta: a failed paired tackle
-  means "won the tackle but not the ball"; Q211 overrun always ends). 155,050 →
-  150,990 sequences; opponent on-ball events inside a sequence 1,147 → 0;
-  every assist now in its own team's chain. `--all` re-classifies every match.
-- **xT** (`xt.py`): a failed pass or carry earns **0**. It used to get the full
-  zone gain of its intended destination, which decided the "best sequences"
-  ranking on the match pages (64% of the top 12 drew most of their xT from a
-  pass that never arrived).
-- **`gold.sequences`**: `end_x`/`end_y` from the possessing team's last action
-  (the last event's coordinates are in the opponent's frame when it is theirs);
-  four new `outcome` values — `retained`, `corner_conceded`, `foul_committed`,
-  `interrupted` — split out of `turnover`; DDL constraint updated in
-  `sql/ddl/gold_sequences.sql` (idempotent ALTER).
-- **Phases** (`phases.py`): the zone a sequence ends in confirms itself, so a
-  chain ending "pass into the final third, shot" gets its attacking segment.
-- **Possession** (`build_team_match_stats.sql`): start-to-next-start clock
-  attribution replaces the one-second-floor duration sum (`GOLD_LAYER.md §4.5.0`).
-
-### Done
-- Silver schema fully designed and operational for La Liga — all 10 tables
-- **Seasons loaded: 2024/25 (47 matches), 2025/26 (380), 2026/27 (31 and counting) — 458 total.** 2026/27 was loaded on 5 Sep 2026 through matchday 3 plus one early matchday-6 fixture; re-run the full order in "How to Run Pipelines" to pick up later matchdays
-- Data ingestion pipelines built for matches, lineups, squads, teams, players, events (carries + xT + SPADL mapping)
-- SPADL columns (`spadl_type_id`, `spadl_result_id`, `spadl_bodypart_id`) added to `silver.events`; backfill via `python -m src.silver.events.spadl`
-- **VAEP is live.** `vaep_value` / `vaep_offensive` / `vaep_defensive` are populated across all 458 matches (811,792 of 941,875 events; the rest are action types SPADL does not map). The previously shipped model was degenerate (`scores` AUC excluding goal actions **0.5222** — a coin flip; it had learned "was this a successful shot?"). It was retrained from scratch in a companion repo, Platt-calibrated on held-out Opta, and integrated on 11 Aug 2026: **0.7465** AUC excluding goal actions, `corr(vaep_offensive, xt)` **−0.1942 → +0.2605**. Backfill via `python -m src.silver.events.vaep`; consult the **`vaep-model`** skill before touching `vaep.py`, `_build_features` or `models/vaep/*.json`
-- Possession sequence classifier implemented (`sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number`)
-- Squad diff strategy live with `squad_snapshot_log` audit table
-- Shot enrichment columns: `shot_play_pattern` (7-value enum from Q22/23/24/25/26/160/9) and `first_time` (bool from Q328)
-- Foot preference enrichment: `preferred_foot` on `silver.players` (derived from Q20/Q72 counts) and `is_weak_foot` on `silver.events`. Runs automatically as post-processing inside `python -m src.silver.events`, alongside xG; `foot_preference.py` is the standalone backfill
-- SPADL and VAEP are computed **inline** by the events pipeline (`include_spadl` / `include_vaep`, both default True). `src.silver.events.spadl` and `.vaep` are backfill tools for already-loaded rows, not part of the new-season path
-
-### Gold Layer — COMPLETE: sequences, teams and players (5 Sep 2026)
-
-The full gold layer is designed in `md/GOLD_LAYER.md`. **The operating manual is
-`GOLD_LAYER.md §9`** — run order, validation gates, documented deviations and
-troubleshooting. Read that before touching anything in `src/gold/`.
-
-Built and populated over all 458 matches (counts below are the 458-match
-snapshot; the 29 Sep 2026 rebuild over 496 matches is in `GOLD_LAYER.md §9.4`):
-
-| Table | Rows |
-|---|---|
-| `gold.sequences` | 152,217 |
-| `gold.sequence_players` | 449,415 |
-| `gold.sequence_phase_segments` | 244,417 |
-| `gold.team_match_stats` | 916 |
-| `gold.team_season_stats` | 60 |
-| `gold.player_match_stats` | 14,394 |
-| `gold.player_season_stats` | 1,464 |
-| `gold.player_season_percentiles` | 9,735 |
-| `gold.formation_slot_positions` | 209 (seeded, generated) |
-| `gold.pass_receptions` | 386,452 (22 Sep 2026, 496 matches) |
-| `gold.match_game_states` | 2,463 (29 Sep 2026, 496 matches) + view `gold.team_game_states` |
-
-```bash
-# Append to the silver run order every weekend. Full rebuild, ~5 minutes.
-python -m src.silver.events.sequences
-python -m src.gold.build_gold
-```
-
-**Full rebuild is the intended posture, not a fallback** (§9.2): at this volume
-it costs ~5 min and cannot leave rows computed under an old definition beside
-rows computed under a new one. `--match-ids` is for fast iteration while
-developing a query, not for the weekend run.
-
-**The phase pass is a hard dependency of the team build**, not an enrichment:
-without it `counter_attack_sequences` and `high_transition_sequences` are zero
-league-wide, which looks plausible and is wrong. `build_gold.py` refuses to run
-the team step if `gold.sequence_phase_segments` is empty.
-
-**`gold.pass_receptions` (added 22 Sep 2026)** is one row per completed pass
-with a resolved receiver: the reception point (pass end, `rx_zone_id`) and the
-receiver's *spell* — their unbroken run of actions until a teammate acts or
-the sequence ends — classified by `spell_end`. Opta records no receiver; the
-rule is the next same-team event by `(json_index, event_id)`, skipping opponent
-and administrative rows. Built by the last `build_gold` step
-(`--step pass_receptions`, ~80 s). Definition, measured numbers and gate G16:
-`GOLD_LAYER.md §4.7`.
-
-**Player position comes from the Opta formation slot, not from
-`match_lineups.position`** (which is `SUB` for every substitute) or
-`players.position_raw` (4 values only). `gold.formation_slot_positions` maps
-`(team_formation, formation_position) -> position, position_group` and is
-**generated** from the measured mean `(x, y)` of each slot — regeneration
-procedure and validation assertions in `GOLD_LAYER.md §9.6 deviation 10` and
-gate G14. The build fails loudly on an unmapped slot rather than emitting a
-NULL position.
-
-**Two traps that will bite anyone extending this** (both in §9.5):
-`sequence_number` is per **team**, not per match — ordering a match by it ties
-every value and silently corrupts any `lag()`/`lead()`; and the percentile
-build reads metrics via `to_jsonb(row) ->> metric`, so a typo in
-`gold.percentile_metrics` yields NULL rather than an error. Gates G10 and G12
-exist to catch exactly these.
-
-**Pitch geometry is settled:** 6 strips × 5 lateral channels = 30 zones, and
-**low `y` is the RIGHT flank** (839:13 on foot preference — GOLD_LAYER §4.6.0).
-The `pitch-guide` skill was inverted and was corrected on 16 Aug 2026; skill,
-GOLD_LAYER and `gold.pitch_zones` now agree. `gold.pitch_zones` is authoritative.
-
-**`sequences.py` — Fix 0 + Fix A + Fix B applied 16 Aug 2026, all 427 matches
-re-classified.** Diagnosis, worked examples and full before/after in
-`md/GOLD_SEQUENCES.md §6`. The before/after table below is that 427-match
-snapshot and is kept as the historical record; the 2026/27 matches loaded on
-5 Sep 2026 were classified with the same fixes, bringing the current totals to
-**458 matches / 858,297 events with a `sequence_id` / 152,217 sequences** after the
-19 Sep 2026 pass (§6.6).
-
-- **Fix 0 — determinism.** The classifier was **non-deterministic**: 11,766
-  events share a `json_index` with another event in the same match (6,026
-  `Carry`, 5,445 `Challenge`) and neither the SQL `ORDER BY` nor the pandas sort
-  had a tiebreaker, so a re-run reproduced only 92.7% of stored `sequence_id`s
-  with no code change. `event_id` is now the tiebreaker in both. Verified: a
-  shuffled re-run now reproduces the stored columns exactly.
-- **Fix A** — possession change is detected against the team that owns the
-  running sequence, not the previous event.
-- **Fix B** — gap closer: any on-ball action opens a sequence when none is
-  running (contested events gated on `outcome = 'success'`, so a *failed* tackle
-  never opens one).
-
-Fixes A and B are **ON by default**; `--no-fix-a` / `--no-fix-b` reproduce the
-old behaviour for A/B comparison only — never for a production backfill.
-
-| | before | after |
-|---|---|---|
-| Events with a `sequence_id` | 782,251 | **821,278** |
-| Sequences | 121,850 | **144,763** |
-| Orphaned passes | 22,036 | **301** |
-| Majority-flip sequences | 3,738 | **1,374** |
-| Sequences with 6+ opponent events | 604 | **5** |
-| Goals inside a sequence | — | **1,140 / 1,140** |
-| Single-event sequences | 22,440 | 43,243 |
-| Sequences per team-match | 142.7 | 169.5 |
-
-The last two rows are the intended price of Fix B — recording brief possessions
-that were previously invisible. Two consequences downstream: `possession_pct`
-is clock-based, start-to-next-start, since 16 Sep 2026 (`GOLD_LAYER.md §4.5.0`;
-the one-second floor it replaced is no longer needed), and style clustering
-must filter `event_count >= 3` (§4.1.9), which now drops ~40% of rows.
-
-Pre-fix snapshot kept in `silver.sequences_backup_20260816` (901,805 rows) —
-drop it once you are satisfied.
-
-Note `Ball touch` with `outcome = 'success'` is a *deflection* (Opta: "ball
-simply hit the player unintentionally") and correctly does **not** end a
-sequence; do not "fix" that.
+- **Data**: La Liga 2024/25 (47 matches, partial, not published), 2025/26
+  (380), 2026/27 (in progress): **496 matches** at the 29 Sep 2026 rebuild.
+  Re-run the full order above to pick up new matchdays.
+- **Silver**: all 10 tables. Events carry synthesised carries, xT (failed
+  actions earn 0), SPADL, **VAEP** (retrained, calibrated: `vaep-model`),
+  **xG** (XGBoost, penalties 0.79), game state before each event, foot
+  preference. Possession sequences from `sequences.py` (Fix 0/A/B and the
+  owner-relative rules: `md/GOLD_SEQUENCES.md §6`).
+- **Gold**: complete. `sequences`, `sequence_players`,
+  `sequence_phase_segments`, `team_match_stats`, `team_season_stats`,
+  `player_match_stats`, `player_season_stats`, `player_season_percentiles`,
+  `formation_slot_positions` (seeded), `pass_receptions`,
+  `match_game_states` + view `team_game_states`. Manual and row counts:
+  `md/GOLD_LAYER.md §9` (§9.4).
+- **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written
+  by `python -m src.export`. Built: screen 01 (season), screen 02 (match),
+  match list, `/demo`. **Next: screen 03 (player)**, brief
+  `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its definition
+  conflicts are listed in `football-metrics §8`; settle them with the user
+  first. `src/export/{squad,player,sequences}.py` are specified (WEB_DATA §8–10),
+  not implemented. Plan: `md/WEB_PLAN.md`; contract: `md/WEB_DATA.md`.
+- **Weekend run**: full order above → `python -m src.silver.events.sequences` →
+  `python -m src.gold.build_gold` → gates (`GOLD_LAYER.md §9.5`) →
+  `python -m src.export` → commit `web/public/data`.
+- **Snapshots to drop once satisfied**: `silver.events_backup_20260921`,
+  `silver.sequences_backup_20260816`.
 
 ### Future Scope
 - Segunda Division (zero schema changes needed)
-- Web visualisation on top of gold layer
-- Sequence & phase clustering (unsupervised ML) — proposal and roadmaps in `md/SEQUENCE_CLUSTERING.md`
+- Screens 03–05 of the site (player, sequence lab, comparison) and methodology
+- Sequence & phase clustering (unsupervised ML): proposal and roadmaps in `md/SEQUENCE_CLUSTERING.md`

@@ -1,13 +1,25 @@
 ---
 name: phases-of-play
 description: >
- Complete guide to understand the phases of play definitions and conditions used in the football analytics project
+  Phases of play for possession sequences: the zone x tempo grid (build-up,
+  fast build-up, mid-block progression, fast mid-block, attacking third, fast
+  attacking third), the overlay phases (counter-attack, high transition, set
+  piece, direct long play, direct free kick / penalty), their exact conditions
+  and thresholds, and how a sequence is split into phase segments.
+  Use when working on src/gold/phases.py, src/gold/sequence_phases.py,
+  gold.sequence_phase_segments, the has_* phase flags on gold.sequences, team
+  counts such as counter_attack_sequences / high_transition_sequences, or any
+  question about what a phase means or why a sequence got (or missed) one.
 ---
 
 # Sequence Phases of Play — Design Specification
 
 **Context:** `gold.sequences` table enrichment — phase-of-play classification  
-**Status:** Design finalised, ready for implementation
+**Status:** Implemented (Sep 2026) in `src/gold/phases.py` (zone × tempo state
+machine) and `src/gold/sequence_phases.py` (segments + the eleven `has_*` flags
+on `gold.sequences`). This file is the design spec. Where it differs from the
+code or `md/GOLD_LAYER.md §4.1.6`, the code and GOLD_LAYER win, and this file
+gets fixed.
 
 ---
 

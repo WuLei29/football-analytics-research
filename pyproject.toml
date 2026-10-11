@@ -20,6 +20,14 @@ dependencies = [
     "seaborn>=0.12",
     "pyyaml>=6.0",
     "xgboost>=1.7",
+    # Every loader, gold build and export connects with psycopg2 and reads
+    # FOOTBALL_DB_DSN from .env. The venv has the source build `psycopg2`;
+    # either distribution satisfies `import psycopg2`.
+    "psycopg2-binary>=2.9",
+    "python-dotenv>=1.0",
+    # xg.py loads the Platt calibrator, a pickled sklearn LogisticRegression.
+    "scikit-learn>=1.3",
+    "joblib>=1.3",
 ]
 
 # ---------------------------------------------------------------------------

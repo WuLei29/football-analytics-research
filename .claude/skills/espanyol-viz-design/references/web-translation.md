@@ -1,6 +1,6 @@
 # Translating the v1 charts to Next.js / React / TypeScript
 
-**Read `SKILL.md` §0 first.** The v2 site's colour, typography, spacing and
+**Read `v1-design-language.md` §0 first.** The v2 site's colour, typography, spacing and
 pitch styling come from `web/design_handoff_espanyol_analytics/README.md`. This
 file's job is the *conversion math* — ramps, marker sizes, mark mechanics,
 chart-by-chart geometry — and the record of what v1 got wrong. Where it shows a
@@ -129,11 +129,11 @@ Notes that matter:
   already stores metres and the export ships metres (`WEB_PLAN` §9.1).
 - `line_zorder=4` becomes render order: draw heatmap `<g>` first, pitch lines
   after it, marks after that. SVG has no z-index for shapes, so the z ladder in
-  SKILL §5 is literally your element order.
+  v1-design-language.md §5 is literally your element order.
 
 ### Zone grids
 
-**Do not port the v1 20-zone grid** (`SKILL.md` §4). The site's zones are the
+**Do not port the v1 20-zone grid** (`v1-design-language.md` §4). The site's zones are the
 project's canonical **30-zone grid** — 6 longitudinal strips × 5 lateral
 channels, `gold.pitch_zones` authoritative, boundaries and assignment logic in
 the `pitch-guide` skill — and the **12×8 xT surface** the match export ships.
@@ -206,7 +206,7 @@ Define these once as pitch-unit radii and let the SVG scale handle the rest.
 ## 5. Marks
 
 ```tsx
-// Fill/stroke rules from SKILL §7. Standardise edges on the team colour.
+// Fill/stroke rules from v1-design-language.md §7. Standardise edges on the team colour.
 const markStyle = (successful: boolean, teamColor: string) =>
   successful
     ? { fill: teamColor, fillOpacity: 0.8, stroke: teamColor, strokeWidth: 0.15 }

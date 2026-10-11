@@ -397,7 +397,7 @@ Grid is defined in `src/silver/events/xt.py`. The grid is symmetric top/bottom (
 
 ## 12. Sequence Columns (populated separately)
 
-`sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number` are **NULL on initial load** and populated in a second pass by a possession-sequence classifier (not yet implemented as of schema definition).
+`sequence_id`, `sequence_start`, `sequence_end`, `sequence_event_number` are **NULL on initial load** and populated in a second pass by the possession-sequence classifier `src/silver/events/sequences.py` (`python -m src.silver.events.sequences`; rules and fixes in `md/GOLD_SEQUENCES.md §6`).
 
 A **possession sequence** = a continuous chain of events by the same team without a change of possession. Typical definition:
 - Starts after: opponent event, ball-out-of-play, goalkeeper recovery, or start of period
