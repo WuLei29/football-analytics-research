@@ -94,10 +94,14 @@ display:flex; flex-direction:column`. Four stacked blocks:
      number Outfit 700 20px white.
    The plate and chip surfaces exist so the type passes contrast over **any** photo. Keep them.
 2. **Bio grid**: `grid-template-columns:1fr 1fr; gap:0 14px; padding:12px 16px;
-   border-bottom:1px solid var(--line)`. 8 rows, each a baseline-aligned `space-between` pair,
-   `padding:3px 0`: key DM Mono 8.5px `.12em` uppercase `--faint`; value Figtree 12px 600 `--ink`.
-   Keys, in order: **Edad, Nacimiento, Altura, Pie, Nacionalidad, Posición, Partidos,
-   Titularidades**. *Weight* and *Contract* from the mock are out because neither exists in the data.
+   border-bottom:1px solid var(--line)`. 12 items (two columns of six), each a baseline-aligned
+   `space-between` pair, `padding:3px 0`: key DM Mono 8.5px `.12em` uppercase `--faint`; value
+   Figtree 12px 600 `--ink`. Keys, in order: **Edad, Nacimiento, Altura, Pie, Nacionalidad, Posición,
+   Partidos, Titularidades, Minutos, Sustituido, Tarjetas, Penaltis** (decided 16 Oct 2026: everything
+   about how much and how he has played sits here, as plain counts, never as a percentile bar).
+   *Tarjetas* is `yellow_cards · red_cards` (`5 · 1`); *Penaltis* is `penalties_scored/penalties_taken`
+   (`3/4`), `—` when he has taken none; *Sustituido* is `matches_subbed_off`. *Weight* and *Contract*
+   from the mock are out because neither exists in the data.
    `height_cm` and `date_of_birth` are hand-filled in `silver.players` and may be NULL; render `—`.
    *Pie* is `preferred_foot`, derived from event foot qualifiers (`izquierdo / derecho / ambos`).
    *Posición* is the **primary position** from the formation slot (`CB`, `RB`, `DM`… mapped to Spanish
@@ -106,20 +110,23 @@ display:flex; flex-direction:column`. Four stacked blocks:
    `border:1px solid var(--line); margin:-0.5px` (collapsed hairline grid). Label DM Mono 9px `.14em`
    uppercase `--mid`; value Outfit 700 **42px** `line-height:.86` (`--blue` for the first, headline
    KPI, `--ink` otherwise); sub DM Mono 9px `--faint`, `margin-top:3px` (per-90 or rank-in-squad line).
-   **The set depends on the position group** (proposed), so a centre back's card isn't four zeros:
+   **The set depends on the role** (decided 16 Oct 2026), so a centre back's card isn't four zeros.
+   VAEP rather than xT is the model value here, as on the percentile cards (it covers every on-ball
+   action and charges losing the ball):
 
-   | Group | KPI 1 (headline) | KPI 2 | KPI 3 | KPI 4 |
+   | Role | KPI 1 (headline) | KPI 2 | KPI 3 | KPI 4 |
    |---|---|---|---|---|
-   | ST, W | Goles | Asistencias | npxG | xT / 90 |
-   | MID | xT / 90 | Asistencias | xA | Pases progresivos |
-   | CB, RB, LB | Acciones def. (aj. posesión) / 90 | Pases progresivos | Duelos aéreos % | Pases % |
-   | GK | Goles evitados | Paradas % | Pases % | Porterías a cero |
+   | ST, W | Goles `goals` | Asistencias `assists` | npxG `npxg` | VAEP /90 `vaep_per_90` |
+   | AM | Goles + asistencias `goal_contributions` | xA `xa` | Pases clave `key_passes` | VAEP /90 `vaep_per_90` |
+   | MID | VAEP /90 `vaep_per_90` | Pases progresivos `progressive_passes` | Recuperaciones `ball_recoveries` | Pases % `pass_completion_rate` |
+   | CB, RB, LB | VAEP /90 `vaep_per_90` | Duelos en el suelo % `ground_duel_win_rate` | Duelos aéreos % `aerial_win_rate` | Pases progresivos `progressive_passes` |
+   | GK | Goles evitados `goals_prevented` | Paradas % `save_pct` | Porterías a cero `clean_sheets` | Pases % `gk_pass_completion_rate` |
 
-   The sets live in `src/export/config.py` (`PLAYER_KPIS` by group), not in the component.
-4. **Secondary stat row**: `flex; wrap; gap:14px; padding:14px 16px`. Each item is value
-   (Outfit 700 19px) + key (DM Mono 8.5px `.1em` uppercase `--mid`), baseline-aligned, `gap:5px`.
-   6 items: **Tiros, Pases clave, Regates ganados, Recuperaciones, Pases %, Minutos** (GK: Paradas,
-   Blocajes, Salidas, Pases largos %, Pases %, Minutos).
+   Season totals unless marked /90 or %; the sub line under a total is its per-90. The sets live in
+   `src/export/config.py` (`PLAYER_KPIS` by role), not in the component.
+4. ~~**Secondary stat row**~~ — **dropped (16 Oct 2026)**. Its six items (shots, key passes, take-ons
+   won, recoveries, pass %, minutes) are all on the percentile cards now, with a league rank, or in
+   the bio grid (minutes). The card ends at the KPI grid.
 
 #### 3b · Event map card (right)
 `background:var(--card); border:1px solid var(--line); radius 14px; padding:16px`.
@@ -401,9 +408,9 @@ no new gold tables are needed.** Every field below reads existing gold or silver
 
 | Block | Field | Source |
 |---|---|---|
-| Header, bio | `player` | `silver.players` (names, `known_name`, nationality, `preferred_foot`, `height_cm`, `date_of_birth`) ⋈ `gold.player_season_stats` (shirt, primary position and group, `is_utility`, `primary_position_pct`, matches, starts, minutes) |
+| Header, bio | `player` | `silver.players` (names, `known_name`, nationality, `preferred_foot`, `height_cm`, `date_of_birth`) ⋈ `gold.player_season_stats` (shirt, primary position and group, `role_group`, `is_utility`, `primary_position_pct`, matches, starts, minutes, `matches_subbed_off`, `yellow_cards`, `red_cards`, `penalties_taken`, `penalties_scored`) |
 | Tab strip | from `squad.json` (WEB_DATA §8) | already specified |
-| KPIs, secondary row | `kpis[]`, `stats[]`: `{key, value, per_90?, sub?}` in display order | `gold.player_season_stats`; sets per group from `PLAYER_KPIS` |
+| KPIs | `kpis[]`: `{key, value, per_90?, sub?}` in display order | `gold.player_season_stats`; sets per role from `PLAYER_KPIS` |
 | `Pases`, `Progresivos`, `Pases clave` | `maps.passes`: compact rows `[x, y, end_x, end_y, flags]`, flags bits = completed, progressive, key_pass, assist | `silver.events` `Pass` by the player; `gold.is_progressive`; `value_assist` |
 | `Conducciones` | `maps.carries`: `[x, y, end_x, end_y, completed]`, progressive only | `silver.events` `Carry` + `gold.is_progressive` |
 | `Toques` | `maps.touch_zones`: `[{zone_id, touches, share}]` | touch set grouped by `gold.zone_id` |
@@ -463,14 +470,16 @@ Desktop-first, same rules as the rest of the app. Below ~1100px:
 | One 24-metric spine for every outfielder | Four cards × six per role (§4) | Decided with the user 15 Oct 2026 |
 | Defensive volumes raw | Possession-adjusted | GOLD_LAYER §4.6.14 |
 | Bio: Weight, Contract, photo URL | Partidos, Titularidades; hand-supplied photo or numeral fallback | Not in the data |
-| KPIs Goals, Assists, xG, xT/90 for everyone | Set per position group | Four zeros for a centre back otherwise |
+| KPIs Goals, Assists, xG, xT/90 for everyone | Set per role, VAEP as the model value | Four zeros for a centre back otherwise |
+| Secondary stat row | Dropped; minutes, subbed, cards, penalties in the bio grid | Everything else in it is on the percentile cards |
 | `SEQ-####` ids | `J{md} · {min}'` | Ids renumber on every rebuild |
 | Player state, re-query on tab click | Route per player; `?vista` sticky | Static export |
 | Hypothetical gold tables per block | One export file, `players/{id}.json` | The site's architecture (WEB_PLAN §2) |
 
 ## Open decisions (defaults above, to confirm)
 1. **Route** `/{team}/jugador/{season}/{player_id}`: adds the season to `routes.player`.
-2. **KPI sets per position group** (table in §3a).
+2. ~~**KPI sets per position group**~~ — **decided 16 Oct 2026**: per role with VAEP (§3a); the
+   secondary stat row dropped and the bio grid extended to 12 items.
 3. **Defensive mode**: outcome colour + type chips (page-02 grammar), versus the mock's colour-by-type
    dots.
 4. ~~**Percentile spine**~~ — **decided 15 Oct 2026**: per-role cards in §4, implemented in gold

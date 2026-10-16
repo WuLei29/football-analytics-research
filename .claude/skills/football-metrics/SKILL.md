@@ -243,8 +243,9 @@ sweeper actions, `gk_long_ball_pct`.
 
 **`README-PLAYER.md` (screen 03) vs the repo.** The brief was rewritten as v2 on
 10 Oct 2026 with the resolutions below. The percentile spine (open decision 4)
-was settled with the user on 15 Oct 2026 (per-role cards, README-PLAYER §4);
-the other five it marks **(proposed)** still need the user's OK. The table
+was settled with the user on 15 Oct 2026 (per-role cards, README-PLAYER §4),
+and the KPI sets (decision 2) on 16 Oct 2026 (per role, VAEP as the model
+value); the other four it marks **(proposed)** still need the user's OK. The table
 records what the original mock said.
 
 | Brief says | Repo has | Suggested resolution |
