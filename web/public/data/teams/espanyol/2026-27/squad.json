@@ -1,0 +1,339 @@
+{
+  "generated_at": "2026-10-16T20:19:06Z",
+  "min_minutes": 158,
+  "players": [
+    {
+      "matches": 7,
+      "minutes": 693,
+      "name": {
+        "first": "Marko",
+        "full": "M. Dmitrović",
+        "last": "Dmitrovic"
+      },
+      "player_id": 2373,
+      "position": "GK",
+      "position_group": "GK",
+      "role": "GK",
+      "shirt_number": 13,
+      "starts": 7
+    },
+    {
+      "matches": 5,
+      "minutes": 444,
+      "name": {
+        "first": "Unai",
+        "full": "Unai Núñez",
+        "last": "Núñez"
+      },
+      "player_id": 2339,
+      "position": "CB",
+      "position_group": "CB",
+      "role": "CB",
+      "shirt_number": 14,
+      "starts": 5
+    },
+    {
+      "matches": 6,
+      "minutes": 413,
+      "name": {
+        "first": "Clemens",
+        "full": "C. Riedel",
+        "last": "Riedel"
+      },
+      "player_id": 2356,
+      "position": "CB",
+      "position_group": "CB",
+      "role": "CB",
+      "shirt_number": 5,
+      "starts": 4
+    },
+    {
+      "matches": 4,
+      "minutes": 400,
+      "name": {
+        "first": "Leandro",
+        "full": "L. Cabrera",
+        "last": "Cabrera"
+      },
+      "player_id": 2360,
+      "position": "CB",
+      "position_group": "CB",
+      "role": "CB",
+      "shirt_number": 6,
+      "starts": 4
+    },
+    {
+      "matches": 3,
+      "minutes": 135,
+      "name": {
+        "first": "Vanja",
+        "full": "V. Drkušić",
+        "last": "Drkusic"
+      },
+      "player_id": 4790,
+      "position": "CB",
+      "position_group": "CB",
+      "role": "CB",
+      "shirt_number": 16,
+      "starts": 1
+    },
+    {
+      "matches": 6,
+      "minutes": 558,
+      "name": {
+        "first": "Omar",
+        "full": "O. El Hilali",
+        "last": "El Hilali"
+      },
+      "player_id": 2363,
+      "position": "RB",
+      "position_group": "RB",
+      "role": "RB",
+      "shirt_number": 23,
+      "starts": 6
+    },
+    {
+      "matches": 1,
+      "minutes": 101,
+      "name": {
+        "first": "José",
+        "full": "José Ángel",
+        "last": "Ángel"
+      },
+      "player_id": 2367,
+      "position": "RB",
+      "position_group": "RB",
+      "role": "RB",
+      "shirt_number": 32,
+      "starts": 1
+    },
+    {
+      "matches": 7,
+      "minutes": 562,
+      "name": {
+        "first": "Roger",
+        "full": "Roger Hinojo",
+        "last": "Hinojo"
+      },
+      "player_id": 2375,
+      "position": "LB",
+      "position_group": "LB",
+      "role": "LB",
+      "shirt_number": 21,
+      "starts": 7
+    },
+    {
+      "matches": 7,
+      "minutes": 590,
+      "name": {
+        "first": "Edu",
+        "full": "Edu Expósito",
+        "last": "Expósito"
+      },
+      "player_id": 2366,
+      "position": "CM",
+      "position_group": "MID",
+      "role": "MID",
+      "shirt_number": 8,
+      "starts": 6
+    },
+    {
+      "matches": 7,
+      "minutes": 457,
+      "name": {
+        "first": "Urko González de",
+        "full": "Urko González de Zárate",
+        "last": "Zárate"
+      },
+      "player_id": 2073,
+      "position": "CM",
+      "position_group": "MID",
+      "role": "MID",
+      "shirt_number": 4,
+      "starts": 6
+    },
+    {
+      "matches": 4,
+      "minutes": 184,
+      "name": {
+        "first": "Gabriel",
+        "full": "Gabriel Moscardo",
+        "last": "Moscardo"
+      },
+      "player_id": 4794,
+      "position": "CM",
+      "position_group": "MID",
+      "role": "MID",
+      "shirt_number": 20,
+      "starts": 2
+    },
+    {
+      "matches": 3,
+      "minutes": 70,
+      "name": {
+        "first": "Pol",
+        "full": "Pol Lozano",
+        "last": "Lozano"
+      },
+      "player_id": 2362,
+      "position": "CM",
+      "position_group": "MID",
+      "role": "MID",
+      "shirt_number": 10,
+      "starts": 0
+    },
+    {
+      "matches": 7,
+      "minutes": 580,
+      "name": {
+        "first": "Javi",
+        "full": "Javi Hernández",
+        "last": "Hernández"
+      },
+      "player_id": 2355,
+      "position": "AM",
+      "position_group": "MID",
+      "role": "AM",
+      "shirt_number": 28,
+      "starts": 7
+    },
+    {
+      "matches": 6,
+      "minutes": 463,
+      "name": {
+        "first": "Tyrhys",
+        "full": "T. Dolan",
+        "last": "Dolan"
+      },
+      "player_id": 2374,
+      "position": "LW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 24,
+      "starts": 5
+    },
+    {
+      "matches": 7,
+      "minutes": 409,
+      "name": {
+        "first": "",
+        "full": "Cala",
+        "last": "Cala"
+      },
+      "player_id": 4785,
+      "position": "RW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 22,
+      "starts": 5
+    },
+    {
+      "matches": 6,
+      "minutes": 265,
+      "name": {
+        "first": "Marcos",
+        "full": "Marcos Fernández",
+        "last": "Fernández"
+      },
+      "player_id": 2376,
+      "position": "RW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 18,
+      "starts": 1
+    },
+    {
+      "matches": 3,
+      "minutes": 176,
+      "name": {
+        "first": "Quilindschy",
+        "full": "Q. Hartman",
+        "last": "Hartman"
+      },
+      "player_id": 4777,
+      "position": "LW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 3,
+      "starts": 1
+    },
+    {
+      "matches": 4,
+      "minutes": 167,
+      "name": {
+        "first": "Bryan",
+        "full": "Bryan Zaragoza",
+        "last": "Zaragoza"
+      },
+      "player_id": 2130,
+      "position": "LW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 15,
+      "starts": 1
+    },
+    {
+      "matches": 4,
+      "minutes": 133,
+      "name": {
+        "first": "Rafel",
+        "full": "Rafel Bauzà",
+        "last": "Bauzà"
+      },
+      "player_id": 2372,
+      "position": "RW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 26,
+      "starts": 1
+    },
+    {
+      "matches": 5,
+      "minutes": 112,
+      "name": {
+        "first": "Pere",
+        "full": "Pere Milla",
+        "last": "Milla"
+      },
+      "player_id": 2346,
+      "position": "RW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 11,
+      "starts": 0
+    },
+    {
+      "matches": 3,
+      "minutes": 43,
+      "name": {
+        "first": "Jofre",
+        "full": "Jofre Carreras",
+        "last": "Carreras"
+      },
+      "player_id": 2357,
+      "position": "LW",
+      "position_group": "W",
+      "role": "W",
+      "shirt_number": 17,
+      "starts": 0
+    },
+    {
+      "matches": 7,
+      "minutes": 663,
+      "name": {
+        "first": "Roberto",
+        "full": "Roberto Fernández",
+        "last": "Fernández"
+      },
+      "player_id": 2359,
+      "position": "ST",
+      "position_group": "ST",
+      "role": "ST",
+      "shirt_number": 9,
+      "starts": 7
+    }
+  ],
+  "schema_version": 1,
+  "season": "2026-27",
+  "team": "espanyol"
+}

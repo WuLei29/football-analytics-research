@@ -1,0 +1,2562 @@
+{
+  "generated_at": "2026-10-16T20:19:06Z",
+  "kpis": [
+    {
+      "decimals": 0,
+      "key": "goals",
+      "per_90": 0.0,
+      "scale": "raw",
+      "squad_n": null,
+      "squad_rank": null,
+      "value": 0
+    },
+    {
+      "decimals": 0,
+      "key": "assists",
+      "per_90": 0.0,
+      "scale": "raw",
+      "squad_n": null,
+      "squad_rank": null,
+      "value": 0
+    },
+    {
+      "decimals": 2,
+      "key": "npxg",
+      "per_90": 0.05,
+      "scale": "raw",
+      "squad_n": null,
+      "squad_rank": null,
+      "value": 0.09
+    },
+    {
+      "decimals": 3,
+      "key": "vaep_per_90",
+      "per_90": null,
+      "scale": "raw",
+      "squad_n": 16,
+      "squad_rank": 5,
+      "value": 0.227
+    }
+  ],
+  "maps": {
+    "carries": [
+      [
+        75.6,
+        57.6,
+        97.0,
+        45.6,
+        1
+      ],
+      [
+        67.1,
+        62.4,
+        88.8,
+        52.4,
+        1
+      ],
+      [
+        88.1,
+        65.6,
+        89.1,
+        49.6,
+        1
+      ],
+      [
+        76.9,
+        66.5,
+        92.4,
+        59.0,
+        1
+      ],
+      [
+        82.0,
+        65.1,
+        100.1,
+        57.0,
+        1
+      ],
+      [
+        66.3,
+        40.9,
+        82.7,
+        41.8,
+        1
+      ],
+      [
+        73.5,
+        66.0,
+        93.0,
+        61.3,
+        1
+      ],
+      [
+        85.6,
+        66.5,
+        93.1,
+        53.2,
+        1
+      ],
+      [
+        79.8,
+        65.1,
+        90.0,
+        51.8,
+        1
+      ],
+      [
+        86.3,
+        60.5,
+        91.6,
+        52.7,
+        1
+      ],
+      [
+        85.2,
+        62.1,
+        91.0,
+        51.4,
+        1
+      ],
+      [
+        35.2,
+        65.1,
+        77.3,
+        63.4,
+        1
+      ],
+      [
+        77.3,
+        63.4,
+        85.7,
+        55.5,
+        1
+      ],
+      [
+        92.9,
+        57.8,
+        95.4,
+        51.0,
+        1
+      ],
+      [
+        98.3,
+        59.4,
+        96.4,
+        51.3,
+        1
+      ]
+    ],
+    "counts": {
+      "assists": 0,
+      "key_passes": 3,
+      "passes": 76,
+      "progressive_carries": 15,
+      "progressive_passes": 32,
+      "receptions": 71,
+      "touches": 161
+    },
+    "defence": [
+      {
+        "matchday": 4,
+        "minute": 87,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 77.6,
+        "y": 64.0
+      },
+      {
+        "matchday": 4,
+        "minute": 95,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 54.7,
+        "y": 64.8
+      },
+      {
+        "matchday": 5,
+        "minute": 92,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 46.2,
+        "y": 63.9
+      },
+      {
+        "matchday": 6,
+        "minute": 48,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 58.9,
+        "y": 55.6
+      },
+      {
+        "matchday": 6,
+        "minute": 48,
+        "outcome": "won",
+        "type": "interception",
+        "x": 64.9,
+        "y": 64.0
+      },
+      {
+        "matchday": 6,
+        "minute": 56,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 66.3,
+        "y": 40.9
+      },
+      {
+        "matchday": 7,
+        "minute": 12,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 41.6,
+        "y": 61.1
+      },
+      {
+        "matchday": 7,
+        "minute": 24,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 55.7,
+        "y": 55.7
+      },
+      {
+        "matchday": 7,
+        "minute": 37,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 63.3,
+        "y": 44.7
+      },
+      {
+        "matchday": 7,
+        "minute": 55,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 8.5,
+        "y": 63.5
+      },
+      {
+        "matchday": 7,
+        "minute": 58,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 38.2,
+        "y": 60.5
+      },
+      {
+        "matchday": 7,
+        "minute": 63,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 30.1,
+        "y": 64.4
+      }
+    ],
+    "key_passes": [
+      [
+        95.4,
+        51.0,
+        90.5,
+        34.9,
+        7
+      ],
+      [
+        74.0,
+        64.5,
+        59.3,
+        30.5,
+        5
+      ],
+      [
+        91.5,
+        57.9,
+        93.6,
+        37.2,
+        7
+      ]
+    ],
+    "passes": [
+      [
+        71.5,
+        60.7,
+        69.5,
+        44.3,
+        1
+      ],
+      [
+        100.9,
+        56.5,
+        96.2,
+        28.6,
+        2
+      ],
+      [
+        73.1,
+        62.2,
+        69.1,
+        45.9,
+        1
+      ],
+      [
+        75.9,
+        60.9,
+        69.6,
+        54.5,
+        1
+      ],
+      [
+        87.5,
+        63.6,
+        101.7,
+        43.7,
+        3
+      ],
+      [
+        72.4,
+        47.9,
+        73.0,
+        19.0,
+        1
+      ],
+      [
+        95.3,
+        51.1,
+        96.9,
+        36.6,
+        2
+      ],
+      [
+        91.5,
+        57.9,
+        93.6,
+        37.2,
+        7
+      ],
+      [
+        51.2,
+        54.5,
+        16.6,
+        39.8,
+        1
+      ],
+      [
+        92.2,
+        55.5,
+        99.3,
+        33.3,
+        2
+      ],
+      [
+        104.5,
+        67.7,
+        97.1,
+        33.5,
+        2
+      ],
+      [
+        78.2,
+        65.9,
+        73.1,
+        56.6,
+        1
+      ],
+      [
+        81.8,
+        60.2,
+        68.4,
+        49.8,
+        1
+      ],
+      [
+        95.9,
+        55.6,
+        93.2,
+        39.4,
+        2
+      ],
+      [
+        77.3,
+        58.0,
+        89.6,
+        33.3,
+        2
+      ],
+      [
+        82.8,
+        46.1,
+        81.1,
+        35.1,
+        0
+      ],
+      [
+        83.5,
+        62.3,
+        73.5,
+        46.3,
+        0
+      ],
+      [
+        60.8,
+        62.9,
+        45.7,
+        44.3,
+        1
+      ],
+      [
+        40.5,
+        68.0,
+        30.3,
+        62.3,
+        1
+      ],
+      [
+        76.8,
+        65.3,
+        94.4,
+        59.4,
+        3
+      ],
+      [
+        81.1,
+        63.2,
+        67.2,
+        60.2,
+        1
+      ],
+      [
+        94.6,
+        61.3,
+        70.1,
+        68.0,
+        0
+      ],
+      [
+        91.6,
+        52.7,
+        94.0,
+        42.9,
+        2
+      ],
+      [
+        93.1,
+        45.8,
+        89.9,
+        34.7,
+        1
+      ],
+      [
+        73.7,
+        63.2,
+        69.3,
+        57.2,
+        1
+      ],
+      [
+        83.2,
+        60.6,
+        81.5,
+        30.9,
+        3
+      ],
+      [
+        55.7,
+        55.6,
+        91.8,
+        40.4,
+        2
+      ],
+      [
+        67.0,
+        63.9,
+        84.5,
+        60.5,
+        2
+      ],
+      [
+        59.7,
+        65.1,
+        69.8,
+        64.3,
+        0
+      ],
+      [
+        76.2,
+        65.7,
+        60.9,
+        59.4,
+        1
+      ],
+      [
+        82.3,
+        59.2,
+        94.6,
+        34.3,
+        2
+      ],
+      [
+        85.7,
+        55.5,
+        99.3,
+        52.1,
+        3
+      ],
+      [
+        77.7,
+        52.2,
+        68.1,
+        37.0,
+        1
+      ],
+      [
+        83.2,
+        60.4,
+        71.5,
+        53.9,
+        1
+      ],
+      [
+        64.7,
+        52.3,
+        62.2,
+        21.6,
+        1
+      ],
+      [
+        50.7,
+        63.4,
+        95.9,
+        55.9,
+        2
+      ],
+      [
+        73.0,
+        60.2,
+        63.0,
+        43.5,
+        1
+      ],
+      [
+        77.6,
+        64.5,
+        105.0,
+        53.7,
+        2
+      ],
+      [
+        76.0,
+        59.8,
+        93.6,
+        36.6,
+        2
+      ],
+      [
+        41.4,
+        56.0,
+        29.4,
+        50.8,
+        1
+      ],
+      [
+        79.1,
+        39.2,
+        105.0,
+        21.8,
+        2
+      ],
+      [
+        99.3,
+        64.2,
+        98.4,
+        56.4,
+        1
+      ],
+      [
+        94.4,
+        68.0,
+        95.1,
+        57.5,
+        3
+      ],
+      [
+        73.0,
+        50.3,
+        77.9,
+        3.7,
+        1
+      ],
+      [
+        93.0,
+        59.2,
+        93.6,
+        39.6,
+        2
+      ],
+      [
+        69.1,
+        58.8,
+        79.0,
+        49.8,
+        2
+      ],
+      [
+        33.1,
+        64.7,
+        49.8,
+        54.6,
+        1
+      ],
+      [
+        63.2,
+        65.6,
+        77.9,
+        49.0,
+        3
+      ],
+      [
+        96.4,
+        51.3,
+        83.5,
+        37.2,
+        0
+      ],
+      [
+        64.3,
+        59.2,
+        67.1,
+        54.2,
+        1
+      ],
+      [
+        64.2,
+        41.0,
+        63.1,
+        27.4,
+        1
+      ],
+      [
+        66.8,
+        54.5,
+        79.9,
+        1.3,
+        1
+      ],
+      [
+        46.6,
+        22.0,
+        67.3,
+        12.4,
+        2
+      ],
+      [
+        21.4,
+        59.8,
+        34.0,
+        29.8,
+        1
+      ],
+      [
+        74.0,
+        64.5,
+        59.3,
+        30.5,
+        5
+      ],
+      [
+        83.0,
+        68.0,
+        69.5,
+        64.1,
+        1
+      ],
+      [
+        80.2,
+        62.4,
+        81.8,
+        61.5,
+        0
+      ],
+      [
+        82.7,
+        41.8,
+        90.1,
+        47.0,
+        1
+      ],
+      [
+        87.7,
+        61.7,
+        90.4,
+        60.1,
+        1
+      ],
+      [
+        95.4,
+        51.0,
+        90.5,
+        34.9,
+        7
+      ],
+      [
+        56.6,
+        57.9,
+        38.5,
+        35.4,
+        1
+      ],
+      [
+        46.7,
+        60.8,
+        21.7,
+        40.6,
+        1
+      ],
+      [
+        63.7,
+        64.9,
+        71.2,
+        62.9,
+        0
+      ],
+      [
+        101.8,
+        44.5,
+        101.0,
+        36.9,
+        2
+      ],
+      [
+        45.4,
+        64.2,
+        60.3,
+        53.2,
+        3
+      ],
+      [
+        54.7,
+        64.8,
+        73.2,
+        56.4,
+        2
+      ],
+      [
+        92.4,
+        59.0,
+        92.1,
+        54.5,
+        1
+      ],
+      [
+        90.9,
+        46.9,
+        84.6,
+        42.6,
+        0
+      ],
+      [
+        80.1,
+        64.8,
+        81.1,
+        49.4,
+        3
+      ],
+      [
+        77.2,
+        58.6,
+        101.4,
+        39.0,
+        3
+      ],
+      [
+        78.2,
+        64.4,
+        82.3,
+        48.3,
+        3
+      ],
+      [
+        17.7,
+        65.1,
+        12.8,
+        55.0,
+        1
+      ],
+      [
+        73.3,
+        64.8,
+        73.3,
+        63.7,
+        0
+      ],
+      [
+        82.4,
+        59.6,
+        90.4,
+        37.4,
+        2
+      ],
+      [
+        58.0,
+        64.2,
+        63.7,
+        64.0,
+        0
+      ],
+      [
+        93.1,
+        53.2,
+        90.0,
+        50.9,
+        0
+      ]
+    ],
+    "progressive_passes": [
+      [
+        77.2,
+        58.6,
+        101.4,
+        39.0,
+        3
+      ],
+      [
+        95.4,
+        51.0,
+        90.5,
+        34.9,
+        7
+      ],
+      [
+        91.5,
+        57.9,
+        93.6,
+        37.2,
+        7
+      ],
+      [
+        87.5,
+        63.6,
+        101.7,
+        43.7,
+        3
+      ],
+      [
+        76.8,
+        65.3,
+        94.4,
+        59.4,
+        3
+      ],
+      [
+        85.7,
+        55.5,
+        99.3,
+        52.1,
+        3
+      ],
+      [
+        83.2,
+        60.6,
+        81.5,
+        30.9,
+        3
+      ],
+      [
+        78.2,
+        64.4,
+        82.3,
+        48.3,
+        3
+      ],
+      [
+        63.2,
+        65.6,
+        77.9,
+        49.0,
+        3
+      ],
+      [
+        94.4,
+        68.0,
+        95.1,
+        57.5,
+        3
+      ],
+      [
+        45.4,
+        64.2,
+        60.3,
+        53.2,
+        3
+      ],
+      [
+        80.1,
+        64.8,
+        81.1,
+        49.4,
+        3
+      ],
+      [
+        82.4,
+        59.6,
+        90.4,
+        37.4,
+        2
+      ],
+      [
+        54.7,
+        64.8,
+        73.2,
+        56.4,
+        2
+      ],
+      [
+        101.8,
+        44.5,
+        101.0,
+        36.9,
+        2
+      ],
+      [
+        46.6,
+        22.0,
+        67.3,
+        12.4,
+        2
+      ],
+      [
+        69.1,
+        58.8,
+        79.0,
+        49.8,
+        2
+      ],
+      [
+        93.0,
+        59.2,
+        93.6,
+        39.6,
+        2
+      ],
+      [
+        79.1,
+        39.2,
+        105.0,
+        21.8,
+        2
+      ],
+      [
+        76.0,
+        59.8,
+        93.6,
+        36.6,
+        2
+      ],
+      [
+        77.6,
+        64.5,
+        105.0,
+        53.7,
+        2
+      ],
+      [
+        50.7,
+        63.4,
+        95.9,
+        55.9,
+        2
+      ],
+      [
+        82.3,
+        59.2,
+        94.6,
+        34.3,
+        2
+      ],
+      [
+        67.0,
+        63.9,
+        84.5,
+        60.5,
+        2
+      ],
+      [
+        55.7,
+        55.6,
+        91.8,
+        40.4,
+        2
+      ],
+      [
+        91.6,
+        52.7,
+        94.0,
+        42.9,
+        2
+      ],
+      [
+        77.3,
+        58.0,
+        89.6,
+        33.3,
+        2
+      ],
+      [
+        95.9,
+        55.6,
+        93.2,
+        39.4,
+        2
+      ],
+      [
+        104.5,
+        67.7,
+        97.1,
+        33.5,
+        2
+      ],
+      [
+        92.2,
+        55.5,
+        99.3,
+        33.3,
+        2
+      ],
+      [
+        95.3,
+        51.1,
+        96.9,
+        36.6,
+        2
+      ],
+      [
+        100.9,
+        56.5,
+        96.2,
+        28.6,
+        2
+      ]
+    ],
+    "progressive_receptions": [
+      [
+        75.6,
+        57.6,
+        0
+      ],
+      [
+        66.3,
+        43.7,
+        0
+      ],
+      [
+        96.9,
+        49.4,
+        1
+      ],
+      [
+        58.0,
+        57.6,
+        0
+      ],
+      [
+        86.3,
+        60.5,
+        0
+      ],
+      [
+        79.2,
+        48.3,
+        0
+      ]
+    ],
+    "reception_zones": [
+      {
+        "count": 1,
+        "share": 1.4,
+        "zone_id": 25
+      },
+      {
+        "count": 1,
+        "share": 1.4,
+        "zone_id": 32
+      },
+      {
+        "count": 7,
+        "share": 9.9,
+        "zone_id": 35
+      },
+      {
+        "count": 1,
+        "share": 1.4,
+        "zone_id": 44
+      },
+      {
+        "count": 14,
+        "share": 19.7,
+        "zone_id": 45
+      },
+      {
+        "count": 1,
+        "share": 1.4,
+        "zone_id": 54
+      },
+      {
+        "count": 38,
+        "share": 53.5,
+        "zone_id": 55
+      },
+      {
+        "count": 2,
+        "share": 2.8,
+        "zone_id": 64
+      },
+      {
+        "count": 6,
+        "share": 8.5,
+        "zone_id": 65
+      }
+    ],
+    "shots": [
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 47.1,
+        "goal_mouth_z": 5.7,
+        "match_id": 2054,
+        "matchday": 6,
+        "minute": 58,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 1,
+        "x": 89.1,
+        "xg": 0.022,
+        "y": 49.6
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 26.6,
+        "goal_mouth_z": 48.6,
+        "match_id": 2054,
+        "matchday": 6,
+        "minute": 87,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 2,
+        "x": 96.1,
+        "xg": 0.035,
+        "y": 46.7
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.1,
+        "goal_mouth_z": 24.0,
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 32,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 3,
+        "x": 90.0,
+        "xg": 0.016,
+        "y": 51.8
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 49.5,
+        "goal_mouth_z": 7.6,
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 49,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 4,
+        "x": 91.0,
+        "xg": 0.02,
+        "y": 51.4
+      }
+    ],
+    "touch_zones": [
+      {
+        "count": 3,
+        "share": 1.9,
+        "zone_id": 25
+      },
+      {
+        "count": 2,
+        "share": 1.2,
+        "zone_id": 32
+      },
+      {
+        "count": 16,
+        "share": 9.9,
+        "zone_id": 35
+      },
+      {
+        "count": 3,
+        "share": 1.9,
+        "zone_id": 43
+      },
+      {
+        "count": 2,
+        "share": 1.2,
+        "zone_id": 44
+      },
+      {
+        "count": 27,
+        "share": 16.8,
+        "zone_id": 45
+      },
+      {
+        "count": 2,
+        "share": 1.2,
+        "zone_id": 53
+      },
+      {
+        "count": 5,
+        "share": 3.1,
+        "zone_id": 54
+      },
+      {
+        "count": 66,
+        "share": 41.0,
+        "zone_id": 55
+      },
+      {
+        "count": 17,
+        "share": 10.6,
+        "zone_id": 64
+      },
+      {
+        "count": 18,
+        "share": 11.2,
+        "zone_id": 65
+      }
+    ]
+  },
+  "percentiles": {
+    "cards": [
+      {
+        "key": "pressing",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_ball_recoveries_per_90",
+            "percentile": 65,
+            "scale": "raw",
+            "value": 3.94
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "def_actions_final_third_per_90",
+            "percentile": 17,
+            "scale": "raw",
+            "value": 0.54
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_tackles_per_90",
+            "percentile": 14,
+            "scale": "raw",
+            "value": 0.58
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "ground_duel_win_rate",
+            "percentile": null,
+            "scale": "pct",
+            "value": 33.3
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_interceptions_per_90",
+            "percentile": 51,
+            "scale": "raw",
+            "value": 0.45
+          },
+          {
+            "decimals": 3,
+            "higher_is_better": true,
+            "key": "vaep_defensive_per_90",
+            "percentile": 55,
+            "scale": "raw",
+            "value": -0.023
+          }
+        ]
+      },
+      {
+        "key": "carrying",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "take_ons_per_90",
+            "percentile": 60,
+            "scale": "raw",
+            "value": 3.77
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "take_on_success_rate",
+            "percentile": null,
+            "scale": "pct",
+            "value": 42.9
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "progressive_carries_into_final_third_per_90",
+            "percentile": 91,
+            "scale": "raw",
+            "value": 1.62
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "carries_into_penalty_area_per_90",
+            "percentile": 100,
+            "scale": "raw",
+            "value": 4.85
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "progressive_receptions_per_90",
+            "percentile": 9,
+            "scale": "raw",
+            "value": 3.23
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": false,
+            "key": "dispossessed_per_90",
+            "percentile": 54,
+            "scale": "raw",
+            "value": 1.08
+          }
+        ]
+      },
+      {
+        "key": "creation",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "crosses_per_90",
+            "percentile": 97,
+            "scale": "raw",
+            "value": 6.47
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "cross_completion_rate",
+            "percentile": 15,
+            "scale": "pct",
+            "value": 8.3
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "passes_into_penalty_area_per_90",
+            "percentile": 98,
+            "scale": "raw",
+            "value": 9.16
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "key_passes_per_90",
+            "percentile": 74,
+            "scale": "raw",
+            "value": 1.62
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "xa_per_90",
+            "percentile": 65,
+            "scale": "raw",
+            "value": 0.18
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "shot_creating_actions_per_90",
+            "percentile": 85,
+            "scale": "raw",
+            "value": 4.31
+          }
+        ]
+      },
+      {
+        "key": "finishing",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "npxg_per_90",
+            "percentile": 20,
+            "scale": "raw",
+            "value": 0.05
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "goals_non_penalty_per_90",
+            "percentile": 0,
+            "scale": "raw",
+            "value": 0.0
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "shots_per_90",
+            "percentile": 58,
+            "scale": "raw",
+            "value": 2.16
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "touches_in_box_per_90",
+            "percentile": 89,
+            "scale": "raw",
+            "value": 9.16
+          },
+          {
+            "decimals": 3,
+            "higher_is_better": true,
+            "key": "npxg_per_shot",
+            "percentile": null,
+            "scale": "raw",
+            "value": 0.023
+          },
+          {
+            "decimals": 3,
+            "higher_is_better": true,
+            "key": "vaep_per_90",
+            "percentile": 75,
+            "scale": "raw",
+            "value": 0.227
+          }
+        ]
+      }
+    ],
+    "eligible": true,
+    "min_minutes": 158,
+    "peer_group": "W",
+    "peer_n": 66,
+    "pooled_am": false,
+    "pooled_fb": false,
+    "role": "W"
+  },
+  "player": {
+    "age": null,
+    "date_of_birth": null,
+    "height_cm": null,
+    "is_utility": true,
+    "matches": 4,
+    "minutes": 167,
+    "name": {
+      "first": "Bryan",
+      "full": "Bryan Zaragoza",
+      "last": "Zaragoza"
+    },
+    "nationality": "Spain",
+    "penalties_scored": 0,
+    "penalties_taken": 0,
+    "player_id": 2130,
+    "position": "LW",
+    "position_group": "W",
+    "preferred_foot": "right",
+    "primary_position_pct": 40,
+    "red_cards": 0,
+    "role": "W",
+    "shirt_number": 15,
+    "starts": 1,
+    "subbed_off": 1,
+    "yellow_cards": 0
+  },
+  "schema_version": 1,
+  "season": {
+    "competition_name": "Primera División",
+    "label": "2026/2027",
+    "slug": "2026-27",
+    "through_matchday": 7
+  },
+  "sequences": {
+    "aggregates": {
+      "ends_in_shot": 12,
+      "passes_per_sequence": 5.0,
+      "sequences": 79,
+      "xt": 1.907
+    },
+    "min_events": 3,
+    "top_vaep": [
+      {
+        "ends_in_shot": false,
+        "events": 11,
+        "id": 5569759,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 57,
+        "opponent_abbr": "ELC",
+        "outcome": "turnover",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 2,
+        "points": [
+          [
+            27.4,
+            33.0
+          ],
+          [
+            5.1,
+            33.9
+          ],
+          [
+            19.2,
+            29.0
+          ],
+          [
+            60.2,
+            28.8
+          ],
+          [
+            62.3,
+            49.4
+          ],
+          [
+            76.2,
+            65.1
+          ],
+          [
+            87.5,
+            63.6
+          ],
+          [
+            101.7,
+            43.7
+          ],
+          [
+            102.6,
+            46.0
+          ]
+        ],
+        "second": 28,
+        "vaep": 0.078,
+        "xt": 0.053
+      },
+      {
+        "ends_in_shot": false,
+        "events": 5,
+        "id": 5529275,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 2041,
+        "matchday": 5,
+        "minute": 88,
+        "opponent_abbr": "OSA",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 4,
+        "points": [
+          [
+            35.8,
+            15.3
+          ],
+          [
+            75.6,
+            57.6
+          ],
+          [
+            97.0,
+            45.6
+          ],
+          [
+            97.0,
+            45.6
+          ],
+          [
+            101.8,
+            44.5
+          ],
+          [
+            101.0,
+            36.9
+          ]
+        ],
+        "second": 30,
+        "vaep": 0.078,
+        "xt": 0.052
+      },
+      {
+        "ends_in_shot": true,
+        "events": 13,
+        "id": 5508051,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2031,
+        "matchday": 4,
+        "minute": 93,
+        "opponent_abbr": "SEV",
+        "outcome": "shot_saved",
+        "passes": 6,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 2,
+        "points": [
+          [
+            28.5,
+            3.1
+          ],
+          [
+            10.8,
+            15.8
+          ],
+          [
+            26.7,
+            35.6
+          ],
+          [
+            55.8,
+            46.2
+          ],
+          [
+            61.7,
+            59.2
+          ],
+          [
+            76.9,
+            66.5
+          ],
+          [
+            92.4,
+            59.0
+          ],
+          [
+            96.3,
+            38.1
+          ],
+          [
+            105.0,
+            35.9
+          ]
+        ],
+        "second": 56,
+        "vaep": 0.064,
+        "xt": 0.248
+      },
+      {
+        "ends_in_shot": true,
+        "events": 5,
+        "id": 5569666,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 53,
+        "opponent_abbr": "ELC",
+        "outcome": "shot_off_target",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            72.4,
+            47.9
+          ],
+          [
+            73.0,
+            19.0
+          ],
+          [
+            76.0,
+            18.6
+          ],
+          [
+            96.5,
+            38.4
+          ],
+          [
+            96.5,
+            38.4
+          ],
+          [
+            105.0,
+            24.5
+          ]
+        ],
+        "second": 11,
+        "vaep": 0.055,
+        "xt": 0.233
+      },
+      {
+        "ends_in_shot": false,
+        "events": 10,
+        "id": 5568860,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 17,
+        "opponent_abbr": "ELC",
+        "outcome": "turnover",
+        "passes": 4,
+        "period": 1,
+        "player_touch_index": 4,
+        "player_touches": 4,
+        "points": [
+          [
+            15.9,
+            22.6
+          ],
+          [
+            11.3,
+            7.8
+          ],
+          [
+            8.7,
+            29.9
+          ],
+          [
+            9.0,
+            32.8
+          ],
+          [
+            35.2,
+            65.1
+          ],
+          [
+            77.3,
+            63.4
+          ],
+          [
+            85.7,
+            55.5
+          ],
+          [
+            99.3,
+            52.1
+          ],
+          [
+            99.9,
+            33.5
+          ]
+        ],
+        "second": 8,
+        "vaep": 0.041,
+        "xt": 0.039
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 5556815,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 2054,
+        "matchday": 6,
+        "minute": 91,
+        "opponent_abbr": "RAY",
+        "outcome": "shot_blocked",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 2,
+        "points": [
+          [
+            94.4,
+            68.0
+          ],
+          [
+            95.1,
+            57.5
+          ],
+          [
+            88.7,
+            60.7
+          ],
+          [
+            81.2,
+            61.9
+          ],
+          [
+            99.3,
+            64.2
+          ],
+          [
+            98.4,
+            56.4
+          ],
+          [
+            92.4,
+            43.2
+          ],
+          [
+            105.0,
+            30.7
+          ]
+        ],
+        "second": 18,
+        "vaep": 0.04,
+        "xt": 0.073
+      },
+      {
+        "ends_in_shot": true,
+        "events": 5,
+        "id": 5569607,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 50,
+        "opponent_abbr": "ELC",
+        "outcome": "shot_off_target",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            72.8,
+            47.1
+          ],
+          [
+            84.9,
+            61.9
+          ],
+          [
+            91.5,
+            57.9
+          ],
+          [
+            93.6,
+            37.2
+          ],
+          [
+            93.6,
+            37.2
+          ],
+          [
+            105.0,
+            0.0
+          ]
+        ],
+        "second": 58,
+        "vaep": 0.038,
+        "xt": 0.084
+      },
+      {
+        "ends_in_shot": false,
+        "events": 14,
+        "id": 5569165,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 34,
+        "opponent_abbr": "ELC",
+        "outcome": "retained",
+        "passes": 6,
+        "period": 1,
+        "player_touch_index": 1,
+        "player_touches": 4,
+        "points": [
+          [
+            64.7,
+            51.5
+          ],
+          [
+            82.2,
+            64.7
+          ],
+          [
+            67.2,
+            60.2
+          ],
+          [
+            77.5,
+            61.6
+          ],
+          [
+            76.8,
+            65.3
+          ],
+          [
+            94.0,
+            59.6
+          ],
+          [
+            77.8,
+            52.7
+          ],
+          [
+            91.7,
+            47.9
+          ],
+          [
+            91.1,
+            49.3
+          ]
+        ],
+        "second": 49,
+        "vaep": 0.038,
+        "xt": 0.042
+      },
+      {
+        "ends_in_shot": false,
+        "events": 12,
+        "id": 5556870,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 2054,
+        "matchday": 6,
+        "minute": 95,
+        "opponent_abbr": "RAY",
+        "outcome": "corner_won",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 7,
+        "player_touches": 2,
+        "points": [
+          [
+            5.8,
+            19.4
+          ],
+          [
+            4.8,
+            29.4
+          ],
+          [
+            16.6,
+            44.5
+          ],
+          [
+            29.7,
+            48.6
+          ],
+          [
+            34.6,
+            35.8
+          ],
+          [
+            44.5,
+            34.4
+          ],
+          [
+            55.2,
+            53.7
+          ],
+          [
+            73.5,
+            66.0
+          ],
+          [
+            93.0,
+            61.3
+          ]
+        ],
+        "second": 20,
+        "vaep": 0.036,
+        "xt": 0.026
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5507929,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2031,
+        "matchday": 4,
+        "minute": 87,
+        "opponent_abbr": "SEV",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 3,
+        "points": [
+          [
+            72.4,
+            46.6
+          ],
+          [
+            77.6,
+            64.0
+          ],
+          [
+            77.6,
+            64.0
+          ],
+          [
+            77.2,
+            58.6
+          ],
+          [
+            101.4,
+            39.0
+          ],
+          [
+            102.5,
+            44.5
+          ],
+          [
+            98.6,
+            33.3
+          ]
+        ],
+        "second": 38,
+        "vaep": 0.034,
+        "xt": 0.04
+      }
+    ],
+    "top_xt": [
+      {
+        "ends_in_shot": true,
+        "events": 13,
+        "id": 5508051,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2031,
+        "matchday": 4,
+        "minute": 93,
+        "opponent_abbr": "SEV",
+        "outcome": "shot_saved",
+        "passes": 6,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 2,
+        "points": [
+          [
+            28.5,
+            3.1
+          ],
+          [
+            10.8,
+            15.8
+          ],
+          [
+            26.7,
+            35.6
+          ],
+          [
+            55.8,
+            46.2
+          ],
+          [
+            61.7,
+            59.2
+          ],
+          [
+            76.9,
+            66.5
+          ],
+          [
+            92.4,
+            59.0
+          ],
+          [
+            96.3,
+            38.1
+          ],
+          [
+            105.0,
+            35.9
+          ]
+        ],
+        "second": 56,
+        "vaep": 0.064,
+        "xt": 0.248
+      },
+      {
+        "ends_in_shot": true,
+        "events": 5,
+        "id": 5569666,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 53,
+        "opponent_abbr": "ELC",
+        "outcome": "shot_off_target",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            72.4,
+            47.9
+          ],
+          [
+            73.0,
+            19.0
+          ],
+          [
+            76.0,
+            18.6
+          ],
+          [
+            96.5,
+            38.4
+          ],
+          [
+            96.5,
+            38.4
+          ],
+          [
+            105.0,
+            24.5
+          ]
+        ],
+        "second": 11,
+        "vaep": 0.055,
+        "xt": 0.233
+      },
+      {
+        "ends_in_shot": true,
+        "events": 18,
+        "id": 5569079,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 29,
+        "opponent_abbr": "ELC",
+        "outcome": "shot_off_target",
+        "passes": 9,
+        "period": 1,
+        "player_touch_index": 2,
+        "player_touches": 3,
+        "points": [
+          [
+            52.4,
+            34.3
+          ],
+          [
+            42.3,
+            43.0
+          ],
+          [
+            70.9,
+            64.5
+          ],
+          [
+            67.6,
+            21.2
+          ],
+          [
+            81.2,
+            12.9
+          ],
+          [
+            98.9,
+            24.1
+          ],
+          [
+            93.1,
+            45.8
+          ],
+          [
+            83.7,
+            25.0
+          ],
+          [
+            105.0,
+            28.8
+          ]
+        ],
+        "second": 58,
+        "vaep": 0.02,
+        "xt": 0.103
+      },
+      {
+        "ends_in_shot": true,
+        "events": 13,
+        "id": 5556068,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 2054,
+        "matchday": 6,
+        "minute": 49,
+        "opponent_abbr": "RAY",
+        "outcome": "shot_blocked",
+        "passes": 6,
+        "period": 2,
+        "player_touch_index": 6,
+        "player_touches": 2,
+        "points": [
+          [
+            12.1,
+            32.4
+          ],
+          [
+            9.8,
+            22.6
+          ],
+          [
+            30.6,
+            8.8
+          ],
+          [
+            40.6,
+            24.0
+          ],
+          [
+            32.2,
+            11.8
+          ],
+          [
+            81.2,
+            39.2
+          ],
+          [
+            92.9,
+            57.8
+          ],
+          [
+            90.5,
+            34.9
+          ],
+          [
+            105.0,
+            33.8
+          ]
+        ],
+        "second": 45,
+        "vaep": 0.029,
+        "xt": 0.098
+      },
+      {
+        "ends_in_shot": true,
+        "events": 5,
+        "id": 5569607,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 50,
+        "opponent_abbr": "ELC",
+        "outcome": "shot_off_target",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            72.8,
+            47.1
+          ],
+          [
+            84.9,
+            61.9
+          ],
+          [
+            91.5,
+            57.9
+          ],
+          [
+            93.6,
+            37.2
+          ],
+          [
+            93.6,
+            37.2
+          ],
+          [
+            105.0,
+            0.0
+          ]
+        ],
+        "second": 58,
+        "vaep": 0.038,
+        "xt": 0.084
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 5556815,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 2054,
+        "matchday": 6,
+        "minute": 91,
+        "opponent_abbr": "RAY",
+        "outcome": "shot_blocked",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 2,
+        "points": [
+          [
+            94.4,
+            68.0
+          ],
+          [
+            95.1,
+            57.5
+          ],
+          [
+            88.7,
+            60.7
+          ],
+          [
+            81.2,
+            61.9
+          ],
+          [
+            99.3,
+            64.2
+          ],
+          [
+            98.4,
+            56.4
+          ],
+          [
+            92.4,
+            43.2
+          ],
+          [
+            105.0,
+            30.7
+          ]
+        ],
+        "second": 18,
+        "vaep": 0.04,
+        "xt": 0.073
+      },
+      {
+        "ends_in_shot": false,
+        "events": 11,
+        "id": 5569759,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 57,
+        "opponent_abbr": "ELC",
+        "outcome": "turnover",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 2,
+        "points": [
+          [
+            27.4,
+            33.0
+          ],
+          [
+            5.1,
+            33.9
+          ],
+          [
+            19.2,
+            29.0
+          ],
+          [
+            60.2,
+            28.8
+          ],
+          [
+            62.3,
+            49.4
+          ],
+          [
+            76.2,
+            65.1
+          ],
+          [
+            87.5,
+            63.6
+          ],
+          [
+            101.7,
+            43.7
+          ],
+          [
+            102.6,
+            46.0
+          ]
+        ],
+        "second": 28,
+        "vaep": 0.078,
+        "xt": 0.053
+      },
+      {
+        "ends_in_shot": false,
+        "events": 5,
+        "id": 5529275,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 2041,
+        "matchday": 5,
+        "minute": 88,
+        "opponent_abbr": "OSA",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 4,
+        "points": [
+          [
+            35.8,
+            15.3
+          ],
+          [
+            75.6,
+            57.6
+          ],
+          [
+            97.0,
+            45.6
+          ],
+          [
+            97.0,
+            45.6
+          ],
+          [
+            101.8,
+            44.5
+          ],
+          [
+            101.0,
+            36.9
+          ]
+        ],
+        "second": 30,
+        "vaep": 0.078,
+        "xt": 0.052
+      },
+      {
+        "ends_in_shot": false,
+        "events": 14,
+        "id": 5569165,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2060,
+        "matchday": 7,
+        "minute": 34,
+        "opponent_abbr": "ELC",
+        "outcome": "retained",
+        "passes": 6,
+        "period": 1,
+        "player_touch_index": 1,
+        "player_touches": 4,
+        "points": [
+          [
+            64.7,
+            51.5
+          ],
+          [
+            82.2,
+            64.7
+          ],
+          [
+            67.2,
+            60.2
+          ],
+          [
+            77.5,
+            61.6
+          ],
+          [
+            76.8,
+            65.3
+          ],
+          [
+            94.0,
+            59.6
+          ],
+          [
+            77.8,
+            52.7
+          ],
+          [
+            91.7,
+            47.9
+          ],
+          [
+            91.1,
+            49.3
+          ]
+        ],
+        "second": 49,
+        "vaep": 0.038,
+        "xt": 0.042
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5507929,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 2031,
+        "matchday": 4,
+        "minute": 87,
+        "opponent_abbr": "SEV",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 3,
+        "points": [
+          [
+            72.4,
+            46.6
+          ],
+          [
+            77.6,
+            64.0
+          ],
+          [
+            77.6,
+            64.0
+          ],
+          [
+            77.2,
+            58.6
+          ],
+          [
+            101.4,
+            39.0
+          ],
+          [
+            102.5,
+            44.5
+          ],
+          [
+            98.6,
+            33.3
+          ]
+        ],
+        "second": 38,
+        "vaep": 0.034,
+        "xt": 0.04
+      }
+    ]
+  },
+  "team": {
+    "abbr": "ESP",
+    "short_name": "Espanyol",
+    "slug": "espanyol",
+    "team_id": 8
+  }
+}

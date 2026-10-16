@@ -1,0 +1,9064 @@
+{
+  "generated_at": "2026-10-16T20:19:06Z",
+  "kpis": [
+    {
+      "decimals": 3,
+      "key": "vaep_per_90",
+      "per_90": null,
+      "scale": "raw",
+      "squad_n": 17,
+      "squad_rank": 2,
+      "value": 0.227
+    },
+    {
+      "decimals": 1,
+      "key": "ground_duel_win_rate",
+      "per_90": null,
+      "scale": "pct",
+      "squad_n": 17,
+      "squad_rank": 5,
+      "value": 48.7
+    },
+    {
+      "decimals": 1,
+      "key": "aerial_win_rate",
+      "per_90": null,
+      "scale": "pct",
+      "squad_n": 17,
+      "squad_rank": 10,
+      "value": 40.6
+    },
+    {
+      "decimals": 0,
+      "key": "progressive_passes",
+      "per_90": 8.71,
+      "scale": "raw",
+      "squad_n": null,
+      "squad_rank": null,
+      "value": 338
+    }
+  ],
+  "maps": {
+    "carries": [
+      [
+        73.6,
+        47.9,
+        89.9,
+        41.7,
+        1
+      ],
+      [
+        86.8,
+        58.1,
+        90.0,
+        40.7,
+        1
+      ],
+      [
+        76.9,
+        51.8,
+        98.8,
+        50.7,
+        1
+      ],
+      [
+        57.3,
+        64.1,
+        96.2,
+        49.1,
+        1
+      ],
+      [
+        71.9,
+        49.2,
+        92.3,
+        48.3,
+        1
+      ],
+      [
+        77.5,
+        46.8,
+        88.4,
+        43.9,
+        1
+      ],
+      [
+        84.4,
+        61.0,
+        96.1,
+        50.2,
+        1
+      ],
+      [
+        81.9,
+        25.2,
+        91.6,
+        25.4,
+        1
+      ],
+      [
+        83.8,
+        58.8,
+        92.8,
+        48.6,
+        1
+      ],
+      [
+        84.1,
+        51.1,
+        89.4,
+        44.5,
+        1
+      ],
+      [
+        86.0,
+        52.2,
+        90.8,
+        44.3,
+        1
+      ],
+      [
+        94.8,
+        60.5,
+        89.5,
+        45.8,
+        1
+      ],
+      [
+        53.1,
+        36.6,
+        96.0,
+        7.7,
+        1
+      ],
+      [
+        97.0,
+        54.3,
+        100.6,
+        49.8,
+        1
+      ],
+      [
+        63.6,
+        57.1,
+        80.7,
+        34.3,
+        1
+      ],
+      [
+        59.3,
+        60.7,
+        80.2,
+        58.8,
+        1
+      ],
+      [
+        57.9,
+        64.1,
+        80.5,
+        44.8,
+        1
+      ],
+      [
+        73.9,
+        65.5,
+        91.2,
+        62.1,
+        1
+      ],
+      [
+        82.5,
+        66.8,
+        95.4,
+        56.0,
+        1
+      ],
+      [
+        60.1,
+        66.5,
+        79.8,
+        62.6,
+        1
+      ],
+      [
+        40.3,
+        64.5,
+        78.4,
+        51.5,
+        1
+      ],
+      [
+        58.7,
+        55.5,
+        79.6,
+        46.1,
+        1
+      ],
+      [
+        40.7,
+        9.0,
+        72.0,
+        16.9,
+        1
+      ],
+      [
+        42.8,
+        58.5,
+        77.1,
+        52.7,
+        1
+      ],
+      [
+        89.4,
+        59.7,
+        96.8,
+        51.6,
+        1
+      ],
+      [
+        46.8,
+        65.2,
+        73.6,
+        51.2,
+        1
+      ],
+      [
+        47.1,
+        64.0,
+        71.2,
+        56.4,
+        1
+      ],
+      [
+        46.3,
+        61.5,
+        71.9,
+        42.3,
+        1
+      ],
+      [
+        79.9,
+        53.4,
+        91.6,
+        51.5,
+        1
+      ],
+      [
+        62.8,
+        59.6,
+        81.7,
+        50.5,
+        1
+      ],
+      [
+        65.7,
+        53.5,
+        79.2,
+        53.1,
+        1
+      ],
+      [
+        49.6,
+        56.2,
+        77.0,
+        48.4,
+        1
+      ],
+      [
+        48.3,
+        56.3,
+        77.9,
+        45.6,
+        1
+      ],
+      [
+        46.6,
+        54.5,
+        71.1,
+        59.1,
+        1
+      ],
+      [
+        65.0,
+        53.4,
+        81.4,
+        44.3,
+        1
+      ],
+      [
+        61.0,
+        60.8,
+        75.6,
+        52.0,
+        1
+      ],
+      [
+        28.6,
+        61.0,
+        63.0,
+        54.9,
+        1
+      ],
+      [
+        99.2,
+        60.9,
+        101.8,
+        51.1,
+        1
+      ],
+      [
+        74.2,
+        62.6,
+        86.1,
+        58.3,
+        1
+      ],
+      [
+        40.7,
+        63.0,
+        67.0,
+        50.2,
+        1
+      ],
+      [
+        61.2,
+        52.5,
+        74.3,
+        47.6,
+        1
+      ],
+      [
+        36.8,
+        29.6,
+        69.7,
+        41.5,
+        1
+      ],
+      [
+        71.5,
+        63.5,
+        79.0,
+        50.5,
+        1
+      ],
+      [
+        58.7,
+        44.9,
+        77.9,
+        44.3,
+        1
+      ],
+      [
+        66.8,
+        63.8,
+        75.3,
+        49.8,
+        1
+      ],
+      [
+        38.5,
+        45.4,
+        63.1,
+        45.3,
+        1
+      ],
+      [
+        61.9,
+        63.8,
+        74.9,
+        59.1,
+        1
+      ],
+      [
+        13.9,
+        60.8,
+        50.7,
+        44.6,
+        1
+      ],
+      [
+        53.3,
+        60.5,
+        75.9,
+        64.1,
+        1
+      ],
+      [
+        64.0,
+        61.0,
+        74.1,
+        39.2,
+        1
+      ],
+      [
+        35.4,
+        4.4,
+        65.0,
+        6.1,
+        1
+      ],
+      [
+        40.3,
+        63.4,
+        66.0,
+        62.6,
+        1
+      ],
+      [
+        29.1,
+        44.4,
+        60.5,
+        18.0,
+        1
+      ],
+      [
+        31.1,
+        52.9,
+        54.9,
+        53.9,
+        1
+      ],
+      [
+        49.3,
+        52.0,
+        69.0,
+        21.6,
+        1
+      ],
+      [
+        48.7,
+        51.8,
+        65.2,
+        50.9,
+        1
+      ],
+      [
+        62.6,
+        54.7,
+        78.2,
+        50.8,
+        1
+      ],
+      [
+        67.3,
+        53.5,
+        76.3,
+        47.5,
+        1
+      ],
+      [
+        66.0,
+        55.4,
+        78.6,
+        40.3,
+        1
+      ],
+      [
+        28.1,
+        62.9,
+        44.8,
+        35.3,
+        1
+      ]
+    ],
+    "counts": {
+      "assists": 3,
+      "key_passes": 24,
+      "passes": 1386,
+      "progressive_carries": 74,
+      "progressive_passes": 338,
+      "receptions": 869,
+      "touches": 2544
+    },
+    "defence": [
+      {
+        "matchday": 1,
+        "minute": 10,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 7.5,
+        "y": 56.6
+      },
+      {
+        "matchday": 1,
+        "minute": 18,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 27.1,
+        "y": 61.7
+      },
+      {
+        "matchday": 1,
+        "minute": 26,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.4,
+        "y": 49.5
+      },
+      {
+        "matchday": 1,
+        "minute": 42,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 87.7,
+        "y": 63.0
+      },
+      {
+        "matchday": 1,
+        "minute": 48,
+        "outcome": "won",
+        "type": "interception",
+        "x": 15.8,
+        "y": 42.4
+      },
+      {
+        "matchday": 1,
+        "minute": 47,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 58.9,
+        "y": 63.9
+      },
+      {
+        "matchday": 1,
+        "minute": 52,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 64.5,
+        "y": 48.3
+      },
+      {
+        "matchday": 1,
+        "minute": 53,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 60.7,
+        "y": 59.4
+      },
+      {
+        "matchday": 1,
+        "minute": 53,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 56.3,
+        "y": 53.9
+      },
+      {
+        "matchday": 1,
+        "minute": 53,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 42.4,
+        "y": 42.0
+      },
+      {
+        "matchday": 1,
+        "minute": 56,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 15.8,
+        "y": 39.6
+      },
+      {
+        "matchday": 1,
+        "minute": 63,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 2.9,
+        "y": 41.8
+      },
+      {
+        "matchday": 1,
+        "minute": 66,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 16.5,
+        "y": 64.3
+      },
+      {
+        "matchday": 1,
+        "minute": 77,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 26.0,
+        "y": 61.5
+      },
+      {
+        "matchday": 1,
+        "minute": 89,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 15.3,
+        "y": 59.4
+      },
+      {
+        "matchday": 1,
+        "minute": 89,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 12.7,
+        "y": 61.5
+      },
+      {
+        "matchday": 1,
+        "minute": 92,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 58.5,
+        "y": 58.5
+      },
+      {
+        "matchday": 1,
+        "minute": 93,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.8,
+        "y": 38.7
+      },
+      {
+        "matchday": 2,
+        "minute": 2,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 39.0,
+        "y": 60.7
+      },
+      {
+        "matchday": 2,
+        "minute": 7,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 59.3,
+        "y": 58.9
+      },
+      {
+        "matchday": 2,
+        "minute": 7,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 27.5,
+        "y": 59.6
+      },
+      {
+        "matchday": 2,
+        "minute": 12,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.5,
+        "y": 46.7
+      },
+      {
+        "matchday": 2,
+        "minute": 30,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 33.0,
+        "y": 61.2
+      },
+      {
+        "matchday": 2,
+        "minute": 34,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 56.8,
+        "y": 55.5
+      },
+      {
+        "matchday": 2,
+        "minute": 50,
+        "outcome": "won",
+        "type": "interception",
+        "x": 42.7,
+        "y": 66.6
+      },
+      {
+        "matchday": 2,
+        "minute": 60,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 82.6,
+        "y": 44.1
+      },
+      {
+        "matchday": 2,
+        "minute": 77,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 57.0,
+        "y": 64.5
+      },
+      {
+        "matchday": 2,
+        "minute": 87,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 38.3,
+        "y": 57.1
+      },
+      {
+        "matchday": 3,
+        "minute": 9,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 42.4,
+        "y": 61.5
+      },
+      {
+        "matchday": 3,
+        "minute": 16,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 58.3,
+        "y": 62.1
+      },
+      {
+        "matchday": 3,
+        "minute": 16,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 57.2,
+        "y": 59.8
+      },
+      {
+        "matchday": 3,
+        "minute": 48,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 59.5,
+        "y": 30.1
+      },
+      {
+        "matchday": 3,
+        "minute": 50,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 65.8,
+        "y": 64.7
+      },
+      {
+        "matchday": 3,
+        "minute": 54,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 22.3,
+        "y": 21.3
+      },
+      {
+        "matchday": 3,
+        "minute": 57,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 32.7,
+        "y": 43.7
+      },
+      {
+        "matchday": 3,
+        "minute": 77,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 61.2,
+        "y": 62.6
+      },
+      {
+        "matchday": 3,
+        "minute": 78,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 66.2,
+        "y": 65.2
+      },
+      {
+        "matchday": 3,
+        "minute": 82,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 17.2,
+        "y": 55.0
+      },
+      {
+        "matchday": 3,
+        "minute": 92,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 13.1,
+        "y": 56.5
+      },
+      {
+        "matchday": 3,
+        "minute": 93,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 19.9,
+        "y": 59.8
+      },
+      {
+        "matchday": 3,
+        "minute": 93,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 18.8,
+        "y": 53.0
+      },
+      {
+        "matchday": 4,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 44.8,
+        "y": 65.4
+      },
+      {
+        "matchday": 4,
+        "minute": 24,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 35.4,
+        "y": 39.6
+      },
+      {
+        "matchday": 4,
+        "minute": 55,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 25.6,
+        "y": 47.3
+      },
+      {
+        "matchday": 4,
+        "minute": 55,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 10.5,
+        "y": 52.0
+      },
+      {
+        "matchday": 4,
+        "minute": 82,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 21.2,
+        "y": 63.5
+      },
+      {
+        "matchday": 4,
+        "minute": 87,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.2,
+        "y": 62.6
+      },
+      {
+        "matchday": 4,
+        "minute": 88,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 22.9,
+        "y": 56.0
+      },
+      {
+        "matchday": 4,
+        "minute": 93,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 21.2,
+        "y": 47.7
+      },
+      {
+        "matchday": 4,
+        "minute": 94,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 29.1,
+        "y": 44.4
+      },
+      {
+        "matchday": 5,
+        "minute": 0,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 68.8,
+        "y": 66.0
+      },
+      {
+        "matchday": 5,
+        "minute": 2,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 22.2,
+        "y": 57.8
+      },
+      {
+        "matchday": 5,
+        "minute": 5,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 7.4,
+        "y": 61.1
+      },
+      {
+        "matchday": 5,
+        "minute": 11,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 84.0,
+        "y": 63.2
+      },
+      {
+        "matchday": 5,
+        "minute": 13,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 11.7,
+        "y": 62.0
+      },
+      {
+        "matchday": 5,
+        "minute": 13,
+        "outcome": "won",
+        "type": "interception",
+        "x": 14.5,
+        "y": 50.9
+      },
+      {
+        "matchday": 5,
+        "minute": 13,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 11.7,
+        "y": 48.2
+      },
+      {
+        "matchday": 5,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 81.5,
+        "y": 61.7
+      },
+      {
+        "matchday": 5,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 81.5,
+        "y": 61.7
+      },
+      {
+        "matchday": 5,
+        "minute": 20,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 21.1,
+        "y": 60.7
+      },
+      {
+        "matchday": 5,
+        "minute": 29,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.9,
+        "y": 39.0
+      },
+      {
+        "matchday": 5,
+        "minute": 29,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 24.0,
+        "y": 65.6
+      },
+      {
+        "matchday": 5,
+        "minute": 40,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 20.9,
+        "y": 51.3
+      },
+      {
+        "matchday": 5,
+        "minute": 49,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 24.5,
+        "y": 45.4
+      },
+      {
+        "matchday": 5,
+        "minute": 50,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 31.2,
+        "y": 62.9
+      },
+      {
+        "matchday": 5,
+        "minute": 53,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 40.3,
+        "y": 62.3
+      },
+      {
+        "matchday": 5,
+        "minute": 57,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 75.1,
+        "y": 56.0
+      },
+      {
+        "matchday": 5,
+        "minute": 60,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 35.8,
+        "y": 49.0
+      },
+      {
+        "matchday": 5,
+        "minute": 68,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 31.7,
+        "y": 63.1
+      },
+      {
+        "matchday": 5,
+        "minute": 72,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 9.3,
+        "y": 48.8
+      },
+      {
+        "matchday": 5,
+        "minute": 83,
+        "outcome": "won",
+        "type": "interception",
+        "x": 22.6,
+        "y": 28.5
+      },
+      {
+        "matchday": 5,
+        "minute": 83,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.1,
+        "y": 32.0
+      },
+      {
+        "matchday": 5,
+        "minute": 89,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 23.5,
+        "y": 61.5
+      },
+      {
+        "matchday": 5,
+        "minute": 89,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 18.4,
+        "y": 64.9
+      },
+      {
+        "matchday": 5,
+        "minute": 90,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 40.4,
+        "y": 57.4
+      },
+      {
+        "matchday": 5,
+        "minute": 92,
+        "outcome": "won",
+        "type": "interception",
+        "x": 28.4,
+        "y": 43.5
+      },
+      {
+        "matchday": 5,
+        "minute": 92,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 27.8,
+        "y": 42.4
+      },
+      {
+        "matchday": 6,
+        "minute": 8,
+        "outcome": "won",
+        "type": "interception",
+        "x": 12.2,
+        "y": 52.5
+      },
+      {
+        "matchday": 6,
+        "minute": 9,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.9,
+        "y": 45.9
+      },
+      {
+        "matchday": 6,
+        "minute": 23,
+        "outcome": "won",
+        "type": "interception",
+        "x": 12.8,
+        "y": 51.9
+      },
+      {
+        "matchday": 6,
+        "minute": 25,
+        "outcome": "won",
+        "type": "interception",
+        "x": 34.9,
+        "y": 58.6
+      },
+      {
+        "matchday": 6,
+        "minute": 25,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 34.8,
+        "y": 57.0
+      },
+      {
+        "matchday": 6,
+        "minute": 29,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 58.8,
+        "y": 65.8
+      },
+      {
+        "matchday": 6,
+        "minute": 29,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 57.8,
+        "y": 64.5
+      },
+      {
+        "matchday": 6,
+        "minute": 30,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 44.1,
+        "y": 65.4
+      },
+      {
+        "matchday": 6,
+        "minute": 45,
+        "outcome": "won",
+        "type": "interception",
+        "x": 28.5,
+        "y": 52.8
+      },
+      {
+        "matchday": 6,
+        "minute": 67,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 71.0,
+        "y": 64.6
+      },
+      {
+        "matchday": 6,
+        "minute": 67,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 40.3,
+        "y": 64.5
+      },
+      {
+        "matchday": 6,
+        "minute": 71,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 62.2,
+        "y": 44.1
+      },
+      {
+        "matchday": 7,
+        "minute": 3,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 99.0,
+        "y": 57.8
+      },
+      {
+        "matchday": 7,
+        "minute": 6,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 96.8,
+        "y": 59.0
+      },
+      {
+        "matchday": 7,
+        "minute": 10,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.6,
+        "y": 45.6
+      },
+      {
+        "matchday": 7,
+        "minute": 19,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 7.2,
+        "y": 43.2
+      },
+      {
+        "matchday": 7,
+        "minute": 21,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 74.7,
+        "y": 60.9
+      },
+      {
+        "matchday": 7,
+        "minute": 35,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 32.0,
+        "y": 57.7
+      },
+      {
+        "matchday": 7,
+        "minute": 38,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 28.9,
+        "y": 49.9
+      },
+      {
+        "matchday": 7,
+        "minute": 38,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 9.6,
+        "y": 56.6
+      },
+      {
+        "matchday": 7,
+        "minute": 43,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 22.9,
+        "y": 54.5
+      },
+      {
+        "matchday": 7,
+        "minute": 43,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 4.6,
+        "y": 54.8
+      },
+      {
+        "matchday": 7,
+        "minute": 43,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 3.1,
+        "y": 52.8
+      },
+      {
+        "matchday": 7,
+        "minute": 53,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 75.6,
+        "y": 54.3
+      },
+      {
+        "matchday": 7,
+        "minute": 54,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 79.7,
+        "y": 55.3
+      },
+      {
+        "matchday": 7,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 24.7,
+        "y": 45.1
+      },
+      {
+        "matchday": 7,
+        "minute": 77,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 16.5,
+        "y": 39.6
+      },
+      {
+        "matchday": 7,
+        "minute": 78,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 25.7,
+        "y": 60.6
+      },
+      {
+        "matchday": 7,
+        "minute": 90,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 53.9,
+        "y": 50.5
+      },
+      {
+        "matchday": 8,
+        "minute": 5,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 36.0,
+        "y": 64.8
+      },
+      {
+        "matchday": 8,
+        "minute": 23,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.4,
+        "y": 63.0
+      },
+      {
+        "matchday": 8,
+        "minute": 28,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 44.1,
+        "y": 57.2
+      },
+      {
+        "matchday": 8,
+        "minute": 35,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 56.0,
+        "y": 61.0
+      },
+      {
+        "matchday": 8,
+        "minute": 73,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 65.5,
+        "y": 61.1
+      },
+      {
+        "matchday": 8,
+        "minute": 86,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 35.8,
+        "y": 45.7
+      },
+      {
+        "matchday": 8,
+        "minute": 95,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 15.8,
+        "y": 59.4
+      },
+      {
+        "matchday": 9,
+        "minute": 4,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.3,
+        "y": 42.5
+      },
+      {
+        "matchday": 9,
+        "minute": 18,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 9.2,
+        "y": 46.0
+      },
+      {
+        "matchday": 9,
+        "minute": 22,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 44.3,
+        "y": 56.2
+      },
+      {
+        "matchday": 9,
+        "minute": 22,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 89.5,
+        "y": 49.0
+      },
+      {
+        "matchday": 9,
+        "minute": 30,
+        "outcome": "won",
+        "type": "interception",
+        "x": 30.3,
+        "y": 63.2
+      },
+      {
+        "matchday": 9,
+        "minute": 30,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 35.7,
+        "y": 62.6
+      },
+      {
+        "matchday": 9,
+        "minute": 39,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 37.8,
+        "y": 50.5
+      },
+      {
+        "matchday": 9,
+        "minute": 44,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 26.6,
+        "y": 56.6
+      },
+      {
+        "matchday": 9,
+        "minute": 45,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 4.7,
+        "y": 48.6
+      },
+      {
+        "matchday": 9,
+        "minute": 55,
+        "outcome": "won",
+        "type": "interception",
+        "x": 50.7,
+        "y": 64.6
+      },
+      {
+        "matchday": 9,
+        "minute": 55,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 61.6,
+        "y": 64.3
+      },
+      {
+        "matchday": 9,
+        "minute": 65,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 34.0,
+        "y": 59.6
+      },
+      {
+        "matchday": 9,
+        "minute": 67,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 44.2,
+        "y": 35.3
+      },
+      {
+        "matchday": 9,
+        "minute": 83,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 27.2,
+        "y": 57.3
+      },
+      {
+        "matchday": 9,
+        "minute": 84,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 33.6,
+        "y": 49.4
+      },
+      {
+        "matchday": 9,
+        "minute": 89,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.5,
+        "y": 36.8
+      },
+      {
+        "matchday": 9,
+        "minute": 90,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.6,
+        "y": 34.5
+      },
+      {
+        "matchday": 10,
+        "minute": 0,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 74.2,
+        "y": 62.6
+      },
+      {
+        "matchday": 10,
+        "minute": 7,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 20.1,
+        "y": 58.5
+      },
+      {
+        "matchday": 10,
+        "minute": 18,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 71.8,
+        "y": 64.7
+      },
+      {
+        "matchday": 10,
+        "minute": 46,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.6,
+        "y": 37.4
+      },
+      {
+        "matchday": 10,
+        "minute": 51,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 42.2,
+        "y": 63.2
+      },
+      {
+        "matchday": 10,
+        "minute": 61,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 39.9,
+        "y": 50.6
+      },
+      {
+        "matchday": 11,
+        "minute": 9,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 78.0,
+        "y": 57.4
+      },
+      {
+        "matchday": 11,
+        "minute": 10,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 9.7,
+        "y": 39.0
+      },
+      {
+        "matchday": 11,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 75.3,
+        "y": 60.9
+      },
+      {
+        "matchday": 11,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 20.2,
+        "y": 63.9
+      },
+      {
+        "matchday": 11,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 16.4,
+        "y": 62.2
+      },
+      {
+        "matchday": 11,
+        "minute": 15,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 37.6,
+        "y": 57.5
+      },
+      {
+        "matchday": 11,
+        "minute": 26,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 3.3,
+        "y": 39.8
+      },
+      {
+        "matchday": 11,
+        "minute": 27,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 40.5,
+        "y": 59.4
+      },
+      {
+        "matchday": 11,
+        "minute": 27,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 14.5,
+        "y": 58.2
+      },
+      {
+        "matchday": 11,
+        "minute": 32,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 71.2,
+        "y": 52.7
+      },
+      {
+        "matchday": 11,
+        "minute": 32,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 37.6,
+        "y": 39.6
+      },
+      {
+        "matchday": 11,
+        "minute": 42,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 44.1,
+        "y": 56.0
+      },
+      {
+        "matchday": 11,
+        "minute": 42,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 41.5,
+        "y": 59.1
+      },
+      {
+        "matchday": 11,
+        "minute": 43,
+        "outcome": "won",
+        "type": "interception",
+        "x": 22.2,
+        "y": 43.9
+      },
+      {
+        "matchday": 11,
+        "minute": 43,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 27.2,
+        "y": 44.5
+      },
+      {
+        "matchday": 11,
+        "minute": 54,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 53.1,
+        "y": 36.6
+      },
+      {
+        "matchday": 11,
+        "minute": 71,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 74.7,
+        "y": 59.0
+      },
+      {
+        "matchday": 11,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 70.8,
+        "y": 21.1
+      },
+      {
+        "matchday": 11,
+        "minute": 90,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.6,
+        "y": 64.1
+      },
+      {
+        "matchday": 13,
+        "minute": 5,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 30.9,
+        "y": 61.7
+      },
+      {
+        "matchday": 13,
+        "minute": 10,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 13.3,
+        "y": 50.9
+      },
+      {
+        "matchday": 13,
+        "minute": 10,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 11.3,
+        "y": 49.6
+      },
+      {
+        "matchday": 13,
+        "minute": 11,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 8.1,
+        "y": 52.1
+      },
+      {
+        "matchday": 13,
+        "minute": 20,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.7,
+        "y": 29.2
+      },
+      {
+        "matchday": 13,
+        "minute": 21,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.2,
+        "y": 54.3
+      },
+      {
+        "matchday": 13,
+        "minute": 37,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 63.2,
+        "y": 56.0
+      },
+      {
+        "matchday": 13,
+        "minute": 46,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 4.7,
+        "y": 61.1
+      },
+      {
+        "matchday": 13,
+        "minute": 62,
+        "outcome": "won",
+        "type": "interception",
+        "x": 37.1,
+        "y": 50.8
+      },
+      {
+        "matchday": 13,
+        "minute": 62,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 6.5,
+        "y": 49.4
+      },
+      {
+        "matchday": 13,
+        "minute": 64,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 22.3,
+        "y": 64.1
+      },
+      {
+        "matchday": 13,
+        "minute": 79,
+        "outcome": "won",
+        "type": "interception",
+        "x": 49.1,
+        "y": 59.0
+      },
+      {
+        "matchday": 13,
+        "minute": 85,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.9,
+        "y": 61.5
+      },
+      {
+        "matchday": 14,
+        "minute": 2,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 3.5,
+        "y": 60.8
+      },
+      {
+        "matchday": 14,
+        "minute": 19,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 21.1,
+        "y": 44.9
+      },
+      {
+        "matchday": 14,
+        "minute": 23,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 26.0,
+        "y": 64.9
+      },
+      {
+        "matchday": 14,
+        "minute": 23,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 21.4,
+        "y": 64.8
+      },
+      {
+        "matchday": 14,
+        "minute": 36,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 18.7,
+        "y": 58.0
+      },
+      {
+        "matchday": 14,
+        "minute": 48,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 30.7,
+        "y": 47.2
+      },
+      {
+        "matchday": 14,
+        "minute": 55,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 30.4,
+        "y": 49.4
+      },
+      {
+        "matchday": 14,
+        "minute": 56,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.7,
+        "y": 40.1
+      },
+      {
+        "matchday": 14,
+        "minute": 58,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 14.3,
+        "y": 52.6
+      },
+      {
+        "matchday": 14,
+        "minute": 70,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 56.7,
+        "y": 63.1
+      },
+      {
+        "matchday": 14,
+        "minute": 87,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 20.6,
+        "y": 60.2
+      },
+      {
+        "matchday": 14,
+        "minute": 87,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 23.9,
+        "y": 62.2
+      },
+      {
+        "matchday": 14,
+        "minute": 92,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 19.1,
+        "y": 62.1
+      },
+      {
+        "matchday": 15,
+        "minute": 17,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 94.0,
+        "y": 49.5
+      },
+      {
+        "matchday": 15,
+        "minute": 17,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 94.2,
+        "y": 64.3
+      },
+      {
+        "matchday": 15,
+        "minute": 23,
+        "outcome": "won",
+        "type": "interception",
+        "x": 30.7,
+        "y": 55.6
+      },
+      {
+        "matchday": 15,
+        "minute": 24,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 24.4,
+        "y": 61.5
+      },
+      {
+        "matchday": 15,
+        "minute": 28,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 8.2,
+        "y": 60.0
+      },
+      {
+        "matchday": 15,
+        "minute": 35,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 6.5,
+        "y": 58.8
+      },
+      {
+        "matchday": 15,
+        "minute": 35,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 1.7,
+        "y": 61.1
+      },
+      {
+        "matchday": 15,
+        "minute": 43,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 23.7,
+        "y": 43.5
+      },
+      {
+        "matchday": 15,
+        "minute": 45,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 39.6,
+        "y": 49.4
+      },
+      {
+        "matchday": 15,
+        "minute": 57,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 23.8,
+        "y": 55.8
+      },
+      {
+        "matchday": 15,
+        "minute": 70,
+        "outcome": "won",
+        "type": "interception",
+        "x": 38.2,
+        "y": 62.2
+      },
+      {
+        "matchday": 15,
+        "minute": 81,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 66.3,
+        "y": 61.0
+      },
+      {
+        "matchday": 15,
+        "minute": 92,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 7.6,
+        "y": 55.6
+      },
+      {
+        "matchday": 15,
+        "minute": 94,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 2.9,
+        "y": 58.1
+      },
+      {
+        "matchday": 16,
+        "minute": 1,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 56.1,
+        "y": 54.3
+      },
+      {
+        "matchday": 16,
+        "minute": 1,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 57.9,
+        "y": 54.0
+      },
+      {
+        "matchday": 16,
+        "minute": 1,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 50.1,
+        "y": 51.2
+      },
+      {
+        "matchday": 16,
+        "minute": 3,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 31.7,
+        "y": 65.1
+      },
+      {
+        "matchday": 16,
+        "minute": 3,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 21.8,
+        "y": 64.3
+      },
+      {
+        "matchday": 16,
+        "minute": 6,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 47.2,
+        "y": 63.9
+      },
+      {
+        "matchday": 16,
+        "minute": 7,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 9.6,
+        "y": 47.8
+      },
+      {
+        "matchday": 16,
+        "minute": 7,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 17.7,
+        "y": 61.5
+      },
+      {
+        "matchday": 16,
+        "minute": 13,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 8.4,
+        "y": 66.0
+      },
+      {
+        "matchday": 16,
+        "minute": 18,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 32.7,
+        "y": 64.9
+      },
+      {
+        "matchday": 16,
+        "minute": 25,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 36.6,
+        "y": 52.4
+      },
+      {
+        "matchday": 16,
+        "minute": 28,
+        "outcome": "won",
+        "type": "interception",
+        "x": 10.9,
+        "y": 59.9
+      },
+      {
+        "matchday": 16,
+        "minute": 28,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 11.3,
+        "y": 66.7
+      },
+      {
+        "matchday": 16,
+        "minute": 40,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 61.6,
+        "y": 65.9
+      },
+      {
+        "matchday": 16,
+        "minute": 57,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 54.7,
+        "y": 45.8
+      },
+      {
+        "matchday": 16,
+        "minute": 60,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 25.9,
+        "y": 59.2
+      },
+      {
+        "matchday": 16,
+        "minute": 63,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.7,
+        "y": 46.3
+      },
+      {
+        "matchday": 16,
+        "minute": 70,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 21.1,
+        "y": 57.5
+      },
+      {
+        "matchday": 16,
+        "minute": 70,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 31.5,
+        "y": 57.6
+      },
+      {
+        "matchday": 16,
+        "minute": 71,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 18.5,
+        "y": 49.6
+      },
+      {
+        "matchday": 16,
+        "minute": 73,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 80.4,
+        "y": 60.6
+      },
+      {
+        "matchday": 16,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 76.3,
+        "y": 64.3
+      },
+      {
+        "matchday": 16,
+        "minute": 85,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 24.8,
+        "y": 66.2
+      },
+      {
+        "matchday": 16,
+        "minute": 86,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 8.3,
+        "y": 64.2
+      },
+      {
+        "matchday": 16,
+        "minute": 86,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 3.3,
+        "y": 55.7
+      },
+      {
+        "matchday": 16,
+        "minute": 91,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 7.2,
+        "y": 53.3
+      },
+      {
+        "matchday": 16,
+        "minute": 93,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 101.0,
+        "y": 62.3
+      },
+      {
+        "matchday": 16,
+        "minute": 93,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 96.5,
+        "y": 62.8
+      },
+      {
+        "matchday": 16,
+        "minute": 94,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 23.7,
+        "y": 59.6
+      },
+      {
+        "matchday": 17,
+        "minute": 4,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 57.8,
+        "y": 55.5
+      },
+      {
+        "matchday": 17,
+        "minute": 11,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 77.8,
+        "y": 55.2
+      },
+      {
+        "matchday": 17,
+        "minute": 11,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 78.5,
+        "y": 55.8
+      },
+      {
+        "matchday": 17,
+        "minute": 12,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 45.5,
+        "y": 63.8
+      },
+      {
+        "matchday": 17,
+        "minute": 14,
+        "outcome": "won",
+        "type": "interception",
+        "x": 12.6,
+        "y": 58.1
+      },
+      {
+        "matchday": 17,
+        "minute": 16,
+        "outcome": "won",
+        "type": "interception",
+        "x": 32.4,
+        "y": 56.4
+      },
+      {
+        "matchday": 17,
+        "minute": 16,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 33.5,
+        "y": 58.8
+      },
+      {
+        "matchday": 17,
+        "minute": 19,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 2.4,
+        "y": 46.3
+      },
+      {
+        "matchday": 17,
+        "minute": 21,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.7,
+        "y": 36.0
+      },
+      {
+        "matchday": 17,
+        "minute": 33,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 64.9,
+        "y": 64.5
+      },
+      {
+        "matchday": 17,
+        "minute": 46,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 32.1,
+        "y": 50.5
+      },
+      {
+        "matchday": 17,
+        "minute": 46,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 42.7,
+        "y": 51.1
+      },
+      {
+        "matchday": 17,
+        "minute": 58,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 9.7,
+        "y": 49.8
+      },
+      {
+        "matchday": 17,
+        "minute": 59,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 18.3,
+        "y": 56.7
+      },
+      {
+        "matchday": 17,
+        "minute": 64,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.9,
+        "y": 42.5
+      },
+      {
+        "matchday": 17,
+        "minute": 67,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 5.5,
+        "y": 41.4
+      },
+      {
+        "matchday": 17,
+        "minute": 72,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 24.5,
+        "y": 51.4
+      },
+      {
+        "matchday": 17,
+        "minute": 73,
+        "outcome": "won",
+        "type": "interception",
+        "x": 37.9,
+        "y": 52.7
+      },
+      {
+        "matchday": 17,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 18.6,
+        "y": 59.4
+      },
+      {
+        "matchday": 17,
+        "minute": 78,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 72.3,
+        "y": 63.9
+      },
+      {
+        "matchday": 18,
+        "minute": 1,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 31.0,
+        "y": 65.6
+      },
+      {
+        "matchday": 18,
+        "minute": 1,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 31.3,
+        "y": 65.8
+      },
+      {
+        "matchday": 18,
+        "minute": 10,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.4,
+        "y": 64.3
+      },
+      {
+        "matchday": 18,
+        "minute": 24,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 31.5,
+        "y": 65.3
+      },
+      {
+        "matchday": 18,
+        "minute": 25,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 63.2,
+        "y": 65.1
+      },
+      {
+        "matchday": 18,
+        "minute": 27,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 27.1,
+        "y": 52.0
+      },
+      {
+        "matchday": 18,
+        "minute": 31,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 47.5,
+        "y": 62.8
+      },
+      {
+        "matchday": 18,
+        "minute": 32,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 32.3,
+        "y": 52.2
+      },
+      {
+        "matchday": 18,
+        "minute": 38,
+        "outcome": "won",
+        "type": "interception",
+        "x": 46.5,
+        "y": 61.0
+      },
+      {
+        "matchday": 18,
+        "minute": 38,
+        "outcome": "won",
+        "type": "interception",
+        "x": 27.6,
+        "y": 60.2
+      },
+      {
+        "matchday": 18,
+        "minute": 47,
+        "outcome": "won",
+        "type": "interception",
+        "x": 6.9,
+        "y": 48.8
+      },
+      {
+        "matchday": 18,
+        "minute": 48,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 52.8,
+        "y": 61.1
+      },
+      {
+        "matchday": 18,
+        "minute": 49,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 30.9,
+        "y": 57.6
+      },
+      {
+        "matchday": 18,
+        "minute": 54,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 12.8,
+        "y": 58.9
+      },
+      {
+        "matchday": 18,
+        "minute": 54,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 8.1,
+        "y": 56.4
+      },
+      {
+        "matchday": 18,
+        "minute": 59,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 20.6,
+        "y": 60.2
+      },
+      {
+        "matchday": 18,
+        "minute": 59,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 10.9,
+        "y": 58.4
+      },
+      {
+        "matchday": 18,
+        "minute": 59,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 10.9,
+        "y": 58.5
+      },
+      {
+        "matchday": 18,
+        "minute": 59,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 11.9,
+        "y": 60.2
+      },
+      {
+        "matchday": 19,
+        "minute": 2,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 13.4,
+        "y": 39.8
+      },
+      {
+        "matchday": 19,
+        "minute": 9,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 35.0,
+        "y": 59.4
+      },
+      {
+        "matchday": 19,
+        "minute": 21,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 64.6,
+        "y": 64.2
+      },
+      {
+        "matchday": 19,
+        "minute": 26,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 32.8,
+        "y": 61.3
+      },
+      {
+        "matchday": 19,
+        "minute": 28,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 21.1,
+        "y": 42.3
+      },
+      {
+        "matchday": 19,
+        "minute": 28,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 67.4,
+        "y": 59.6
+      },
+      {
+        "matchday": 19,
+        "minute": 29,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 62.6,
+        "y": 61.4
+      },
+      {
+        "matchday": 19,
+        "minute": 38,
+        "outcome": "won",
+        "type": "interception",
+        "x": 58.5,
+        "y": 63.8
+      },
+      {
+        "matchday": 19,
+        "minute": 43,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 35.9,
+        "y": 37.0
+      },
+      {
+        "matchday": 19,
+        "minute": 46,
+        "outcome": "won",
+        "type": "interception",
+        "x": 25.7,
+        "y": 64.3
+      },
+      {
+        "matchday": 19,
+        "minute": 46,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 55.8,
+        "y": 64.6
+      },
+      {
+        "matchday": 19,
+        "minute": 48,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.8,
+        "y": 37.1
+      },
+      {
+        "matchday": 19,
+        "minute": 50,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 68.1,
+        "y": 47.9
+      },
+      {
+        "matchday": 19,
+        "minute": 58,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 63.0,
+        "y": 64.6
+      },
+      {
+        "matchday": 19,
+        "minute": 59,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 54.2,
+        "y": 35.8
+      },
+      {
+        "matchday": 19,
+        "minute": 64,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 76.3,
+        "y": 53.3
+      },
+      {
+        "matchday": 19,
+        "minute": 69,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 30.4,
+        "y": 65.6
+      },
+      {
+        "matchday": 19,
+        "minute": 69,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.6,
+        "y": 64.1
+      },
+      {
+        "matchday": 19,
+        "minute": 75,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 39.1,
+        "y": 56.8
+      },
+      {
+        "matchday": 20,
+        "minute": 11,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 42.9,
+        "y": 28.1
+      },
+      {
+        "matchday": 20,
+        "minute": 14,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 94.4,
+        "y": 61.1
+      },
+      {
+        "matchday": 20,
+        "minute": 14,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 84.7,
+        "y": 64.7
+      },
+      {
+        "matchday": 20,
+        "minute": 18,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 60.7,
+        "y": 46.4
+      },
+      {
+        "matchday": 20,
+        "minute": 29,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 17.0,
+        "y": 57.2
+      },
+      {
+        "matchday": 20,
+        "minute": 31,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 56.8,
+        "y": 44.9
+      },
+      {
+        "matchday": 20,
+        "minute": 36,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 86.5,
+        "y": 56.2
+      },
+      {
+        "matchday": 20,
+        "minute": 36,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 91.7,
+        "y": 59.0
+      },
+      {
+        "matchday": 20,
+        "minute": 49,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 91.6,
+        "y": 11.0
+      },
+      {
+        "matchday": 20,
+        "minute": 49,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 85.7,
+        "y": 3.9
+      },
+      {
+        "matchday": 20,
+        "minute": 54,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 34.1,
+        "y": 38.6
+      },
+      {
+        "matchday": 20,
+        "minute": 69,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 67.6,
+        "y": 64.5
+      },
+      {
+        "matchday": 21,
+        "minute": 8,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 17.2,
+        "y": 60.8
+      },
+      {
+        "matchday": 21,
+        "minute": 24,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 64.2,
+        "y": 30.1
+      },
+      {
+        "matchday": 21,
+        "minute": 26,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 46.6,
+        "y": 59.1
+      },
+      {
+        "matchday": 21,
+        "minute": 33,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 31.7,
+        "y": 62.8
+      },
+      {
+        "matchday": 21,
+        "minute": 42,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 67.7,
+        "y": 62.4
+      },
+      {
+        "matchday": 21,
+        "minute": 47,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 96.3,
+        "y": 66.1
+      },
+      {
+        "matchday": 21,
+        "minute": 55,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.4,
+        "y": 65.3
+      },
+      {
+        "matchday": 21,
+        "minute": 58,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 31.1,
+        "y": 52.9
+      },
+      {
+        "matchday": 21,
+        "minute": 80,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 5.5,
+        "y": 58.8
+      },
+      {
+        "matchday": 21,
+        "minute": 81,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 15.8,
+        "y": 24.7
+      },
+      {
+        "matchday": 21,
+        "minute": 88,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 20.4,
+        "y": 63.4
+      },
+      {
+        "matchday": 21,
+        "minute": 88,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 12.5,
+        "y": 62.0
+      },
+      {
+        "matchday": 22,
+        "minute": 11,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 14.0,
+        "y": 63.9
+      },
+      {
+        "matchday": 22,
+        "minute": 12,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 58.8,
+        "y": 66.2
+      },
+      {
+        "matchday": 22,
+        "minute": 13,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 13.4,
+        "y": 61.6
+      },
+      {
+        "matchday": 22,
+        "minute": 13,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 15.0,
+        "y": 57.0
+      },
+      {
+        "matchday": 22,
+        "minute": 17,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 72.4,
+        "y": 67.1
+      },
+      {
+        "matchday": 22,
+        "minute": 22,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 42.7,
+        "y": 55.8
+      },
+      {
+        "matchday": 22,
+        "minute": 22,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 39.6,
+        "y": 64.1
+      },
+      {
+        "matchday": 22,
+        "minute": 33,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 45.1,
+        "y": 65.4
+      },
+      {
+        "matchday": 22,
+        "minute": 36,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 35.5,
+        "y": 33.0
+      },
+      {
+        "matchday": 22,
+        "minute": 49,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 88.8,
+        "y": 61.3
+      },
+      {
+        "matchday": 22,
+        "minute": 49,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 62.6,
+        "y": 49.9
+      },
+      {
+        "matchday": 22,
+        "minute": 60,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 51.9,
+        "y": 61.6
+      },
+      {
+        "matchday": 22,
+        "minute": 69,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 48.2,
+        "y": 58.8
+      },
+      {
+        "matchday": 22,
+        "minute": 75,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 11.7,
+        "y": 57.7
+      },
+      {
+        "matchday": 22,
+        "minute": 79,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 45.6,
+        "y": 18.9
+      },
+      {
+        "matchday": 22,
+        "minute": 79,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 44.4,
+        "y": 22.2
+      },
+      {
+        "matchday": 22,
+        "minute": 79,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 35.8,
+        "y": 25.0
+      },
+      {
+        "matchday": 22,
+        "minute": 87,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 37.1,
+        "y": 42.2
+      },
+      {
+        "matchday": 22,
+        "minute": 95,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 3.3,
+        "y": 65.5
+      },
+      {
+        "matchday": 24,
+        "minute": 0,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 73.0,
+        "y": 64.3
+      },
+      {
+        "matchday": 24,
+        "minute": 0,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 77.1,
+        "y": 64.8
+      },
+      {
+        "matchday": 24,
+        "minute": 2,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.8,
+        "y": 48.2
+      },
+      {
+        "matchday": 24,
+        "minute": 8,
+        "outcome": "won",
+        "type": "interception",
+        "x": 4.0,
+        "y": 54.9
+      },
+      {
+        "matchday": 24,
+        "minute": 21,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.7,
+        "y": 61.5
+      },
+      {
+        "matchday": 24,
+        "minute": 31,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 57.0,
+        "y": 63.8
+      },
+      {
+        "matchday": 24,
+        "minute": 50,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 6.7,
+        "y": 32.8
+      },
+      {
+        "matchday": 24,
+        "minute": 52,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 40.3,
+        "y": 55.2
+      },
+      {
+        "matchday": 24,
+        "minute": 54,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 41.2,
+        "y": 43.9
+      },
+      {
+        "matchday": 24,
+        "minute": 56,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 76.0,
+        "y": 42.4
+      },
+      {
+        "matchday": 24,
+        "minute": 56,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 72.1,
+        "y": 51.2
+      },
+      {
+        "matchday": 24,
+        "minute": 60,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.4,
+        "y": 41.3
+      },
+      {
+        "matchday": 24,
+        "minute": 62,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 41.2,
+        "y": 58.6
+      },
+      {
+        "matchday": 24,
+        "minute": 63,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 36.5,
+        "y": 50.8
+      },
+      {
+        "matchday": 24,
+        "minute": 72,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 48.8,
+        "y": 34.5
+      },
+      {
+        "matchday": 24,
+        "minute": 72,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 61.3,
+        "y": 29.6
+      },
+      {
+        "matchday": 24,
+        "minute": 75,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 8.6,
+        "y": 59.6
+      },
+      {
+        "matchday": 24,
+        "minute": 75,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 8.4,
+        "y": 49.4
+      },
+      {
+        "matchday": 24,
+        "minute": 95,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 55.3,
+        "y": 58.4
+      },
+      {
+        "matchday": 24,
+        "minute": 97,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 6.0,
+        "y": 51.5
+      },
+      {
+        "matchday": 25,
+        "minute": 0,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 43.9,
+        "y": 59.8
+      },
+      {
+        "matchday": 25,
+        "minute": 25,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 84.4,
+        "y": 63.6
+      },
+      {
+        "matchday": 25,
+        "minute": 26,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 59.2,
+        "y": 56.2
+      },
+      {
+        "matchday": 25,
+        "minute": 28,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 30.1,
+        "y": 50.0
+      },
+      {
+        "matchday": 25,
+        "minute": 38,
+        "outcome": "won",
+        "type": "interception",
+        "x": 34.5,
+        "y": 60.2
+      },
+      {
+        "matchday": 25,
+        "minute": 38,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 30.6,
+        "y": 61.4
+      },
+      {
+        "matchday": 25,
+        "minute": 47,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 18.3,
+        "y": 15.5
+      },
+      {
+        "matchday": 25,
+        "minute": 47,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 19.5,
+        "y": 41.4
+      },
+      {
+        "matchday": 25,
+        "minute": 47,
+        "outcome": "won",
+        "type": "interception",
+        "x": 30.2,
+        "y": 65.7
+      },
+      {
+        "matchday": 25,
+        "minute": 50,
+        "outcome": "won",
+        "type": "interception",
+        "x": 21.7,
+        "y": 58.4
+      },
+      {
+        "matchday": 25,
+        "minute": 50,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 23.0,
+        "y": 63.3
+      },
+      {
+        "matchday": 25,
+        "minute": 56,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 67.2,
+        "y": 56.1
+      },
+      {
+        "matchday": 25,
+        "minute": 59,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 89.9,
+        "y": 65.9
+      },
+      {
+        "matchday": 25,
+        "minute": 62,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 32.5,
+        "y": 64.7
+      },
+      {
+        "matchday": 25,
+        "minute": 73,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 96.3,
+        "y": 63.9
+      },
+      {
+        "matchday": 25,
+        "minute": 78,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 24.7,
+        "y": 60.5
+      },
+      {
+        "matchday": 25,
+        "minute": 90,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 78.8,
+        "y": 50.7
+      },
+      {
+        "matchday": 25,
+        "minute": 93,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 9.3,
+        "y": 43.0
+      },
+      {
+        "matchday": 26,
+        "minute": 1,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 23.3,
+        "y": 62.0
+      },
+      {
+        "matchday": 26,
+        "minute": 1,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 28.0,
+        "y": 47.2
+      },
+      {
+        "matchday": 26,
+        "minute": 30,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 23.2,
+        "y": 49.2
+      },
+      {
+        "matchday": 26,
+        "minute": 32,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 65.2,
+        "y": 63.5
+      },
+      {
+        "matchday": 26,
+        "minute": 50,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 13.4,
+        "y": 46.4
+      },
+      {
+        "matchday": 26,
+        "minute": 52,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 6.9,
+        "y": 61.6
+      },
+      {
+        "matchday": 26,
+        "minute": 52,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 7.6,
+        "y": 61.6
+      },
+      {
+        "matchday": 26,
+        "minute": 54,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 26.7,
+        "y": 62.9
+      },
+      {
+        "matchday": 26,
+        "minute": 63,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 37.2,
+        "y": 60.2
+      },
+      {
+        "matchday": 26,
+        "minute": 63,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.1,
+        "y": 56.6
+      },
+      {
+        "matchday": 26,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 40.3,
+        "y": 40.4
+      },
+      {
+        "matchday": 26,
+        "minute": 93,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 6.6,
+        "y": 62.6
+      },
+      {
+        "matchday": 26,
+        "minute": 96,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 14.0,
+        "y": 56.3
+      },
+      {
+        "matchday": 27,
+        "minute": 7,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 2.9,
+        "y": 35.7
+      },
+      {
+        "matchday": 27,
+        "minute": 10,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 62.7,
+        "y": 64.1
+      },
+      {
+        "matchday": 27,
+        "minute": 20,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 61.9,
+        "y": 64.7
+      },
+      {
+        "matchday": 27,
+        "minute": 45,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 45.4,
+        "y": 58.5
+      },
+      {
+        "matchday": 27,
+        "minute": 45,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 64.3,
+        "y": 50.6
+      },
+      {
+        "matchday": 27,
+        "minute": 58,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 48.9,
+        "y": 45.1
+      },
+      {
+        "matchday": 27,
+        "minute": 62,
+        "outcome": "won",
+        "type": "interception",
+        "x": 54.0,
+        "y": 64.9
+      },
+      {
+        "matchday": 27,
+        "minute": 62,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 65.1,
+        "y": 64.7
+      },
+      {
+        "matchday": 27,
+        "minute": 86,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 64.7,
+        "y": 60.7
+      },
+      {
+        "matchday": 28,
+        "minute": 2,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 39.0,
+        "y": 64.5
+      },
+      {
+        "matchday": 28,
+        "minute": 14,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 25.2,
+        "y": 42.4
+      },
+      {
+        "matchday": 28,
+        "minute": 17,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 32.8,
+        "y": 46.1
+      },
+      {
+        "matchday": 28,
+        "minute": 25,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 9.3,
+        "y": 34.3
+      },
+      {
+        "matchday": 28,
+        "minute": 27,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 31.4,
+        "y": 44.7
+      },
+      {
+        "matchday": 28,
+        "minute": 31,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 40.3,
+        "y": 63.4
+      },
+      {
+        "matchday": 28,
+        "minute": 46,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 92.8,
+        "y": 60.8
+      },
+      {
+        "matchday": 28,
+        "minute": 61,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 43.7,
+        "y": 58.4
+      },
+      {
+        "matchday": 28,
+        "minute": 61,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 16.2,
+        "y": 29.8
+      },
+      {
+        "matchday": 28,
+        "minute": 63,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 43.5,
+        "y": 56.2
+      },
+      {
+        "matchday": 28,
+        "minute": 63,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 12.7,
+        "y": 50.4
+      },
+      {
+        "matchday": 28,
+        "minute": 72,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 31.7,
+        "y": 49.6
+      },
+      {
+        "matchday": 28,
+        "minute": 72,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 21.9,
+        "y": 58.2
+      },
+      {
+        "matchday": 28,
+        "minute": 73,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 16.4,
+        "y": 51.8
+      },
+      {
+        "matchday": 28,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.9,
+        "y": 44.3
+      },
+      {
+        "matchday": 28,
+        "minute": 79,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 27.2,
+        "y": 54.5
+      },
+      {
+        "matchday": 28,
+        "minute": 82,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 9.3,
+        "y": 54.1
+      },
+      {
+        "matchday": 28,
+        "minute": 82,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 14.7,
+        "y": 56.6
+      },
+      {
+        "matchday": 29,
+        "minute": 8,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 13.4,
+        "y": 51.2
+      },
+      {
+        "matchday": 29,
+        "minute": 29,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 13.8,
+        "y": 50.9
+      },
+      {
+        "matchday": 29,
+        "minute": 39,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.5,
+        "y": 36.0
+      },
+      {
+        "matchday": 29,
+        "minute": 43,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 5.2,
+        "y": 54.8
+      },
+      {
+        "matchday": 29,
+        "minute": 51,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 73.9,
+        "y": 6.9
+      },
+      {
+        "matchday": 29,
+        "minute": 54,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 29.9,
+        "y": 50.1
+      },
+      {
+        "matchday": 29,
+        "minute": 60,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 51.9,
+        "y": 51.0
+      },
+      {
+        "matchday": 29,
+        "minute": 69,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.6,
+        "y": 61.0
+      },
+      {
+        "matchday": 29,
+        "minute": 97,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 8.2,
+        "y": 59.4
+      },
+      {
+        "matchday": 30,
+        "minute": 4,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 16.9,
+        "y": 36.4
+      },
+      {
+        "matchday": 30,
+        "minute": 18,
+        "outcome": "won",
+        "type": "interception",
+        "x": 3.8,
+        "y": 29.0
+      },
+      {
+        "matchday": 30,
+        "minute": 18,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 5.2,
+        "y": 25.2
+      },
+      {
+        "matchday": 30,
+        "minute": 22,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 37.0,
+        "y": 48.1
+      },
+      {
+        "matchday": 30,
+        "minute": 29,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.1,
+        "y": 37.2
+      },
+      {
+        "matchday": 30,
+        "minute": 30,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 20.6,
+        "y": 58.0
+      },
+      {
+        "matchday": 30,
+        "minute": 30,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 9.3,
+        "y": 47.8
+      },
+      {
+        "matchday": 30,
+        "minute": 35,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 24.4,
+        "y": 48.8
+      },
+      {
+        "matchday": 30,
+        "minute": 39,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 20.7,
+        "y": 63.9
+      },
+      {
+        "matchday": 30,
+        "minute": 40,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 23.3,
+        "y": 39.4
+      },
+      {
+        "matchday": 30,
+        "minute": 49,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 34.4,
+        "y": 52.5
+      },
+      {
+        "matchday": 30,
+        "minute": 55,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 19.4,
+        "y": 49.6
+      },
+      {
+        "matchday": 30,
+        "minute": 63,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 23.7,
+        "y": 56.5
+      },
+      {
+        "matchday": 30,
+        "minute": 65,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 60.8,
+        "y": 60.6
+      },
+      {
+        "matchday": 30,
+        "minute": 85,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 31.7,
+        "y": 63.1
+      },
+      {
+        "matchday": 30,
+        "minute": 85,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 30.7,
+        "y": 61.6
+      },
+      {
+        "matchday": 31,
+        "minute": 5,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 45.8,
+        "y": 65.2
+      },
+      {
+        "matchday": 31,
+        "minute": 27,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 43.6,
+        "y": 62.6
+      },
+      {
+        "matchday": 31,
+        "minute": 27,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 44.0,
+        "y": 62.6
+      },
+      {
+        "matchday": 31,
+        "minute": 28,
+        "outcome": "won",
+        "type": "interception",
+        "x": 24.2,
+        "y": 61.9
+      },
+      {
+        "matchday": 31,
+        "minute": 28,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 22.2,
+        "y": 64.3
+      },
+      {
+        "matchday": 31,
+        "minute": 28,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 10.3,
+        "y": 57.7
+      },
+      {
+        "matchday": 31,
+        "minute": 28,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 5.6,
+        "y": 56.4
+      },
+      {
+        "matchday": 31,
+        "minute": 41,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.3,
+        "y": 54.1
+      },
+      {
+        "matchday": 31,
+        "minute": 45,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 67.5,
+        "y": 59.0
+      },
+      {
+        "matchday": 31,
+        "minute": 49,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 68.6,
+        "y": 49.2
+      },
+      {
+        "matchday": 31,
+        "minute": 52,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 28.2,
+        "y": 61.9
+      },
+      {
+        "matchday": 31,
+        "minute": 65,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 24.0,
+        "y": 51.0
+      },
+      {
+        "matchday": 31,
+        "minute": 77,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 24.8,
+        "y": 49.9
+      },
+      {
+        "matchday": 31,
+        "minute": 92,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 47.1,
+        "y": 59.3
+      },
+      {
+        "matchday": 33,
+        "minute": 28,
+        "outcome": "won",
+        "type": "interception",
+        "x": 46.0,
+        "y": 49.6
+      },
+      {
+        "matchday": 33,
+        "minute": 40,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 31.0,
+        "y": 54.5
+      },
+      {
+        "matchday": 33,
+        "minute": 40,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 5.5,
+        "y": 63.1
+      },
+      {
+        "matchday": 33,
+        "minute": 40,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 8.8,
+        "y": 61.8
+      },
+      {
+        "matchday": 33,
+        "minute": 44,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 15.2,
+        "y": 60.7
+      },
+      {
+        "matchday": 33,
+        "minute": 46,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.4,
+        "y": 39.8
+      },
+      {
+        "matchday": 33,
+        "minute": 45,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 22.4,
+        "y": 52.8
+      },
+      {
+        "matchday": 33,
+        "minute": 45,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 15.5,
+        "y": 64.0
+      },
+      {
+        "matchday": 33,
+        "minute": 45,
+        "outcome": "won",
+        "type": "interception",
+        "x": 20.2,
+        "y": 59.5
+      },
+      {
+        "matchday": 33,
+        "minute": 54,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 92.4,
+        "y": 59.1
+      },
+      {
+        "matchday": 33,
+        "minute": 54,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 99.5,
+        "y": 58.8
+      },
+      {
+        "matchday": 33,
+        "minute": 54,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 70.9,
+        "y": 53.2
+      },
+      {
+        "matchday": 33,
+        "minute": 54,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 77.7,
+        "y": 54.7
+      },
+      {
+        "matchday": 33,
+        "minute": 58,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.0,
+        "y": 56.0
+      },
+      {
+        "matchday": 33,
+        "minute": 84,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 72.4,
+        "y": 54.0
+      },
+      {
+        "matchday": 33,
+        "minute": 84,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 73.0,
+        "y": 50.2
+      },
+      {
+        "matchday": 33,
+        "minute": 86,
+        "outcome": "won",
+        "type": "interception",
+        "x": 68.8,
+        "y": 56.4
+      },
+      {
+        "matchday": 33,
+        "minute": 89,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 14.7,
+        "y": 55.6
+      },
+      {
+        "matchday": 32,
+        "minute": 6,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 9.4,
+        "y": 44.5
+      },
+      {
+        "matchday": 32,
+        "minute": 8,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 18.6,
+        "y": 62.6
+      },
+      {
+        "matchday": 32,
+        "minute": 9,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.6,
+        "y": 61.8
+      },
+      {
+        "matchday": 32,
+        "minute": 15,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 9.6,
+        "y": 63.1
+      },
+      {
+        "matchday": 32,
+        "minute": 15,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 27.5,
+        "y": 61.3
+      },
+      {
+        "matchday": 32,
+        "minute": 21,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 41.9,
+        "y": 62.6
+      },
+      {
+        "matchday": 32,
+        "minute": 27,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 42.4,
+        "y": 65.0
+      },
+      {
+        "matchday": 32,
+        "minute": 63,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 13.7,
+        "y": 63.8
+      },
+      {
+        "matchday": 32,
+        "minute": 63,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.8,
+        "y": 61.7
+      },
+      {
+        "matchday": 32,
+        "minute": 66,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 40.5,
+        "y": 65.1
+      },
+      {
+        "matchday": 32,
+        "minute": 74,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 21.7,
+        "y": 61.4
+      },
+      {
+        "matchday": 32,
+        "minute": 82,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 54.8,
+        "y": 65.1
+      },
+      {
+        "matchday": 34,
+        "minute": 7,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 5.1,
+        "y": 49.2
+      },
+      {
+        "matchday": 34,
+        "minute": 42,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.3,
+        "y": 37.7
+      },
+      {
+        "matchday": 34,
+        "minute": 48,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 80.0,
+        "y": 35.6
+      },
+      {
+        "matchday": 34,
+        "minute": 53,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 4.8,
+        "y": 35.2
+      },
+      {
+        "matchday": 34,
+        "minute": 61,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 13.5,
+        "y": 57.7
+      },
+      {
+        "matchday": 34,
+        "minute": 65,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 38.3,
+        "y": 59.4
+      },
+      {
+        "matchday": 34,
+        "minute": 67,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 16.4,
+        "y": 40.1
+      },
+      {
+        "matchday": 34,
+        "minute": 67,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 16.0,
+        "y": 40.5
+      },
+      {
+        "matchday": 34,
+        "minute": 90,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 5.2,
+        "y": 31.2
+      },
+      {
+        "matchday": 35,
+        "minute": 2,
+        "outcome": "won",
+        "type": "interception",
+        "x": 59.1,
+        "y": 62.8
+      },
+      {
+        "matchday": 35,
+        "minute": 5,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 4.5,
+        "y": 27.8
+      },
+      {
+        "matchday": 35,
+        "minute": 58,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 27.0,
+        "y": 51.5
+      },
+      {
+        "matchday": 35,
+        "minute": 67,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 13.3,
+        "y": 38.8
+      },
+      {
+        "matchday": 36,
+        "minute": 8,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.8,
+        "y": 62.2
+      },
+      {
+        "matchday": 36,
+        "minute": 23,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 34.5,
+        "y": 51.6
+      },
+      {
+        "matchday": 36,
+        "minute": 24,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 6.4,
+        "y": 29.0
+      },
+      {
+        "matchday": 36,
+        "minute": 29,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 45.8,
+        "y": 63.4
+      },
+      {
+        "matchday": 36,
+        "minute": 36,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 37.1,
+        "y": 50.3
+      },
+      {
+        "matchday": 36,
+        "minute": 40,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 29.1,
+        "y": 40.7
+      },
+      {
+        "matchday": 36,
+        "minute": 42,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.2,
+        "y": 22.5
+      },
+      {
+        "matchday": 36,
+        "minute": 43,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 21.3,
+        "y": 10.1
+      },
+      {
+        "matchday": 36,
+        "minute": 46,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 26.0,
+        "y": 56.7
+      },
+      {
+        "matchday": 36,
+        "minute": 64,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 23.5,
+        "y": 29.4
+      },
+      {
+        "matchday": 36,
+        "minute": 72,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 66.4,
+        "y": 54.3
+      },
+      {
+        "matchday": 36,
+        "minute": 80,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 7.6,
+        "y": 43.1
+      },
+      {
+        "matchday": 36,
+        "minute": 84,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 47.4,
+        "y": 44.5
+      },
+      {
+        "matchday": 36,
+        "minute": 93,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 15.8,
+        "y": 44.5
+      },
+      {
+        "matchday": 36,
+        "minute": 94,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 30.3,
+        "y": 63.1
+      },
+      {
+        "matchday": 37,
+        "minute": 0,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 10.3,
+        "y": 62.1
+      },
+      {
+        "matchday": 37,
+        "minute": 0,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 9.0,
+        "y": 61.4
+      },
+      {
+        "matchday": 37,
+        "minute": 1,
+        "outcome": "won",
+        "type": "interception",
+        "x": 10.2,
+        "y": 53.2
+      },
+      {
+        "matchday": 37,
+        "minute": 1,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 10.7,
+        "y": 61.7
+      },
+      {
+        "matchday": 37,
+        "minute": 19,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 42.5,
+        "y": 50.9
+      },
+      {
+        "matchday": 37,
+        "minute": 34,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.3,
+        "y": 45.5
+      },
+      {
+        "matchday": 37,
+        "minute": 46,
+        "outcome": "won",
+        "type": "interception",
+        "x": 36.6,
+        "y": 63.4
+      },
+      {
+        "matchday": 37,
+        "minute": 72,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 2.7,
+        "y": 65.2
+      },
+      {
+        "matchday": 37,
+        "minute": 72,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 6.2,
+        "y": 47.7
+      },
+      {
+        "matchday": 37,
+        "minute": 77,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 20.6,
+        "y": 64.1
+      },
+      {
+        "matchday": 37,
+        "minute": 82,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 25.2,
+        "y": 46.0
+      },
+      {
+        "matchday": 37,
+        "minute": 90,
+        "outcome": "won",
+        "type": "interception",
+        "x": 3.9,
+        "y": 54.6
+      },
+      {
+        "matchday": 37,
+        "minute": 93,
+        "outcome": "lost",
+        "type": "challenge",
+        "x": 20.5,
+        "y": 45.3
+      },
+      {
+        "matchday": 37,
+        "minute": 93,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 20.5,
+        "y": 47.8
+      },
+      {
+        "matchday": 38,
+        "minute": 16,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 62.6,
+        "y": 58.3
+      },
+      {
+        "matchday": 38,
+        "minute": 16,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 59.2,
+        "y": 60.2
+      },
+      {
+        "matchday": 38,
+        "minute": 23,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 62.5,
+        "y": 48.1
+      },
+      {
+        "matchday": 38,
+        "minute": 23,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 67.3,
+        "y": 44.9
+      },
+      {
+        "matchday": 38,
+        "minute": 56,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 45.1,
+        "y": 60.9
+      },
+      {
+        "matchday": 38,
+        "minute": 56,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 30.7,
+        "y": 61.3
+      },
+      {
+        "matchday": 38,
+        "minute": 70,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 12.9,
+        "y": 58.6
+      },
+      {
+        "matchday": 38,
+        "minute": 73,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 64.9,
+        "y": 54.6
+      },
+      {
+        "matchday": 38,
+        "minute": 81,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 16.8,
+        "y": 33.7
+      },
+      {
+        "matchday": 38,
+        "minute": 85,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 38.1,
+        "y": 47.1
+      },
+      {
+        "matchday": 38,
+        "minute": 88,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 9.4,
+        "y": 56.9
+      },
+      {
+        "matchday": 38,
+        "minute": 90,
+        "outcome": "won",
+        "type": "interception",
+        "x": 16.5,
+        "y": 45.4
+      }
+    ],
+    "key_passes": [
+      [
+        95.9,
+        63.8,
+        96.3,
+        31.8,
+        7
+      ],
+      [
+        92.8,
+        61.3,
+        98.8,
+        34.9,
+        7
+      ],
+      [
+        95.4,
+        56.0,
+        99.9,
+        38.6,
+        11
+      ],
+      [
+        99.4,
+        60.5,
+        96.3,
+        34.6,
+        7
+      ],
+      [
+        73.9,
+        64.3,
+        74.0,
+        57.5,
+        5
+      ],
+      [
+        77.1,
+        57.3,
+        77.9,
+        37.9,
+        5
+      ],
+      [
+        102.5,
+        51.0,
+        92.3,
+        31.1,
+        5
+      ],
+      [
+        95.3,
+        54.1,
+        90.7,
+        34.5,
+        7
+      ],
+      [
+        69.4,
+        45.2,
+        89.6,
+        41.3,
+        7
+      ],
+      [
+        95.1,
+        63.8,
+        95.3,
+        32.1,
+        11
+      ],
+      [
+        83.3,
+        45.6,
+        76.0,
+        37.3,
+        5
+      ],
+      [
+        84.6,
+        65.6,
+        97.0,
+        37.5,
+        7
+      ],
+      [
+        96.0,
+        61.6,
+        99.2,
+        38.2,
+        7
+      ],
+      [
+        75.2,
+        49.6,
+        84.1,
+        35.6,
+        7
+      ],
+      [
+        101.5,
+        55.6,
+        97.8,
+        31.8,
+        7
+      ],
+      [
+        78.5,
+        53.7,
+        76.5,
+        43.7,
+        5
+      ],
+      [
+        83.8,
+        56.7,
+        84.0,
+        44.1,
+        7
+      ],
+      [
+        87.9,
+        55.8,
+        86.2,
+        38.8,
+        7
+      ],
+      [
+        77.0,
+        48.4,
+        86.3,
+        24.9,
+        7
+      ],
+      [
+        93.9,
+        56.2,
+        97.5,
+        30.6,
+        7
+      ],
+      [
+        104.5,
+        67.7,
+        91.1,
+        35.8,
+        7
+      ],
+      [
+        74.3,
+        54.5,
+        92.9,
+        47.7,
+        7
+      ],
+      [
+        89.5,
+        54.0,
+        91.8,
+        37.7,
+        7
+      ],
+      [
+        91.7,
+        58.4,
+        89.7,
+        35.0,
+        7
+      ],
+      [
+        93.0,
+        54.9,
+        97.1,
+        38.6,
+        11
+      ],
+      [
+        76.3,
+        47.5,
+        76.3,
+        30.7,
+        5
+      ],
+      [
+        37.0,
+        63.1,
+        69.4,
+        23.4,
+        7
+      ]
+    ],
+    "passes": [
+      [
+        76.0,
+        58.2,
+        72.8,
+        50.0,
+        1
+      ],
+      [
+        9.4,
+        56.9,
+        19.8,
+        62.6,
+        0
+      ],
+      [
+        90.2,
+        56.0,
+        90.5,
+        58.2,
+        1
+      ],
+      [
+        75.2,
+        63.4,
+        78.1,
+        56.0,
+        1
+      ],
+      [
+        89.5,
+        45.8,
+        105.0,
+        9.9,
+        0
+      ],
+      [
+        64.9,
+        54.6,
+        76.3,
+        37.0,
+        2
+      ],
+      [
+        12.0,
+        58.3,
+        4.5,
+        42.6,
+        1
+      ],
+      [
+        96.1,
+        50.2,
+        95.8,
+        44.0,
+        2
+      ],
+      [
+        42.6,
+        55.8,
+        60.3,
+        49.8,
+        3
+      ],
+      [
+        50.2,
+        68.0,
+        37.8,
+        46.6,
+        1
+      ],
+      [
+        57.8,
+        61.0,
+        59.2,
+        59.4,
+        0
+      ],
+      [
+        84.9,
+        60.8,
+        77.3,
+        62.8,
+        1
+      ],
+      [
+        37.0,
+        63.1,
+        69.4,
+        23.4,
+        7
+      ],
+      [
+        29.2,
+        60.7,
+        10.7,
+        54.0,
+        1
+      ],
+      [
+        71.8,
+        62.4,
+        83.0,
+        43.2,
+        2
+      ],
+      [
+        31.8,
+        56.4,
+        29.7,
+        27.2,
+        1
+      ],
+      [
+        17.2,
+        64.7,
+        27.8,
+        58.4,
+        1
+      ],
+      [
+        17.9,
+        68.0,
+        18.0,
+        61.1,
+        1
+      ],
+      [
+        54.8,
+        52.0,
+        37.8,
+        38.2,
+        1
+      ],
+      [
+        67.5,
+        46.4,
+        67.7,
+        28.6,
+        1
+      ],
+      [
+        41.7,
+        58.8,
+        44.1,
+        51.5,
+        1
+      ],
+      [
+        60.3,
+        54.5,
+        50.8,
+        33.9,
+        1
+      ],
+      [
+        60.9,
+        57.2,
+        69.6,
+        40.2,
+        3
+      ],
+      [
+        55.9,
+        45.2,
+        26.7,
+        41.1,
+        1
+      ],
+      [
+        78.5,
+        68.0,
+        93.2,
+        46.6,
+        2
+      ],
+      [
+        87.6,
+        68.0,
+        88.3,
+        61.7,
+        1
+      ],
+      [
+        73.0,
+        51.3,
+        92.5,
+        48.4,
+        3
+      ],
+      [
+        63.3,
+        65.0,
+        62.5,
+        60.2,
+        1
+      ],
+      [
+        50.8,
+        68.0,
+        60.0,
+        65.0,
+        1
+      ],
+      [
+        72.6,
+        63.9,
+        60.6,
+        63.5,
+        1
+      ],
+      [
+        56.5,
+        58.4,
+        46.6,
+        44.0,
+        1
+      ],
+      [
+        34.8,
+        54.0,
+        37.0,
+        47.3,
+        1
+      ],
+      [
+        74.3,
+        47.6,
+        91.8,
+        29.9,
+        3
+      ],
+      [
+        60.3,
+        68.0,
+        62.4,
+        60.0,
+        1
+      ],
+      [
+        37.0,
+        44.5,
+        32.4,
+        17.6,
+        1
+      ],
+      [
+        71.1,
+        43.5,
+        62.6,
+        17.3,
+        1
+      ],
+      [
+        29.2,
+        57.8,
+        14.7,
+        33.3,
+        1
+      ],
+      [
+        61.4,
+        35.2,
+        57.5,
+        40.9,
+        1
+      ],
+      [
+        65.6,
+        45.2,
+        64.9,
+        26.0,
+        1
+      ],
+      [
+        35.4,
+        60.6,
+        22.4,
+        58.5,
+        1
+      ],
+      [
+        59.2,
+        60.2,
+        56.1,
+        54.1,
+        1
+      ],
+      [
+        59.5,
+        62.2,
+        62.5,
+        59.0,
+        0
+      ],
+      [
+        44.1,
+        54.8,
+        70.5,
+        28.8,
+        2
+      ],
+      [
+        30.2,
+        54.9,
+        31.8,
+        47.2,
+        1
+      ],
+      [
+        56.6,
+        50.3,
+        49.6,
+        38.0,
+        1
+      ],
+      [
+        48.0,
+        56.8,
+        63.0,
+        50.4,
+        3
+      ],
+      [
+        58.8,
+        60.2,
+        63.1,
+        50.9,
+        1
+      ],
+      [
+        98.8,
+        50.7,
+        91.2,
+        51.2,
+        1
+      ],
+      [
+        85.6,
+        68.0,
+        94.2,
+        61.2,
+        3
+      ],
+      [
+        79.8,
+        62.6,
+        81.1,
+        62.8,
+        0
+      ],
+      [
+        36.5,
+        68.0,
+        41.6,
+        62.4,
+        1
+      ],
+      [
+        25.2,
+        46.0,
+        45.4,
+        56.7,
+        1
+      ],
+      [
+        17.7,
+        64.9,
+        38.4,
+        59.6,
+        1
+      ],
+      [
+        20.4,
+        68.0,
+        26.1,
+        62.9,
+        1
+      ],
+      [
+        79.2,
+        64.3,
+        75.5,
+        49.8,
+        1
+      ],
+      [
+        84.9,
+        68.0,
+        82.1,
+        61.9,
+        1
+      ],
+      [
+        90.6,
+        50.2,
+        82.1,
+        61.1,
+        1
+      ],
+      [
+        31.6,
+        58.0,
+        37.7,
+        51.5,
+        1
+      ],
+      [
+        88.8,
+        52.2,
+        79.9,
+        51.8,
+        1
+      ],
+      [
+        40.2,
+        58.4,
+        66.3,
+        26.4,
+        3
+      ],
+      [
+        58.7,
+        59.4,
+        88.0,
+        10.1,
+        3
+      ],
+      [
+        76.3,
+        47.5,
+        76.3,
+        30.7,
+        5
+      ],
+      [
+        44.9,
+        51.0,
+        27.1,
+        30.3,
+        1
+      ],
+      [
+        39.9,
+        62.7,
+        41.9,
+        57.5,
+        1
+      ],
+      [
+        89.0,
+        68.0,
+        72.0,
+        61.9,
+        1
+      ],
+      [
+        96.2,
+        68.0,
+        89.6,
+        51.1,
+        3
+      ],
+      [
+        67.8,
+        58.1,
+        77.6,
+        58.1,
+        1
+      ],
+      [
+        44.8,
+        61.3,
+        83.1,
+        57.4,
+        2
+      ],
+      [
+        31.9,
+        68.0,
+        19.9,
+        60.7,
+        1
+      ],
+      [
+        44.5,
+        64.1,
+        33.3,
+        57.8,
+        1
+      ],
+      [
+        47.9,
+        60.0,
+        27.8,
+        47.5,
+        1
+      ],
+      [
+        81.1,
+        57.9,
+        68.8,
+        59.4,
+        1
+      ],
+      [
+        76.3,
+        63.4,
+        64.3,
+        58.3,
+        1
+      ],
+      [
+        81.1,
+        68.0,
+        71.2,
+        63.2,
+        1
+      ],
+      [
+        39.2,
+        68.0,
+        42.9,
+        36.8,
+        1
+      ],
+      [
+        62.4,
+        61.6,
+        42.1,
+        39.0,
+        1
+      ],
+      [
+        77.0,
+        64.6,
+        71.1,
+        62.2,
+        1
+      ],
+      [
+        11.8,
+        63.2,
+        40.4,
+        49.0,
+        3
+      ],
+      [
+        11.8,
+        61.3,
+        16.2,
+        56.7,
+        1
+      ],
+      [
+        29.1,
+        61.0,
+        70.9,
+        39.2,
+        2
+      ],
+      [
+        36.9,
+        43.1,
+        66.7,
+        42.9,
+        2
+      ],
+      [
+        75.6,
+        51.9,
+        66.8,
+        46.0,
+        1
+      ],
+      [
+        83.2,
+        61.8,
+        93.0,
+        37.3,
+        2
+      ],
+      [
+        47.4,
+        44.5,
+        62.5,
+        34.1,
+        3
+      ],
+      [
+        71.0,
+        20.0,
+        68.4,
+        0.0,
+        0
+      ],
+      [
+        67.6,
+        51.1,
+        60.4,
+        60.2,
+        1
+      ],
+      [
+        70.2,
+        52.5,
+        75.9,
+        59.8,
+        0
+      ],
+      [
+        62.6,
+        61.9,
+        56.9,
+        61.4,
+        1
+      ],
+      [
+        67.2,
+        68.0,
+        61.3,
+        58.6,
+        1
+      ],
+      [
+        43.7,
+        62.6,
+        47.2,
+        60.0,
+        0
+      ],
+      [
+        93.0,
+        54.9,
+        97.1,
+        38.6,
+        11
+      ],
+      [
+        35.6,
+        65.1,
+        21.8,
+        55.9,
+        1
+      ],
+      [
+        75.0,
+        64.1,
+        94.5,
+        62.1,
+        3
+      ],
+      [
+        72.9,
+        68.0,
+        59.1,
+        62.3,
+        1
+      ],
+      [
+        72.0,
+        55.6,
+        76.8,
+        62.4,
+        1
+      ],
+      [
+        62.2,
+        59.8,
+        41.1,
+        48.3,
+        1
+      ],
+      [
+        47.0,
+        68.0,
+        39.3,
+        57.0,
+        1
+      ],
+      [
+        61.9,
+        63.5,
+        46.7,
+        59.0,
+        1
+      ],
+      [
+        48.3,
+        68.0,
+        40.4,
+        51.6,
+        1
+      ],
+      [
+        79.2,
+        64.5,
+        67.5,
+        62.0,
+        1
+      ],
+      [
+        80.5,
+        68.0,
+        75.8,
+        62.3,
+        1
+      ],
+      [
+        82.4,
+        61.7,
+        93.5,
+        55.1,
+        2
+      ],
+      [
+        62.9,
+        63.7,
+        44.5,
+        56.4,
+        1
+      ],
+      [
+        37.8,
+        51.4,
+        73.7,
+        33.3,
+        2
+      ],
+      [
+        20.8,
+        62.4,
+        29.6,
+        47.0,
+        1
+      ],
+      [
+        62.9,
+        59.8,
+        49.0,
+        28.6,
+        1
+      ],
+      [
+        54.1,
+        61.8,
+        41.7,
+        33.9,
+        1
+      ],
+      [
+        55.2,
+        65.1,
+        46.8,
+        53.0,
+        1
+      ],
+      [
+        59.0,
+        65.8,
+        70.2,
+        45.3,
+        3
+      ],
+      [
+        91.2,
+        62.1,
+        91.9,
+        58.8,
+        0
+      ],
+      [
+        29.1,
+        40.7,
+        40.1,
+        41.3,
+        1
+      ],
+      [
+        92.5,
+        61.3,
+        79.7,
+        58.1,
+        1
+      ],
+      [
+        79.0,
+        50.5,
+        69.6,
+        52.5,
+        1
+      ],
+      [
+        37.9,
+        50.4,
+        42.4,
+        42.4,
+        1
+      ],
+      [
+        44.3,
+        61.5,
+        39.1,
+        49.4,
+        1
+      ],
+      [
+        79.2,
+        62.3,
+        86.6,
+        64.7,
+        1
+      ],
+      [
+        41.2,
+        62.4,
+        31.5,
+        44.9,
+        1
+      ],
+      [
+        70.4,
+        60.8,
+        57.0,
+        42.8,
+        1
+      ],
+      [
+        79.2,
+        53.1,
+        82.3,
+        39.0,
+        2
+      ],
+      [
+        68.6,
+        68.0,
+        63.8,
+        61.7,
+        1
+      ],
+      [
+        30.9,
+        68.0,
+        29.9,
+        54.7,
+        1
+      ],
+      [
+        31.5,
+        51.6,
+        9.2,
+        38.8,
+        1
+      ],
+      [
+        67.7,
+        62.1,
+        56.8,
+        64.5,
+        1
+      ],
+      [
+        45.1,
+        48.3,
+        37.7,
+        39.6,
+        1
+      ],
+      [
+        40.5,
+        63.3,
+        28.2,
+        56.6,
+        1
+      ],
+      [
+        41.5,
+        64.1,
+        41.7,
+        53.7,
+        1
+      ],
+      [
+        75.5,
+        64.1,
+        57.8,
+        54.7,
+        1
+      ],
+      [
+        87.6,
+        62.5,
+        95.1,
+        41.0,
+        2
+      ],
+      [
+        65.2,
+        50.9,
+        98.4,
+        12.9,
+        3
+      ],
+      [
+        51.1,
+        68.0,
+        38.3,
+        48.1,
+        1
+      ],
+      [
+        27.3,
+        9.6,
+        23.4,
+        26.5,
+        1
+      ],
+      [
+        65.3,
+        61.8,
+        42.3,
+        53.1,
+        1
+      ],
+      [
+        44.8,
+        63.0,
+        50.8,
+        60.4,
+        0
+      ],
+      [
+        44.8,
+        64.9,
+        34.0,
+        51.4,
+        1
+      ],
+      [
+        88.3,
+        68.0,
+        76.0,
+        60.5,
+        1
+      ],
+      [
+        29.8,
+        54.9,
+        47.1,
+        28.8,
+        2
+      ],
+      [
+        21.7,
+        48.8,
+        32.8,
+        44.7,
+        1
+      ],
+      [
+        66.0,
+        68.0,
+        71.9,
+        51.1,
+        3
+      ],
+      [
+        57.5,
+        56.0,
+        42.1,
+        50.9,
+        1
+      ],
+      [
+        44.9,
+        58.9,
+        63.4,
+        50.9,
+        3
+      ],
+      [
+        75.0,
+        68.0,
+        50.2,
+        59.1,
+        1
+      ],
+      [
+        50.9,
+        68.0,
+        73.7,
+        62.9,
+        2
+      ],
+      [
+        71.2,
+        61.1,
+        59.1,
+        62.6,
+        1
+      ],
+      [
+        78.3,
+        68.0,
+        78.6,
+        62.0,
+        1
+      ],
+      [
+        53.9,
+        50.0,
+        22.9,
+        40.9,
+        1
+      ],
+      [
+        36.1,
+        61.0,
+        35.8,
+        57.6,
+        1
+      ],
+      [
+        67.9,
+        23.1,
+        80.7,
+        7.5,
+        0
+      ],
+      [
+        49.3,
+        58.8,
+        40.2,
+        48.8,
+        1
+      ],
+      [
+        90.3,
+        52.4,
+        99.4,
+        38.5,
+        2
+      ],
+      [
+        64.3,
+        49.2,
+        63.7,
+        47.7,
+        1
+      ]
+    ],
+    "progressive_passes": [
+      [
+        77.1,
+        52.7,
+        102.1,
+        27.1,
+        3
+      ],
+      [
+        84.6,
+        65.6,
+        97.0,
+        37.5,
+        7
+      ],
+      [
+        96.0,
+        61.6,
+        99.2,
+        38.2,
+        7
+      ],
+      [
+        95.9,
+        63.8,
+        96.3,
+        31.8,
+        7
+      ],
+      [
+        92.8,
+        61.3,
+        98.8,
+        34.9,
+        7
+      ],
+      [
+        99.4,
+        60.5,
+        96.3,
+        34.6,
+        7
+      ],
+      [
+        93.9,
+        56.2,
+        97.5,
+        30.6,
+        7
+      ],
+      [
+        93.0,
+        54.9,
+        97.1,
+        38.6,
+        11
+      ],
+      [
+        95.4,
+        56.0,
+        99.9,
+        38.6,
+        11
+      ],
+      [
+        101.5,
+        55.6,
+        97.8,
+        31.8,
+        7
+      ],
+      [
+        69.4,
+        45.2,
+        89.6,
+        41.3,
+        7
+      ],
+      [
+        77.4,
+        57.7,
+        94.9,
+        30.3,
+        3
+      ],
+      [
+        77.9,
+        44.3,
+        91.8,
+        38.8,
+        3
+      ],
+      [
+        74.3,
+        47.6,
+        91.8,
+        29.9,
+        3
+      ],
+      [
+        79.6,
+        46.1,
+        91.1,
+        36.0,
+        3
+      ],
+      [
+        83.2,
+        52.6,
+        88.8,
+        33.1,
+        3
+      ],
+      [
+        95.1,
+        63.8,
+        95.3,
+        32.1,
+        11
+      ],
+      [
+        89.8,
+        68.0,
+        94.1,
+        41.0,
+        3
+      ],
+      [
+        104.5,
+        67.7,
+        91.1,
+        35.8,
+        7
+      ],
+      [
+        89.5,
+        54.0,
+        91.8,
+        37.7,
+        7
+      ],
+      [
+        91.7,
+        58.4,
+        89.7,
+        35.0,
+        7
+      ],
+      [
+        95.3,
+        54.1,
+        90.7,
+        34.5,
+        7
+      ],
+      [
+        76.8,
+        56.4,
+        97.7,
+        50.2,
+        3
+      ],
+      [
+        56.5,
+        62.8,
+        89.7,
+        24.5,
+        3
+      ],
+      [
+        40.7,
+        51.1,
+        97.0,
+        15.0,
+        3
+      ],
+      [
+        71.4,
+        62.2,
+        89.8,
+        49.2,
+        3
+      ],
+      [
+        74.2,
+        64.9,
+        93.3,
+        45.8,
+        3
+      ],
+      [
+        74.3,
+        61.8,
+        90.9,
+        45.6,
+        3
+      ],
+      [
+        76.0,
+        33.6,
+        93.9,
+        49.6,
+        3
+      ],
+      [
+        74.3,
+        54.5,
+        92.9,
+        47.7,
+        7
+      ],
+      [
+        73.0,
+        51.3,
+        92.5,
+        48.4,
+        3
+      ],
+      [
+        88.1,
+        68.0,
+        96.5,
+        45.9,
+        3
+      ],
+      [
+        95.3,
+        68.0,
+        97.9,
+        47.3,
+        3
+      ],
+      [
+        87.0,
+        68.0,
+        94.1,
+        45.6,
+        3
+      ],
+      [
+        65.2,
+        50.9,
+        98.4,
+        12.9,
+        3
+      ],
+      [
+        97.9,
+        68.0,
+        98.7,
+        45.6,
+        3
+      ],
+      [
+        98.8,
+        68.0,
+        97.7,
+        48.6,
+        3
+      ],
+      [
+        97.3,
+        68.0,
+        96.5,
+        43.5,
+        3
+      ],
+      [
+        58.7,
+        59.4,
+        88.0,
+        10.1,
+        3
+      ],
+      [
+        33.3,
+        43.5,
+        90.3,
+        66.3,
+        3
+      ],
+      [
+        38.7,
+        47.2,
+        87.8,
+        64.9,
+        3
+      ],
+      [
+        69.8,
+        54.6,
+        88.0,
+        59.0,
+        3
+      ],
+      [
+        67.4,
+        19.9,
+        88.8,
+        10.6,
+        3
+      ],
+      [
+        88.3,
+        64.2,
+        88.2,
+        49.6,
+        3
+      ],
+      [
+        88.7,
+        68.0,
+        96.1,
+        46.4,
+        3
+      ],
+      [
+        92.8,
+        68.0,
+        94.7,
+        46.2,
+        3
+      ],
+      [
+        73.5,
+        5.6,
+        91.0,
+        9.0,
+        3
+      ],
+      [
+        76.3,
+        64.9,
+        97.7,
+        59.6,
+        3
+      ],
+      [
+        72.4,
+        58.5,
+        91.9,
+        11.0,
+        3
+      ],
+      [
+        77.0,
+        51.3,
+        95.8,
+        53.7,
+        3
+      ],
+      [
+        71.8,
+        47.3,
+        89.0,
+        55.1,
+        3
+      ],
+      [
+        69.3,
+        31.8,
+        78.8,
+        35.3,
+        3
+      ],
+      [
+        57.6,
+        65.7,
+        81.6,
+        54.1,
+        3
+      ],
+      [
+        76.5,
+        64.7,
+        85.9,
+        37.3,
+        3
+      ],
+      [
+        74.1,
+        62.0,
+        93.5,
+        60.8,
+        3
+      ],
+      [
+        75.0,
+        62.1,
+        88.4,
+        59.6,
+        3
+      ],
+      [
+        75.0,
+        64.1,
+        94.5,
+        62.1,
+        3
+      ],
+      [
+        79.3,
+        68.0,
+        87.9,
+        58.3,
+        3
+      ],
+      [
+        85.8,
+        68.0,
+        92.9,
+        57.8,
+        3
+      ],
+      [
+        86.3,
+        68.0,
+        91.0,
+        51.0,
+        3
+      ]
+    ],
+    "progressive_receptions": [
+      [
+        91.0,
+        66.6,
+        0
+      ],
+      [
+        87.0,
+        60.0,
+        0
+      ],
+      [
+        81.5,
+        55.2,
+        0
+      ],
+      [
+        90.5,
+        39.4,
+        1
+      ],
+      [
+        89.8,
+        58.5,
+        0
+      ],
+      [
+        97.2,
+        53.6,
+        1
+      ],
+      [
+        96.5,
+        57.8,
+        0
+      ],
+      [
+        81.6,
+        64.0,
+        0
+      ],
+      [
+        61.2,
+        57.6,
+        0
+      ],
+      [
+        82.5,
+        66.8,
+        0
+      ],
+      [
+        91.6,
+        61.9,
+        0
+      ],
+      [
+        70.8,
+        62.2,
+        0
+      ],
+      [
+        102.6,
+        50.5,
+        1
+      ],
+      [
+        73.2,
+        60.1,
+        0
+      ],
+      [
+        85.4,
+        56.4,
+        0
+      ],
+      [
+        85.6,
+        52.6,
+        0
+      ],
+      [
+        96.4,
+        57.2,
+        0
+      ],
+      [
+        60.0,
+        63.4,
+        0
+      ],
+      [
+        92.8,
+        52.6,
+        1
+      ],
+      [
+        90.6,
+        53.0,
+        1
+      ],
+      [
+        101.0,
+        35.7,
+        1
+      ],
+      [
+        74.0,
+        54.6,
+        0
+      ],
+      [
+        100.0,
+        43.0,
+        1
+      ],
+      [
+        97.7,
+        55.8,
+        0
+      ],
+      [
+        90.5,
+        62.6,
+        0
+      ],
+      [
+        71.6,
+        63.8,
+        0
+      ],
+      [
+        76.1,
+        56.4,
+        0
+      ],
+      [
+        72.7,
+        47.3,
+        0
+      ],
+      [
+        91.7,
+        59.5,
+        0
+      ],
+      [
+        57.3,
+        64.1,
+        0
+      ],
+      [
+        83.8,
+        58.8,
+        0
+      ],
+      [
+        100.6,
+        61.8,
+        0
+      ],
+      [
+        100.4,
+        17.4,
+        1
+      ],
+      [
+        73.7,
+        60.2,
+        0
+      ],
+      [
+        73.6,
+        47.9,
+        0
+      ],
+      [
+        62.0,
+        63.9,
+        0
+      ],
+      [
+        100.8,
+        57.0,
+        0
+      ],
+      [
+        84.0,
+        65.1,
+        0
+      ],
+      [
+        61.0,
+        62.6,
+        0
+      ],
+      [
+        77.0,
+        65.5,
+        0
+      ],
+      [
+        86.6,
+        66.1,
+        0
+      ],
+      [
+        69.6,
+        63.4,
+        0
+      ],
+      [
+        85.4,
+        59.3,
+        0
+      ],
+      [
+        101.4,
+        46.4,
+        1
+      ],
+      [
+        87.5,
+        62.0,
+        0
+      ],
+      [
+        86.3,
+        57.1,
+        0
+      ],
+      [
+        93.2,
+        58.5,
+        0
+      ],
+      [
+        79.3,
+        56.3,
+        0
+      ],
+      [
+        36.5,
+        57.5,
+        0
+      ],
+      [
+        81.9,
+        25.2,
+        0
+      ],
+      [
+        90.2,
+        51.1,
+        1
+      ],
+      [
+        67.6,
+        50.6,
+        0
+      ],
+      [
+        48.5,
+        59.4,
+        0
+      ],
+      [
+        77.5,
+        46.8,
+        0
+      ],
+      [
+        98.4,
+        55.1,
+        0
+      ],
+      [
+        96.0,
+        54.7,
+        0
+      ],
+      [
+        89.9,
+        45.0,
+        1
+      ],
+      [
+        88.2,
+        64.9,
+        0
+      ],
+      [
+        101.0,
+        57.7,
+        0
+      ],
+      [
+        65.9,
+        17.6,
+        0
+      ],
+      [
+        74.4,
+        44.7,
+        0
+      ],
+      [
+        71.3,
+        62.2,
+        0
+      ],
+      [
+        82.7,
+        25.3,
+        0
+      ],
+      [
+        42.9,
+        62.6,
+        0
+      ],
+      [
+        96.1,
+        51.4,
+        1
+      ],
+      [
+        44.2,
+        62.3,
+        0
+      ],
+      [
+        75.2,
+        62.4,
+        0
+      ],
+      [
+        58.8,
+        49.2,
+        0
+      ],
+      [
+        65.9,
+        63.7,
+        0
+      ],
+      [
+        77.8,
+        42.2,
+        0
+      ],
+      [
+        95.3,
+        56.0,
+        0
+      ],
+      [
+        88.5,
+        59.2,
+        0
+      ],
+      [
+        89.4,
+        31.8,
+        1
+      ],
+      [
+        56.2,
+        56.4,
+        0
+      ],
+      [
+        66.0,
+        65.6,
+        0
+      ],
+      [
+        93.0,
+        60.2,
+        0
+      ],
+      [
+        83.2,
+        61.6,
+        0
+      ],
+      [
+        71.6,
+        63.9,
+        0
+      ],
+      [
+        92.6,
+        52.5,
+        1
+      ],
+      [
+        79.2,
+        51.1,
+        0
+      ],
+      [
+        76.9,
+        51.8,
+        0
+      ],
+      [
+        73.4,
+        39.4,
+        0
+      ],
+      [
+        67.5,
+        46.4,
+        0
+      ],
+      [
+        92.5,
+        27.8,
+        1
+      ],
+      [
+        80.4,
+        62.4,
+        0
+      ]
+    ],
+    "reception_zones": [
+      {
+        "count": 4,
+        "share": 0.5,
+        "zone_id": 14
+      },
+      {
+        "count": 15,
+        "share": 1.7,
+        "zone_id": 15
+      },
+      {
+        "count": 1,
+        "share": 0.1,
+        "zone_id": 21
+      },
+      {
+        "count": 1,
+        "share": 0.1,
+        "zone_id": 23
+      },
+      {
+        "count": 17,
+        "share": 2.0,
+        "zone_id": 24
+      },
+      {
+        "count": 95,
+        "share": 10.9,
+        "zone_id": 25
+      },
+      {
+        "count": 3,
+        "share": 0.3,
+        "zone_id": 31
+      },
+      {
+        "count": 6,
+        "share": 0.7,
+        "zone_id": 33
+      },
+      {
+        "count": 44,
+        "share": 5.1,
+        "zone_id": 34
+      },
+      {
+        "count": 145,
+        "share": 16.7,
+        "zone_id": 35
+      },
+      {
+        "count": 1,
+        "share": 0.1,
+        "zone_id": 41
+      },
+      {
+        "count": 3,
+        "share": 0.3,
+        "zone_id": 42
+      },
+      {
+        "count": 7,
+        "share": 0.8,
+        "zone_id": 43
+      },
+      {
+        "count": 40,
+        "share": 4.6,
+        "zone_id": 44
+      },
+      {
+        "count": 208,
+        "share": 23.9,
+        "zone_id": 45
+      },
+      {
+        "count": 1,
+        "share": 0.1,
+        "zone_id": 51
+      },
+      {
+        "count": 2,
+        "share": 0.2,
+        "zone_id": 52
+      },
+      {
+        "count": 10,
+        "share": 1.2,
+        "zone_id": 53
+      },
+      {
+        "count": 32,
+        "share": 3.7,
+        "zone_id": 54
+      },
+      {
+        "count": 153,
+        "share": 17.6,
+        "zone_id": 55
+      },
+      {
+        "count": 1,
+        "share": 0.1,
+        "zone_id": 61
+      },
+      {
+        "count": 1,
+        "share": 0.1,
+        "zone_id": 62
+      },
+      {
+        "count": 7,
+        "share": 0.8,
+        "zone_id": 63
+      },
+      {
+        "count": 10,
+        "share": 1.2,
+        "zone_id": 64
+      },
+      {
+        "count": 62,
+        "share": 7.1,
+        "zone_id": 65
+      }
+    ],
+    "shots": [
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 52.4,
+        "goal_mouth_z": 80.6,
+        "match_id": 4,
+        "matchday": 1,
+        "minute": 48,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 1,
+        "x": 80.6,
+        "xg": 0.014,
+        "y": 40.5
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 45.7,
+        "goal_mouth_z": 2.5,
+        "match_id": 22,
+        "matchday": 3,
+        "minute": 52,
+        "outcome": "goal",
+        "play_pattern": "regular_play",
+        "shot_id": 2,
+        "x": 89.0,
+        "xg": 0.114,
+        "y": 37.1
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 48.0,
+        "goal_mouth_z": 19.0,
+        "match_id": 54,
+        "matchday": 6,
+        "minute": 51,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 3,
+        "x": 81.6,
+        "xg": 0.012,
+        "y": 46.2
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 52.2,
+        "goal_mouth_z": 19.0,
+        "match_id": 70,
+        "matchday": 7,
+        "minute": 6,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 4,
+        "x": 95.9,
+        "xg": 0.039,
+        "y": 46.7
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.5,
+        "goal_mouth_z": 19.0,
+        "match_id": 70,
+        "matchday": 7,
+        "minute": 65,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 5,
+        "x": 82.1,
+        "xg": 0.023,
+        "y": 26.0
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 52.1,
+        "goal_mouth_z": 19.0,
+        "match_id": 70,
+        "matchday": 7,
+        "minute": 72,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 6,
+        "x": 80.7,
+        "xg": 0.018,
+        "y": 34.3
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 42.2,
+        "goal_mouth_z": 19.4,
+        "match_id": 70,
+        "matchday": 7,
+        "minute": 72,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 7,
+        "x": 83.9,
+        "xg": 0.049,
+        "y": 34.3
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": true,
+        "goal_mouth_y": 57.5,
+        "goal_mouth_z": 22.2,
+        "match_id": 77,
+        "matchday": 8,
+        "minute": 47,
+        "outcome": "off_target",
+        "play_pattern": "from_corner",
+        "shot_id": 8,
+        "x": 81.6,
+        "xg": 0.011,
+        "y": 38.6
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.0,
+        "goal_mouth_z": 5.7,
+        "match_id": 89,
+        "matchday": 9,
+        "minute": 69,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 9,
+        "x": 94.4,
+        "xg": 0.028,
+        "y": 49.1
+      },
+      {
+        "big_chance": true,
+        "body_part": "right_foot",
+        "first_time": true,
+        "goal_mouth_y": 42.0,
+        "goal_mouth_z": 91.7,
+        "match_id": 89,
+        "matchday": 9,
+        "minute": 88,
+        "outcome": "off_target",
+        "play_pattern": "fast_break",
+        "shot_id": 10,
+        "x": 101.0,
+        "xg": 0.763,
+        "y": 35.7
+      },
+      {
+        "big_chance": true,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 54.4,
+        "goal_mouth_z": 9.5,
+        "match_id": 99,
+        "matchday": 10,
+        "minute": 46,
+        "outcome": "goal",
+        "play_pattern": "fast_break",
+        "shot_id": 11,
+        "x": 100.0,
+        "xg": 0.212,
+        "y": 43.0
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 41.7,
+        "goal_mouth_z": 86.1,
+        "match_id": 125,
+        "matchday": 13,
+        "minute": 1,
+        "outcome": "off_target",
+        "play_pattern": "throw_in_set_piece",
+        "shot_id": 12,
+        "x": 91.9,
+        "xg": 0.076,
+        "y": 43.9
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 72.9,
+        "goal_mouth_z": 9.7,
+        "match_id": 322,
+        "matchday": 15,
+        "minute": 43,
+        "outcome": "off_target",
+        "play_pattern": "fast_break",
+        "shot_id": 13,
+        "x": 85.6,
+        "xg": 0.038,
+        "y": 45.1
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 53.6,
+        "goal_mouth_z": 13.3,
+        "match_id": 544,
+        "matchday": 17,
+        "minute": 43,
+        "outcome": "goal",
+        "play_pattern": "set_piece",
+        "shot_id": 14,
+        "x": 83.0,
+        "xg": 0.02,
+        "y": 31.7
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 45.3,
+        "goal_mouth_z": 14.6,
+        "match_id": 550,
+        "matchday": 18,
+        "minute": 75,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 15,
+        "x": 89.4,
+        "xg": 0.039,
+        "y": 44.5
+      },
+      {
+        "big_chance": true,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 55.0,
+        "goal_mouth_z": 84.7,
+        "match_id": 563,
+        "matchday": 19,
+        "minute": 40,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 16,
+        "x": 96.9,
+        "xg": 0.251,
+        "y": 30.3
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 38.7,
+        "goal_mouth_z": 6.9,
+        "match_id": 563,
+        "matchday": 19,
+        "minute": 42,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 17,
+        "x": 77.4,
+        "xg": 0.015,
+        "y": 41.1
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 45.9,
+        "goal_mouth_z": 27.8,
+        "match_id": 563,
+        "matchday": 19,
+        "minute": 52,
+        "outcome": "goal",
+        "play_pattern": "regular_play",
+        "shot_id": 18,
+        "x": 90.7,
+        "xg": 0.034,
+        "y": 46.2
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 52.9,
+        "goal_mouth_z": 19.0,
+        "match_id": 578,
+        "matchday": 20,
+        "minute": 23,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 19,
+        "x": 89.9,
+        "xg": 0.064,
+        "y": 41.7
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.8,
+        "goal_mouth_z": 19.0,
+        "match_id": 871,
+        "matchday": 24,
+        "minute": 34,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 20,
+        "x": 91.6,
+        "xg": 0.085,
+        "y": 25.4
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": true,
+        "goal_mouth_y": 53.7,
+        "goal_mouth_z": 19.0,
+        "match_id": 893,
+        "matchday": 26,
+        "minute": 25,
+        "outcome": "blocked",
+        "play_pattern": "set_piece",
+        "shot_id": 21,
+        "x": 79.5,
+        "xg": 0.018,
+        "y": 42.6
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 49.6,
+        "goal_mouth_z": 19.0,
+        "match_id": 893,
+        "matchday": 26,
+        "minute": 47,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 22,
+        "x": 82.3,
+        "xg": 0.017,
+        "y": 44.1
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 46.1,
+        "goal_mouth_z": 29.1,
+        "match_id": 893,
+        "matchday": 26,
+        "minute": 56,
+        "outcome": "goal",
+        "play_pattern": "fast_break",
+        "shot_id": 23,
+        "x": 88.4,
+        "xg": 0.061,
+        "y": 43.9
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 49.1,
+        "goal_mouth_z": 11.4,
+        "match_id": 903,
+        "matchday": 27,
+        "minute": 8,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 24,
+        "x": 84.9,
+        "xg": 0.019,
+        "y": 46.6
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.5,
+        "goal_mouth_z": 19.0,
+        "match_id": 903,
+        "matchday": 27,
+        "minute": 14,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 25,
+        "x": 90.8,
+        "xg": 0.043,
+        "y": 44.3
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 41.3,
+        "goal_mouth_z": 1.4,
+        "match_id": 903,
+        "matchday": 27,
+        "minute": 14,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 26,
+        "x": 91.3,
+        "xg": 0.024,
+        "y": 46.2
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 49.9,
+        "goal_mouth_z": 19.0,
+        "match_id": 903,
+        "matchday": 27,
+        "minute": 91,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 27,
+        "x": 89.9,
+        "xg": 0.051,
+        "y": 45.0
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.2,
+        "goal_mouth_z": 19.0,
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 31,
+        "outcome": "blocked",
+        "play_pattern": "fast_break",
+        "shot_id": 28,
+        "x": 89.0,
+        "xg": 0.018,
+        "y": 49.2
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 57.5,
+        "goal_mouth_z": 86.1,
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 40,
+        "outcome": "off_target",
+        "play_pattern": "set_piece",
+        "shot_id": 29,
+        "x": 82.6,
+        "xg": 0.026,
+        "y": 16.7
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 73.3,
+        "goal_mouth_z": 73.6,
+        "match_id": 968,
+        "matchday": 33,
+        "minute": 20,
+        "outcome": "off_target",
+        "play_pattern": "from_corner",
+        "shot_id": 30,
+        "x": 82.1,
+        "xg": 0.017,
+        "y": 47.5
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 50.8,
+        "goal_mouth_z": 19.0,
+        "match_id": 968,
+        "matchday": 33,
+        "minute": 54,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 31,
+        "x": 91.0,
+        "xg": 0.041,
+        "y": 45.8
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 54.6,
+        "goal_mouth_z": 19.0,
+        "match_id": 974,
+        "matchday": 34,
+        "minute": 40,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 32,
+        "x": 95.8,
+        "xg": 0.023,
+        "y": 50.4
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": true,
+        "goal_mouth_y": 49.4,
+        "goal_mouth_z": 5.7,
+        "match_id": 974,
+        "matchday": 34,
+        "minute": 75,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 33,
+        "x": 89.4,
+        "xg": 0.092,
+        "y": 31.8
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 48.3,
+        "goal_mouth_z": 19.0,
+        "match_id": 974,
+        "matchday": 34,
+        "minute": 86,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 34,
+        "x": 89.5,
+        "xg": 0.089,
+        "y": 35.6
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 74.8,
+        "goal_mouth_z": 95.8,
+        "match_id": 974,
+        "matchday": 34,
+        "minute": 86,
+        "outcome": "off_target",
+        "play_pattern": "from_corner",
+        "shot_id": 35,
+        "x": 78.8,
+        "xg": 0.012,
+        "y": 26.7
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 63.4,
+        "goal_mouth_z": 87.5,
+        "match_id": 988,
+        "matchday": 35,
+        "minute": 4,
+        "outcome": "off_target",
+        "play_pattern": "from_corner",
+        "shot_id": 36,
+        "x": 66.9,
+        "xg": 0.011,
+        "y": 44.0
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 48.8,
+        "goal_mouth_z": 30.4,
+        "match_id": 995,
+        "matchday": 36,
+        "minute": 19,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 37,
+        "x": 92.9,
+        "xg": 0.02,
+        "y": 51.0
+      },
+      {
+        "big_chance": false,
+        "body_part": "right_foot",
+        "first_time": false,
+        "goal_mouth_y": 51.4,
+        "goal_mouth_z": 19.0,
+        "match_id": 995,
+        "matchday": 36,
+        "minute": 68,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 38,
+        "x": 89.4,
+        "xg": 0.031,
+        "y": 45.2
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 45.5,
+        "goal_mouth_z": 5.7,
+        "match_id": 1008,
+        "matchday": 37,
+        "minute": 26,
+        "outcome": "goal",
+        "play_pattern": "set_piece",
+        "shot_id": 39,
+        "x": 80.0,
+        "xg": 0.018,
+        "y": 37.1
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 51.8,
+        "goal_mouth_z": 5.1,
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 5,
+        "outcome": "saved",
+        "play_pattern": "regular_play",
+        "shot_id": 40,
+        "x": 96.8,
+        "xg": 0.026,
+        "y": 51.6
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": false,
+        "goal_mouth_y": 43.0,
+        "goal_mouth_z": 16.7,
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 23,
+        "outcome": "off_target",
+        "play_pattern": "regular_play",
+        "shot_id": 41,
+        "x": 82.7,
+        "xg": 0.024,
+        "y": 43.2
+      },
+      {
+        "big_chance": false,
+        "body_part": "left_foot",
+        "first_time": true,
+        "goal_mouth_y": 53.5,
+        "goal_mouth_z": 19.0,
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 46,
+        "outcome": "blocked",
+        "play_pattern": "regular_play",
+        "shot_id": 42,
+        "x": 92.5,
+        "xg": 0.08,
+        "y": 27.8
+      }
+    ],
+    "touch_zones": [
+      {
+        "count": 3,
+        "share": 0.1,
+        "zone_id": 12
+      },
+      {
+        "count": 39,
+        "share": 1.5,
+        "zone_id": 13
+      },
+      {
+        "count": 49,
+        "share": 1.9,
+        "zone_id": 14
+      },
+      {
+        "count": 128,
+        "share": 5.0,
+        "zone_id": 15
+      },
+      {
+        "count": 3,
+        "share": 0.1,
+        "zone_id": 21
+      },
+      {
+        "count": 2,
+        "share": 0.1,
+        "zone_id": 22
+      },
+      {
+        "count": 19,
+        "share": 0.7,
+        "zone_id": 23
+      },
+      {
+        "count": 105,
+        "share": 4.1,
+        "zone_id": 24
+      },
+      {
+        "count": 316,
+        "share": 12.4,
+        "zone_id": 25
+      },
+      {
+        "count": 3,
+        "share": 0.1,
+        "zone_id": 31
+      },
+      {
+        "count": 1,
+        "share": 0.0,
+        "zone_id": 32
+      },
+      {
+        "count": 20,
+        "share": 0.8,
+        "zone_id": 33
+      },
+      {
+        "count": 111,
+        "share": 4.4,
+        "zone_id": 34
+      },
+      {
+        "count": 342,
+        "share": 13.4,
+        "zone_id": 35
+      },
+      {
+        "count": 3,
+        "share": 0.1,
+        "zone_id": 41
+      },
+      {
+        "count": 10,
+        "share": 0.4,
+        "zone_id": 42
+      },
+      {
+        "count": 33,
+        "share": 1.3,
+        "zone_id": 43
+      },
+      {
+        "count": 103,
+        "share": 4.0,
+        "zone_id": 44
+      },
+      {
+        "count": 471,
+        "share": 18.5,
+        "zone_id": 45
+      },
+      {
+        "count": 7,
+        "share": 0.3,
+        "zone_id": 51
+      },
+      {
+        "count": 7,
+        "share": 0.3,
+        "zone_id": 52
+      },
+      {
+        "count": 45,
+        "share": 1.8,
+        "zone_id": 53
+      },
+      {
+        "count": 115,
+        "share": 4.5,
+        "zone_id": 54
+      },
+      {
+        "count": 358,
+        "share": 14.1,
+        "zone_id": 55
+      },
+      {
+        "count": 5,
+        "share": 0.2,
+        "zone_id": 61
+      },
+      {
+        "count": 2,
+        "share": 0.1,
+        "zone_id": 62
+      },
+      {
+        "count": 13,
+        "share": 0.5,
+        "zone_id": 63
+      },
+      {
+        "count": 51,
+        "share": 2.0,
+        "zone_id": 64
+      },
+      {
+        "count": 180,
+        "share": 7.1,
+        "zone_id": 65
+      }
+    ]
+  },
+  "percentiles": {
+    "cards": [
+      {
+        "key": "defending",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_interceptions_per_90",
+            "percentile": 44,
+            "scale": "raw",
+            "value": 0.95
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_ball_recoveries_per_90",
+            "percentile": 62,
+            "scale": "raw",
+            "value": 4.13
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_clearances_per_90",
+            "percentile": 22,
+            "scale": "raw",
+            "value": 2.14
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "shots_blocked_per_90",
+            "percentile": 91,
+            "scale": "raw",
+            "value": 0.41
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "def_actions_final_third_per_90",
+            "percentile": 78,
+            "scale": "raw",
+            "value": 1.01
+          },
+          {
+            "decimals": 3,
+            "higher_is_better": true,
+            "key": "vaep_defensive_per_90",
+            "percentile": 88,
+            "scale": "raw",
+            "value": -0.002
+          }
+        ]
+      },
+      {
+        "key": "duels",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "padj_tackles_per_90",
+            "percentile": 75,
+            "scale": "raw",
+            "value": 2.29
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "ground_duel_win_rate",
+            "percentile": 62,
+            "scale": "pct",
+            "value": 48.7
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": false,
+            "key": "dribbled_past_per_90",
+            "percentile": 47,
+            "scale": "raw",
+            "value": 0.82
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "aerials_won_per_90",
+            "percentile": 6,
+            "scale": "raw",
+            "value": 0.34
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "aerial_win_rate",
+            "percentile": 28,
+            "scale": "pct",
+            "value": 40.6
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": false,
+            "key": "fouls_committed_per_90",
+            "percentile": 47,
+            "scale": "raw",
+            "value": 1.06
+          }
+        ]
+      },
+      {
+        "key": "progression",
+        "metrics": [
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "pass_completion_rate",
+            "percentile": 19,
+            "scale": "pct",
+            "value": 76.1
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "progressive_passes_per_90",
+            "percentile": 44,
+            "scale": "raw",
+            "value": 8.71
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "progressive_carries_per_90",
+            "percentile": 75,
+            "scale": "raw",
+            "value": 1.91
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "progressive_carries_into_final_third_per_90",
+            "percentile": 78,
+            "scale": "raw",
+            "value": 0.8
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "receptions_final_third_per_90",
+            "percentile": 19,
+            "scale": "raw",
+            "value": 7.19
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "take_on_success_rate",
+            "percentile": 94,
+            "scale": "pct",
+            "value": 53.3
+          }
+        ]
+      },
+      {
+        "key": "creation",
+        "metrics": [
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "crosses_per_90",
+            "percentile": 38,
+            "scale": "raw",
+            "value": 2.35
+          },
+          {
+            "decimals": 1,
+            "higher_is_better": true,
+            "key": "cross_completion_rate",
+            "percentile": 12,
+            "scale": "pct",
+            "value": 18.7
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "passes_into_penalty_area_per_90",
+            "percentile": 44,
+            "scale": "raw",
+            "value": 2.94
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "xa_per_90",
+            "percentile": 41,
+            "scale": "raw",
+            "value": 0.06
+          },
+          {
+            "decimals": 2,
+            "higher_is_better": true,
+            "key": "shot_creating_actions_per_90",
+            "percentile": 38,
+            "scale": "raw",
+            "value": 1.47
+          },
+          {
+            "decimals": 3,
+            "higher_is_better": true,
+            "key": "vaep_per_90",
+            "percentile": 94,
+            "scale": "raw",
+            "value": 0.227
+          }
+        ]
+      }
+    ],
+    "eligible": true,
+    "min_minutes": 855,
+    "peer_group": "LB",
+    "peer_n": 33,
+    "pooled_am": false,
+    "pooled_fb": false,
+    "role": "LB"
+  },
+  "player": {
+    "age": null,
+    "date_of_birth": null,
+    "height_cm": null,
+    "is_utility": false,
+    "matches": 36,
+    "minutes": 3492,
+    "name": {
+      "first": "Carlos",
+      "full": "Carlos Romero",
+      "last": "Romero"
+    },
+    "nationality": "Spain",
+    "penalties_scored": 0,
+    "penalties_taken": 0,
+    "player_id": 2358,
+    "position": "LB",
+    "position_group": "LB",
+    "preferred_foot": "left",
+    "primary_position_pct": 100,
+    "red_cards": 0,
+    "role": "LB",
+    "shirt_number": 22,
+    "starts": 36,
+    "subbed_off": 4,
+    "yellow_cards": 4
+  },
+  "schema_version": 1,
+  "season": {
+    "competition_name": "Primera División",
+    "label": "2025/2026",
+    "slug": "2025-26",
+    "through_matchday": 38
+  },
+  "sequences": {
+    "aggregates": {
+      "ends_in_shot": 98,
+      "passes_per_sequence": 5.0,
+      "sequences": 1107,
+      "xt": 16.283
+    },
+    "min_events": 3,
+    "top_vaep": [
+      {
+        "ends_in_shot": true,
+        "events": 9,
+        "id": 5015245,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 35,
+        "opponent_abbr": "MLL",
+        "outcome": "goal",
+        "passes": 5,
+        "period": 1,
+        "player_touch_index": 2,
+        "player_touches": 1,
+        "points": [
+          [
+            35.8,
+            9.5
+          ],
+          [
+            27.8,
+            32.1
+          ],
+          [
+            37.2,
+            47.8
+          ],
+          [
+            61.2,
+            28.4
+          ],
+          [
+            70.2,
+            8.8
+          ],
+          [
+            79.6,
+            16.7
+          ],
+          [
+            93.0,
+            30.9
+          ],
+          [
+            95.3,
+            31.4
+          ],
+          [
+            105.0,
+            37.2
+          ]
+        ],
+        "second": 1,
+        "vaep": 0.94,
+        "xt": 0.099
+      },
+      {
+        "ends_in_shot": true,
+        "events": 23,
+        "id": 5218680,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 1008,
+        "matchday": 37,
+        "minute": 52,
+        "opponent_abbr": "OSA",
+        "outcome": "goal",
+        "passes": 14,
+        "period": 2,
+        "player_touch_index": 6,
+        "player_touches": 2,
+        "points": [
+          [
+            66.5,
+            47.5
+          ],
+          [
+            57.2,
+            36.5
+          ],
+          [
+            49.1,
+            40.6
+          ],
+          [
+            56.9,
+            50.0
+          ],
+          [
+            16.6,
+            37.3
+          ],
+          [
+            58.7,
+            54.9
+          ],
+          [
+            57.6,
+            63.9
+          ],
+          [
+            88.0,
+            10.1
+          ],
+          [
+            105.0,
+            36.1
+          ]
+        ],
+        "second": 0,
+        "vaep": 0.915,
+        "xt": 0.232
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 5288154,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 31,
+        "matchday": 4,
+        "minute": 19,
+        "opponent_abbr": "MLL",
+        "outcome": "goal",
+        "passes": 5,
+        "period": 1,
+        "player_touch_index": 0,
+        "player_touches": 4,
+        "points": [
+          [
+            45.0,
+            68.0
+          ],
+          [
+            56.9,
+            64.3
+          ],
+          [
+            48.5,
+            64.6
+          ],
+          [
+            58.6,
+            63.5
+          ],
+          [
+            82.5,
+            66.8
+          ],
+          [
+            95.4,
+            56.0
+          ],
+          [
+            99.9,
+            38.6
+          ],
+          [
+            105.0,
+            32.3
+          ]
+        ],
+        "second": 48,
+        "vaep": 0.893,
+        "xt": 0.245
+      },
+      {
+        "ends_in_shot": true,
+        "events": 4,
+        "id": 5192326,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 995,
+        "matchday": 36,
+        "minute": 68,
+        "opponent_abbr": "ATH",
+        "outcome": "goal",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            73.6,
+            44.3
+          ],
+          [
+            92.6,
+            52.5
+          ],
+          [
+            93.0,
+            54.9
+          ],
+          [
+            97.1,
+            38.6
+          ],
+          [
+            105.0,
+            37.3
+          ]
+        ],
+        "second": 54,
+        "vaep": 0.858,
+        "xt": 0.233
+      },
+      {
+        "ends_in_shot": true,
+        "events": 13,
+        "id": 4937637,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 871,
+        "matchday": 24,
+        "minute": 84,
+        "opponent_abbr": "CEL",
+        "outcome": "goal",
+        "passes": 8,
+        "period": 2,
+        "player_touch_index": 3,
+        "player_touches": 2,
+        "points": [
+          [
+            33.2,
+            9.8
+          ],
+          [
+            44.4,
+            7.5
+          ],
+          [
+            36.5,
+            23.7
+          ],
+          [
+            46.6,
+            51.0
+          ],
+          [
+            60.7,
+            57.0
+          ],
+          [
+            66.7,
+            44.5
+          ],
+          [
+            99.6,
+            45.9
+          ],
+          [
+            96.1,
+            34.3
+          ],
+          [
+            105.0,
+            34.5
+          ]
+        ],
+        "second": 49,
+        "vaep": 0.835,
+        "xt": 0.097
+      },
+      {
+        "ends_in_shot": true,
+        "events": 32,
+        "id": 4699477,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 125,
+        "matchday": 13,
+        "minute": 46,
+        "opponent_abbr": "SEV",
+        "outcome": "goal",
+        "passes": 20,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 3,
+        "points": [
+          [
+            60.1,
+            0.0
+          ],
+          [
+            38.6,
+            48.8
+          ],
+          [
+            52.6,
+            1.0
+          ],
+          [
+            73.7,
+            2.7
+          ],
+          [
+            66.0,
+            63.0
+          ],
+          [
+            47.8,
+            24.3
+          ],
+          [
+            97.5,
+            9.9
+          ],
+          [
+            83.2,
+            4.8
+          ],
+          [
+            105.0,
+            36.7
+          ]
+        ],
+        "second": 12,
+        "vaep": 0.81,
+        "xt": 0.243
+      },
+      {
+        "ends_in_shot": true,
+        "events": 5,
+        "id": 4670176,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 111,
+        "matchday": 11,
+        "minute": 55,
+        "opponent_abbr": "ALA",
+        "outcome": "goal",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 3,
+        "points": [
+          [
+            86.6,
+            68.0
+          ],
+          [
+            83.7,
+            51.7
+          ],
+          [
+            91.6,
+            60.3
+          ],
+          [
+            95.1,
+            63.8
+          ],
+          [
+            95.3,
+            32.1
+          ],
+          [
+            105.0,
+            30.8
+          ]
+        ],
+        "second": 42,
+        "vaep": 0.789,
+        "xt": 0.08
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 5429918,
+        "is_home": true,
+        "kind": "fast",
+        "match_id": 99,
+        "matchday": 10,
+        "minute": 46,
+        "opponent_abbr": "ELC",
+        "outcome": "goal",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 2,
+        "player_touches": 3,
+        "points": [
+          [
+            3.3,
+            41.6
+          ],
+          [
+            15.2,
+            45.9
+          ],
+          [
+            36.8,
+            29.6
+          ],
+          [
+            69.7,
+            41.5
+          ],
+          [
+            85.6,
+            63.0
+          ],
+          [
+            100.0,
+            43.0
+          ],
+          [
+            105.0,
+            37.4
+          ]
+        ],
+        "second": 25,
+        "vaep": 0.788,
+        "xt": 0.055
+      },
+      {
+        "ends_in_shot": true,
+        "events": 19,
+        "id": 5002498,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 903,
+        "matchday": 27,
+        "minute": 34,
+        "opponent_abbr": "OVI",
+        "outcome": "goal",
+        "passes": 10,
+        "period": 1,
+        "player_touch_index": 3,
+        "player_touches": 2,
+        "points": [
+          [
+            47.4,
+            0.0
+          ],
+          [
+            60.7,
+            7.6
+          ],
+          [
+            13.3,
+            11.5
+          ],
+          [
+            43.7,
+            63.1
+          ],
+          [
+            38.1,
+            16.1
+          ],
+          [
+            49.5,
+            23.9
+          ],
+          [
+            85.3,
+            6.7
+          ],
+          [
+            92.1,
+            36.4
+          ],
+          [
+            105.0,
+            31.8
+          ]
+        ],
+        "second": 45,
+        "vaep": 0.752,
+        "xt": 0.096
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 4982467,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 893,
+        "matchday": 26,
+        "minute": 55,
+        "opponent_abbr": "ELC",
+        "outcome": "goal",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 2,
+        "points": [
+          [
+            4.9,
+            25.1
+          ],
+          [
+            49.8,
+            15.3
+          ],
+          [
+            47.2,
+            20.9
+          ],
+          [
+            57.9,
+            28.0
+          ],
+          [
+            64.5,
+            27.6
+          ],
+          [
+            77.5,
+            46.8
+          ],
+          [
+            88.4,
+            43.9
+          ],
+          [
+            105.0,
+            31.0
+          ]
+        ],
+        "second": 53,
+        "vaep": 0.732,
+        "xt": 0.041
+      }
+    ],
+    "top_xt": [
+      {
+        "ends_in_shot": true,
+        "events": 10,
+        "id": 5409431,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 89,
+        "matchday": 9,
+        "minute": 57,
+        "opponent_abbr": "OVI",
+        "outcome": "shot_off_target",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 3,
+        "player_touches": 2,
+        "points": [
+          [
+            19.3,
+            24.4
+          ],
+          [
+            32.1,
+            33.7
+          ],
+          [
+            34.6,
+            49.9
+          ],
+          [
+            42.8,
+            58.5
+          ],
+          [
+            77.1,
+            52.7
+          ],
+          [
+            102.1,
+            27.1
+          ],
+          [
+            84.5,
+            55.1
+          ],
+          [
+            98.1,
+            27.4
+          ],
+          [
+            105.0,
+            26.9
+          ]
+        ],
+        "second": 20,
+        "vaep": 0.055,
+        "xt": 0.247
+      },
+      {
+        "ends_in_shot": false,
+        "events": 12,
+        "id": 4862071,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 578,
+        "matchday": 20,
+        "minute": 35,
+        "opponent_abbr": "GIR",
+        "outcome": "turnover",
+        "passes": 8,
+        "period": 1,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            42.1,
+            68.0
+          ],
+          [
+            6.2,
+            47.3
+          ],
+          [
+            59.8,
+            38.4
+          ],
+          [
+            47.1,
+            29.4
+          ],
+          [
+            48.3,
+            17.0
+          ],
+          [
+            73.7,
+            2.5
+          ],
+          [
+            89.0,
+            4.4
+          ],
+          [
+            97.7,
+            35.0
+          ]
+        ],
+        "second": 6,
+        "vaep": 0.038,
+        "xt": 0.246
+      },
+      {
+        "ends_in_shot": true,
+        "events": 10,
+        "id": 5079838,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 941,
+        "matchday": 31,
+        "minute": 2,
+        "opponent_abbr": "BAR",
+        "outcome": "shot_off_target",
+        "passes": 5,
+        "period": 1,
+        "player_touch_index": 3,
+        "player_touches": 2,
+        "points": [
+          [
+            26.4,
+            26.5
+          ],
+          [
+            47.5,
+            37.9
+          ],
+          [
+            43.5,
+            46.2
+          ],
+          [
+            60.2,
+            56.1
+          ],
+          [
+            68.6,
+            49.2
+          ],
+          [
+            92.2,
+            2.2
+          ],
+          [
+            94.6,
+            9.9
+          ],
+          [
+            97.5,
+            28.0
+          ],
+          [
+            105.0,
+            28.2
+          ]
+        ],
+        "second": 53,
+        "vaep": 0.077,
+        "xt": 0.246
+      },
+      {
+        "ends_in_shot": true,
+        "events": 16,
+        "id": 5368959,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 70,
+        "matchday": 7,
+        "minute": 5,
+        "opponent_abbr": "GIR",
+        "outcome": "shot_off_target",
+        "passes": 10,
+        "period": 1,
+        "player_touch_index": 1,
+        "player_touches": 1,
+        "points": [
+          [
+            47.6,
+            44.8
+          ],
+          [
+            45.5,
+            58.1
+          ],
+          [
+            30.3,
+            16.8
+          ],
+          [
+            60.0,
+            29.0
+          ],
+          [
+            46.1,
+            25.2
+          ],
+          [
+            57.8,
+            6.6
+          ],
+          [
+            100.5,
+            3.2
+          ],
+          [
+            97.8,
+            32.4
+          ],
+          [
+            105.0,
+            68.0
+          ]
+        ],
+        "second": 47,
+        "vaep": 0.062,
+        "xt": 0.246
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 5288154,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 31,
+        "matchday": 4,
+        "minute": 19,
+        "opponent_abbr": "MLL",
+        "outcome": "goal",
+        "passes": 5,
+        "period": 1,
+        "player_touch_index": 0,
+        "player_touches": 4,
+        "points": [
+          [
+            45.0,
+            68.0
+          ],
+          [
+            56.9,
+            64.3
+          ],
+          [
+            48.5,
+            64.6
+          ],
+          [
+            58.6,
+            63.5
+          ],
+          [
+            82.5,
+            66.8
+          ],
+          [
+            95.4,
+            56.0
+          ],
+          [
+            99.9,
+            38.6
+          ],
+          [
+            105.0,
+            32.3
+          ]
+        ],
+        "second": 48,
+        "vaep": 0.893,
+        "xt": 0.245
+      },
+      {
+        "ends_in_shot": true,
+        "events": 9,
+        "id": 5410015,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 89,
+        "matchday": 9,
+        "minute": 88,
+        "opponent_abbr": "OVI",
+        "outcome": "shot_off_target",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 7,
+        "player_touches": 1,
+        "points": [
+          [
+            10.2,
+            36.9
+          ],
+          [
+            35.4,
+            27.6
+          ],
+          [
+            37.1,
+            27.5
+          ],
+          [
+            44.5,
+            42.1
+          ],
+          [
+            79.2,
+            47.0
+          ],
+          [
+            95.1,
+            20.3
+          ],
+          [
+            102.4,
+            21.2
+          ],
+          [
+            101.0,
+            35.7
+          ],
+          [
+            105.0,
+            27.9
+          ]
+        ],
+        "second": 11,
+        "vaep": 0.187,
+        "xt": 0.245
+      },
+      {
+        "ends_in_shot": true,
+        "events": 32,
+        "id": 4699477,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 125,
+        "matchday": 13,
+        "minute": 46,
+        "opponent_abbr": "SEV",
+        "outcome": "goal",
+        "passes": 20,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 3,
+        "points": [
+          [
+            60.1,
+            0.0
+          ],
+          [
+            38.6,
+            48.8
+          ],
+          [
+            52.6,
+            1.0
+          ],
+          [
+            73.7,
+            2.7
+          ],
+          [
+            66.0,
+            63.0
+          ],
+          [
+            47.8,
+            24.3
+          ],
+          [
+            97.5,
+            9.9
+          ],
+          [
+            83.2,
+            4.8
+          ],
+          [
+            105.0,
+            36.7
+          ]
+        ],
+        "second": 12,
+        "vaep": 0.81,
+        "xt": 0.243
+      },
+      {
+        "ends_in_shot": true,
+        "events": 7,
+        "id": 4831384,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 563,
+        "matchday": 19,
+        "minute": 40,
+        "opponent_abbr": "LEV",
+        "outcome": "shot_off_target",
+        "passes": 4,
+        "period": 1,
+        "player_touch_index": 1,
+        "player_touches": 3,
+        "points": [
+          [
+            47.5,
+            39.2
+          ],
+          [
+            49.3,
+            52.0
+          ],
+          [
+            69.0,
+            21.6
+          ],
+          [
+            78.6,
+            2.7
+          ],
+          [
+            84.0,
+            2.5
+          ],
+          [
+            95.3,
+            37.0
+          ],
+          [
+            96.9,
+            30.3
+          ],
+          [
+            105.0,
+            37.8
+          ]
+        ],
+        "second": 4,
+        "vaep": 0.102,
+        "xt": 0.243
+      },
+      {
+        "ends_in_shot": true,
+        "events": 17,
+        "id": 4833759,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 4,
+        "matchday": 1,
+        "minute": 49,
+        "opponent_abbr": "ATM",
+        "outcome": "shot_off_target",
+        "passes": 9,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 2,
+        "points": [
+          [
+            48.8,
+            37.5
+          ],
+          [
+            37.1,
+            20.1
+          ],
+          [
+            9.1,
+            32.0
+          ],
+          [
+            64.6,
+            2.3
+          ],
+          [
+            58.3,
+            8.9
+          ],
+          [
+            89.6,
+            64.0
+          ],
+          [
+            95.9,
+            63.8
+          ],
+          [
+            95.8,
+            32.5
+          ],
+          [
+            105.0,
+            28.1
+          ]
+        ],
+        "second": 58,
+        "vaep": 0.045,
+        "xt": 0.243
+      },
+      {
+        "ends_in_shot": true,
+        "events": 3,
+        "id": 5047814,
+        "is_home": true,
+        "kind": "direct_long",
+        "match_id": 924,
+        "matchday": 29,
+        "minute": 91,
+        "opponent_abbr": "GET",
+        "outcome": "shot_saved",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            58.1,
+            44.3
+          ],
+          [
+            57.4,
+            23.2
+          ],
+          [
+            96.9,
+            37.5
+          ],
+          [
+            105.0,
+            31.4
+          ]
+        ],
+        "second": 34,
+        "vaep": 0.069,
+        "xt": 0.241
+      }
+    ]
+  },
+  "team": {
+    "abbr": "ESP",
+    "short_name": "Espanyol",
+    "slug": "espanyol",
+    "team_id": 8
+  }
+}

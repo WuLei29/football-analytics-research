@@ -1,0 +1,558 @@
+{
+  "generated_at": "2026-10-16T20:19:06Z",
+  "kpis": [
+    {
+      "decimals": 3,
+      "key": "vaep_per_90",
+      "per_90": null,
+      "scale": "raw",
+      "squad_n": 17,
+      "squad_rank": null,
+      "value": -0.275
+    },
+    {
+      "decimals": 1,
+      "key": "ground_duel_win_rate",
+      "per_90": null,
+      "scale": "pct",
+      "squad_n": 17,
+      "squad_rank": null,
+      "value": null
+    },
+    {
+      "decimals": 1,
+      "key": "aerial_win_rate",
+      "per_90": null,
+      "scale": "pct",
+      "squad_n": 17,
+      "squad_rank": null,
+      "value": 0.0
+    },
+    {
+      "decimals": 0,
+      "key": "progressive_passes",
+      "per_90": 0.0,
+      "scale": "raw",
+      "squad_n": null,
+      "squad_rank": null,
+      "value": 0
+    }
+  ],
+  "maps": {
+    "carries": [],
+    "counts": {
+      "assists": 0,
+      "key_passes": 0,
+      "passes": 2,
+      "progressive_carries": 0,
+      "progressive_passes": 0,
+      "receptions": 4,
+      "touches": 6
+    },
+    "defence": [
+      {
+        "matchday": 38,
+        "minute": 79,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 36.9,
+        "y": 64.8
+      }
+    ],
+    "key_passes": [],
+    "passes": [
+      [
+        81.8,
+        50.9,
+        79.5,
+        48.1,
+        0
+      ],
+      [
+        67.6,
+        55.6,
+        57.0,
+        51.8,
+        1
+      ]
+    ],
+    "progressive_passes": [],
+    "progressive_receptions": [],
+    "reception_zones": [
+      {
+        "count": 1,
+        "share": 25.0,
+        "zone_id": 43
+      },
+      {
+        "count": 1,
+        "share": 25.0,
+        "zone_id": 44
+      },
+      {
+        "count": 2,
+        "share": 50.0,
+        "zone_id": 54
+      }
+    ],
+    "shots": [],
+    "touch_zones": [
+      {
+        "count": 1,
+        "share": 16.7,
+        "zone_id": 33
+      },
+      {
+        "count": 1,
+        "share": 16.7,
+        "zone_id": 35
+      },
+      {
+        "count": 1,
+        "share": 16.7,
+        "zone_id": 44
+      },
+      {
+        "count": 1,
+        "share": 16.7,
+        "zone_id": 45
+      },
+      {
+        "count": 2,
+        "share": 33.3,
+        "zone_id": 54
+      }
+    ]
+  },
+  "percentiles": {
+    "cards": [],
+    "eligible": false,
+    "min_minutes": 855,
+    "peer_group": "RB",
+    "peer_n": null,
+    "pooled_am": false,
+    "pooled_fb": false,
+    "role": "RB"
+  },
+  "player": {
+    "age": null,
+    "date_of_birth": null,
+    "height_cm": null,
+    "is_utility": false,
+    "matches": 1,
+    "minutes": 27,
+    "name": {
+      "first": "Lluc",
+      "full": "Lluc Castell",
+      "last": "Castell"
+    },
+    "nationality": "Spain",
+    "penalties_scored": 0,
+    "penalties_taken": 0,
+    "player_id": 3273,
+    "position": "RB",
+    "position_group": "RB",
+    "preferred_foot": null,
+    "primary_position_pct": 100,
+    "red_cards": 0,
+    "role": "RB",
+    "shirt_number": 32,
+    "starts": 0,
+    "subbed_off": 0,
+    "yellow_cards": 0
+  },
+  "schema_version": 1,
+  "season": {
+    "competition_name": "Primera División",
+    "label": "2025/2026",
+    "slug": "2025-26",
+    "through_matchday": 38
+  },
+  "sequences": {
+    "aggregates": {
+      "ends_in_shot": 0,
+      "passes_per_sequence": 3.0,
+      "sequences": 4,
+      "xt": 0.03
+    },
+    "min_events": 3,
+    "top_vaep": [
+      {
+        "ends_in_shot": false,
+        "events": 7,
+        "id": 5229341,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 72,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 4,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            61.2,
+            43.0
+          ],
+          [
+            63.8,
+            53.7
+          ],
+          [
+            67.6,
+            55.6
+          ],
+          [
+            57.0,
+            51.8
+          ],
+          [
+            58.8,
+            53.0
+          ],
+          [
+            66.0,
+            57.7
+          ],
+          [
+            82.1,
+            64.6
+          ],
+          [
+            86.4,
+            52.2
+          ]
+        ],
+        "second": 37,
+        "vaep": 0.007,
+        "xt": 0.011
+      },
+      {
+        "ends_in_shot": false,
+        "events": 4,
+        "id": 5229526,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 84,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 3,
+        "player_touches": 1,
+        "points": [
+          [
+            71.1,
+            51.3
+          ],
+          [
+            71.1,
+            51.3
+          ],
+          [
+            74.8,
+            53.7
+          ],
+          [
+            81.8,
+            50.9
+          ],
+          [
+            79.5,
+            48.1
+          ]
+        ],
+        "second": 35,
+        "vaep": 0.002,
+        "xt": 0.006
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5229518,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 84,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 1,
+        "points": [
+          [
+            75.2,
+            63.4
+          ],
+          [
+            78.1,
+            56.0
+          ],
+          [
+            73.4,
+            54.3
+          ],
+          [
+            80.1,
+            62.4
+          ],
+          [
+            79.2,
+            60.1
+          ],
+          [
+            79.7,
+            50.8
+          ]
+        ],
+        "second": 23,
+        "vaep": 0.002,
+        "xt": 0.007
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5229576,
+        "is_home": true,
+        "kind": "buildup",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 86,
+        "opponent_abbr": "RSO",
+        "outcome": "foul_committed",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 1,
+        "points": [
+          [
+            14.6,
+            27.9
+          ],
+          [
+            37.6,
+            14.5
+          ],
+          [
+            33.8,
+            11.7
+          ],
+          [
+            26.7,
+            19.2
+          ],
+          [
+            20.7,
+            18.2
+          ],
+          [
+            46.6,
+            27.8
+          ]
+        ],
+        "second": 25,
+        "vaep": -0.005,
+        "xt": 0.006
+      }
+    ],
+    "top_xt": [
+      {
+        "ends_in_shot": false,
+        "events": 7,
+        "id": 5229341,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 72,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 4,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            61.2,
+            43.0
+          ],
+          [
+            63.8,
+            53.7
+          ],
+          [
+            67.6,
+            55.6
+          ],
+          [
+            57.0,
+            51.8
+          ],
+          [
+            58.8,
+            53.0
+          ],
+          [
+            66.0,
+            57.7
+          ],
+          [
+            82.1,
+            64.6
+          ],
+          [
+            86.4,
+            52.2
+          ]
+        ],
+        "second": 37,
+        "vaep": 0.007,
+        "xt": 0.011
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5229518,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 84,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 1,
+        "points": [
+          [
+            75.2,
+            63.4
+          ],
+          [
+            78.1,
+            56.0
+          ],
+          [
+            73.4,
+            54.3
+          ],
+          [
+            80.1,
+            62.4
+          ],
+          [
+            79.2,
+            60.1
+          ],
+          [
+            79.7,
+            50.8
+          ]
+        ],
+        "second": 23,
+        "vaep": 0.002,
+        "xt": 0.007
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5229576,
+        "is_home": true,
+        "kind": "buildup",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 86,
+        "opponent_abbr": "RSO",
+        "outcome": "foul_committed",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 5,
+        "player_touches": 1,
+        "points": [
+          [
+            14.6,
+            27.9
+          ],
+          [
+            37.6,
+            14.5
+          ],
+          [
+            33.8,
+            11.7
+          ],
+          [
+            26.7,
+            19.2
+          ],
+          [
+            20.7,
+            18.2
+          ],
+          [
+            46.6,
+            27.8
+          ]
+        ],
+        "second": 25,
+        "vaep": -0.005,
+        "xt": 0.006
+      },
+      {
+        "ends_in_shot": false,
+        "events": 4,
+        "id": 5229526,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 1013,
+        "matchday": 38,
+        "minute": 84,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 3,
+        "player_touches": 1,
+        "points": [
+          [
+            71.1,
+            51.3
+          ],
+          [
+            71.1,
+            51.3
+          ],
+          [
+            74.8,
+            53.7
+          ],
+          [
+            81.8,
+            50.9
+          ],
+          [
+            79.5,
+            48.1
+          ]
+        ],
+        "second": 35,
+        "vaep": 0.002,
+        "xt": 0.006
+      }
+    ]
+  },
+  "team": {
+    "abbr": "ESP",
+    "short_name": "Espanyol",
+    "slug": "espanyol",
+    "team_id": 8
+  }
+}

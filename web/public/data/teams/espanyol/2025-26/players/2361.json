@@ -1,0 +1,2278 @@
+{
+  "generated_at": "2026-10-16T20:19:06Z",
+  "kpis": [
+    {
+      "decimals": 3,
+      "key": "vaep_per_90",
+      "per_90": null,
+      "scale": "raw",
+      "squad_n": 17,
+      "squad_rank": null,
+      "value": 0.241
+    },
+    {
+      "decimals": 1,
+      "key": "ground_duel_win_rate",
+      "per_90": null,
+      "scale": "pct",
+      "squad_n": 17,
+      "squad_rank": null,
+      "value": 80.0
+    },
+    {
+      "decimals": 1,
+      "key": "aerial_win_rate",
+      "per_90": null,
+      "scale": "pct",
+      "squad_n": 17,
+      "squad_rank": null,
+      "value": 63.6
+    },
+    {
+      "decimals": 0,
+      "key": "progressive_passes",
+      "per_90": 3.91,
+      "scale": "raw",
+      "squad_n": null,
+      "squad_rank": null,
+      "value": 14
+    }
+  ],
+  "maps": {
+    "carries": [],
+    "counts": {
+      "assists": 0,
+      "key_passes": 0,
+      "passes": 73,
+      "progressive_carries": 0,
+      "progressive_passes": 14,
+      "receptions": 43,
+      "touches": 151
+    },
+    "defence": [
+      {
+        "matchday": 1,
+        "minute": 88,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.9,
+        "y": 32.6
+      },
+      {
+        "matchday": 1,
+        "minute": 94,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 17.9,
+        "y": 30.1
+      },
+      {
+        "matchday": 2,
+        "minute": 8,
+        "outcome": "lost",
+        "type": "attempted_tackle",
+        "x": 41.7,
+        "y": 11.2
+      },
+      {
+        "matchday": 2,
+        "minute": 45,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 42.6,
+        "y": 47.8
+      },
+      {
+        "matchday": 2,
+        "minute": 63,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 22.6,
+        "y": 27.9
+      },
+      {
+        "matchday": 2,
+        "minute": 82,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 23.0,
+        "y": 11.3
+      },
+      {
+        "matchday": 2,
+        "minute": 83,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 32.8,
+        "y": 37.4
+      },
+      {
+        "matchday": 2,
+        "minute": 88,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 28.7,
+        "y": 17.0
+      },
+      {
+        "matchday": 3,
+        "minute": 88,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 35.4,
+        "y": 46.0
+      },
+      {
+        "matchday": 3,
+        "minute": 91,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 8.4,
+        "y": 31.0
+      },
+      {
+        "matchday": 3,
+        "minute": 92,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 18.7,
+        "y": 32.7
+      },
+      {
+        "matchday": 3,
+        "minute": 95,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.1,
+        "y": 35.2
+      },
+      {
+        "matchday": 4,
+        "minute": 90,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 45.6,
+        "y": 32.2
+      },
+      {
+        "matchday": 4,
+        "minute": 92,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 13.9,
+        "y": 33.0
+      },
+      {
+        "matchday": 12,
+        "minute": 82,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 21.8,
+        "y": 8.6
+      },
+      {
+        "matchday": 12,
+        "minute": 83,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 45.6,
+        "y": 4.6
+      },
+      {
+        "matchday": 12,
+        "minute": 84,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 32.4,
+        "y": 15.7
+      },
+      {
+        "matchday": 12,
+        "minute": 84,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 38.5,
+        "y": 8.8
+      },
+      {
+        "matchday": 12,
+        "minute": 90,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 33.2,
+        "y": 28.6
+      },
+      {
+        "matchday": 16,
+        "minute": 92,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 12.4,
+        "y": 31.8
+      },
+      {
+        "matchday": 21,
+        "minute": 79,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 17.7,
+        "y": 6.9
+      },
+      {
+        "matchday": 21,
+        "minute": 84,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 19.9,
+        "y": 26.6
+      },
+      {
+        "matchday": 21,
+        "minute": 89,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 4.3,
+        "y": 29.3
+      },
+      {
+        "matchday": 21,
+        "minute": 89,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 6.0,
+        "y": 30.7
+      },
+      {
+        "matchday": 22,
+        "minute": 85,
+        "outcome": "won",
+        "type": "blocked_pass",
+        "x": 32.9,
+        "y": 18.8
+      },
+      {
+        "matchday": 22,
+        "minute": 85,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 23.5,
+        "y": 19.4
+      },
+      {
+        "matchday": 22,
+        "minute": 86,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 46.1,
+        "y": 12.9
+      },
+      {
+        "matchday": 26,
+        "minute": 97,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 32.2,
+        "y": 38.6
+      },
+      {
+        "matchday": 26,
+        "minute": 98,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 13.3,
+        "y": 22.1
+      },
+      {
+        "matchday": 28,
+        "minute": 57,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 25.9,
+        "y": 17.6
+      },
+      {
+        "matchday": 28,
+        "minute": 59,
+        "outcome": "lost",
+        "type": "tackle",
+        "x": 12.8,
+        "y": 41.0
+      },
+      {
+        "matchday": 28,
+        "minute": 62,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 9.3,
+        "y": 29.4
+      },
+      {
+        "matchday": 28,
+        "minute": 63,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 11.1,
+        "y": 47.0
+      },
+      {
+        "matchday": 28,
+        "minute": 77,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 9.4,
+        "y": 29.4
+      },
+      {
+        "matchday": 28,
+        "minute": 84,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 16.0,
+        "y": 36.6
+      },
+      {
+        "matchday": 28,
+        "minute": 84,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 14.5,
+        "y": 37.4
+      },
+      {
+        "matchday": 28,
+        "minute": 92,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 40.7,
+        "y": 49.0
+      },
+      {
+        "matchday": 28,
+        "minute": 98,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 60.4,
+        "y": 18.8
+      },
+      {
+        "matchday": 29,
+        "minute": 79,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 31.1,
+        "y": 14.6
+      },
+      {
+        "matchday": 29,
+        "minute": 79,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 20.3,
+        "y": 5.0
+      },
+      {
+        "matchday": 29,
+        "minute": 85,
+        "outcome": "won",
+        "type": "clearance",
+        "x": 23.3,
+        "y": 42.0
+      },
+      {
+        "matchday": 29,
+        "minute": 87,
+        "outcome": "won",
+        "type": "tackle",
+        "x": 15.0,
+        "y": 14.2
+      },
+      {
+        "matchday": 29,
+        "minute": 87,
+        "outcome": "won",
+        "type": "ball_recovery",
+        "x": 21.1,
+        "y": 11.8
+      },
+      {
+        "matchday": 29,
+        "minute": 90,
+        "outcome": "won",
+        "type": "interception",
+        "x": 33.0,
+        "y": 7.6
+      }
+    ],
+    "key_passes": [],
+    "passes": [
+      [
+        48.6,
+        7.1,
+        55.9,
+        5.2,
+        1
+      ],
+      [
+        31.9,
+        6.9,
+        47.4,
+        25.2,
+        3
+      ],
+      [
+        46.0,
+        10.1,
+        63.5,
+        24.3,
+        3
+      ],
+      [
+        35.5,
+        25.8,
+        41.7,
+        10.3,
+        1
+      ],
+      [
+        60.5,
+        19.0,
+        65.1,
+        9.2,
+        1
+      ],
+      [
+        33.3,
+        18.0,
+        45.8,
+        24.1,
+        1
+      ],
+      [
+        76.2,
+        20.7,
+        73.6,
+        0.0,
+        0
+      ],
+      [
+        29.2,
+        39.2,
+        33.2,
+        23.7,
+        1
+      ],
+      [
+        52.1,
+        27.2,
+        67.1,
+        13.5,
+        1
+      ],
+      [
+        32.2,
+        32.3,
+        31.2,
+        50.5,
+        1
+      ],
+      [
+        56.3,
+        23.7,
+        65.6,
+        9.6,
+        0
+      ],
+      [
+        27.5,
+        37.9,
+        33.2,
+        51.7,
+        1
+      ],
+      [
+        37.0,
+        46.5,
+        50.7,
+        40.8,
+        0
+      ],
+      [
+        21.7,
+        26.0,
+        27.7,
+        38.6,
+        1
+      ],
+      [
+        32.5,
+        26.5,
+        47.7,
+        32.8,
+        0
+      ],
+      [
+        89.7,
+        24.5,
+        88.9,
+        32.9,
+        0
+      ],
+      [
+        25.3,
+        23.1,
+        35.7,
+        21.8,
+        1
+      ],
+      [
+        35.8,
+        25.4,
+        57.1,
+        16.7,
+        2
+      ],
+      [
+        19.9,
+        26.6,
+        67.1,
+        12.4,
+        3
+      ],
+      [
+        20.9,
+        22.5,
+        19.1,
+        8.4,
+        1
+      ],
+      [
+        18.9,
+        5.0,
+        76.3,
+        13.3,
+        2
+      ],
+      [
+        21.9,
+        10.4,
+        26.9,
+        3.1,
+        1
+      ],
+      [
+        37.4,
+        25.6,
+        55.2,
+        29.4,
+        2
+      ],
+      [
+        28.7,
+        6.9,
+        62.8,
+        13.0,
+        3
+      ],
+      [
+        35.6,
+        43.3,
+        18.6,
+        36.7,
+        1
+      ],
+      [
+        47.6,
+        29.6,
+        57.0,
+        18.2,
+        1
+      ],
+      [
+        22.7,
+        23.4,
+        32.8,
+        11.6,
+        1
+      ],
+      [
+        41.9,
+        9.4,
+        49.8,
+        17.0,
+        1
+      ],
+      [
+        78.1,
+        29.6,
+        86.2,
+        34.2,
+        2
+      ],
+      [
+        8.7,
+        26.5,
+        7.1,
+        16.8,
+        1
+      ],
+      [
+        49.3,
+        34.3,
+        56.3,
+        44.9,
+        0
+      ],
+      [
+        28.4,
+        27.6,
+        28.5,
+        43.7,
+        1
+      ],
+      [
+        40.1,
+        43.4,
+        43.6,
+        14.3,
+        1
+      ],
+      [
+        44.7,
+        6.4,
+        61.9,
+        0.7,
+        0
+      ],
+      [
+        33.8,
+        31.6,
+        47.9,
+        24.1,
+        1
+      ],
+      [
+        25.4,
+        26.2,
+        35.0,
+        22.0,
+        1
+      ],
+      [
+        36.9,
+        39.9,
+        46.4,
+        36.9,
+        1
+      ],
+      [
+        33.9,
+        25.4,
+        29.1,
+        45.8,
+        1
+      ],
+      [
+        29.1,
+        43.5,
+        29.1,
+        53.6,
+        1
+      ],
+      [
+        26.5,
+        12.9,
+        58.6,
+        15.6,
+        2
+      ],
+      [
+        41.6,
+        9.6,
+        77.1,
+        38.6,
+        2
+      ],
+      [
+        40.6,
+        47.0,
+        13.5,
+        42.6,
+        1
+      ],
+      [
+        37.6,
+        36.3,
+        68.8,
+        42.8,
+        2
+      ],
+      [
+        7.2,
+        21.5,
+        39.5,
+        18.6,
+        2
+      ],
+      [
+        28.5,
+        24.3,
+        29.4,
+        8.3,
+        1
+      ],
+      [
+        35.5,
+        35.2,
+        32.8,
+        47.3,
+        1
+      ],
+      [
+        31.6,
+        23.3,
+        47.1,
+        29.4,
+        1
+      ],
+      [
+        31.0,
+        22.9,
+        41.1,
+        19.6,
+        1
+      ],
+      [
+        26.1,
+        22.4,
+        24.8,
+        8.1,
+        1
+      ],
+      [
+        29.3,
+        18.2,
+        32.5,
+        4.6,
+        1
+      ],
+      [
+        42.2,
+        35.5,
+        43.7,
+        50.6,
+        1
+      ],
+      [
+        36.9,
+        28.1,
+        37.0,
+        39.5,
+        1
+      ],
+      [
+        40.4,
+        25.6,
+        54.0,
+        32.0,
+        1
+      ],
+      [
+        4.9,
+        27.2,
+        4.1,
+        32.9,
+        1
+      ],
+      [
+        52.0,
+        32.4,
+        68.6,
+        47.2,
+        2
+      ],
+      [
+        18.8,
+        17.0,
+        28.9,
+        23.4,
+        1
+      ],
+      [
+        37.1,
+        34.5,
+        36.5,
+        53.1,
+        1
+      ],
+      [
+        38.9,
+        28.0,
+        50.1,
+        27.0,
+        1
+      ],
+      [
+        4.6,
+        27.3,
+        4.3,
+        30.1,
+        1
+      ],
+      [
+        37.8,
+        27.4,
+        54.5,
+        12.9,
+        1
+      ],
+      [
+        5.1,
+        26.6,
+        4.4,
+        33.7,
+        1
+      ],
+      [
+        59.5,
+        25.4,
+        73.7,
+        39.7,
+        3
+      ],
+      [
+        33.8,
+        27.3,
+        38.0,
+        15.6,
+        1
+      ],
+      [
+        18.3,
+        28.0,
+        42.0,
+        16.6,
+        0
+      ],
+      [
+        45.9,
+        31.3,
+        58.7,
+        35.4,
+        1
+      ],
+      [
+        12.2,
+        22.2,
+        25.2,
+        9.9,
+        1
+      ],
+      [
+        12.7,
+        23.2,
+        9.2,
+        39.2,
+        1
+      ],
+      [
+        12.7,
+        17.7,
+        23.7,
+        8.8,
+        1
+      ],
+      [
+        36.8,
+        29.7,
+        34.6,
+        40.6,
+        1
+      ],
+      [
+        41.3,
+        19.0,
+        49.6,
+        3.1,
+        1
+      ],
+      [
+        56.4,
+        6.2,
+        63.2,
+        2.5,
+        1
+      ],
+      [
+        39.3,
+        30.9,
+        43.9,
+        17.9,
+        1
+      ],
+      [
+        42.6,
+        31.7,
+        47.0,
+        25.2,
+        1
+      ]
+    ],
+    "progressive_passes": [
+      [
+        28.7,
+        6.9,
+        62.8,
+        13.0,
+        3
+      ],
+      [
+        19.9,
+        26.6,
+        67.1,
+        12.4,
+        3
+      ],
+      [
+        59.5,
+        25.4,
+        73.7,
+        39.7,
+        3
+      ],
+      [
+        46.0,
+        10.1,
+        63.5,
+        24.3,
+        3
+      ],
+      [
+        31.9,
+        6.9,
+        47.4,
+        25.2,
+        3
+      ],
+      [
+        78.1,
+        29.6,
+        86.2,
+        34.2,
+        2
+      ],
+      [
+        37.4,
+        25.6,
+        55.2,
+        29.4,
+        2
+      ],
+      [
+        18.9,
+        5.0,
+        76.3,
+        13.3,
+        2
+      ],
+      [
+        35.8,
+        25.4,
+        57.1,
+        16.7,
+        2
+      ],
+      [
+        52.0,
+        32.4,
+        68.6,
+        47.2,
+        2
+      ],
+      [
+        7.2,
+        21.5,
+        39.5,
+        18.6,
+        2
+      ],
+      [
+        37.6,
+        36.3,
+        68.8,
+        42.8,
+        2
+      ],
+      [
+        41.6,
+        9.6,
+        77.1,
+        38.6,
+        2
+      ],
+      [
+        26.5,
+        12.9,
+        58.6,
+        15.6,
+        2
+      ]
+    ],
+    "progressive_receptions": [
+      [
+        102.2,
+        32.5,
+        1
+      ],
+      [
+        89.7,
+        24.5,
+        1
+      ],
+      [
+        56.3,
+        23.7,
+        0
+      ],
+      [
+        95.9,
+        38.4,
+        1
+      ],
+      [
+        76.2,
+        20.7,
+        0
+      ]
+    ],
+    "reception_zones": [
+      {
+        "count": 3,
+        "share": 7.0,
+        "zone_id": 12
+      },
+      {
+        "count": 4,
+        "share": 9.3,
+        "zone_id": 13
+      },
+      {
+        "count": 2,
+        "share": 4.7,
+        "zone_id": 21
+      },
+      {
+        "count": 3,
+        "share": 7.0,
+        "zone_id": 22
+      },
+      {
+        "count": 11,
+        "share": 25.6,
+        "zone_id": 23
+      },
+      {
+        "count": 2,
+        "share": 4.7,
+        "zone_id": 24
+      },
+      {
+        "count": 1,
+        "share": 2.3,
+        "zone_id": 31
+      },
+      {
+        "count": 11,
+        "share": 25.6,
+        "zone_id": 33
+      },
+      {
+        "count": 1,
+        "share": 2.3,
+        "zone_id": 34
+      },
+      {
+        "count": 1,
+        "share": 2.3,
+        "zone_id": 42
+      },
+      {
+        "count": 1,
+        "share": 2.3,
+        "zone_id": 52
+      },
+      {
+        "count": 1,
+        "share": 2.3,
+        "zone_id": 62
+      },
+      {
+        "count": 2,
+        "share": 4.7,
+        "zone_id": 63
+      }
+    ],
+    "shots": [
+      {
+        "big_chance": true,
+        "body_part": "right_foot",
+        "first_time": true,
+        "goal_mouth_y": 46.4,
+        "goal_mouth_z": 8.2,
+        "match_id": 4,
+        "matchday": 1,
+        "minute": 72,
+        "outcome": "goal",
+        "play_pattern": "set_piece",
+        "shot_id": 1,
+        "x": 100.9,
+        "xg": 0.547,
+        "y": 32.0
+      },
+      {
+        "big_chance": false,
+        "body_part": "head",
+        "first_time": true,
+        "goal_mouth_y": 34.3,
+        "goal_mouth_z": 26.4,
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 92,
+        "outcome": "off_target",
+        "play_pattern": "set_piece",
+        "shot_id": 2,
+        "x": 95.9,
+        "xg": 0.038,
+        "y": 38.4
+      }
+    ],
+    "touch_zones": [
+      {
+        "count": 7,
+        "share": 4.6,
+        "zone_id": 12
+      },
+      {
+        "count": 19,
+        "share": 12.6,
+        "zone_id": 13
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 14
+      },
+      {
+        "count": 12,
+        "share": 7.9,
+        "zone_id": 21
+      },
+      {
+        "count": 17,
+        "share": 11.3,
+        "zone_id": 22
+      },
+      {
+        "count": 25,
+        "share": 16.6,
+        "zone_id": 23
+      },
+      {
+        "count": 2,
+        "share": 1.3,
+        "zone_id": 24
+      },
+      {
+        "count": 10,
+        "share": 6.6,
+        "zone_id": 31
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 32
+      },
+      {
+        "count": 33,
+        "share": 21.9,
+        "zone_id": 33
+      },
+      {
+        "count": 8,
+        "share": 5.3,
+        "zone_id": 34
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 41
+      },
+      {
+        "count": 3,
+        "share": 2.0,
+        "zone_id": 42
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 43
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 52
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 53
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 62
+      },
+      {
+        "count": 5,
+        "share": 3.3,
+        "zone_id": 63
+      },
+      {
+        "count": 2,
+        "share": 1.3,
+        "zone_id": 64
+      },
+      {
+        "count": 1,
+        "share": 0.7,
+        "zone_id": 65
+      }
+    ]
+  },
+  "percentiles": {
+    "cards": [],
+    "eligible": false,
+    "min_minutes": 855,
+    "peer_group": "CB",
+    "peer_n": null,
+    "pooled_am": false,
+    "pooled_fb": false,
+    "role": "CB"
+  },
+  "player": {
+    "age": null,
+    "date_of_birth": null,
+    "height_cm": null,
+    "is_utility": false,
+    "matches": 12,
+    "minutes": 322,
+    "name": {
+      "first": "Miguel",
+      "full": "Miguel Rubio",
+      "last": "Rubio"
+    },
+    "nationality": "Spain",
+    "penalties_scored": 0,
+    "penalties_taken": 0,
+    "player_id": 2361,
+    "position": "CB",
+    "position_group": "CB",
+    "preferred_foot": "right",
+    "primary_position_pct": 63,
+    "red_cards": 0,
+    "role": "CB",
+    "shirt_number": 15,
+    "starts": 1,
+    "subbed_off": 0,
+    "yellow_cards": 0
+  },
+  "schema_version": 1,
+  "season": {
+    "competition_name": "Primera División",
+    "label": "2025/2026",
+    "slug": "2025-26",
+    "through_matchday": 38
+  },
+  "sequences": {
+    "aggregates": {
+      "ends_in_shot": 4,
+      "passes_per_sequence": 4.5,
+      "sequences": 61,
+      "xt": 0.761
+    },
+    "min_events": 3,
+    "top_vaep": [
+      {
+        "ends_in_shot": true,
+        "events": 3,
+        "id": 4834247,
+        "is_home": true,
+        "kind": "free_kick",
+        "match_id": 4,
+        "matchday": 1,
+        "minute": 72,
+        "opponent_abbr": "ATM",
+        "outcome": "goal",
+        "passes": 1,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            66.8,
+            44.5
+          ],
+          [
+            102.2,
+            32.5
+          ],
+          [
+            100.9,
+            32.0
+          ],
+          [
+            105.0,
+            31.3
+          ]
+        ],
+        "second": 2,
+        "vaep": 0.957,
+        "xt": 0.238
+      },
+      {
+        "ends_in_shot": false,
+        "events": 7,
+        "id": 4867032,
+        "is_home": false,
+        "kind": "direct_long",
+        "match_id": 580,
+        "matchday": 21,
+        "minute": 84,
+        "opponent_abbr": "VAL",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            23.7,
+            12.2
+          ],
+          [
+            19.9,
+            26.6
+          ],
+          [
+            19.9,
+            26.6
+          ],
+          [
+            67.1,
+            12.4
+          ],
+          [
+            72.4,
+            12.6
+          ],
+          [
+            72.4,
+            12.6
+          ],
+          [
+            99.1,
+            13.1
+          ]
+        ],
+        "second": 21,
+        "vaep": 0.065,
+        "xt": 0.032
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 4904623,
+        "is_home": true,
+        "kind": "buildup",
+        "match_id": 855,
+        "matchday": 22,
+        "minute": 92,
+        "opponent_abbr": "ALA",
+        "outcome": "shot_off_target",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 2,
+        "player_touches": 2,
+        "points": [
+          [
+            19.4,
+            68.0
+          ],
+          [
+            17.2,
+            57.1
+          ],
+          [
+            14.6,
+            36.7
+          ],
+          [
+            27.5,
+            37.9
+          ],
+          [
+            33.2,
+            51.7
+          ],
+          [
+            46.4,
+            58.5
+          ],
+          [
+            68.2,
+            61.9
+          ],
+          [
+            94.8,
+            34.6
+          ],
+          [
+            105.0,
+            26.9
+          ]
+        ],
+        "second": 43,
+        "vaep": 0.051,
+        "xt": 0.1
+      },
+      {
+        "ends_in_shot": true,
+        "events": 3,
+        "id": 5016246,
+        "is_home": false,
+        "kind": "free_kick",
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 92,
+        "opponent_abbr": "MLL",
+        "outcome": "shot_off_target",
+        "passes": 1,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            69.3,
+            28.0
+          ],
+          [
+            95.1,
+            38.1
+          ],
+          [
+            95.9,
+            38.4
+          ],
+          [
+            105.0,
+            22.0
+          ]
+        ],
+        "second": 8,
+        "vaep": 0.045,
+        "xt": 0.088
+      },
+      {
+        "ends_in_shot": false,
+        "events": 3,
+        "id": 5016356,
+        "is_home": false,
+        "kind": "fast",
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 98,
+        "opponent_abbr": "MLL",
+        "outcome": "retained",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            33.3,
+            18.0
+          ],
+          [
+            45.8,
+            24.1
+          ],
+          [
+            63.6,
+            31.3
+          ]
+        ],
+        "second": 20,
+        "vaep": 0.037,
+        "xt": 0.009
+      },
+      {
+        "ends_in_shot": false,
+        "events": 9,
+        "id": 5257672,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 16,
+        "matchday": 2,
+        "minute": 62,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 1,
+        "points": [
+          [
+            37.6,
+            38.8
+          ],
+          [
+            33.8,
+            31.6
+          ],
+          [
+            48.3,
+            23.9
+          ],
+          [
+            41.5,
+            28.2
+          ],
+          [
+            58.9,
+            34.3
+          ],
+          [
+            60.3,
+            26.6
+          ],
+          [
+            77.6,
+            9.3
+          ],
+          [
+            86.6,
+            24.1
+          ],
+          [
+            82.7,
+            34.2
+          ]
+        ],
+        "second": 29,
+        "vaep": 0.034,
+        "xt": 0.017
+      },
+      {
+        "ends_in_shot": false,
+        "events": 5,
+        "id": 5256921,
+        "is_home": false,
+        "kind": "direct_long",
+        "match_id": 16,
+        "matchday": 2,
+        "minute": 25,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 1,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            31.6,
+            23.3
+          ],
+          [
+            47.1,
+            29.4
+          ],
+          [
+            83.9,
+            45.2
+          ],
+          [
+            99.9,
+            57.1
+          ],
+          [
+            101.7,
+            56.2
+          ],
+          [
+            94.3,
+            39.6
+          ]
+        ],
+        "second": 25,
+        "vaep": 0.024,
+        "xt": 0.035
+      },
+      {
+        "ends_in_shot": false,
+        "events": 6,
+        "id": 5270665,
+        "is_home": true,
+        "kind": "buildup",
+        "match_id": 22,
+        "matchday": 3,
+        "minute": 95,
+        "opponent_abbr": "OSA",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            12.1,
+            35.2
+          ],
+          [
+            30.9,
+            45.5
+          ],
+          [
+            30.9,
+            45.5
+          ],
+          [
+            35.2,
+            34.1
+          ],
+          [
+            32.9,
+            12.0
+          ],
+          [
+            36.4,
+            8.7
+          ],
+          [
+            84.8,
+            23.9
+          ]
+        ],
+        "second": 15,
+        "vaep": 0.02,
+        "xt": 0.001
+      },
+      {
+        "ends_in_shot": false,
+        "events": 9,
+        "id": 5016360,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 98,
+        "opponent_abbr": "MLL",
+        "outcome": "turnover",
+        "passes": 6,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 2,
+        "points": [
+          [
+            60.4,
+            18.8
+          ],
+          [
+            64.9,
+            9.0
+          ],
+          [
+            81.9,
+            3.5
+          ],
+          [
+            74.5,
+            15.7
+          ],
+          [
+            81.9,
+            3.9
+          ],
+          [
+            81.7,
+            8.8
+          ],
+          [
+            98.1,
+            12.3
+          ],
+          [
+            100.6,
+            28.8
+          ]
+        ],
+        "second": 29,
+        "vaep": 0.016,
+        "xt": 0.03
+      },
+      {
+        "ends_in_shot": false,
+        "events": 7,
+        "id": 5258048,
+        "is_home": false,
+        "kind": "buildup",
+        "match_id": 16,
+        "matchday": 2,
+        "minute": 82,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            23.0,
+            11.3
+          ],
+          [
+            35.9,
+            18.4
+          ],
+          [
+            34.6,
+            18.0
+          ],
+          [
+            30.0,
+            42.8
+          ],
+          [
+            30.0,
+            42.8
+          ],
+          [
+            28.9,
+            43.1
+          ],
+          [
+            63.5,
+            66.1
+          ],
+          [
+            62.5,
+            66.4
+          ]
+        ],
+        "second": 13,
+        "vaep": 0.016,
+        "xt": 0.006
+      }
+    ],
+    "top_xt": [
+      {
+        "ends_in_shot": true,
+        "events": 3,
+        "id": 4834247,
+        "is_home": true,
+        "kind": "free_kick",
+        "match_id": 4,
+        "matchday": 1,
+        "minute": 72,
+        "opponent_abbr": "ATM",
+        "outcome": "goal",
+        "passes": 1,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            66.8,
+            44.5
+          ],
+          [
+            102.2,
+            32.5
+          ],
+          [
+            100.9,
+            32.0
+          ],
+          [
+            105.0,
+            31.3
+          ]
+        ],
+        "second": 2,
+        "vaep": 0.957,
+        "xt": 0.238
+      },
+      {
+        "ends_in_shot": true,
+        "events": 8,
+        "id": 4904623,
+        "is_home": true,
+        "kind": "buildup",
+        "match_id": 855,
+        "matchday": 22,
+        "minute": 92,
+        "opponent_abbr": "ALA",
+        "outcome": "shot_off_target",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 2,
+        "player_touches": 2,
+        "points": [
+          [
+            19.4,
+            68.0
+          ],
+          [
+            17.2,
+            57.1
+          ],
+          [
+            14.6,
+            36.7
+          ],
+          [
+            27.5,
+            37.9
+          ],
+          [
+            33.2,
+            51.7
+          ],
+          [
+            46.4,
+            58.5
+          ],
+          [
+            68.2,
+            61.9
+          ],
+          [
+            94.8,
+            34.6
+          ],
+          [
+            105.0,
+            26.9
+          ]
+        ],
+        "second": 43,
+        "vaep": 0.051,
+        "xt": 0.1
+      },
+      {
+        "ends_in_shot": true,
+        "events": 3,
+        "id": 5016246,
+        "is_home": false,
+        "kind": "free_kick",
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 92,
+        "opponent_abbr": "MLL",
+        "outcome": "shot_off_target",
+        "passes": 1,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            69.3,
+            28.0
+          ],
+          [
+            95.1,
+            38.1
+          ],
+          [
+            95.9,
+            38.4
+          ],
+          [
+            105.0,
+            22.0
+          ]
+        ],
+        "second": 8,
+        "vaep": 0.045,
+        "xt": 0.088
+      },
+      {
+        "ends_in_shot": false,
+        "events": 5,
+        "id": 4867235,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 580,
+        "matchday": 21,
+        "minute": 96,
+        "opponent_abbr": "VAL",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 2,
+        "player_touch_index": 3,
+        "player_touches": 2,
+        "points": [
+          [
+            51.6,
+            68.0
+          ],
+          [
+            39.7,
+            65.6
+          ],
+          [
+            56.5,
+            62.8
+          ],
+          [
+            89.7,
+            24.5
+          ],
+          [
+            89.7,
+            24.5
+          ],
+          [
+            88.9,
+            32.9
+          ]
+        ],
+        "second": 36,
+        "vaep": 0.014,
+        "xt": 0.042
+      },
+      {
+        "ends_in_shot": false,
+        "events": 5,
+        "id": 5256921,
+        "is_home": false,
+        "kind": "direct_long",
+        "match_id": 16,
+        "matchday": 2,
+        "minute": 25,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 3,
+        "period": 1,
+        "player_touch_index": 0,
+        "player_touches": 1,
+        "points": [
+          [
+            31.6,
+            23.3
+          ],
+          [
+            47.1,
+            29.4
+          ],
+          [
+            83.9,
+            45.2
+          ],
+          [
+            99.9,
+            57.1
+          ],
+          [
+            101.7,
+            56.2
+          ],
+          [
+            94.3,
+            39.6
+          ]
+        ],
+        "second": 25,
+        "vaep": 0.024,
+        "xt": 0.035
+      },
+      {
+        "ends_in_shot": false,
+        "events": 7,
+        "id": 4867032,
+        "is_home": false,
+        "kind": "direct_long",
+        "match_id": 580,
+        "matchday": 21,
+        "minute": 84,
+        "opponent_abbr": "VAL",
+        "outcome": "turnover",
+        "passes": 2,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 2,
+        "points": [
+          [
+            23.7,
+            12.2
+          ],
+          [
+            19.9,
+            26.6
+          ],
+          [
+            19.9,
+            26.6
+          ],
+          [
+            67.1,
+            12.4
+          ],
+          [
+            72.4,
+            12.6
+          ],
+          [
+            72.4,
+            12.6
+          ],
+          [
+            99.1,
+            13.1
+          ]
+        ],
+        "second": 21,
+        "vaep": 0.065,
+        "xt": 0.032
+      },
+      {
+        "ends_in_shot": false,
+        "events": 9,
+        "id": 5016360,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 909,
+        "matchday": 28,
+        "minute": 98,
+        "opponent_abbr": "MLL",
+        "outcome": "turnover",
+        "passes": 6,
+        "period": 2,
+        "player_touch_index": 0,
+        "player_touches": 2,
+        "points": [
+          [
+            60.4,
+            18.8
+          ],
+          [
+            64.9,
+            9.0
+          ],
+          [
+            81.9,
+            3.5
+          ],
+          [
+            74.5,
+            15.7
+          ],
+          [
+            81.9,
+            3.9
+          ],
+          [
+            81.7,
+            8.8
+          ],
+          [
+            98.1,
+            12.3
+          ],
+          [
+            100.6,
+            28.8
+          ]
+        ],
+        "second": 29,
+        "vaep": 0.016,
+        "xt": 0.03
+      },
+      {
+        "ends_in_shot": false,
+        "events": 9,
+        "id": 5047712,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 924,
+        "matchday": 29,
+        "minute": 85,
+        "opponent_abbr": "GET",
+        "outcome": "corner_won",
+        "passes": 5,
+        "period": 2,
+        "player_touch_index": 2,
+        "player_touches": 2,
+        "points": [
+          [
+            32.2,
+            44.9
+          ],
+          [
+            40.8,
+            51.2
+          ],
+          [
+            36.8,
+            27.9
+          ],
+          [
+            35.5,
+            25.8
+          ],
+          [
+            41.8,
+            10.2
+          ],
+          [
+            48.1,
+            17.4
+          ],
+          [
+            49.2,
+            16.7
+          ],
+          [
+            95.8,
+            14.9
+          ],
+          [
+            95.4,
+            15.9
+          ]
+        ],
+        "second": 14,
+        "vaep": 0.01,
+        "xt": 0.03
+      },
+      {
+        "ends_in_shot": false,
+        "events": 25,
+        "id": 5256737,
+        "is_home": false,
+        "kind": "positional",
+        "match_id": 16,
+        "matchday": 2,
+        "minute": 18,
+        "opponent_abbr": "RSO",
+        "outcome": "turnover",
+        "passes": 12,
+        "period": 1,
+        "player_touch_index": 2,
+        "player_touches": 1,
+        "points": [
+          [
+            60.0,
+            63.9
+          ],
+          [
+            57.0,
+            43.7
+          ],
+          [
+            42.2,
+            35.5
+          ],
+          [
+            43.2,
+            51.3
+          ],
+          [
+            48.7,
+            44.5
+          ],
+          [
+            63.4,
+            65.1
+          ],
+          [
+            81.7,
+            1.6
+          ],
+          [
+            96.3,
+            17.0
+          ],
+          [
+            91.2,
+            30.1
+          ]
+        ],
+        "second": 47,
+        "vaep": 0.013,
+        "xt": 0.026
+      },
+      {
+        "ends_in_shot": false,
+        "events": 27,
+        "id": 4681308,
+        "is_home": true,
+        "kind": "positional",
+        "match_id": 116,
+        "matchday": 12,
+        "minute": 86,
+        "opponent_abbr": "VIL",
+        "outcome": "turnover",
+        "passes": 16,
+        "period": 2,
+        "player_touch_index": 1,
+        "player_touches": 4,
+        "points": [
+          [
+            70.1,
+            65.1
+          ],
+          [
+            47.7,
+            30.9
+          ],
+          [
+            56.9,
+            18.0
+          ],
+          [
+            18.6,
+            36.7
+          ],
+          [
+            25.5,
+            55.1
+          ],
+          [
+            8.2,
+            33.5
+          ],
+          [
+            59.1,
+            4.0
+          ],
+          [
+            75.3,
+            64.5
+          ],
+          [
+            101.4,
+            52.4
+          ]
+        ],
+        "second": 41,
+        "vaep": 0.01,
+        "xt": 0.025
+      }
+    ]
+  },
+  "team": {
+    "abbr": "ESP",
+    "short_name": "Espanyol",
+    "slug": "espanyol",
+    "team_id": 8
+  }
+}
