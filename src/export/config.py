@@ -65,6 +65,179 @@ def min_minutes_for(team_matches: int) -> float:
     return MIN_MINUTES_SHARE * team_matches * MINUTES_PER_MATCH
 
 
+# A role with fewer eligible players than this is ranked inside a larger one:
+# RB + LB -> FB, AM -> MID. Same number as build_player_percentiles.sql.
+PEER_POOL_MIN = 20
+
+
+# ---------------------------------------------------------------------------
+# Player percentile spine: screen 03 block 4 (§9, README-PLAYER §4)
+# ---------------------------------------------------------------------------
+#
+# Four cards of six metrics per ROLE (player_season_stats.role_group: the
+# formation-slot group, with high-playing midfielders split out as AM). The
+# keys are columns on gold.player_season_stats.
+#
+# WHICH rows get a bar is not decided here: a metric is ranked for a role iff
+# gold.percentile_metrics lists it for that role, and its direction and
+# attempt floor come from the same row. So Postgres and the site agree on
+# what is ranked; they differ only in the minutes gate (§3.6). A row that is
+# not ranked ships its value with `percentile: null` and renders as "—".
+
+@dataclass(frozen=True)
+class SpineMetric:
+    key: str                    # column on gold.player_season_stats
+    # "pct" for the 0-1 rates gold stores (shipped x100); "raw" otherwise.
+    scale: str = "raw"
+    decimals: int = 2
+    # Shown as "value / out_of" without a bar (penalties saved of faced).
+    out_of: str | None = None
+
+
+def _m(key: str, scale: str = "raw", decimals: int | None = None,
+       out_of: str | None = None) -> SpineMetric:
+    if decimals is None:
+        decimals = 1 if scale == "pct" else 2
+    return SpineMetric(key, scale, decimals, out_of)
+
+
+# (card key, metrics). Card keys are translated in web/lib/labels.ts.
+PLAYER_SPINE: dict[str, list[tuple[str, list[SpineMetric]]]] = {
+    "GK": [
+        ("goalkeeping", [_m("save_pct", "pct"), _m("goals_prevented_per_90"),
+                         _m("saves_per_90"), _m("goals_conceded_per_90"),
+                         _m("clean_sheet_rate", "pct"), _m("xg_faced_per_90")]),
+        ("area",        [_m("claims_per_90"), _m("claim_rate", "pct"),
+                         _m("punches_per_90"), _m("keeper_sweeper_actions_per_90"),
+                         _m("sweeper_avg_x", decimals=1),
+                         _m("padj_clearances_per_90")]),
+        ("distribution", [_m("passes_per_90", decimals=1),
+                          _m("gk_pass_completion_rate", "pct"),
+                          _m("long_pass_completion_rate", "pct"),
+                          _m("gk_long_ball_pct", "pct"),
+                          _m("progressive_passes_per_90"),
+                          _m("passes_received_per_90", decimals=1)]),
+        ("value",       [_m("vaep_per_90", decimals=3),
+                         _m("vaep_defensive_per_90", decimals=3),
+                         _m("vaep_offensive_per_90", decimals=3),
+                         _m("errors_per_90"),
+                         _m("penalties_saved", decimals=0, out_of="penalties_faced")]),
+    ],
+    "CB": [
+        ("defending",   [_m("padj_interceptions_per_90"), _m("padj_clearances_per_90"),
+                         _m("shots_blocked_per_90"), _m("padj_blocked_passes_per_90"),
+                         _m("padj_ball_recoveries_per_90"), _m("errors_per_90")]),
+        ("duels",       [_m("padj_tackles_per_90"), _m("ground_duel_win_rate", "pct"),
+                         _m("dribbled_past_per_90"), _m("aerials_won_per_90"),
+                         _m("aerial_win_rate", "pct"), _m("fouls_committed_per_90")]),
+        ("passing",     [_m("passes_per_90", decimals=1),
+                         _m("pass_completion_rate", "pct"),
+                         _m("long_balls_per_90"), _m("long_ball_accuracy", "pct"),
+                         _m("progressive_passes_per_90"),
+                         _m("passes_into_final_third_per_90")]),
+        ("impact",      [_m("vaep_per_90", decimals=3),
+                         _m("vaep_defensive_per_90", decimals=3),
+                         _m("vaep_offensive_per_90", decimals=3),
+                         _m("progressive_carries_per_90"), _m("headed_shots_per_90"),
+                         _m("aerials_won_att_third_per_90")]),
+    ],
+    "FB": [
+        ("defending",   [_m("padj_interceptions_per_90"), _m("padj_ball_recoveries_per_90"),
+                         _m("padj_clearances_per_90"), _m("shots_blocked_per_90"),
+                         _m("def_actions_final_third_per_90"),
+                         _m("vaep_defensive_per_90", decimals=3)]),
+        ("duels",       [_m("padj_tackles_per_90"), _m("ground_duel_win_rate", "pct"),
+                         _m("dribbled_past_per_90"), _m("aerials_won_per_90"),
+                         _m("aerial_win_rate", "pct"), _m("fouls_committed_per_90")]),
+        ("progression", [_m("pass_completion_rate", "pct"),
+                         _m("progressive_passes_per_90"), _m("progressive_carries_per_90"),
+                         _m("progressive_carries_into_final_third_per_90"),
+                         _m("receptions_final_third_per_90"),
+                         _m("take_on_success_rate", "pct")]),
+        ("creation",    [_m("crosses_per_90"), _m("cross_completion_rate", "pct"),
+                         _m("passes_into_penalty_area_per_90"), _m("xa_per_90"),
+                         _m("shot_creating_actions_per_90"),
+                         _m("vaep_per_90", decimals=3)]),
+    ],
+    "MID": [
+        ("defending",   [_m("padj_interceptions_per_90"), _m("padj_ball_recoveries_per_90"),
+                         _m("padj_blocked_passes_per_90"),
+                         _m("def_actions_final_third_per_90"),
+                         _m("vaep_defensive_per_90", decimals=3), _m("errors_per_90")]),
+        ("duels",       [_m("padj_tackles_per_90"), _m("ground_duel_win_rate", "pct"),
+                         _m("dribbled_past_per_90"), _m("aerials_won_per_90"),
+                         _m("aerial_win_rate", "pct"), _m("fouls_committed_per_90")]),
+        ("passing_progression",
+                        [_m("passes_per_90", decimals=1),
+                         _m("pass_completion_rate", "pct"),
+                         _m("progressive_passes_per_90"),
+                         _m("passes_into_final_third_per_90"),
+                         _m("progressive_carries_per_90"), _m("xt_per_90", decimals=3)]),
+        ("creation",    [_m("key_passes_per_90"), _m("xa_per_90"),
+                         _m("through_balls_per_90"), _m("shot_creating_actions_per_90"),
+                         _m("npxg_per_90"), _m("vaep_per_90", decimals=3)]),
+    ],
+    "AM": [
+        ("pressing",    [_m("padj_ball_recoveries_per_90"),
+                         _m("def_actions_final_third_per_90"),
+                         _m("padj_tackles_per_90"), _m("ground_duel_win_rate", "pct"),
+                         _m("padj_interceptions_per_90"),
+                         _m("vaep_defensive_per_90", decimals=3)]),
+        ("passing",     [_m("passes_per_90", decimals=1),
+                         _m("pass_completion_rate", "pct"),
+                         _m("progressive_passes_per_90"),
+                         _m("passes_into_final_third_per_90"),
+                         _m("passes_into_penalty_area_per_90"),
+                         _m("through_balls_per_90")]),
+        ("carrying",    [_m("progressive_carries_into_final_third_per_90"),
+                         _m("take_ons_per_90"), _m("take_on_success_rate", "pct"),
+                         _m("receptions_final_third_per_90"),
+                         _m("xt_per_90", decimals=3), _m("dispossessed_per_90")]),
+        ("creation",    [_m("key_passes_per_90"), _m("xa_per_90"),
+                         _m("shot_creating_actions_per_90"), _m("npxg_per_90"),
+                         _m("goals_non_penalty_per_90"), _m("vaep_per_90", decimals=3)]),
+    ],
+    "W": [
+        ("pressing",    [_m("padj_ball_recoveries_per_90"),
+                         _m("def_actions_final_third_per_90"),
+                         _m("padj_tackles_per_90"), _m("ground_duel_win_rate", "pct"),
+                         _m("padj_interceptions_per_90"),
+                         _m("vaep_defensive_per_90", decimals=3)]),
+        ("carrying",    [_m("take_ons_per_90"), _m("take_on_success_rate", "pct"),
+                         _m("progressive_carries_into_final_third_per_90"),
+                         _m("carries_into_penalty_area_per_90"),
+                         _m("progressive_receptions_per_90"), _m("dispossessed_per_90")]),
+        ("creation",    [_m("crosses_per_90"), _m("cross_completion_rate", "pct"),
+                         _m("passes_into_penalty_area_per_90"), _m("key_passes_per_90"),
+                         _m("xa_per_90"), _m("shot_creating_actions_per_90")]),
+        ("finishing",   [_m("npxg_per_90"), _m("goals_non_penalty_per_90"),
+                         _m("shots_per_90"), _m("touches_in_box_per_90"),
+                         _m("npxg_per_shot", decimals=3), _m("vaep_per_90", decimals=3)]),
+    ],
+    "ST": [
+        ("pressing",    [_m("padj_ball_recoveries_per_90"),
+                         _m("def_actions_final_third_per_90"),
+                         _m("aerials_won_per_90"), _m("aerial_win_rate", "pct"),
+                         _m("aerials_won_att_third_per_90"), _m("fouls_won_per_90")]),
+        ("link_play",   [_m("pass_completion_rate", "pct"),
+                         _m("passes_received_per_90", decimals=1),
+                         _m("key_passes_per_90"), _m("xa_per_90"),
+                         _m("shot_creating_actions_per_90"),
+                         _m("vaep_per_90", decimals=3)]),
+        ("movement",    [_m("receptions_in_box_per_90"),
+                         _m("progressive_receptions_per_90"),
+                         _m("touches_in_box_per_90"), _m("take_on_success_rate", "pct"),
+                         _m("progressive_carries_per_90"), _m("dispossessed_per_90")]),
+        ("finishing",   [_m("npxg_per_90"), _m("goals_non_penalty_per_90"),
+                         _m("shots_per_90"), _m("npxg_per_shot", decimals=3),
+                         _m("xg_overperformance_per_90"), _m("headed_shots_per_90")]),
+    ],
+}
+# RB and LB share the full-back sheet; the peer set is still per side.
+PLAYER_SPINE["RB"] = PLAYER_SPINE["FB"]
+PLAYER_SPINE["LB"] = PLAYER_SPINE["FB"]
+
+
 # ---------------------------------------------------------------------------
 # Team profile: the 24 metrics of screen 01 block 5 (§5.1)
 # ---------------------------------------------------------------------------

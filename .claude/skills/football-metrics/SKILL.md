@@ -91,6 +91,8 @@ match rows. Ratios are STORED GENERATED columns over the summed inputs.
 |---|---|
 | `goals`, `goals_non_penalty` | `Goal` events; non-penalty excludes `shot_play_pattern='penalty'` |
 | `shots`, `shots_on_target`, `shots_in_box` | §2 sets; in box by **shot origin** |
+| `headed_shots` | Shots with `spadl_bodypart_id = 1` (`headed_goals` is only the goals) |
+| `npxg_per_shot` | `npxg / (shots − penalties_taken)`. Use it over `xg_per_shot`, which counts each penalty at 0.79 |
 | `xg`, `npxg` | Σ `silver.events.xg`; npxg drops penalties (fixed 0.79) |
 | `xg_overperformance` | `goals_non_penalty − npxg`. Not `goals − xg`, which flatters penalty takers. |
 | `big_chances` | Opta Q214 on the shot. `big_chances_missed` = the `Chance missed` event. |
@@ -126,6 +128,8 @@ match rows. Ratios are STORED GENERATED columns over the summed inputs.
 | `carries`, `carry_distance_total` | Synthesised carries; distance = Σ `gold.action_length` |
 | `progressive_carries` | `gold.is_progressive` on a carry |
 | `carries_into_final_third` / `_penalty_area` | Start outside, end inside |
+| `progressive_carries_into_final_third` | Progressive **and** `x < 70 → end_x ≥ 70`. Drops the 7 m nudges over the line (median 23 m kept) |
+| `receptions_final_third` / `_in_box`, `progressive_receptions` | From `gold.pass_receptions` by receiver: pass end `≥ 70` / in the box / progressive pass |
 | `take_ons`, `take_ons_won` | `Take On`; won = success |
 | `dispossessed` | `Dispossessed` event (lower is better) |
 | `touches`, `touches_in_box`, `touches_final_third` | §2 touch set, by location |
@@ -140,7 +144,10 @@ match rows. Ratios are STORED GENERATED columns over the summed inputs.
 | `interceptions`, `clearances`, `blocked_passes`, `ball_recoveries` | One event type each |
 | `defensive_actions` | Broad set (§2); `def_actions_final_third` at `x ≥ 70` |
 | `aerials_won` / `_lost`, `aerial_win_rate` | `Aerial` by outcome |
+| `ground_duels`, `ground_duel_win_rate` | *Duelos defensivos en el suelo*: won = `Tackle` (either outcome), lost = `Attempted Tackle` + `Challenge`. `tackles / (tackles + tackles_missed + dribbled_past)`. Opta has no 50/50. The won volume is `padj_tackles`. |
 | `duels` | **Not a player column.** Team `duels_won` = `tackles_won + aerials_won` (WEB_DATA §14 #5). Don't treat it as independent evidence next to those two. |
+| `shots_blocked` | `Save` + Q94 by an outfield player (keepers' Saves never carry Q94) |
+| `aerial_duels` | `aerials_won + aerials_lost`, the floor for `aerial_win_rate` |
 | `fouls_committed` / `_won`, `errors`, `offsides_provoked` | As named. `caught_offside` = `Offside Pass` (Opta has no caught-offside event). |
 
 ### Goalkeeping (NULL for outfield players)
@@ -202,9 +209,16 @@ sweeper actions, `gk_long_ball_pct`.
   `gold.formation_slot_positions`: `GK, CB, RB, LB, MID, W, ST`. Not from
   `match_lineups.position` (substitutes are `SUB`), and not from
   `players.position_raw`. A season's primary group is the minutes-weighted one.
-- **Which metrics are ranked for which group** lives in the seed of
-  `gold.percentile_metrics` (`sql/ddl/gold_players.sql`, 36 metrics). Lower is
-  better for dispossessed, dribbled_past, fouls, errors and fouls_per_tackle.
+- **Role** (`player_season_stats.role_group`) is the percentile peer key: the
+  primary group, except a `MID` with **≥ 30% of touches in the final third**
+  is `AM` (GOLD_LAYER §4.6.2a). 27 AMs / 70 MIDs in 2025/26. The slot alone
+  can't see it: a 4-3-3's advanced 8 is a CM.
+- **Which metrics are ranked for which role** lives in the seed of
+  `gold.percentile_metrics` (`sql/ddl/gold_players.sql`, 61 metrics), and the
+  seed **is** the screen-03 spine (README-PLAYER §4; layout in
+  `src/export/config.py` `PLAYER_SPINE`). Lower is better for dispossessed,
+  dribbled_past, fouls_committed, errors and goals_conceded. Rates carry an
+  attempt floor (`attempts_column`, `min_attempts`: 10, 20 for pass %).
   A typo in a metric name yields NULL, not an error (gate G12).
 - **Two eligibility gates. Know which one you're showing:**
   - gold `player_season_percentiles`: a flat **450 min**, empty for roughly
@@ -212,8 +226,8 @@ sweeper actions, `gk_long_ball_pct`.
   - site export: **25% of the club's available minutes**
     (`MIN_MINUTES_SHARE` in `src/export/config.py`). The site's numbers are
     the export's.
-  - RB and LB are pooled into `FB` only when either has fewer than 20 eligible
-    players. Always ship `peer_n`.
+  - RB and LB are pooled into `FB`, and AM into `MID`, only when the role has
+    fewer than 20 eligible players. Always ship `peer_n`.
 
 ## 8. What Opta does not give us, and known brief conflicts
 
@@ -228,9 +242,10 @@ sweeper actions, `gk_long_ball_pct`.
 - **Off-ball runs, tracking data, defensive line from tracking.**
 
 **`README-PLAYER.md` (screen 03) vs the repo.** The brief was rewritten as v2 on
-10 Oct 2026 with the resolutions below. The six it marks **(proposed)** in its
-"Open decisions" section still need the user's OK. The table records what the
-original mock said.
+10 Oct 2026 with the resolutions below. The percentile spine (open decision 4)
+was settled with the user on 15 Oct 2026 (per-role cards, README-PLAYER §4);
+the other five it marks **(proposed)** still need the user's OK. The table
+records what the original mock said.
 
 | Brief says | Repo has | Suggested resolution |
 |---|---|---|
@@ -238,7 +253,8 @@ original mock said.
 | Carry "≥5 m under control" | Carries ≥ 1 m; progressive carries use the 25% rule | Map shows progressive carries or all carries; label says which |
 | Touch heat on a 12×8 grid | Player heatmap uses the 30 zones (WEB_DATA §9); 12×8 is the xT grid | 30 zones (`ZoneHeatmap`) |
 | Defending percentile: **Pressures** | Not in Opta | Swap for `padj_ball_recoveries_per_90` or `def_actions_final_third` |
-| Percentile groups "Forwards / Midfielders / Defenders", 900' floor | `GK CB RB LB MID W ST`, 25% export gate | Use the repo groups; heading names the real group |
+| Duels / 50/50 duels | No 50/50 event | `ground_duel_win_rate` (§3 Defending) |
+| Percentile groups "Forwards / Midfielders / Defenders", 900' floor | Roles `GK CB RB LB MID AM W ST`, 25% export gate | Use the repo roles; heading names the peer group |
 | Tables `gold.player_events`, `player_touch_grid`, `player_season_metrics`, `player_profile` | Don't exist. The site reads `players/{id}.json` from `src/export` | Extend the export contract (WEB_DATA §9), not gold |
 | Bio: age, born, height, weight, foot, nationality, contract, photo | `silver.players` has `date_of_birth` and `height_cm` (both hand-filled, may be NULL), `nationality`, `preferred_foot` (derived). No weight, contract or photo. | Ship what exists. Weight, contract and photo are hand-authored content or omitted. |
 

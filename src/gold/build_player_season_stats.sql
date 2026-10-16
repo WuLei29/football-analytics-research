@@ -232,7 +232,17 @@ agg AS (
         COALESCE(sum(padj_clearances), 0)::real        AS padj_clearances,
         COALESCE(sum(padj_ball_recoveries), 0)::real   AS padj_ball_recoveries,
         COALESCE(sum(padj_blocked_passes), 0)::real    AS padj_blocked_passes,
-        COALESCE(sum(padj_defensive_actions), 0)::real AS padj_defensive_actions
+        COALESCE(sum(padj_defensive_actions), 0)::real AS padj_defensive_actions,
+
+        -- ── §4.6.17 (15 Oct 2026 amendment) ────────────────────────────────
+        count(*) FILTER (WHERE subbed_off)::smallint             AS matches_subbed_off,
+        sum(shots_blocked)::smallint                             AS shots_blocked,
+        sum(headed_shots)::smallint                              AS headed_shots,
+        sum(progressive_carries_into_final_third)::smallint      AS progressive_carries_into_final_third,
+        sum(passes_long_completed)::int                          AS passes_long_completed,
+        sum(receptions_final_third)::int                         AS receptions_final_third,
+        sum(receptions_in_box)::smallint                         AS receptions_in_box,
+        sum(progressive_receptions)::int                         AS progressive_receptions
     FROM gold.player_match_stats
     WHERE competition_season_id = %(cs_id)s
     GROUP BY competition_season_id, player_id, team_id
@@ -278,7 +288,10 @@ INSERT INTO gold.player_season_stats (
     set_piece_goals, set_piece_xg,
     padj_tackles, padj_interceptions, padj_clearances, padj_ball_recoveries,
     padj_blocked_passes, padj_defensive_actions,
-    team_season_goals
+    team_season_goals,
+    matches_subbed_off, shots_blocked, headed_shots,
+    progressive_carries_into_final_third, passes_long_completed,
+    receptions_final_third, receptions_in_box, progressive_receptions
 )
 SELECT
     a.competition_season_id, a.player_id, a.team_id,
@@ -343,7 +356,11 @@ SELECT
     a.padj_tackles, a.padj_interceptions, a.padj_clearances,
     a.padj_ball_recoveries, a.padj_blocked_passes, a.padj_defensive_actions,
 
-    tc.team_season_goals
+    tc.team_season_goals,
+
+    a.matches_subbed_off, a.shots_blocked, a.headed_shots,
+    a.progressive_carries_into_final_third, a.passes_long_completed,
+    a.receptions_final_third, a.receptions_in_box, a.progressive_receptions
 FROM agg a
 JOIN silver.players p               ON p.player_id = a.player_id
 JOIN silver.teams   t               ON t.team_id   = a.team_id

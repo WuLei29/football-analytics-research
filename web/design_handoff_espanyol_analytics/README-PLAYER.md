@@ -182,9 +182,12 @@ a real file.
 colour thresholds) with a player metric source.
 
 - **Section head**: `flex; baseline; space-between; margin-bottom:12px`. Title Outfit 700 19px
-  `-.015em`: `Percentil vs LaLiga · {grupo}`. The group is the player's **primary position group**,
-  one of `Porteros, Centrales, Laterales derechos, Laterales izquierdos (or Laterales when pooled),
-  Centrocampistas, Extremos, Delanteros`. Caption DM Mono 9px `.12em` uppercase `--faint`:
+  `-.015em`: `Percentil vs LaLiga · {grupo}`. The group is the player's **role**
+  (`role_group`: the formation-slot group, with midfielders who take ≥ 30% of their touches in the
+  final third split out as mediapuntas, GOLD_LAYER §4.6.2a), one of `Porteros, Centrales, Laterales
+  derechos, Laterales izquierdos (or Laterales when pooled), Centrocampistas, Mediapuntas (or
+  Centrocampistas when pooled), Extremos, Delanteros`. The heading names the **peer group**, so a
+  pooled mediapunta reads "vs centrocampistas". Caption DM Mono 9px `.12em` uppercase `--faint`:
   `Por 90 · vs {peer_n} {grupo} con ≥ {min_minutes}' · barra = percentil, más es mejor`.
   If `is_utility` (primary position < 60% of minutes), add a mono chip
   `POLIVALENTE · {pct}% {posición}`. A percentile against centre backs means less when half the
@@ -208,37 +211,107 @@ colour thresholds) with a player metric source.
 - `peer_n` always ships. Below the gate, the block renders the "todavía pocos minutos" state rather
   than bars.
 
-**The four cards** (outfield; proposed mapping of the mock's 24 metrics onto real columns). Values per
-90 unless marked %. **Bold** = an existing gold column; the rest are per-90s the export computes from
-gold season totals.
+**The cards, per role** (decided 15 Oct 2026, from the user's per-position sheet, reviewed metric by
+metric). Volumes are per 90; defensive volumes are **possession-adjusted** (`padj_*`: without it, the
+best defenders are whoever plays for the side that never has the ball). ↓ = lower is better (the
+percentile is already flipped). ○ = value shown, **no bar** (`percentile: null`). Every column is on
+`gold.player_season_stats`; the Spanish label goes in `labels.ts`.
 
-- **Ataque**: **Goles** (`goals_per_90`), **Tiros** (`shots_per_90`), **npxG** (`npxg_per_90`; the
-  mock said xG, and penalties would flatter takers), Ocasiones claras (`big_chances`, Q214), Toques en
-  el área (`touches_in_box`), **Conversión %** (`shot_conversion_rate`).
-- **Creación**: Asistencias (`assists`), **xA** (`xa_per_90`), **Pases clave** (`key_passes_per_90`),
-  Pases al área (`passes_into_penalty_area`), **Pases progresivos** (`progressive_passes_per_90`),
-  **Pases %** (`pass_completion_rate`).
-- **Progresión**: **xT** (`xt_per_90`), Conducciones al último tercio (`carries_into_final_third`),
-  **Conducciones progresivas** (`progressive_carries_per_90`), Regates ganados (`take_ons_won`),
-  **Regates %** (`take_on_success_rate`), Distancia conducida (`carry_distance_total`, m).
-- **Defensa**: **Recuperaciones** (`padj_ball_recoveries_per_90`), **Entradas**
-  (`padj_tackles_per_90`), **Intercepciones** (`padj_interceptions_per_90`), Acciones def. en último
-  tercio (`def_actions_final_third`; replaces *Pressures*, which Opta doesn't record), **Entradas
-  ganadas %** (`tackle_success_rate`; replaces *Duels won %*, since there's no player duel column),
-  **Duelos aéreos %** (`aerial_win_rate`).
+*Duelos en el suelo* are the defender's ground contests: won = Entrada (`Tackle`, either outcome), lost
+= Entrada fallida (`Attempted Tackle`) + Regateado (`Challenge`). Opta records no 50/50. The won count
+is `padj_tackles`, so "Entradas" is not shown separately.
 
-Defensive volumes use the **possession-adjusted** (`padj_*`) form. Without it, the best defenders in
-the league are whoever plays for the side that never has the ball.
+**Porteros (GK)**
 
-**Goalkeepers** get one card, **Portería**: `save_pct`, `goals_prevented`, `gk_pass_completion_rate`,
-`gk_long_ball_pct`, `claims_successful` / 90, `keeper_sweeper_actions` / 90. Then two cards,
-Distribución and Valor, as the data allows (proposed).
+| Portería | Área y salidas | Distribución | Valor |
+|---|---|---|---|
+| Paradas % `save_pct` | Blocajes /90 `claims_per_90` | Pases /90 ○ `passes_per_90` | VAEP /90 `vaep_per_90` |
+| Goles evitados /90 `goals_prevented_per_90` | Blocajes % `claim_rate` | Pases % `gk_pass_completion_rate` | VAEP defensivo /90 `vaep_defensive_per_90` |
+| Paradas /90 `saves_per_90` | Despejes de puños /90 `punches_per_90` | Pases largos (≥30 m) % `long_pass_completion_rate` | VAEP ofensivo /90 `vaep_offensive_per_90` |
+| Goles encajados /90 ↓ `goals_conceded_per_90` | Salidas fuera del área /90 `keeper_sweeper_actions_per_90` | Pases en largo, cuota ○ `gk_long_ball_pct` | Errores /90 ↓ `errors_per_90` |
+| Porterías a cero % `clean_sheet_rate` | Altura media de salida (m) `sweeper_avg_x` | Pases progresivos /90 `progressive_passes_per_90` | Penaltis parados ○ `penalties_saved` / `penalties_faced` |
+| xG en contra /90 ○ `xg_faced_per_90` | Despejes /90 `padj_clearances_per_90` | Pases recibidos /90 ○ `passes_received_per_90` | |
 
-The spine (key, card, per-90 or rate, direction, the groups it's ranked for) lives in
-`src/export/config.py` as `PLAYER_SPINE`. For metrics that `gold.percentile_metrics` already ranks,
-it uses the same groups and direction; the new ones get their groups there (proposed: add them to
-`gold.percentile_metrics` as well, so Postgres and the site agree). Rates render with one decimal and
-`%`; per-90 volumes with two decimals (`lib/format.ts`).
+**Centrales (CB)**
+
+| Defensa | Duelos | Pase | Impacto |
+|---|---|---|---|
+| Intercepciones `padj_interceptions_per_90` | Duelos en el suelo ganados `padj_tackles_per_90` | Pases /90 `passes_per_90` | VAEP /90 `vaep_per_90` |
+| Despejes `padj_clearances_per_90` | Duelos en el suelo % `ground_duel_win_rate` | Pases % `pass_completion_rate` | VAEP defensivo /90 `vaep_defensive_per_90` |
+| Tiros bloqueados /90 `shots_blocked_per_90` | Regateado /90 ↓ `dribbled_past_per_90` | Balones largos /90 `long_balls_per_90` | VAEP ofensivo /90 `vaep_offensive_per_90` |
+| Pases bloqueados `padj_blocked_passes_per_90` | Duelos aéreos ganados /90 `aerials_won_per_90` | Balones largos % `long_ball_accuracy` | Conducciones progresivas /90 `progressive_carries_per_90` |
+| Recuperaciones `padj_ball_recoveries_per_90` | Duelos aéreos % `aerial_win_rate` | Pases progresivos /90 `progressive_passes_per_90` | Remates de cabeza /90 `headed_shots_per_90` |
+| Errores /90 ↓ `errors_per_90` | Faltas cometidas /90 ↓ `fouls_committed_per_90` | Pases al último tercio /90 `passes_into_final_third_per_90` | Aéreos ganados en campo rival /90 `aerials_won_att_third_per_90` |
+
+**Laterales (RB, LB)**
+
+| Defensa | Duelos | Progresión | Creación |
+|---|---|---|---|
+| Intercepciones `padj_interceptions_per_90` | Duelos en el suelo ganados `padj_tackles_per_90` | Pases % `pass_completion_rate` | Centros /90 `crosses_per_90` |
+| Recuperaciones `padj_ball_recoveries_per_90` | Duelos en el suelo % `ground_duel_win_rate` | Pases progresivos /90 `progressive_passes_per_90` | Centros % `cross_completion_rate` |
+| Despejes `padj_clearances_per_90` | Regateado /90 ↓ `dribbled_past_per_90` | Conducciones progresivas /90 `progressive_carries_per_90` | Pases al área /90 `passes_into_penalty_area_per_90` |
+| Tiros bloqueados /90 `shots_blocked_per_90` | Duelos aéreos ganados /90 `aerials_won_per_90` | Cond. prog. al último tercio /90 `progressive_carries_into_final_third_per_90` | xA /90 `xa_per_90` |
+| Acciones def. último tercio /90 `def_actions_final_third_per_90` | Duelos aéreos % `aerial_win_rate` | Recepciones último tercio /90 `receptions_final_third_per_90` | Acciones de creación de tiro /90 `shot_creating_actions_per_90` |
+| VAEP defensivo /90 `vaep_defensive_per_90` | Faltas cometidas /90 ↓ `fouls_committed_per_90` | Regates % `take_on_success_rate` | VAEP /90 `vaep_per_90` |
+
+**Centrocampistas (MID)**
+
+| Defensa | Duelos | Pase y progresión | Creación y llegada |
+|---|---|---|---|
+| Intercepciones `padj_interceptions_per_90` | Duelos en el suelo ganados `padj_tackles_per_90` | Pases /90 `passes_per_90` | Pases clave /90 `key_passes_per_90` |
+| Recuperaciones `padj_ball_recoveries_per_90` | Duelos en el suelo % `ground_duel_win_rate` | Pases % `pass_completion_rate` | xA /90 `xa_per_90` |
+| Pases bloqueados `padj_blocked_passes_per_90` | Regateado /90 ↓ `dribbled_past_per_90` | Pases progresivos /90 `progressive_passes_per_90` | Pases filtrados /90 `through_balls_per_90` |
+| Acciones def. último tercio /90 `def_actions_final_third_per_90` | Duelos aéreos ganados /90 `aerials_won_per_90` | Pases al último tercio /90 `passes_into_final_third_per_90` | Acciones de creación de tiro /90 `shot_creating_actions_per_90` |
+| VAEP defensivo /90 `vaep_defensive_per_90` | Duelos aéreos % `aerial_win_rate` | Conducciones progresivas /90 `progressive_carries_per_90` | npxG /90 `npxg_per_90` |
+| Errores /90 ↓ `errors_per_90` | Faltas cometidas /90 ↓ `fouls_committed_per_90` | xT /90 `xt_per_90` | VAEP /90 `vaep_per_90` |
+
+**Mediapuntas (AM role)**
+
+| Presión | Pase | Conducción y regate | Creación y gol |
+|---|---|---|---|
+| Recuperaciones `padj_ball_recoveries_per_90` | Pases /90 `passes_per_90` | Cond. prog. al último tercio /90 `progressive_carries_into_final_third_per_90` | Pases clave /90 `key_passes_per_90` |
+| Acciones def. último tercio /90 `def_actions_final_third_per_90` | Pases % `pass_completion_rate` | Regates /90 `take_ons_per_90` | xA /90 `xa_per_90` |
+| Duelos en el suelo ganados `padj_tackles_per_90` | Pases progresivos /90 `progressive_passes_per_90` | Regates % `take_on_success_rate` | Acciones de creación de tiro /90 `shot_creating_actions_per_90` |
+| Duelos en el suelo % `ground_duel_win_rate` | Pases al último tercio /90 `passes_into_final_third_per_90` | Recepciones último tercio /90 `receptions_final_third_per_90` | npxG /90 `npxg_per_90` |
+| Intercepciones `padj_interceptions_per_90` | Pases al área /90 `passes_into_penalty_area_per_90` | xT /90 `xt_per_90` | Goles sin penalti /90 `goals_non_penalty_per_90` |
+| VAEP defensivo /90 `vaep_defensive_per_90` | Pases filtrados /90 `through_balls_per_90` | Pérdidas /90 ↓ `dispossessed_per_90` | VAEP /90 `vaep_per_90` |
+
+**Extremos (W)**
+
+| Presión | Regate y conducción | Creación | Finalización |
+|---|---|---|---|
+| Recuperaciones `padj_ball_recoveries_per_90` | Regates /90 `take_ons_per_90` | Centros /90 `crosses_per_90` | npxG /90 `npxg_per_90` |
+| Acciones def. último tercio /90 `def_actions_final_third_per_90` | Regates % `take_on_success_rate` | Centros % `cross_completion_rate` | Goles sin penalti /90 `goals_non_penalty_per_90` |
+| Duelos en el suelo ganados `padj_tackles_per_90` | Cond. prog. al último tercio /90 `progressive_carries_into_final_third_per_90` | Pases al área /90 `passes_into_penalty_area_per_90` | Tiros /90 `shots_per_90` |
+| Duelos en el suelo % `ground_duel_win_rate` | Conducciones al área /90 `carries_into_penalty_area_per_90` | Pases clave /90 `key_passes_per_90` | Toques en el área /90 `touches_in_box_per_90` |
+| Intercepciones `padj_interceptions_per_90` | Recepciones progresivas /90 `progressive_receptions_per_90` | xA /90 `xa_per_90` | xG por tiro (sin penaltis) `npxg_per_shot` |
+| VAEP defensivo /90 `vaep_defensive_per_90` | Pérdidas /90 ↓ `dispossessed_per_90` | Acciones de creación de tiro /90 `shot_creating_actions_per_90` | VAEP /90 `vaep_per_90` |
+
+**Delanteros (ST)**
+
+| Presión y duelos | Juego asociativo | Desmarque y regate | Finalización |
+|---|---|---|---|
+| Recuperaciones `padj_ball_recoveries_per_90` | Pases % `pass_completion_rate` | Recepciones en el área /90 `receptions_in_box_per_90` | npxG /90 `npxg_per_90` |
+| Acciones def. último tercio /90 `def_actions_final_third_per_90` | Pases recibidos /90 `passes_received_per_90` | Recepciones progresivas /90 `progressive_receptions_per_90` | Goles sin penalti /90 `goals_non_penalty_per_90` |
+| Duelos aéreos ganados /90 `aerials_won_per_90` | Pases clave /90 `key_passes_per_90` | Toques en el área /90 `touches_in_box_per_90` | Tiros /90 `shots_per_90` |
+| Duelos aéreos % `aerial_win_rate` | xA /90 `xa_per_90` | Regates % `take_on_success_rate` | xG por tiro (sin penaltis) `npxg_per_shot` |
+| Aéreos ganados en campo rival /90 `aerials_won_att_third_per_90` | Acciones de creación de tiro /90 `shot_creating_actions_per_90` | Conducciones progresivas /90 `progressive_carries_per_90` | Goles − xG (sin penaltis) /90 `xg_overperformance_per_90` |
+| Faltas recibidas /90 `fouls_won_per_90` | VAEP /90 `vaep_per_90` | Pérdidas /90 ↓ `dispossessed_per_90` | Remates de cabeza /90 `headed_shots_per_90` |
+
+**Not on any card, on purpose**: 50/50 duels (no such event), red cards and penalties taken (mostly
+zeros, so the bar is noise: they go in the profile card as counts), `chances_created` (= assists + key
+passes, both shown), shots on target and first-time shots, and xG (replaced by npxG). Keepers' short
+and medium pass % were dropped because every keeper completes ~98% of passes under 30 m.
+
+**Attempt floors.** A rate gets a bar only once its denominator reaches 10 (20 for pass %, 5 full
+matches for clean-sheet %); below that it shows its value with "—". The floors live on
+`gold.percentile_metrics` (`attempts_column`, `min_attempts`).
+
+The layout lives in `src/export/config.py` as `PLAYER_SPINE` (role → cards → metrics, with display
+scale and decimals). **What is ranked** comes from `gold.percentile_metrics`, whose seed is exactly
+the ranked rows above, so Postgres and the site agree; the ranking itself is
+`src/export/player_percentiles.py`. Rates render with one decimal and `%`; per-90 volumes with two
+decimals, VAEP and xT with three (`lib/format.ts`).
 
 ### 5 · Sequences involving {surname}
 Same model as the page-02 sequence block and the screen-04 lab, scoped to chains the player touched
@@ -385,8 +458,9 @@ Desktop-first, same rules as the rest of the app. Below ~1100px:
 | Touch heat on a 12×8 grid | 30 zones | 12×8 is the xT grid; the 30 zones are the site's one spatial grid (screen 02 made the same change) |
 | Six modes | Eight: + Recepciones, + Tiros | The reception heatmap and shot map requested for this page, kept on the one pitch |
 | Defensive dots coloured by type | Diamonds coloured by outcome, chips by type | Same component and grammar as page 02 (proposed, Open decisions #3) |
-| Percentiles vs Forwards / Midfielders / Defenders, 900' floor | Seven formation-slot groups, 25%-of-club-minutes gate, `peer_n` shown | The project's peer groups and the site's gate (WEB_DATA §3.6) |
-| *Pressures*, *Duels won %* | Def. actions in final third, Tackles won % | Not in Opta / no player duel column |
+| Percentiles vs Forwards / Midfielders / Defenders, 900' floor | Eight roles (seven formation-slot groups + mediapuntas by final-third share), 25%-of-club-minutes gate, `peer_n` shown | The project's peer groups and the site's gate (WEB_DATA §3.6, GOLD_LAYER §4.6.2a) |
+| *Pressures*, *Duels won %* | Def. actions in final third, Duelos en el suelo % (Tackle vs Attempted Tackle + Challenge) | Not in Opta; no 50/50 event |
+| One 24-metric spine for every outfielder | Four cards × six per role (§4) | Decided with the user 15 Oct 2026 |
 | Defensive volumes raw | Possession-adjusted | GOLD_LAYER §4.6.14 |
 | Bio: Weight, Contract, photo URL | Partidos, Titularidades; hand-supplied photo or numeral fallback | Not in the data |
 | KPIs Goals, Assists, xG, xT/90 for everyone | Set per position group | Four zeros for a centre back otherwise |
@@ -399,8 +473,8 @@ Desktop-first, same rules as the rest of the app. Below ~1100px:
 2. **KPI sets per position group** (table in §3a).
 3. **Defensive mode**: outcome colour + type chips (page-02 grammar), versus the mock's colour-by-type
    dots.
-4. **Percentile spine**: the 24-metric mapping in §4, "—" on metrics not ranked for the group, and
-   whether the new spine metrics also go into `gold.percentile_metrics`.
+4. ~~**Percentile spine**~~ — **decided 15 Oct 2026**: per-role cards in §4, implemented in gold
+   (`gold.percentile_metrics` is the ranked spine) and in the export (`PLAYER_SPINE`).
 5. **Exposure caps**: 150 passes, 60 progressive passes/carries.
 6. **Photos**: hand-supplied, numeral fallback, or no photo block at all.
 

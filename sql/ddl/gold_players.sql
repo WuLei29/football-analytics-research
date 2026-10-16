@@ -589,6 +589,166 @@ CREATE INDEX IF NOT EXISTS player_season_stats_season_team_idx
 
 
 -- ───────────────────────────────────────────────────────────────────────────
+-- Amendment (15 Oct 2026): the screen-03 percentile spine (README-PLAYER §4).
+--
+-- Added as ALTERs because CREATE TABLE IF NOT EXISTS no-ops on an existing
+-- database; on a fresh one they run straight after the CREATEs. Measured
+-- league-wide values for every new column are in GOLD_LAYER §4.6.17.
+--
+-- Base counts, at match grain and summed at season grain:
+--   shots_blocked          Save + Q94 by the player: an outfield block of a
+--                          shot (3,194 rows). Keepers' Saves never carry Q94.
+--   headed_shots           shots with spadl_bodypart_id = 1 (headed_goals
+--                          counts only the goals).
+--   progressive_carries_into_final_third
+--                          gold.is_progressive AND x < 70 AND end_x >= 70.
+--                          The non-progressive crossings are 7 m nudges over
+--                          the line (median); the progressive ones are 23 m.
+--   passes_long_completed  completed passes >= 30 m (passes_long's numerator).
+--   receptions_final_third / receptions_in_box / progressive_receptions
+--                          from gold.pass_receptions by receiver_id: the
+--                          reception point is the pass end (rx_x >= 70,
+--                          rx_in_box) and is_progressive is the pass's. Needs
+--                          pass_receptions built first (build_gold STEP_ORDER).
+--
+-- Ground duels (Spanish: duelos defensivos en el suelo). Opta records no
+-- 50/50; the defender's side of a ground contest is three events, all already
+-- counted: Tackle (won -- both outcomes, since a failed Tackle still took the
+-- ball off the attacker), Attempted Tackle and Challenge (lost: went in and
+-- missed / was dribbled past). They overlap in 255 of 7,658 Challenges, so
+-- the sum is a fair duel count.
+-- ───────────────────────────────────────────────────────────────────────────
+ALTER TABLE gold.player_match_stats
+    ADD COLUMN IF NOT EXISTS shots_blocked                        SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS headed_shots                         SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS progressive_carries_into_final_third SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS passes_long_completed                SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS receptions_final_third               SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS receptions_in_box                    SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS progressive_receptions               SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS ground_duels SMALLINT GENERATED ALWAYS AS
+        (tackles + tackles_missed + dribbled_past) STORED,
+    ADD COLUMN IF NOT EXISTS ground_duel_win_rate REAL GENERATED ALWAYS AS
+        (tackles::real / NULLIF(tackles + tackles_missed + dribbled_past, 0)) STORED;
+
+ALTER TABLE gold.player_season_stats
+    ADD COLUMN IF NOT EXISTS matches_subbed_off                   SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS shots_blocked                        SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS headed_shots                         SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS progressive_carries_into_final_third SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS passes_long_completed                INT      NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS receptions_final_third               INT      NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS receptions_in_box                    SMALLINT NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS progressive_receptions               INT      NOT NULL DEFAULT 0,
+
+    -- ── role (§4.6.2a) ─────────────────────────────────────────────────────
+    -- The percentile ROLE: the formation-slot group, except that a midfielder
+    -- with >= 30% of his on-ball touches in the final third is an AM. The slot
+    -- alone cannot see it: a 4-3-3's advanced 8 is a CM, and 15 of the 27 AMs
+    -- of 2025/26 came from CM slots. Measured on the season so far, so it can
+    -- move early in a season (86% of midfielders kept their role between the
+    -- two halves of 2025/26).
+    ADD COLUMN IF NOT EXISTS role_group VARCHAR(3) GENERATED ALWAYS AS (
+        CASE WHEN primary_position_group = 'MID'
+              AND touches > 0
+              AND touches_final_third >= 0.30 * touches
+             THEN 'AM' ELSE primary_position_group END) STORED,
+
+    -- ── attempt counts: the denominators the percentile floors read ────────
+    ADD COLUMN IF NOT EXISTS ground_duels INT GENERATED ALWAYS AS
+        (tackles + tackles_missed + dribbled_past) STORED,
+    ADD COLUMN IF NOT EXISTS aerial_duels INT GENERATED ALWAYS AS
+        (aerials_won + aerials_lost) STORED,
+    ADD COLUMN IF NOT EXISTS shots_non_penalty SMALLINT GENERATED ALWAYS AS
+        (shots - penalties_taken) STORED,
+    ADD COLUMN IF NOT EXISTS shots_on_target_faced SMALLINT GENERATED ALWAYS AS
+        (saves + goals_conceded) STORED,
+
+    -- ── rates ──────────────────────────────────────────────────────────────
+    ADD COLUMN IF NOT EXISTS ground_duel_win_rate REAL GENERATED ALWAYS AS
+        (tackles::real / NULLIF(tackles + tackles_missed + dribbled_past, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS claim_rate REAL GENERATED ALWAYS AS
+        (claims_successful::real / NULLIF(claims, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS long_pass_completion_rate REAL GENERATED ALWAYS AS
+        (passes_long_completed::real / NULLIF(passes_long, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS clean_sheet_rate REAL GENERATED ALWAYS AS
+        (clean_sheets::real / NULLIF(matches_full_90, 0)) STORED,
+    -- xg_per_shot counts every penalty at 0.79 and flatters the taker.
+    ADD COLUMN IF NOT EXISTS npxg_per_shot REAL GENERATED ALWAYS AS
+        (npxg / NULLIF(shots - penalties_taken, 0)) STORED,
+
+    -- ── per-90 (same rule as the block above: generated, never averaged) ──
+    ADD COLUMN IF NOT EXISTS goals_non_penalty_per_90 REAL GENERATED ALWAYS AS
+        (goals_non_penalty * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS xg_overperformance_per_90 REAL GENERATED ALWAYS AS
+        ((goals_non_penalty - npxg) * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS headed_shots_per_90 REAL GENERATED ALWAYS AS
+        (headed_shots * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS touches_in_box_per_90 REAL GENERATED ALWAYS AS
+        (touches_in_box * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS shot_creating_actions_per_90 REAL GENERATED ALWAYS AS
+        (shot_creating_actions * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS crosses_per_90 REAL GENERATED ALWAYS AS
+        (crosses * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS through_balls_per_90 REAL GENERATED ALWAYS AS
+        (through_balls * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS passes_into_penalty_area_per_90 REAL GENERATED ALWAYS AS
+        (passes_into_penalty_area * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS passes_per_90 REAL GENERATED ALWAYS AS
+        (passes * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS passes_received_per_90 REAL GENERATED ALWAYS AS
+        (passes_received * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS passes_into_final_third_per_90 REAL GENERATED ALWAYS AS
+        (passes_into_final_third * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS long_balls_per_90 REAL GENERATED ALWAYS AS
+        (long_balls * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS take_ons_per_90 REAL GENERATED ALWAYS AS
+        (take_ons * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS carries_into_penalty_area_per_90 REAL GENERATED ALWAYS AS
+        (carries_into_penalty_area * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS progressive_carries_into_final_third_per_90 REAL GENERATED ALWAYS AS
+        (progressive_carries_into_final_third * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS receptions_final_third_per_90 REAL GENERATED ALWAYS AS
+        (receptions_final_third * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS receptions_in_box_per_90 REAL GENERATED ALWAYS AS
+        (receptions_in_box * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS progressive_receptions_per_90 REAL GENERATED ALWAYS AS
+        (progressive_receptions * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS fouls_won_per_90 REAL GENERATED ALWAYS AS
+        (fouls_won * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS def_actions_final_third_per_90 REAL GENERATED ALWAYS AS
+        (def_actions_final_third * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS shots_blocked_per_90 REAL GENERATED ALWAYS AS
+        (shots_blocked * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS padj_blocked_passes_per_90 REAL GENERATED ALWAYS AS
+        (padj_blocked_passes * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS aerials_won_att_third_per_90 REAL GENERATED ALWAYS AS
+        (aerials_won_att_third * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS vaep_offensive_per_90 REAL GENERATED ALWAYS AS
+        (vaep_offensive * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS vaep_defensive_per_90 REAL GENERATED ALWAYS AS
+        (vaep_defensive * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    -- goalkeeping: NULL for outfield players because their inputs are NULL.
+    ADD COLUMN IF NOT EXISTS saves_per_90 REAL GENERATED ALWAYS AS
+        (saves * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS goals_conceded_per_90 REAL GENERATED ALWAYS AS
+        (goals_conceded * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS xg_faced_per_90 REAL GENERATED ALWAYS AS
+        (xg_faced * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS goals_prevented_per_90 REAL GENERATED ALWAYS AS
+        ((xg_faced - goals_conceded) * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS claims_per_90 REAL GENERATED ALWAYS AS
+        (claims * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS punches_per_90 REAL GENERATED ALWAYS AS
+        (punches * 90.0 / NULLIF(minutes_played, 0)) STORED,
+    ADD COLUMN IF NOT EXISTS keeper_sweeper_actions_per_90 REAL GENERATED ALWAYS AS
+        (keeper_sweeper_actions * 90.0 / NULLIF(minutes_played, 0)) STORED;
+
+CREATE INDEX IF NOT EXISTS player_season_stats_season_role_idx
+    ON gold.player_season_stats (competition_season_id, role_group);
+
+
+-- ───────────────────────────────────────────────────────────────────────────
 -- gold.player_season_totals — §4.2.1
 --
 -- The player-season rollup across clubs. Exposed as a VIEW rather than as
@@ -625,70 +785,118 @@ GROUP BY player_id, competition_season_id;
 -- position group, and which direction is good. Adding a metric to the
 -- percentile set is then a one-row INSERT, not a rewrite of the build SQL.
 --
--- Two rules from §4.6.14 are enforced by what is listed here:
---   * only per-90 or padj forms appear -- percentiling raw volume produces a
---     minutes ranking wearing a skill ranking's clothes;
+-- Three rules from §4.6.14 are enforced by what is listed here:
+--   * only per-90, padj or rate forms appear -- percentiling raw volume
+--     produces a minutes ranking wearing a skill ranking's clothes;
 --   * `higher_is_better = FALSE` for the metrics where it is not (dispossessed,
---     errors, dribbled_past, fouls_committed, caught_offside, goals_conceded).
+--     errors, dribbled_past, fouls_committed, goals_conceded);
+--   * a rate is ranked only once its denominator reaches `min_attempts`
+--     (`attempts_column` names that denominator on player_season_stats). Below
+--     it the value is NULL for ranking: 4 of 5 crosses is not an 80% crosser.
+--
+-- position_group here is the player's ROLE (player_season_stats.role_group):
+-- the seven formation-slot groups plus AM, the midfielders who play high
+-- (§4.6.2a). The metric set is chosen by role; the peer set a role is ranked
+-- in may be pooled (RB+LB -> FB, AM -> MID) when it is under 20 players.
 -- ───────────────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS gold.percentile_metrics (
     metric           VARCHAR(60) NOT NULL,
     position_group   VARCHAR(3)  NOT NULL
-        CHECK (position_group IN ('GK','CB','RB','LB','MID','W','ST')),
+        CHECK (position_group IN ('GK','CB','RB','LB','MID','AM','W','ST')),
     higher_is_better BOOLEAN     NOT NULL DEFAULT TRUE,
+    attempts_column  VARCHAR(60),
+    min_attempts     SMALLINT,
     PRIMARY KEY (metric, position_group)
 );
 
-INSERT INTO gold.percentile_metrics (metric, position_group, higher_is_better)
-SELECT m.metric, g.grp, m.hib
+-- Amendment (15 Oct 2026): the attempt floor and the AM role. CREATE TABLE IF
+-- NOT EXISTS no-ops on an existing database, so add both explicitly.
+ALTER TABLE gold.percentile_metrics
+    ADD COLUMN IF NOT EXISTS attempts_column VARCHAR(60),
+    ADD COLUMN IF NOT EXISTS min_attempts    SMALLINT;
+ALTER TABLE gold.percentile_metrics
+    DROP CONSTRAINT IF EXISTS percentile_metrics_position_group_check;
+ALTER TABLE gold.percentile_metrics
+    ADD CONSTRAINT percentile_metrics_position_group_check
+    CHECK (position_group IN ('GK','CB','RB','LB','MID','AM','W','ST'));
+
+-- The seed is REPLACED, not merged: it is reference data, and a row left over
+-- from an earlier metric set would keep ranking a metric no card shows.
+--
+-- It is the screen-03 spine (README-PLAYER §4, src/export/config.py
+-- PLAYER_SPINE) with the unranked rows left out: four cards of six per role,
+-- three of six for keepers. A metric shared by several roles appears once with
+-- all of them. Defensive volumes are possession-adjusted; "duelos en el suelo
+-- ganados" is padj_tackles_per_90, since a won ground duel IS a Tackle.
+DELETE FROM gold.percentile_metrics;
+
+INSERT INTO gold.percentile_metrics
+    (metric, position_group, higher_is_better, attempts_column, min_attempts)
+SELECT m.metric, g.grp, m.hib, m.attempts_column, m.min_attempts
 FROM (VALUES
-    -- attacking output
-    ('goals_per_90',                 'ST W MID',             TRUE),
-    ('npxg_per_90',                  'ST W MID',             TRUE),
-    ('shots_per_90',                 'ST W MID',             TRUE),
-    ('xg_per_shot',                  'ST W',                 TRUE),
-    ('shot_conversion_rate',         'ST W',                 TRUE),
-    ('shot_accuracy',                'ST W MID',             TRUE),
-    ('goal_contributions_per_90',    'ST W MID',             TRUE),
-    -- creation
-    ('xa_per_90',                    'W MID RB LB',          TRUE),
-    ('key_passes_per_90',            'W MID RB LB ST',       TRUE),
-    ('cross_completion_rate',        'RB LB W MID',          TRUE),
-    -- passing and progression
-    ('pass_completion_rate',         'CB MID GK RB LB W ST', TRUE),
-    ('progressive_passes_per_90',    'MID CB RB LB W',       TRUE),
-    ('progressive_pass_rate',        'CB MID RB LB',         TRUE),
-    ('long_ball_accuracy',           'GK CB',                TRUE),
-    ('xt_per_90',                    'MID W RB LB CB',       TRUE),
-    -- carrying
-    ('progressive_carries_per_90',   'W MID RB LB CB ST',    TRUE),
-    ('take_on_success_rate',         'W ST RB LB',           TRUE),
-    ('touches_per_90',               'CB MID RB LB',         TRUE),
-    -- defending (possession-adjusted — raw volume ranks teams, not players)
-    ('padj_tackles_per_90',          'CB RB LB MID W',       TRUE),
-    ('padj_interceptions_per_90',    'CB MID RB LB',         TRUE),
-    ('padj_ball_recoveries_per_90',  'MID CB RB LB W',       TRUE),
-    ('padj_clearances_per_90',       'CB RB LB',             TRUE),
-    ('padj_defensive_actions_per_90','CB RB LB MID W ST',    TRUE),
-    ('tackle_success_rate',          'CB RB LB MID',         TRUE),
-    ('aerial_win_rate',              'CB ST RB LB MID',      TRUE),
-    ('aerials_won_per_90',           'CB ST',                TRUE),
-    -- model values
-    ('vaep_per_90',                  'GK CB RB LB MID W ST', TRUE),
-    -- lower is better
-    ('dispossessed_per_90',          'W ST MID',             FALSE),
-    ('dribbled_past_per_90',         'RB LB CB MID W',       FALSE),
-    ('fouls_committed_per_90',       'CB RB LB MID ST',      FALSE),
-    ('errors_per_90',                'CB GK RB LB MID',      FALSE),
-    ('fouls_per_tackle',             'CB RB LB MID',         FALSE),
-    -- goalkeeping
-    ('save_pct',                     'GK',                   TRUE),
-    ('goals_prevented',              'GK',                   TRUE),
-    ('gk_pass_completion_rate',      'GK',                   TRUE),
-    ('gk_long_ball_pct',             'GK',                   TRUE)
-) AS m(metric, groups, hib)
-CROSS JOIN LATERAL unnest(string_to_array(m.groups, ' ')) AS g(grp)
-ON CONFLICT (metric, position_group) DO NOTHING;
+    ('save_pct',                                    'GK',                    TRUE , 'shots_on_target_faced', 10),
+    ('goals_prevented_per_90',                      'GK',                    TRUE , NULL, NULL),
+    ('saves_per_90',                                'GK',                    TRUE , NULL, NULL),
+    ('goals_conceded_per_90',                       'GK',                    FALSE, NULL, NULL),
+    ('clean_sheet_rate',                            'GK',                    TRUE , 'matches_full_90', 5),
+    ('claims_per_90',                               'GK',                    TRUE , NULL, NULL),
+    ('claim_rate',                                  'GK',                    TRUE , 'claims', 10),
+    ('punches_per_90',                              'GK',                    TRUE , NULL, NULL),
+    ('keeper_sweeper_actions_per_90',               'GK',                    TRUE , NULL, NULL),
+    ('sweeper_avg_x',                               'GK',                    TRUE , 'keeper_sweeper_actions', 10),
+    ('padj_clearances_per_90',                      'GK CB RB LB',           TRUE , NULL, NULL),
+    ('gk_pass_completion_rate',                     'GK',                    TRUE , 'gk_passes', 20),
+    ('long_pass_completion_rate',                   'GK',                    TRUE , 'passes_long', 10),
+    ('progressive_passes_per_90',                   'GK CB RB LB MID AM',    TRUE , NULL, NULL),
+    ('vaep_per_90',                                 'GK CB RB LB MID AM W ST', TRUE , NULL, NULL),
+    ('vaep_defensive_per_90',                       'GK CB RB LB MID AM W',  TRUE , NULL, NULL),
+    ('vaep_offensive_per_90',                       'GK CB',                 TRUE , NULL, NULL),
+    ('errors_per_90',                               'GK CB MID',             FALSE, NULL, NULL),
+    ('padj_interceptions_per_90',                   'CB RB LB MID AM W',     TRUE , NULL, NULL),
+    ('shots_blocked_per_90',                        'CB RB LB',              TRUE , NULL, NULL),
+    ('padj_blocked_passes_per_90',                  'CB MID',                TRUE , NULL, NULL),
+    ('padj_ball_recoveries_per_90',                 'CB RB LB MID AM W ST',  TRUE , NULL, NULL),
+    ('padj_tackles_per_90',                         'CB RB LB MID AM W',     TRUE , NULL, NULL),
+    ('ground_duel_win_rate',                        'CB RB LB MID AM W',     TRUE , 'ground_duels', 10),
+    ('dribbled_past_per_90',                        'CB RB LB MID',          FALSE, NULL, NULL),
+    ('aerials_won_per_90',                          'CB RB LB MID ST',       TRUE , NULL, NULL),
+    ('aerial_win_rate',                             'CB RB LB MID ST',       TRUE , 'aerial_duels', 10),
+    ('fouls_committed_per_90',                      'CB RB LB MID',          FALSE, NULL, NULL),
+    ('passes_per_90',                               'CB MID AM',             TRUE , NULL, NULL),
+    ('pass_completion_rate',                        'CB RB LB MID AM ST',    TRUE , 'passes', 20),
+    ('long_balls_per_90',                           'CB',                    TRUE , NULL, NULL),
+    ('long_ball_accuracy',                          'CB',                    TRUE , 'long_balls', 10),
+    ('passes_into_final_third_per_90',              'CB MID AM',             TRUE , NULL, NULL),
+    ('progressive_carries_per_90',                  'CB RB LB MID ST',       TRUE , NULL, NULL),
+    ('headed_shots_per_90',                         'CB ST',                 TRUE , NULL, NULL),
+    ('aerials_won_att_third_per_90',                'CB ST',                 TRUE , NULL, NULL),
+    ('def_actions_final_third_per_90',              'RB LB MID AM W ST',     TRUE , NULL, NULL),
+    ('progressive_carries_into_final_third_per_90', 'RB LB AM W',            TRUE , NULL, NULL),
+    ('receptions_final_third_per_90',               'RB LB AM',              TRUE , NULL, NULL),
+    ('take_on_success_rate',                        'RB LB AM W ST',         TRUE , 'take_ons', 10),
+    ('crosses_per_90',                              'RB LB W',               TRUE , NULL, NULL),
+    ('cross_completion_rate',                       'RB LB W',               TRUE , 'crosses', 10),
+    ('passes_into_penalty_area_per_90',             'RB LB AM W',            TRUE , NULL, NULL),
+    ('xa_per_90',                                   'RB LB MID AM W ST',     TRUE , NULL, NULL),
+    ('shot_creating_actions_per_90',                'RB LB MID AM W ST',     TRUE , NULL, NULL),
+    ('xt_per_90',                                   'MID AM',                TRUE , NULL, NULL),
+    ('key_passes_per_90',                           'MID AM W ST',           TRUE , NULL, NULL),
+    ('through_balls_per_90',                        'MID AM',                TRUE , NULL, NULL),
+    ('npxg_per_90',                                 'MID AM W ST',           TRUE , NULL, NULL),
+    ('take_ons_per_90',                             'AM W',                  TRUE , NULL, NULL),
+    ('dispossessed_per_90',                         'AM W ST',               FALSE, NULL, NULL),
+    ('goals_non_penalty_per_90',                    'AM W ST',               TRUE , NULL, NULL),
+    ('carries_into_penalty_area_per_90',            'W',                     TRUE , NULL, NULL),
+    ('progressive_receptions_per_90',               'W ST',                  TRUE , NULL, NULL),
+    ('shots_per_90',                                'W ST',                  TRUE , NULL, NULL),
+    ('touches_in_box_per_90',                       'W ST',                  TRUE , NULL, NULL),
+    ('npxg_per_shot',                               'W ST',                  TRUE , 'shots_non_penalty', 10),
+    ('fouls_won_per_90',                            'ST',                    TRUE , NULL, NULL),
+    ('passes_received_per_90',                      'ST',                    TRUE , NULL, NULL),
+    ('receptions_in_box_per_90',                    'ST',                    TRUE , NULL, NULL),
+    ('xg_overperformance_per_90',                   'ST',                    TRUE , NULL, NULL)
+) AS m(metric, groups, hib, attempts_column, min_attempts)
+CROSS JOIN LATERAL unnest(string_to_array(m.groups, ' ')) AS g(grp);
 
 
 -- ───────────────────────────────────────────────────────────────────────────
@@ -713,9 +921,15 @@ CREATE TABLE IF NOT EXISTS gold.player_season_percentiles (
     -- TRUE when RB and LB were pooled into FB because either peer set was
     -- under 20 (§4.6.14). Recorded rather than done silently.
     pooled_fb             BOOLEAN NOT NULL DEFAULT FALSE,
+    -- TRUE when the AM role had under 20 eligible players and was ranked
+    -- among all midfielders instead (§4.6.2a).
+    pooled_am             BOOLEAN NOT NULL DEFAULT FALSE,
 
     PRIMARY KEY (competition_season_id, player_id, team_id, metric)
 );
+
+ALTER TABLE gold.player_season_percentiles
+    ADD COLUMN IF NOT EXISTS pooled_am BOOLEAN NOT NULL DEFAULT FALSE;
 
 CREATE INDEX IF NOT EXISTS player_season_percentiles_lookup_idx
     ON gold.player_season_percentiles (competition_season_id, position_group, metric);

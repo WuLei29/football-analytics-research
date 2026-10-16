@@ -64,10 +64,13 @@ STEP_ORDER = [
     "sequence_phases",
     "team_match_stats",
     "team_season_stats",
+    # Before the player build since 15 Oct 2026: player_match_stats counts
+    # receptions by zone from it (GOLD_LAYER §4.6.17). It needs only the
+    # sequences and the team rows, both built above.
+    "pass_receptions",
     "player_match_stats",
     "player_season_stats",
     "player_percentiles",
-    "pass_receptions",
 ]
 
 
@@ -172,6 +175,12 @@ def _check_player_match_stats(cur) -> str | None:
             "gold.team_match_stats is empty. The player build reads it for "
             "match context and for the opponent possession share that every "
             "padj_* column depends on (§4.6.14). Run --step team_match_stats."
+        )
+    if _count(cur, "gold.pass_receptions") == 0:
+        return (
+            "gold.pass_receptions is empty. The player build counts receptions "
+            "by zone from it (§4.6.17); an empty table would zero them all "
+            "without an error. Run --step pass_receptions."
         )
     if _count(cur, "gold.formation_slot_positions") == 0:
         return (

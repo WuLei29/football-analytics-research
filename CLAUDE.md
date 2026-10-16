@@ -202,6 +202,7 @@ src/
     config.py                     #   teams, seasons, metric registries, percentile gate, caps
     db.py                         #   every export query (read-only)
     manifest.py league_table.py overview.py match.py   # one module per published file
+    player_percentiles.py         #   screen-03 percentile ranking (pure; site gate)
 sql/
   ddl/                            # gold DDL + gold_functions.sql (geometry helpers: zone_id, in_box, is_progressive…)
   seed/                           # formation_slot_positions
@@ -348,10 +349,14 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
 - **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written
   by `python -m src.export`. Built: screen 01 (season), screen 02 (match),
   match list, `/demo`. **Next: screen 03 (player)**, brief
-  `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its definition
-  conflicts are listed in `football-metrics §8`; settle them with the user
-  first. `src/export/{squad,player,sequences}.py` are specified (WEB_DATA §8–10),
-  not implemented. Plan: `md/WEB_PLAN.md`; contract: `md/WEB_DATA.md`.
+  `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
+  spine is **settled (15 Oct 2026)**: per-role cards (README-PLAYER §4), roles
+  `GK CB RB LB MID AM W ST` (`role_group`, AM = midfielder with ≥ 30% of
+  touches in the final third), ranked by `src/export/player_percentiles.py`
+  from `PLAYER_SPINE` + `gold.percentile_metrics`. Its other open decisions
+  are in README-PLAYER "Open decisions". `src/export/{squad,player,sequences}.py`
+  are specified (WEB_DATA §8–10), not implemented. Plan: `md/WEB_PLAN.md`;
+  contract: `md/WEB_DATA.md`.
 - **Weekend run**: full order above → `python -m src.silver.events.sequences` →
   `python -m src.gold.build_gold` → gates (`GOLD_LAYER.md §9.5`) →
   `python -m src.export` → commit `web/public/data`.

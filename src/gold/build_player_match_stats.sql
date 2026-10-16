@@ -15,6 +15,8 @@
 --   silver.events                   every action count, filtered by player_id
 --   gold.formation_slot_positions   the granular position (§4.6.0)
 --   gold.team_match_stats           context AND the opponent's possession share
+--   gold.pass_receptions            receptions by zone (§4.6.17), so it must be
+--                                   built first (build_gold STEP_ORDER)
 --
 -- WHY CONTEXT COMES FROM gold.team_match_stats AND NOT silver.matches:
 -- matchday, date, venue and result would otherwise be re-derived here, and a
@@ -102,6 +104,8 @@ event_stats AS (
         -- spadl_bodypart_id 1 = HEAD (0 foot, 2 other, 4/5 left/right foot).
         count(*) FILTER (WHERE e.event_type = 'Goal'
                            AND e.spadl_bodypart_id = 1)::smallint AS headed_goals,
+        count(*) FILTER (WHERE e.event_type IN ('Goal','Attempt Saved','Miss','Post')
+                           AND e.spadl_bodypart_id = 1)::smallint AS headed_shots,
         COALESCE(sum(e.xg), 0)::real AS xg,
         COALESCE(sum(e.xg) FILTER (WHERE e.shot_play_pattern IS DISTINCT FROM 'penalty'),
                  0)::real AS npxg,
@@ -156,6 +160,9 @@ event_stats AS (
         count(*) FILTER (WHERE e.event_type = 'Pass'
                            AND gold.action_length(e.x, e.y, e.end_x, e.end_y) >= 30
                         )::smallint AS passes_long,
+        count(*) FILTER (WHERE e.event_type = 'Pass' AND e.outcome = 'success'
+                           AND gold.action_length(e.x, e.y, e.end_x, e.end_y) >= 30
+                        )::smallint AS passes_long_completed,
         count(*) FILTER (WHERE e.event_type = 'Pass' AND e.end_x - e.x >  2
                         )::smallint AS passes_forward,
         count(*) FILTER (WHERE e.event_type = 'Pass' AND e.end_x - e.x < -2
@@ -187,6 +194,11 @@ event_stats AS (
                         )::smallint AS progressive_carries,
         count(*) FILTER (WHERE e.event_type = 'Carry' AND e.x < 70 AND e.end_x >= 70
                         )::smallint AS carries_into_final_third,
+        -- The crossings that are not progressive are nudges over the line
+        -- (median 7 m against 23 m); this keeps the runs.
+        count(*) FILTER (WHERE e.event_type = 'Carry' AND e.x < 70 AND e.end_x >= 70
+                           AND gold.is_progressive(e.x, e.y, e.end_x, e.end_y)
+                        )::smallint AS progressive_carries_into_final_third,
         count(*) FILTER (WHERE e.event_type = 'Carry'
                            AND gold.in_box(e.end_x, e.end_y)
                            AND NOT gold.in_box(e.x, e.y)
@@ -243,6 +255,11 @@ event_stats AS (
         -- is the Offside Pass itself (§9.6 deviation 4).
         count(*) FILTER (WHERE e.event_type = 'Offside Pass')::smallint AS caught_offside,
         count(*) FILTER (WHERE e.event_type = 'Shield ball opp')::smallint AS shield_ball_opp,
+        -- An outfield block of a shot is a Save with Q94. Keepers' Saves never
+        -- carry it, so this needs no position filter and is 0 for keepers.
+        count(*) FILTER (WHERE e.event_type = 'Save'
+                           AND e.raw_data->'qualifier' @> '[{"qualifierId": 94}]'
+                        )::smallint AS shots_blocked,
 
         -- ═══ §4.6.9 Aerial duels ═══════════════════════════════════════════
         count(*) FILTER (WHERE e.event_type = 'Aerial' AND e.outcome = 'success'
@@ -381,6 +398,21 @@ shot_creating AS (
     GROUP BY match_id, player_id
 ),
 
+-- ── receptions, from gold.pass_receptions (§4.7) ───────────────────────────
+-- The reception point is the pass end; is_progressive is the pass's. Read
+-- from the reception table rather than re-derived, so the receiver rule
+-- (next same-team event, opponent and admin rows skipped) exists once.
+receptions AS (
+    SELECT match_id, receiver_id AS player_id,
+           count(*) FILTER (WHERE rx_x >= 70)::smallint     AS receptions_final_third,
+           count(*) FILTER (WHERE rx_in_box)::smallint      AS receptions_in_box,
+           count(*) FILTER (WHERE is_progressive)::smallint AS progressive_receptions
+    FROM gold.pass_receptions
+    WHERE receiver_id IS NOT NULL
+      AND (%(match_ids)s::int[] IS NULL OR match_id = ANY (%(match_ids)s::int[]))
+    GROUP BY match_id, receiver_id
+),
+
 -- ── what the keeper faced while ON THE PITCH ───────────────────────────────
 -- Derived from the minute window, NOT from the match score: a keeper subbed at
 -- 60' owns only the goals conceded before then (§4.6.10).
@@ -448,7 +480,10 @@ INSERT INTO gold.player_match_stats (
     yellow_cards, second_yellows, red_cards,
     corners_taken, free_kicks_taken, direct_free_kick_shots, throw_ins_taken,
     set_piece_goals, set_piece_xg,
-    opponent_possession_pct
+    opponent_possession_pct,
+    shots_blocked, headed_shots, progressive_carries_into_final_third,
+    passes_long_completed,
+    receptions_final_third, receptions_in_box, progressive_receptions
 )
 SELECT
     a.match_id, a.player_id, a.team_id, a.opponent_team_id, a.competition_season_id,
@@ -543,10 +578,18 @@ SELECT
     COALESCE(es.set_piece_goals, 0), COALESCE(es.set_piece_xg, 0),
 
     -- ── §4.6.14 input ──────────────────────────────────────────────────────
-    a.opponent_possession_pct
+    a.opponent_possession_pct,
+
+    -- ── §4.6.17 (15 Oct 2026 amendment) ────────────────────────────────────
+    COALESCE(es.shots_blocked, 0), COALESCE(es.headed_shots, 0),
+    COALESCE(es.progressive_carries_into_final_third, 0),
+    COALESCE(es.passes_long_completed, 0),
+    COALESCE(rx.receptions_final_third, 0), COALESCE(rx.receptions_in_box, 0),
+    COALESCE(rx.progressive_receptions, 0)
 FROM appearances a
 LEFT JOIN event_stats     es ON es.match_id = a.match_id AND es.player_id = a.player_id
 LEFT JOIN assist_xa       ax ON ax.match_id = a.match_id AND ax.player_id = a.player_id
 LEFT JOIN passes_received pr ON pr.match_id = a.match_id AND pr.player_id = a.player_id
 LEFT JOIN shot_creating   sc ON sc.match_id = a.match_id AND sc.player_id = a.player_id
-LEFT JOIN keeper_faced    kf ON kf.match_id = a.match_id AND kf.player_id = a.player_id;
+LEFT JOIN keeper_faced    kf ON kf.match_id = a.match_id AND kf.player_id = a.player_id
+LEFT JOIN receptions      rx ON rx.match_id = a.match_id AND rx.player_id = a.player_id;

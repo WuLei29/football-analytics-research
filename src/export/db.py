@@ -289,6 +289,43 @@ def fetch_leaders(conn, cs_id: int, team_id: int, metric: str, limit: int,
 
 
 # ---------------------------------------------------------------------------
+# Player percentiles (§3.6, §9)
+# ---------------------------------------------------------------------------
+
+def fetch_percentile_metrics(conn) -> list[dict[str, Any]]:
+    """gold.percentile_metrics: which metric is ranked for which role, which
+    way is good, and the attempt floor. The site reads the same seed gold
+    ranks with, so the two cannot disagree on WHAT is ranked."""
+    return _rows(
+        conn,
+        """SELECT metric, position_group, higher_is_better,
+                  attempts_column, min_attempts
+           FROM gold.percentile_metrics
+           ORDER BY metric, position_group""",
+    )
+
+
+def fetch_player_season_rows(conn, cs_id: int, columns: list[str]) -> list[dict[str, Any]]:
+    """Every player-club row of one season, with the given metric columns.
+
+    The whole league, not one club: a percentile is a rank among every La
+    Liga player of the same role. Ordered on the primary key so the output
+    is stable between runs.
+    """
+    assert_columns_exist(conn, "gold.player_season_stats", columns)
+    cols = ", ".join(f"pss.{c}" for c in sorted(set(columns)))
+    return _rows(
+        conn,
+        f"""SELECT pss.player_id, pss.team_id, pss.role_group,
+                   pss.minutes_played, pss.team_matches, {cols}
+            FROM gold.player_season_stats pss
+            WHERE pss.competition_season_id = %(cs_id)s
+            ORDER BY pss.player_id, pss.team_id""",
+        {"cs_id": cs_id},
+    )
+
+
+# ---------------------------------------------------------------------------
 # Match file (§7)
 #
 # This block is where the export stops reading gold aggregates and starts
