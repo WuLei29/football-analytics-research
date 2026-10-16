@@ -35,11 +35,13 @@ import { Momentum } from "@/components/viz/Momentum";
 import { PassNetwork } from "@/components/viz/PassNetwork";
 import { ProgressionArrows } from "@/components/viz/ProgressionArrows";
 import { MatchSequences } from "@/components/match/MatchSequences";
+import { SequenceLegend } from "@/components/viz/SequenceLegend";
 import { ShotMap } from "@/components/viz/ShotMap";
 import { VizDefs } from "@/components/viz/VizDefs";
 import { ZoneHeatmap } from "@/components/viz/ZoneHeatmap";
 import { matchReading } from "@/content/narratives";
 import { getManifest, getMatch, getOverview, getTeam } from "@/lib/data/load";
+import { sequenceEntry } from "@/lib/data/sequences";
 import { dec, longDate } from "@/lib/format";
 import { match as copy, site, viz } from "@/lib/labels";
 import { routes } from "@/lib/routes";
@@ -374,47 +376,12 @@ export default async function MatchPage({ params }: PageProps) {
           best xT first as the export ordered them, or best VAEP first when
           the reader flips the toggle (`MatchSequences` owns that choice and
           re-sorts). The file's `rank` (the design's "twelve best") is not
-          used here — the list IS the ranking. The marks legend is built here
-          so the component holds no Spanish. */}
+          used here — the list IS the ranking. The entry mapping and the marks
+          legend are shared with the player page, which draws the same chains
+          (`lib/data/sequences.ts`, `SequenceLegend`). */}
       <MatchSequences
-        sequences={file.sequences.map((s) => ({
-          sequence_id: s.sequence_id,
-          primary_phase: s.primary_phase ?? "chaotic",
-          outcome: s.outcome ?? "turnover",
-          start_kind: s.start_kind,
-          end_action: s.end_action,
-          start_minute: s.minute,
-          start_second: s.second,
-          duration_s: s.duration_s,
-          event_count: s.events,
-          xt: s.xt ?? 0,
-          vaep: s.vaep ?? 0,
-          actions: s.actions,
-        }))}
-        legend={
-          <div className="mt-2">
-            <Legend
-              items={[
-                { halo: "var(--color-blue)", text: viz.legend.sequenceStart },
-                { swatch: "var(--color-blue)", diamond: true, text: viz.legend.sequenceRegain },
-                { swatch: "var(--color-blue)", text: viz.legend.finisher },
-                { bar: "var(--color-mid)", text: viz.legend.pass },
-                { dotted: "var(--color-mid)", text: viz.legend.carry },
-                { dashed: "var(--color-mid)", text: viz.legend.clearance },
-                { curved: "var(--color-gold)", text: viz.legend.cross },
-                { swatch: "var(--color-blue)", text: viz.legend.takeOn },
-                { bar: "var(--color-blue)", text: viz.legend.shot },
-              ]}
-            />
-            {/* An instruction, not a mark: italic, sentence case. */}
-            <p
-              className="label mt-1"
-              style={{ letterSpacing: 0, textTransform: "none", fontStyle: "italic" }}
-            >
-              {viz.legend.sequenceHover}
-            </p>
-          </div>
-        }
+        sequences={file.sequences.map((s) => sequenceEntry(s))}
+        legend={<SequenceLegend />}
       />
 
       {/* --- Block 7: the four player boxes, both teams ------------------- */}

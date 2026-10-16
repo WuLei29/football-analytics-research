@@ -4,9 +4,10 @@ match.simplify). No database: every function under test takes rows."""
 from datetime import date
 
 from src.export.match import simplify
+from src.export.config import PlayerKpi
 from src.export.player import (
     FLAG_ASSIST, FLAG_COMPLETED, FLAG_PROGRESSIVE, age_on, defence_outcome,
-    pass_row, squad_rank,
+    kpi_value, pass_row, squad_rank, top_ids,
 )
 from src.export.squad import display_name, squad_order
 
@@ -58,9 +59,9 @@ def test_defence_outcome_follows_the_brief():
 
 def test_pass_row_flags():
     row = {"x": 10.04, "y": 5.0, "end_x": 40.0, "end_y": 6.0, "completed": True,
-           "progressive": True, "key_pass": None, "assist": False}
-    assert pass_row(row) == [10.0, 5.0, 40.0, 6.0, FLAG_COMPLETED | FLAG_PROGRESSIVE]
-    assert pass_row({**row, "completed": False, "progressive": False, "assist": True})[4] == FLAG_ASSIST
+           "progressive": True, "key_pass": None, "assist": False, "xt": 0.01234}
+    assert pass_row(row, 3) == [10.0, 5.0, 40.0, 6.0, FLAG_COMPLETED | FLAG_PROGRESSIVE, 3, 0.012]
+    assert pass_row({**row, "completed": False, "progressive": False, "assist": True}, 0)[4] == FLAG_ASSIST
 
 
 def test_squad_rank_respects_the_gate_and_ties():
@@ -79,3 +80,31 @@ def test_age_on():
     assert age_on(date(2003, 9, 12), date(2026, 5, 24)) == 22
     assert age_on(date(2003, 5, 24), date(2026, 5, 24)) == 23
     assert age_on(None, date(2026, 5, 24)) is None
+
+
+def _match(minutes, **parts):
+    return {"minutes": minutes, "kpi_parts": parts}
+
+
+def test_kpi_value_rebuilds_totals_rates_and_per_90():
+    matches = [
+        _match(90, goals=1, assists=0, tackles=2, tackles_missed=1, dribbled_past=1, vaep=0.3),
+        _match(45, goals=0, assists=2, tackles=0, tackles_missed=0, dribbled_past=0, vaep=0.15),
+    ]
+    assert kpi_value(PlayerKpi("goal_contributions"), matches) == 3
+    # A rate is pooled over the matches, not an average of match rates.
+    assert kpi_value(PlayerKpi("ground_duel_win_rate", "pct", 1, total=False), matches) == 50.0
+    assert kpi_value(PlayerKpi("vaep_per_90", decimals=3, total=False), matches) == 0.3
+    # No denominator in the selection: not applicable, never 0.
+    assert kpi_value(PlayerKpi("ground_duel_win_rate", "pct", 1, total=False), matches[1:]) is None
+
+
+def test_top_ids_puts_nulls_last_and_breaks_ties_on_start_event():
+    rows = [
+        {"sequence_id": "a", "xt": 0.1, "start_event_id": 9},
+        {"sequence_id": "b", "xt": None, "start_event_id": 1},
+        {"sequence_id": "c", "xt": 0.1, "start_event_id": 2},
+        {"sequence_id": "d", "xt": 0.5, "start_event_id": 5},
+    ]
+    assert top_ids(rows, "xt", 3) == ["d", "c", "a"]
+    assert top_ids(rows, "xt", 9)[-1] == "b"

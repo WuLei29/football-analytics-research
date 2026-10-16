@@ -202,7 +202,7 @@ src/
     config.py                     #   teams, seasons, metric registries, percentile gate, caps
     db.py                         #   every export query (read-only)
     manifest.py league_table.py overview.py match.py   # one module per published file
-    squad.py player.py            #   screen 03: squad.json + players/{id}.json
+    squad.py player.py            #   screen 03: squad.json + players/{id}.json (per match, filterable)
     player_percentiles.py         #   screen-03 percentile ranking (pure; site gate)
 sql/
   ddl/                            # gold DDL + gold_functions.sql (geometry helpers: zone_id, in_box, is_progressive…)
@@ -352,9 +352,12 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   match list, `/demo`, and **screen 03 (player, 16 Oct 2026)**:
   `/{team}/jugador/{season}/{player_id}` from `squad.json` +
   `players/{id}.json` (`src/export/squad.py`, `player.py`), components in
-  `web/components/player/`, fixture page `/demo/jugador`. Until the export
-  has run `--only squad,player` against the real database the route builds
-  one "en preparación" placeholder page and the leader rows stay unlinked.
+  `web/components/player/`, fixture page `/demo/jugador`; the Plantilla tab
+  (`/{team}/plantilla/{season}`) opens it on the first squad player. A match
+  filter (`?partidos=`) narrows card, map and sequences, not percentiles;
+  filtered sequences fetch their match files, so **export player and match
+  files in the same run** (they share `sequence_id`). README-PLAYER
+  "Review of 16 Oct 2026".
   Brief `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
   spine is **settled (15 Oct 2026)**: per-role cards (README-PLAYER §4), roles
   `GK CB RB LB MID AM W ST` (`role_group`, AM = midfielder with ≥ 30% of

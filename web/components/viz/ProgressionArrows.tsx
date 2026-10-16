@@ -45,7 +45,8 @@ interface ProgressionArrowsProps {
   className?: string;
 }
 
-const STYLE = {
+/** Exported so the player page's arrow modes draw with the same weights. */
+export const PROGRESSION_STYLE = {
   pass: { tone: "blue", width: 0.28, opacity: 0.55 },
   carry: { tone: "gold", width: 0.42, opacity: 0.9 },
 } as const;
@@ -67,7 +68,7 @@ export function ProgressionArrows({
     end_x: a.end_x,
     end_y: a.end_y,
     completed: a.completed,
-    ...STYLE[a.kind],
+    ...PROGRESSION_STYLE[a.kind],
   }));
   return (
     <ActionArrows actions={marks} orientation={orientation} title={title} className={className} />

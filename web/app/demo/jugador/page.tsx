@@ -7,10 +7,12 @@
  *        `lib/viz/fixtures.ts`, seeded and deterministic.
  *
  * The /demo idiom applied to a whole page: the new layers (ActionArrows, the
- * reception dot layer, the player variant of SequenceTraces, the percentile
- * cards) are checked here before a real `players/{id}.json` exists, and the
- * fixture is the contract check — it is typed as `PlayerFile`. The tab-strip
- * pills render but link nowhere: there are no fixture pages behind them.
+ * reception dot layer, the sequence browser with the gold player node, the
+ * percentile cards, the match filter) are checked here against a fixture,
+ * and the fixture is the contract check — it is typed as `PlayerFile`. The
+ * player picker's rows render but link nowhere: there are no fixture pages
+ * behind them. Every chain ships in the fixture, so the sequences never
+ * fetch a match file here.
  */
 
 import { PlayerView } from "@/components/player/PlayerView";

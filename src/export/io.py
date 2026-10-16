@@ -97,12 +97,17 @@ class Writer:
         self.dry_run = dry_run
         self.written: list[tuple[str, int]] = []
 
-    def write(self, rel_path: str, payload: dict[str, Any], generated_at: datetime) -> None:
+    def write(self, rel_path: str, payload: dict[str, Any], generated_at: datetime,
+              compact: bool = False) -> None:
+        """`compact` drops the indentation: for files that are mostly long
+        arrays of coordinates (the player files), where indent=2 puts every
+        number on its own line, triples the size and makes no diff readable."""
         body = json.dumps(
             envelope(payload, generated_at),
             cls=_Encoder,
             ensure_ascii=False,
-            indent=2,
+            indent=None if compact else 2,
+            separators=(",", ":") if compact else None,
             sort_keys=True,
         )
         size = len(body.encode("utf-8"))

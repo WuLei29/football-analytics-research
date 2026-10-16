@@ -8,22 +8,32 @@ Spec: md/WEB_DATA.md §9, README-PLAYER "Data contract" (which replaces §9 for
 screen 03).
 
 Reads: silver.players, silver.events, silver.matches, gold.player_season_stats,
-gold.pass_receptions, gold.sequences, gold.sequence_players.
+gold.player_match_stats, gold.pass_receptions, gold.sequences,
+gold.sequence_players.
 Writes: teams/{team}/{season}/players/{player_id}.json.
 
-Nothing is aggregated on the site and no gold table is created for this page:
-every block below is a slice of an existing gold or silver table.
+No gold table is created for this page: every block below is a slice of an
+existing gold or silver table.
 
 Frame: every coordinate is the player's own event, in his team's attacking
 frame (§3.1), so the site draws it as shipped -- a right back's marks sit at
 low y, which the site puts at the bottom of a horizontal pitch.
 
-Deviation from README-PLAYER's contract, on purpose: the passes ship as THREE
-lists (`passes`, `progressive_passes`, `key_passes`) rather than one list with
-flag bits filtered on the site. The three modes have different caps -- the
-150 most recent, the 60 best by xT, all of them -- and one capped list cannot
-serve all three without the progressive mode showing only whatever progressive
-passes happened to be recent.
+The match filter (16 Oct 2026). The page can narrow the profile card, the
+event map and the sequences to one match or a group of matches; the
+percentile cards stay season-wide. So the file is per match underneath:
+
+  - `matches[]` -- every match the player played, in date order, with its bio
+    counts and the gold.player_match_stats columns the headline KPIs are
+    rebuilt from (`KPI_FORMULAS`). `build` checks that the formula over every
+    match reproduces the season value, so the two cannot drift.
+  - every map row carries `m`, its index into `matches[]`, and ships
+    UNCAPPED: the caps (150 recent passes, 60 best progressive) are applied
+    on the site after the filter (`caps`).
+  - `sequences.index` is every chain the player was in; the page ranks it for
+    the selection and draws each chain from its match file, which carries
+    the same actions (WEB_DATA §7.3). The season top lists ship in full in
+    `sequences.entries`, so the default view needs no fetch.
 """
 
 from __future__ import annotations
@@ -33,35 +43,39 @@ from typing import Any
 
 from . import db
 from .config import (
+    KPI_FORMULAS,
     PLAYER_KPIS,
     PLAYER_PASS_MAP_MAX,
     PLAYER_PROGRESSIVE_MAX,
     PLAYER_TOP_SEQUENCES,
     RECEPTION_MAX_GAP_M,
-    SEQUENCE_MAX_WAYPOINTS,
     SEQUENCE_MIN_EVENTS,
     PlayerKpi,
     TeamConfig,
     min_minutes_for,
 )
 from .io import Writer, as_int, r, r_coord, r_rate, r_value
-from .match import (
-    _body_part,
-    _sequence_points,
-    _shot_outcome,
-    sequence_kind,
-    simplify,
-)
+from .match import _body_part, _sequences as match_sequences, _shot_outcome
 from .seasons import SeasonMeta
 from .squad import display_name
 
-# Bits of the compact pass row [x, y, end_x, end_y, flags].
+# Bits of the compact pass row [x, y, end_x, end_y, flags, m, xt].
 FLAG_COMPLETED, FLAG_PROGRESSIVE, FLAG_KEY_PASS, FLAG_ASSIST = 1, 2, 4, 8
 
 # README-PLAYER §3b: these two are always a duel lost (the player went in and
 # missed, or was dribbled past); a Tackle is won or lost by its outcome; every
 # other defensive type is a ball won.
 DEFENCE_ALWAYS_LOST = {"Attempted Tackle", "Challenge"}
+
+# The bio counts that are summed over the selected matches, and the season
+# column each must add up to.
+BIO_SUMS = {
+    "minutes": "minutes_played",
+    "yellow_cards": "yellow_cards",
+    "red_cards": "red_cards",
+    "penalties_taken": "penalties_taken",
+    "penalties_scored": "penalties_scored",
+}
 
 
 def age_on(born: date | None, on: date | None) -> int | None:
@@ -105,6 +119,91 @@ def _player_block(row: dict[str, Any], season: SeasonMeta) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# matches (the filter's rows)
+# ---------------------------------------------------------------------------
+
+def kpi_columns(role: str) -> list[str]:
+    """The gold.player_match_stats columns the role's KPIs are rebuilt from."""
+    cols: set[str] = set()
+    for kpi in PLAYER_KPIS[role]:
+        formula = KPI_FORMULAS[kpi.key]
+        cols.update(formula["num"])
+        cols.update(formula.get("den") or {})
+    return sorted(cols)
+
+
+def _match_entry(row: dict[str, Any], columns: list[str]) -> dict[str, Any]:
+    return {
+        "match_id": int(row["match_id"]),
+        "matchday": as_int(row["matchday"]),
+        "date": row["match_date"],
+        "is_home": bool(row["is_home"]),
+        "opponent_abbr": row["opponent_abbr"],
+        "opponent_short_name": row["opponent_short_name"],
+        "goals_for": as_int(row["goals_for"]),
+        "goals_against": as_int(row["goals_against"]),
+        "started": bool(row["started"]),
+        "subbed_off": bool(row["subbed_off"]),
+        "minutes": int(row["minutes_played"]),
+        "yellow_cards": int(row["yellow_cards"] or 0),
+        "red_cards": int(row["red_cards"] or 0),
+        "penalties_taken": int(row["penalties_taken"]),
+        "penalties_scored": int(row["penalties_scored"]),
+        # Unrounded beyond 4 decimals: the site sums these, and a season of
+        # 2-decimal VAEP values would drift from the season figure.
+        "kpi_parts": {c: round(float(row[c]), 4) for c in columns},
+    }
+
+
+def kpi_value(kpi: PlayerKpi, matches: list[dict[str, Any]]) -> float | None:
+    """The KPI over `matches` by its KPI_FORMULAS entry, display-scaled. The
+    site runs the same arithmetic (lib/data/playerFilter.ts)."""
+    formula = KPI_FORMULAS[kpi.key]
+
+    def total(terms: dict[str, float]) -> float:
+        return sum(coef * m["kpi_parts"][col] for m in matches for col, coef in terms.items())
+
+    num = total(formula["num"])
+    if formula.get("per90"):
+        minutes = sum(m["minutes"] for m in matches)
+        value = num * 90.0 / minutes if minutes else None
+    elif formula.get("den"):
+        den = total(formula["den"])
+        value = num / den if den else None
+    else:
+        value = num
+    return _scaled(kpi, value)
+
+
+def check_against_season(player_id: int, entries: list[dict[str, Any]],
+                         kpis: list[dict[str, Any]], role: str,
+                         season_row: dict[str, Any]) -> None:
+    """Fail loudly when the per-match rows do not add up to the season: the
+    page would show one number for "Temporada" and another for every match
+    selected one by one."""
+    problems: list[str] = []
+    if len(entries) != int(season_row["matches_played"]):
+        problems.append(f"matches {len(entries)} vs {season_row['matches_played']}")
+    starts = sum(1 for m in entries if m["started"])
+    if starts != int(season_row["matches_started"]):
+        problems.append(f"starts {starts} vs {season_row['matches_started']}")
+    for key, col in BIO_SUMS.items():
+        got = sum(m[key] for m in entries)
+        if got != int(season_row[col] or 0):
+            problems.append(f"{key} {got} vs {season_row[col]}")
+    for kpi, shipped in zip(PLAYER_KPIS[role], kpis):
+        rebuilt = kpi_value(kpi, entries)
+        season = shipped["value"]
+        if (rebuilt is None) != (season is None) or (
+                rebuilt is not None and abs(rebuilt - season) > 1.01 * 10 ** -kpi.decimals):
+            problems.append(f"{kpi.key} {rebuilt} vs season {season}")
+    if problems:
+        raise ValueError(
+            f"player {player_id}: per-match rows do not add up to the season: "
+            + "; ".join(problems))
+
+
+# ---------------------------------------------------------------------------
 # kpis (§3a)
 # ---------------------------------------------------------------------------
 
@@ -140,6 +239,7 @@ def _kpis(role: str, player_id: int, club_rows: list[dict[str, Any]],
     out: list[dict[str, Any]] = []
     for kpi in PLAYER_KPIS[role]:
         raw = mine[kpi.key]
+        formula = KPI_FORMULAS[kpi.key]
         entry: dict[str, Any] = {
             "key": kpi.key,
             "value": _scaled(kpi, raw),
@@ -148,6 +248,13 @@ def _kpis(role: str, player_id: int, club_rows: list[dict[str, Any]],
             "per_90": None,
             "squad_rank": None,
             "squad_n": None,
+            # How the page rebuilds the value for a selection of matches.
+            "formula": {
+                "num": formula["num"],
+                "den": formula.get("den"),
+                "per90": bool(formula.get("per90")),
+            },
+            "total": kpi.total,
         }
         if kpi.total:
             # The sub line under a season total is its per-90.
@@ -164,23 +271,21 @@ def _kpis(role: str, player_id: int, club_rows: list[dict[str, Any]],
 # maps (§3b)
 # ---------------------------------------------------------------------------
 
-def pass_row(row: dict[str, Any]) -> list[float | int]:
+def pass_row(row: dict[str, Any], m: int) -> list[float | int | None]:
     flags = ((FLAG_COMPLETED if row["completed"] else 0)
              | (FLAG_PROGRESSIVE if row["progressive"] else 0)
              | (FLAG_KEY_PASS if row["key_pass"] else 0)
              | (FLAG_ASSIST if row["assist"] else 0))
     return [r_coord(row["x"]), r_coord(row["y"]),
-            r_coord(row["end_x"]), r_coord(row["end_y"]), flags]
+            r_coord(row["end_x"]), r_coord(row["end_y"]), flags, m,
+            r_value(row["xt"])]
 
 
-def _zones(rows: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
-    total = sum(int(row[key]) for row in rows)
+def _zone_rows(rows: list[dict[str, Any]], key: str,
+               index: dict[int, int]) -> list[list[int]]:
+    """[m, zone_id, count] per match and zone."""
     return [
-        {
-            "zone_id": int(row["zone_id"]),
-            "count": int(row[key]),
-            "share": r_rate(100.0 * int(row[key]) / total) if total else None,
-        }
+        [index[int(row["match_id"])], int(row["zone_id"]), int(row[key])]
         for row in rows
         if row["zone_id"] is not None
     ]
@@ -219,57 +324,56 @@ def defence_outcome(event_type: str, outcome: str | None) -> str:
     return "won"
 
 
-def _defence(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _defence(rows: list[dict[str, Any]], m) -> list[list[Any]]:
+    """[type, x, y, won 0|1, minute, m] -- compact: a centre back has 500+.
+    `type` is the page-02 key, so the chips and tooltips reuse its labels."""
     return [
-        {
-            # The page-02 type keys, so the chips and tooltips reuse its labels.
-            "type": row["event_type"].lower().replace(" ", "_"),
-            "x": r_coord(row["x"]),
-            "y": r_coord(row["y"]),
-            "outcome": defence_outcome(row["event_type"], row["outcome"]),
-            "minute": as_int(row["minute"]),
-            "matchday": as_int(row["matchday"]),
-        }
+        [
+            row["event_type"].lower().replace(" ", "_"),
+            r_coord(row["x"]),
+            r_coord(row["y"]),
+            1 if defence_outcome(row["event_type"], row["outcome"]) == "won" else 0,
+            as_int(row["minute"]),
+            m(row),
+        ]
         for row in rows
     ]
 
 
-def _maps(conn, cs_id: int, team_id: int, player_id: int) -> dict[str, Any]:
-    counts = db.fetch_player_pass_counts(conn, cs_id, team_id, player_id) or {}
-    touch_rows = db.fetch_player_touch_zones(conn, cs_id, team_id, player_id)
-    reception_rows = db.fetch_player_reception_zones(conn, cs_id, team_id, player_id)
+def _maps(conn, cs_id: int, team_id: int, player_id: int,
+          index: dict[int, int]) -> dict[str, Any]:
+    def m(row: dict[str, Any]) -> int:
+        match_id = int(row["match_id"])
+        if match_id not in index:
+            raise ValueError(
+                f"player {player_id}: an event of match {match_id}, which is "
+                "not in his gold.player_match_stats rows")
+        return index[match_id]
+
     return {
-        # Totals behind every capped list, for the "150 DE 1,284" note.
-        "counts": {
-            "passes": int(counts.get("passes") or 0),
-            "progressive_passes": int(counts.get("progressive_passes") or 0),
-            "key_passes": int(counts.get("key_passes") or 0),
-            "assists": int(counts.get("assists") or 0),
-            "progressive_carries": db.fetch_player_carry_count(conn, cs_id, team_id, player_id),
-            "touches": sum(int(row["touches"]) for row in touch_rows),
-            "receptions": sum(int(row["receptions"]) for row in reception_rows),
-        },
-        "passes": [pass_row(row) for row in db.fetch_player_recent_passes(
-            conn, cs_id, team_id, player_id, PLAYER_PASS_MAP_MAX)],
-        "progressive_passes": [pass_row(row) for row in db.fetch_player_progressive_passes(
-            conn, cs_id, team_id, player_id, PLAYER_PROGRESSIVE_MAX)],
-        "key_passes": [pass_row(row) for row in db.fetch_player_key_passes(
+        # Applied on the site after the match filter.
+        "caps": {"passes": PLAYER_PASS_MAP_MAX, "progressive": PLAYER_PROGRESSIVE_MAX},
+        "passes": [pass_row(row, m(row)) for row in db.fetch_player_passes(
             conn, cs_id, team_id, player_id)],
         "carries": [
             [r_coord(row["x"]), r_coord(row["y"]), r_coord(row["end_x"]),
-             r_coord(row["end_y"]), 1 if row["completed"] else 0]
-            for row in db.fetch_player_carries(conn, cs_id, team_id, player_id,
-                                               PLAYER_PROGRESSIVE_MAX)
+             r_coord(row["end_y"]), 1 if row["completed"] else 0, m(row),
+             r_value(row["xt"])]
+            for row in db.fetch_player_carries(conn, cs_id, team_id, player_id)
         ],
-        "touch_zones": _zones(touch_rows, "touches"),
-        "reception_zones": _zones(reception_rows, "receptions"),
+        "touch_zones": _zone_rows(
+            db.fetch_player_touch_zones(conn, cs_id, team_id, player_id),
+            "touches", index),
+        "reception_zones": _zone_rows(
+            db.fetch_player_reception_zones(conn, cs_id, team_id, player_id),
+            "receptions", index),
         "progressive_receptions": [
-            [r_coord(row["rx_x"]), r_coord(row["rx_y"]), 1 if row["rx_in_box"] else 0]
+            [r_coord(row["rx_x"]), r_coord(row["rx_y"]), 1 if row["rx_in_box"] else 0, m(row)]
             for row in db.fetch_player_progressive_receptions(
                 conn, cs_id, team_id, player_id, RECEPTION_MAX_GAP_M)
         ],
         "shots": _shots(db.fetch_player_shots(conn, cs_id, team_id, player_id)),
-        "defence": _defence(db.fetch_player_defence(conn, cs_id, team_id, player_id)),
+        "defence": _defence(db.fetch_player_defence(conn, cs_id, team_id, player_id), m),
     }
 
 
@@ -277,79 +381,48 @@ def _maps(conn, cs_id: int, team_id: int, player_id: int) -> dict[str, Any]:
 # sequences (§5)
 # ---------------------------------------------------------------------------
 
-def sequence_entry(row: dict[str, Any], chain: list[dict[str, Any]],
-                   player_id: int) -> dict[str, Any]:
-    """One row of the top-10 list, with its trace.
+def top_ids(rows: list[dict[str, Any]], metric: str, limit: int) -> list[str]:
+    """The `limit` best chains by `metric`, NULLs last, start_event_id the
+    tiebreak (it does not renumber on a gold rebuild)."""
+    ranked = sorted(
+        rows,
+        key=lambda row: (row[metric] is None, -float(row[metric] or 0),
+                         int(row["start_event_id"])),
+    )
+    return [row["sequence_id"] for row in ranked[:limit]]
 
-    The player's FIRST touch of the chain is forced into the simplified
-    polyline as a waypoint, so the gold dot the site draws on it always sits
-    on the line (README-PLAYER §5). `player_touch_index` is its index in
-    `points`, or null if none of his events in the chain has a coordinate.
-    """
-    points = _sequence_points(chain)
-    touch = next((i for i, e in enumerate(chain) if e["player_id"] == player_id), None)
-    simplified = simplify(points, SEQUENCE_MAX_WAYPOINTS,
-                          keep=(touch,) if touch is not None else ())
-    touch_index = None
-    if touch is not None:
-        # simplify returns the same list objects, so identity finds the point
-        # even when two waypoints share a coordinate.
-        touch_index = next(j for j, p in enumerate(simplified) if p is points[touch])
+
+def _sequences(conn, cs_id: int, team_id: int, player_id: int,
+               index: dict[int, int]) -> dict[str, Any]:
+    rows = db.fetch_player_sequence_index(conn, cs_id, team_id, player_id,
+                                          SEQUENCE_MIN_EVENTS)
+    season_ids = sorted(set(top_ids(rows, "xt", PLAYER_TOP_SEQUENCES))
+                        | set(top_ids(rows, "vaep", PLAYER_TOP_SEQUENCES)))
+    entries = match_sequences(
+        db.fetch_player_sequence_rows(conn, team_id, season_ids),
+        db.fetch_player_sequence_events(conn, team_id, season_ids),
+    )
+    by_id = {
+        row["sequence_id"]: int(row["match_id"])
+        for row in rows
+    }
+    for entry in entries:
+        # The match file's entry, word for word, minus the per-match rank.
+        entry.pop("rank", None)
+        entry["match_id"] = by_id[entry["sequence_id"]]
 
     return {
-        # Stable across gold rebuilds, unlike sequence_id (CLAUDE.md traps).
-        "id": int(row["start_event_id"]),
-        "match_id": int(row["match_id"]),
-        "matchday": as_int(row["matchday"]),
-        "opponent_abbr": row["opponent_abbr"],
-        "is_home": bool(row["is_home"]),
-        "period": as_int(row["period"]),
-        "minute": as_int(row["start_minute"]),
-        "second": as_int(row["start_second"]),
-        # The match page's row title, by the same function (§7.6).
-        "kind": sequence_kind(row, chain),
-        "outcome": row["outcome"],
-        "events": as_int(row["event_count"]),
-        "passes": as_int(row["pass_count"]),
-        "player_touches": as_int(row["player_touches"]),
-        "xt": r_value(row["xt"]),
-        "vaep": r_value(row["vaep"]),
-        "ends_in_shot": int(row["shot_count"] or 0) > 0,
-        "points": simplified,
-        "player_touch_index": touch_index,
-    }
-
-
-def _sequences(conn, cs_id: int, team_id: int, player_id: int) -> dict[str, Any]:
-    agg = db.fetch_player_sequence_aggregates(
-        conn, cs_id, team_id, player_id, SEQUENCE_MIN_EVENTS) or {}
-    tops = {
-        metric: db.fetch_player_top_sequences(
-            conn, cs_id, team_id, player_id, SEQUENCE_MIN_EVENTS, metric,
-            PLAYER_TOP_SEQUENCES)
-        for metric in ("xt", "vaep")
-    }
-    ids = sorted({row["sequence_id"] for rows in tops.values() for row in rows})
-    by_sequence: dict[str, list[dict[str, Any]]] = {}
-    for event in db.fetch_player_sequence_events(conn, team_id, ids):
-        by_sequence.setdefault(event["sequence_id"], []).append(event)
-
-    def entries(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        return [sequence_entry(row, by_sequence[row["sequence_id"]], player_id)
-                for row in rows if by_sequence.get(row["sequence_id"])]
-
-    n = int(agg.get("sequences") or 0)
-    return {
-        # Over EVERY chain with the player and 3+ events, not the top 10.
-        "aggregates": {
-            "sequences": n,
-            "xt": r_value(agg.get("xt")) if n else None,
-            "ends_in_shot": int(agg.get("ends_in_shot") or 0),
-            "passes_per_sequence": r_rate(agg.get("passes_per_sequence")) if n else None,
-        },
         "min_events": SEQUENCE_MIN_EVENTS,
-        "top_xt": entries(tops["xt"]),
-        "top_vaep": entries(tops["vaep"]),
+        "top": PLAYER_TOP_SEQUENCES,
+        # [m, sequence_id, xt, vaep, ends_in_shot 0|1, passes] per chain.
+        "index": [
+            [index[int(row["match_id"])], row["sequence_id"],
+             r_value(row["xt"]), r_value(row["vaep"]),
+             1 if int(row["shot_count"] or 0) > 0 else 0,
+             as_int(row["pass_count"])]
+            for row in rows
+        ],
+        "entries": entries,
     }
 
 
@@ -372,6 +445,13 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
         if role not in PLAYER_KPIS:
             raise KeyError(f"player {player_id}: no KPI set for role {role!r}")
 
+        columns = kpi_columns(role)
+        matches = [_match_entry(m, columns) for m in db.fetch_player_matches(
+            conn, cs_id, team_id, player_id, columns)]
+        index = {m["match_id"]: i for i, m in enumerate(matches)}
+        kpis = _kpis(role, player_id, kpi_rows, gate)
+        check_against_season(player_id, matches, kpis, role, row)
+
         payload = {
             "team": {
                 "slug": team_cfg.slug,
@@ -387,12 +467,13 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
                 "through_matchday": through_matchday,
             },
             "player": _player_block(row, season),
-            "kpis": _kpis(role, player_id, kpi_rows, gate),
-            "maps": _maps(conn, cs_id, team_id, player_id),
+            "matches": matches,
+            "kpis": kpis,
+            "maps": _maps(conn, cs_id, team_id, player_id, index),
             "percentiles": percentiles.get((player_id, team_id)),
-            "sequences": _sequences(conn, cs_id, team_id, player_id),
+            "sequences": _sequences(conn, cs_id, team_id, player_id, index),
         }
         writer.write(
             f"teams/{team_cfg.slug}/{season.slug}/players/{player_id}.json",
-            payload, generated_at,
+            payload, generated_at, compact=True,
         )

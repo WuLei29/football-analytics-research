@@ -20,15 +20,20 @@ export const routes = {
   matches: (team: string, season: string) => `/${team}/partidos/${season}`,
   /** Screen 02 — match analysis. Phase 5a. */
   match: (team: string, matchId: number) => `/${team}/partido/${matchId}`,
-  /** The sortable squad table. Phase 5b. */
+  /**
+   * The Plantilla tab: screen 03 opened on the first player of the squad
+   * (GK first), with the player picker to move on. The sortable squad table
+   * of WEB_PLAN phase 5b is not built.
+   */
   squad: (team: string, season: string) => `/${team}/plantilla/${season}`,
   /**
-   * Screen 03 — player profile. A season page: minutes, percentiles and maps
-   * are all season-scoped (README-PLAYER open decision 1). `vista` is the
-   * event-map mode, carried so it stays sticky from one player to the next.
+   * Screen 03 — player profile. A season page: percentiles are season-scoped
+   * (README-PLAYER open decision 1). `query` is the `?vista=&partidos=` the
+   * picker carries so the map mode and the match filter stay sticky from one
+   * player to the next (`lib/vista.ts`).
    */
-  player: (team: string, season: string, playerId: number, vista?: string) =>
-    `/${team}/jugador/${season}/${playerId}/${vista ? `?vista=${vista}` : ""}`,
+  player: (team: string, season: string, playerId: number, query = "") =>
+    `/${team}/jugador/${season}/${playerId}/${query}`,
   /** Screen 04 — sequence laboratory. Phase 5b. */
   sequences: (team: string, season: string) => `/${team}/secuencias/${season}`,
   /** Screen 05 — match-group comparison. Phase 5b. */
@@ -51,7 +56,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { key: "season", label: "Temporada", href: routes.season, ready: true },
   { key: "matches", label: "Partidos", href: routes.matches, ready: true },
-  { key: "squad", label: "Plantilla", href: routes.squad, ready: false },
+  { key: "squad", label: "Plantilla", href: routes.squad, ready: true },
   { key: "sequences", label: "Secuencias", href: routes.sequences, ready: false },
   { key: "compare", label: "Comparar", href: routes.compare, ready: false },
   {

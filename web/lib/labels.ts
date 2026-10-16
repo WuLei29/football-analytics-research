@@ -432,6 +432,8 @@ export const viz = {
     sequenceStart: "Inicio de la jugada",
     sequenceRegain: "Balón recuperado",
     sequenceHover: "Pasa el cursor por una acción para leerla.",
+    /** The player page's gold node: "Romero". */
+    focusPlayer: (surname: string) => surname,
   },
 
   /** The hover card of one action in the detailed sequence view. */
@@ -980,6 +982,23 @@ export const player = {
   seasonLine: (season: string, matchday: number | null) =>
     matchday === null ? `LALIGA ${season}` : `LALIGA ${season} · HASTA J${matchday}`,
   tabsLabel: "Jugadores de la plantilla",
+  /** The player picker (replaces the pill strip, 16 Oct 2026). */
+  pickerLabel: "Cambiar de jugador",
+
+  /** The match filter: what the card, the map and the sequences cover. */
+  filter: {
+    label: "Partidos",
+    season: "Temporada completa",
+    last5: "Últimos 5",
+    home: "Como local",
+    away: "Como visitante",
+    pick: "O elige partidos",
+    count: (n: number) => (n === 1 ? "1 partido" : `${n} partidos`),
+    /** The button when exactly one match is selected: "J5 · L LEV 3–0". */
+    one: (matchday: number, venue: string, abbr: string, gf: number, ga: number) =>
+      `J${matchday} · ${venue} ${abbr} ${gf}–${ga}`,
+    scope: "Ficha, mapa y jugadas · los percentiles son siempre de toda la temporada",
+  },
 
   bio: {
     age: "Edad",
@@ -1003,37 +1022,50 @@ export const player = {
   kpiPer90: (value: string) => `${value} por 90`,
   kpiSquadRank: (rank: number, n: number) => `${rank}.º de ${n} en la plantilla`,
   kpiUnranked: "pocos minutos para ordenar",
+  /** Under a filtered rate, where a squad rank would be a season fact. */
+  kpiSelection: (n: number) => (n === 1 ? "en este partido" : `en estos ${n} partidos`),
 
-  mapAttack: "ATAQUE →",
-  /** "150 DE 1,284 PASES" when a cap applies, else "34 PASES". */
-  mapCount: (shown: string, total: string, noun: string, capped: boolean) =>
-    capped ? `${shown} DE ${total} ${noun}` : `${total} ${noun}`,
-  mapNouns: {
-    pases: "PASES",
-    progresivos: "PASES PROGRESIVOS",
-    conducciones: "CONDUCCIONES",
-    toques: "TOQUES",
-    recepciones: "RECEPCIONES",
-    tiros: "TIROS",
-    defensivas: "ACCIONES",
-    "pases-clave": "PASES CLAVE Y ASIST.",
-  } as Record<PlayerMapMode, string>,
-  mapEmpty: "Ninguna acción de este tipo en la temporada.",
+  /**
+   * The caption of the event-map card, a sentence like the match page's
+   * captions. `shown`/`total` are formatted; `capped` when a cap cut the list.
+   */
+  mapCaption: (mode: PlayerMapMode, shown: string, total: string, capped: boolean) => {
+    const attack = " · ataca hacia la derecha";
+    switch (mode) {
+      case "pases":
+        return (capped ? `Los ${shown} más recientes de ${total} pases` : `${total} pases`) + attack;
+      case "progresivos":
+        return (capped
+          ? `Los ${shown} de más xT de ${total} pases progresivos`
+          : `${total} pases progresivos`) + attack;
+      case "conducciones":
+        return (capped
+          ? `Las ${shown} de más xT de ${total} conducciones progresivas`
+          : `${total} conducciones progresivas`) + attack;
+      case "toques":
+        return `${total} toques con balón, por zona` + attack;
+      case "recepciones":
+        return `${total} pases recibidos, por zona` + attack;
+      case "tiros":
+        return `${total} tiros` + attack;
+      case "defensivas":
+        return `${total} acciones defensivas` + attack;
+      case "pases-clave":
+        return `${total} pases clave y asistencias` + attack;
+    }
+  },
+  mapModesLabel: "Qué dibuja el mapa",
+  mapEmpty: "Ninguna acción de este tipo en los partidos elegidos.",
+  /** Legend items in the match page's style: the mark's name, nothing else. */
   legend: {
-    progressive: "Azul = progresivo",
-    rest: "gris = resto",
-    failed: "discontinua = fallado",
-    progressiveRule: "Acercan el balón ≥ 25 % a la portería",
-    carryRule: "Progresivas · ≥ 25 % más cerca de portería",
-    touchDensity: "Densidad de toques",
-    receptionZones: "Zonas = recepciones",
-    receptionDot: "Punto = recepción progresiva",
-    receptionRing: "Anillo = en el área",
-    shotSize: "Tamaño = xG · relleno = resultado",
-    regain: "Azul = recupera",
-    lost: "gris = pierde",
-    assist: "Dorado = asistencia",
-    keyPass: "azul = pase clave",
+    restPasses: "Resto de pases",
+    failed: "Fallado",
+    progressiveRule: "Progresivo: acerca el balón ≥ 25 % a la portería",
+    receptionZones: "Recepciones por zona",
+    receptionDot: "Recepción progresiva",
+    receptionRing: "En el área",
+    assist: "Asistencia",
+    keyPass: "Pase clave",
   },
 
   percentileHeading: (group: string) => `Percentil vs LaLiga · ${group}`,
@@ -1049,23 +1081,22 @@ export const player = {
   lowerIsBetter: "↓",
 
   sequencesHeading: (surname: string) => `Jugadas con ${surname}`,
-  tracesHeading: "Trazas",
-  tracesNote: "Punto = inicio · dorado = su toque · anillo = final",
   aggregates: {
     sequences: "Jugadas",
     xt: "xT en jugadas",
     shots: "Acaban en tiro",
     passes: "Pases por jugada (media)",
   },
-  aggregatesNote: (min: number) => `Todas las jugadas con él y ${min} o más acciones`,
-  topHeading: (metric: string) => `Top 10 por ${metric}`,
-  topHint: "clic para trazar",
-  /** "J7 · 42'". */
-  sequenceWhen: (matchday: number, minute: number) => `J${matchday} · ${minute}'`,
-  /** "GIR (L)" / "GIR (V)". */
-  sequenceOpponent: (abbr: string, home: boolean) => `${abbr} (${home ? "L" : "V"})`,
-  sequenceLine: (passes: string, touches: string) => `${passes} pases · ${touches} toques suyos`,
-  sequencesEmpty: "Todavía no hay jugadas de tres o más acciones con él.",
+  /** "Las 10 mejores de sus 1,107 jugadas de tres o más acciones, por xT. …" */
+  sequencesCaption: (shown: number, total: string, metric: string) =>
+    `Las ${shown} mejores de sus ${total} jugadas de tres o más acciones, ` +
+    `por ${metric}. Elige una para leerla; en dorado, él.`,
+  sequencesEmpty: "No hay jugadas de tres o más acciones con él en estos partidos.",
+  sequencesLoading: "Cargando las jugadas de estos partidos…",
+  sequencesError: "No se pudieron cargar las jugadas de estos partidos.",
+  /** "J9 · OVI (V)": which match a chain in the list is from. */
+  sequenceContext: (matchday: number, abbr: string, home: boolean) =>
+    `J${matchday} · ${abbr} (${home ? "L" : "V"})`,
 
   /** The placeholder page built before the export has written any squad.json. */
   pendingTitle: "Perfiles de jugador",

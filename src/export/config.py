@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUT = PROJECT_ROOT / "web" / "public" / "data"
@@ -459,6 +460,33 @@ PLAYER_KPIS: dict[str, list[PlayerKpi]] = {
 PLAYER_KPIS["W"] = PLAYER_KPIS["ST"]
 PLAYER_KPIS["RB"] = PLAYER_KPIS["CB"]
 PLAYER_KPIS["LB"] = PLAYER_KPIS["CB"]
+
+# How each headline KPI is rebuilt from gold.player_match_stats when the page
+# filters to a match or a group of matches (16 Oct 2026). `num` and `den` are
+# {column: coefficient}, summed over the selected matches; the value is
+# sum(num) / sum(den), or sum(num) * 90 / minutes when `per90`. The export
+# checks that the formula over every match reproduces the season value, so a
+# gold definition that drifts from this table fails the run.
+KPI_FORMULAS: dict[str, dict[str, Any]] = {
+    "goals": {"num": {"goals": 1}},
+    "assists": {"num": {"assists": 1}},
+    "npxg": {"num": {"npxg": 1}},
+    "goal_contributions": {"num": {"goals": 1, "assists": 1}},
+    "xa": {"num": {"xa": 1}},
+    "key_passes": {"num": {"key_passes": 1}},
+    "progressive_passes": {"num": {"progressive_passes": 1}},
+    "ball_recoveries": {"num": {"ball_recoveries": 1}},
+    "vaep_per_90": {"num": {"vaep": 1}, "per90": True},
+    "pass_completion_rate": {"num": {"passes_completed": 1}, "den": {"passes": 1}},
+    "ground_duel_win_rate": {"num": {"tackles": 1},
+                             "den": {"tackles": 1, "tackles_missed": 1, "dribbled_past": 1}},
+    "aerial_win_rate": {"num": {"aerials_won": 1},
+                        "den": {"aerials_won": 1, "aerials_lost": 1}},
+    "goals_prevented": {"num": {"xg_faced": 1, "goals_conceded": -1}},
+    "save_pct": {"num": {"saves": 1}, "den": {"saves": 1, "goals_conceded": 1}},
+    "clean_sheets": {"num": {"clean_sheet": 1}},
+    "gk_pass_completion_rate": {"num": {"gk_passes_completed": 1}, "den": {"gk_passes": 1}},
+}
 
 # Exposure caps of the event map (WEB_PLAN §6 level B, README-PLAYER open
 # decision 5). Shipping every pass of a season with coordinates is the

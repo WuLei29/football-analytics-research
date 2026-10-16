@@ -83,6 +83,12 @@ export interface SequenceEntry {
   xt: number;
   vaep: number;
   actions: SequenceAction[];
+  /**
+   * Which match the chain is from — "J9 · OVI (V)" — when the list spans
+   * several (the player page). Shown before the clock; absent on a match
+   * page, where every row is the same match.
+   */
+  context?: string;
 }
 
 interface SequenceBrowserProps {
@@ -96,6 +102,8 @@ interface SequenceBrowserProps {
   /** Height of the scrolling list, in px. */
   listHeight?: number;
   className?: string;
+  /** Passed to `SequenceDetail`: this player's nodes are drawn in gold. */
+  focusPlayerId?: number;
 }
 
 export function SequenceBrowser({
@@ -106,6 +114,7 @@ export function SequenceBrowser({
   initialIndex = 0,
   listHeight = 430,
   className,
+  focusPlayerId,
 }: SequenceBrowserProps) {
   const [selected, setSelected] = useState(initialIndex);
   const active = sequences[selected] ?? sequences[0] ?? null;
@@ -148,6 +157,7 @@ export function SequenceBrowser({
           title={title}
           orientation={orientation}
           describe={describe}
+          focusPlayerId={focusPlayerId}
         />
         {/* The legend gets a wrapper of its own rather than sitting beside the
             pitch as a sibling. It arrives from a server component through the
@@ -253,7 +263,7 @@ function SequenceRow({
               flexShrink: 0,
             }}
           >
-            {clock}
+            {sequence.context ? `${sequence.context} · ${clock}` : clock}
           </span>
         </span>
 

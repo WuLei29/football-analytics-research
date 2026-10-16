@@ -140,6 +140,12 @@ interface SequenceDetailProps {
    * or ended. Without it the marks have no hover.
    */
   describe?: (action: SequenceAction, role: ActionRole) => ActionTooltip;
+  /**
+   * The player page's player: his nodes are drawn in `--gold` so a reader
+   * sees where in the chain he was (README-PLAYER §5). Absent on the match
+   * page, which draws every node alike.
+   */
+  focusPlayerId?: number;
 }
 
 /** Pitch-unit radii, from espanyol-viz-design references/web-translation.md §4. */
@@ -185,6 +191,7 @@ export function SequenceDetail({
   nodeRadius = 1.5,
   className,
   describe,
+  focusPlayerId,
 }: SequenceDetailProps) {
   const [hovered, setHovered] = useState<number | null>(null);
   const figureRef = useRef<HTMLDivElement>(null);
@@ -362,14 +369,19 @@ export function SequenceDetail({
         <g>
           {playerNodes(actions).map((node) => {
             const p = at(node.x, node.y);
+            const focus = focusPlayerId !== undefined && node.player_id === focusPlayerId;
+            // Gold fill marks the page's player; the finisher keeps its
+            // inverted blue unless he is the finisher too.
+            const fill = focus ? "var(--color-gold)" : node.isFinal ? "var(--color-blue)" : "var(--color-card)";
+            const ink = focus ? "var(--color-ink)" : node.isFinal ? "var(--color-card)" : "var(--color-blue)";
             return (
               <g key={`${node.player_id}-${node.index}`}>
                 <circle
                   cx={p.x}
                   cy={p.y}
                   r={nodeRadius}
-                  fill={node.isFinal ? "var(--color-blue)" : "var(--color-card)"}
-                  stroke="var(--color-blue)"
+                  fill={fill}
+                  stroke={focus && !node.isFinal ? "var(--color-gold)" : "var(--color-blue)"}
                   strokeWidth={0.3}
                 />
                 <text
@@ -379,7 +391,7 @@ export function SequenceDetail({
                   fontFamily="var(--font-mono)"
                   fontSize={1.8}
                   fontWeight={600}
-                  fill={node.isFinal ? "var(--color-card)" : "var(--color-blue)"}
+                  fill={ink}
                 >
                   {node.shirt_number ?? node.surname?.slice(0, 2).toUpperCase() ?? ""}
                 </text>

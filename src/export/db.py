@@ -840,110 +840,87 @@ WHERE m.competition_season_id = %(cs_id)s
   AND e.player_id = %(player_id)s
 """
 
+# One row per match the player played for the club this season, in date
+# order: the match context for the page's match filter, the bio counts, and
+# the gold columns the headline KPIs are rebuilt from (KPI_FORMULAS). `{cols}`
+# is that column list, checked against the table before it is formatted in.
+PLAYER_MATCHES_SQL = """
+SELECT pms.match_id, pms.matchday, pms.match_date, pms.is_home,
+       tms.goals_for, tms.goals_against,
+       opp.abbreviation AS opponent_abbr, opp.short_name AS opponent_short_name,
+       pms.started, pms.subbed_off, pms.minutes_played,
+       pms.yellow_cards, pms.red_cards,
+       COALESCE(pms.penalties_taken, 0)  AS penalties_taken,
+       COALESCE(pms.penalties_scored, 0) AS penalties_scored
+       {cols}
+FROM gold.player_match_stats pms
+JOIN gold.team_match_stats tms
+  ON tms.match_id = pms.match_id AND tms.team_id = pms.team_id
+JOIN silver.teams opp ON opp.team_id = pms.opponent_team_id
+WHERE pms.competition_season_id = %(cs_id)s
+  AND pms.team_id = %(team_id)s
+  AND pms.player_id = %(player_id)s
+  AND pms.minutes_played > 0
+ORDER BY pms.match_date, pms.match_id
+"""
+
+
+def fetch_player_matches(conn, cs_id: int, team_id: int, player_id: int,
+                         columns: list[str]) -> list[dict[str, Any]]:
+    assert_columns_exist(conn, "gold.player_match_stats", columns)
+    # clean_sheet is a boolean; the KPI sums it. Everything else is numeric
+    # and may be NULL for a role it does not apply to (saves on a striker).
+    cols = "".join(
+        f",\n       (pms.{c})::int AS {c}" if c == "clean_sheet"
+        else f",\n       COALESCE(pms.{c}, 0) AS {c}"
+        for c in sorted(set(columns))
+    )
+    return _rows(conn, PLAYER_MATCHES_SQL.format(cols=cols),
+                 _player_params(cs_id, team_id, player_id))
+
+
 # `value_assist` is the typeId of the shot the pass created: 16 is a goal
 # (assist), 13/14/15 a miss, post or save (key pass). Key passes EXCLUDE
 # assists (football-metrics §3).
-PLAYER_PASS_COLUMNS = """
-       e.x, e.y, e.end_x, e.end_y,
+#
+# Every pass of the season ships (16 Oct 2026): the page filters by match, so
+# the caps -- the 150 most recent, the 60 best progressive by xT -- are applied
+# on the site AFTER the filter, not here. Chronological, so "most recent" is
+# the tail of the list.
+PLAYER_PASSES_SQL = f"""
+SELECT e.match_id, e.x, e.y, e.end_x, e.end_y, e.xt,
        e.outcome = 'success'                       AS completed,
        gold.is_progressive(e.x, e.y, e.end_x, e.end_y) AS progressive,
        e.value_assist IN ('13', '14', '15')        AS key_pass,
        e.value_assist = '16'                       AS assist
-"""
-
-PLAYER_PASS_COUNTS_SQL = f"""
-SELECT count(*)                                                    AS passes,
-       count(*) FILTER (WHERE gold.is_progressive(e.x, e.y, e.end_x, e.end_y))
-                                                                   AS progressive_passes,
-       count(*) FILTER (WHERE e.value_assist IN ('13', '14', '15')) AS key_passes,
-       count(*) FILTER (WHERE e.value_assist = '16')                AS assists
 {_PLAYER_EVENTS_FROM}
   AND e.event_type = 'Pass'
   AND e.x IS NOT NULL AND e.end_x IS NOT NULL
-"""
-
-PLAYER_RECENT_PASSES_SQL = f"""
-SELECT {PLAYER_PASS_COLUMNS}
-{_PLAYER_EVENTS_FROM}
-  AND e.event_type = 'Pass'
-  AND e.x IS NOT NULL AND e.end_x IS NOT NULL
-ORDER BY m.match_date DESC, e.match_id DESC, e.json_index DESC, e.event_id DESC
-LIMIT %(limit)s
-"""
-
-PLAYER_PROGRESSIVE_PASSES_SQL = f"""
-SELECT {PLAYER_PASS_COLUMNS}
-{_PLAYER_EVENTS_FROM}
-  AND e.event_type = 'Pass'
-  AND e.x IS NOT NULL AND e.end_x IS NOT NULL
-  AND gold.is_progressive(e.x, e.y, e.end_x, e.end_y)
--- xT comes from a zone grid, so ties are common: event_id breaks them.
-ORDER BY e.xt DESC NULLS LAST, e.event_id
-LIMIT %(limit)s
-"""
-
-PLAYER_KEY_PASSES_SQL = f"""
-SELECT {PLAYER_PASS_COLUMNS}
-{_PLAYER_EVENTS_FROM}
-  AND e.event_type = 'Pass'
-  AND e.x IS NOT NULL AND e.end_x IS NOT NULL
-  AND e.value_assist IN ('13', '14', '15', '16')
 ORDER BY m.match_date, e.match_id, e.json_index, e.event_id
 """
 
 
-def fetch_player_pass_counts(conn, cs_id: int, team_id: int, player_id: int
-                             ) -> dict[str, Any]:
-    return _one(conn, PLAYER_PASS_COUNTS_SQL, _player_params(cs_id, team_id, player_id))
-
-
-def fetch_player_recent_passes(conn, cs_id: int, team_id: int, player_id: int,
-                               limit: int) -> list[dict[str, Any]]:
-    return _rows(conn, PLAYER_RECENT_PASSES_SQL,
-                 _player_params(cs_id, team_id, player_id, limit=limit))
-
-
-def fetch_player_progressive_passes(conn, cs_id: int, team_id: int, player_id: int,
-                                    limit: int) -> list[dict[str, Any]]:
-    return _rows(conn, PLAYER_PROGRESSIVE_PASSES_SQL,
-                 _player_params(cs_id, team_id, player_id, limit=limit))
-
-
-def fetch_player_key_passes(conn, cs_id: int, team_id: int, player_id: int
-                            ) -> list[dict[str, Any]]:
-    return _rows(conn, PLAYER_KEY_PASSES_SQL, _player_params(cs_id, team_id, player_id))
+def fetch_player_passes(conn, cs_id: int, team_id: int, player_id: int
+                        ) -> list[dict[str, Any]]:
+    return _rows(conn, PLAYER_PASSES_SQL, _player_params(cs_id, team_id, player_id))
 
 
 # Progressive carries only: all carries are hundreds of short arrows
-# (README-PLAYER §3b). 'Carry' is the synthesised type_id = -1.
-PLAYER_CARRY_COUNT_SQL = f"""
-SELECT count(*) AS progressive_carries
-{_PLAYER_EVENTS_FROM}
-  AND e.event_type = 'Carry'
-  AND e.x IS NOT NULL AND e.end_x IS NOT NULL
-  AND gold.is_progressive(e.x, e.y, e.end_x, e.end_y)
-"""
-
+# (README-PLAYER §3b). 'Carry' is the synthesised type_id = -1. Uncapped and
+# chronological, like the passes; the site keeps the best 60 by xT.
 PLAYER_CARRIES_SQL = f"""
-SELECT e.x, e.y, e.end_x, e.end_y, e.outcome = 'success' AS completed
+SELECT e.match_id, e.x, e.y, e.end_x, e.end_y, e.xt, e.outcome = 'success' AS completed
 {_PLAYER_EVENTS_FROM}
   AND e.event_type = 'Carry'
   AND e.x IS NOT NULL AND e.end_x IS NOT NULL
   AND gold.is_progressive(e.x, e.y, e.end_x, e.end_y)
-ORDER BY e.xt DESC NULLS LAST, e.event_id
-LIMIT %(limit)s
+ORDER BY m.match_date, e.match_id, e.json_index, e.event_id
 """
 
 
-def fetch_player_carry_count(conn, cs_id: int, team_id: int, player_id: int) -> int:
-    row = _one(conn, PLAYER_CARRY_COUNT_SQL, _player_params(cs_id, team_id, player_id))
-    return int(row["progressive_carries"]) if row else 0
-
-
-def fetch_player_carries(conn, cs_id: int, team_id: int, player_id: int,
-                         limit: int) -> list[dict[str, Any]]:
-    return _rows(conn, PLAYER_CARRIES_SQL,
-                 _player_params(cs_id, team_id, player_id, limit=limit))
+def fetch_player_carries(conn, cs_id: int, team_id: int, player_id: int
+                         ) -> list[dict[str, Any]]:
+    return _rows(conn, PLAYER_CARRIES_SQL, _player_params(cs_id, team_id, player_id))
 
 
 # The on-ball touch set of gold.player_match_stats.touches, word for word, so
@@ -953,12 +930,12 @@ TOUCH_TYPES = ("Pass", "Carry", "Take On", "Ball touch", "Clearance",
                "Goal", "Attempt Saved", "Miss", "Post")
 
 PLAYER_TOUCH_ZONES_SQL = f"""
-SELECT gold.zone_id(e.x, e.y) AS zone_id, count(*) AS touches
+SELECT e.match_id, gold.zone_id(e.x, e.y) AS zone_id, count(*) AS touches
 {_PLAYER_EVENTS_FROM}
   AND e.event_type = ANY(%(touch_types)s)
   AND e.x BETWEEN 0 AND 105 AND e.y BETWEEN 0 AND 68
-GROUP BY 1
-ORDER BY 1
+GROUP BY 1, 2
+ORDER BY 1, 2
 """
 
 
@@ -973,17 +950,17 @@ def fetch_player_touch_zones(conn, cs_id: int, team_id: int, player_id: int
 # table resolves it as the next same-team action after a completed pass, and
 # the reception point is the pass end (GOLD_LAYER §4.7).
 PLAYER_RECEPTION_ZONES_SQL = """
-SELECT rx_zone_id AS zone_id, count(*) AS receptions
+SELECT match_id, rx_zone_id AS zone_id, count(*) AS receptions
 FROM gold.pass_receptions
 WHERE competition_season_id = %(cs_id)s
   AND team_id = %(team_id)s
   AND receiver_id = %(player_id)s
-GROUP BY rx_zone_id
-ORDER BY rx_zone_id
+GROUP BY match_id, rx_zone_id
+ORDER BY match_id, rx_zone_id
 """
 
 PLAYER_PROGRESSIVE_RECEPTIONS_SQL = """
-SELECT rx_x, rx_y, rx_in_box
+SELECT match_id, rx_x, rx_y, rx_in_box
 FROM gold.pass_receptions
 WHERE competition_season_id = %(cs_id)s
   AND team_id = %(team_id)s
@@ -1036,7 +1013,7 @@ def fetch_player_shots(conn, cs_id: int, team_id: int, player_id: int
 # Aerials are left out on purpose: they are duels on the percentile cards,
 # and on a centre back's map ~150 of them bury every other mark.
 PLAYER_DEFENCE_SQL = f"""
-SELECT e.event_type, e.x, e.y, e.outcome, e.minute, m.matchday
+SELECT e.match_id, e.event_type, e.x, e.y, e.outcome, e.minute, m.matchday
 {_PLAYER_EVENTS_FROM}
   AND e.event_type IN ('Tackle', 'Interception', 'Ball recovery', 'Blocked Pass',
                        'Clearance', 'Attempted Tackle', 'Challenge')
@@ -1050,83 +1027,85 @@ def fetch_player_defence(conn, cs_id: int, team_id: int, player_id: int
     return _rows(conn, PLAYER_DEFENCE_SQL, _player_params(cs_id, team_id, player_id))
 
 
-# The chains the player touched while his team had the ball, with 3+ events
+# Every chain the player touched while his team had the ball, with 3+ events
 # (GOLD_LAYER §4.1.9). `is_possessing_team` drops the sandwich and deflection
-# rows (§4.1.0 #2).
-PLAYER_SEQUENCES_FROM = """
+# rows (§4.1.0 #2). The page ranks this index for whatever matches are
+# selected, and draws a chain from its match file (WEB_DATA §7.3) -- the same
+# sequence_id, because both files come out of the same export run.
+PLAYER_SEQUENCE_INDEX_SQL = """
+SELECT s.sequence_id, s.match_id, s.start_event_id,
+       s.xt, s.vaep, s.shot_count, s.pass_count
 FROM gold.sequence_players sp
 JOIN gold.sequences s ON s.sequence_id = sp.sequence_id
+JOIN silver.matches m ON m.match_id = s.match_id
 WHERE sp.competition_season_id = %(cs_id)s
   AND sp.team_id = %(team_id)s
   AND sp.player_id = %(player_id)s
   AND sp.is_possessing_team
   AND s.event_count >= %(min_events)s
-"""
-
-PLAYER_SEQUENCE_AGG_SQL = f"""
-SELECT count(*)                                AS sequences,
-       sum(s.xt)                               AS xt,
-       count(*) FILTER (WHERE s.shot_count > 0) AS ends_in_shot,
-       avg(s.pass_count)                       AS passes_per_sequence
-{PLAYER_SEQUENCES_FROM}
-"""
-
-PLAYER_TOP_SEQUENCES_SQL = """
-SELECT s.sequence_id, s.match_id, m.matchday, s.is_home,
-       opp.abbreviation AS opponent_abbr,
-       s.period, s.start_minute, s.start_second, s.start_event_id,
-       s.event_count, s.pass_count, s.shot_count, s.xt, s.vaep,
-       s.outcome, s.sequence_type,
-       s.has_counter_attack, s.has_high_transition, s.has_set_piece,
-       s.has_buildup, s.has_midblock, s.has_attacking,
-       sp.touches AS player_touches
-FROM gold.sequence_players sp
-JOIN gold.sequences s  ON s.sequence_id = sp.sequence_id
-JOIN silver.matches m  ON m.match_id = s.match_id
-JOIN silver.teams opp  ON opp.team_id = s.opponent_team_id
-WHERE sp.competition_season_id = %(cs_id)s
-  AND sp.team_id = %(team_id)s
-  AND sp.player_id = %(player_id)s
-  AND sp.is_possessing_team
-  AND s.event_count >= %(min_events)s
--- start_event_id is the tiebreak: it identifies the chain and, unlike
--- sequence_id, does not renumber on a gold rebuild.
-ORDER BY s.{metric} DESC NULLS LAST, s.start_event_id
-LIMIT %(limit)s
+ORDER BY m.match_date, s.match_id, s.start_event_id
 """
 
 
-def fetch_player_sequence_aggregates(conn, cs_id: int, team_id: int, player_id: int,
-                                     min_events: int) -> dict[str, Any]:
+def fetch_player_sequence_index(conn, cs_id: int, team_id: int, player_id: int,
+                                min_events: int) -> list[dict[str, Any]]:
     params = _player_params(cs_id, team_id, player_id)
     params["min_events"] = min_events
-    return _one(conn, PLAYER_SEQUENCE_AGG_SQL, params)
+    return _rows(conn, PLAYER_SEQUENCE_INDEX_SQL, params)
 
 
-def fetch_player_top_sequences(conn, cs_id: int, team_id: int, player_id: int,
-                               min_events: int, metric: str, limit: int
-                               ) -> list[dict[str, Any]]:
-    if metric not in ("xt", "vaep"):
-        raise ValueError(f"cannot rank sequences by {metric!r}")
-    params = _player_params(cs_id, team_id, player_id, limit=limit)
-    params["min_events"] = min_events
-    return _rows(conn, PLAYER_TOP_SEQUENCES_SQL.format(metric=metric), params)
+# The match file's sequence header (SEQUENCES_SQL), for chosen chains across
+# matches: the season top lists ship in full so the default view needs no
+# fetch.
+PLAYER_SEQUENCE_ROWS_SQL = """
+SELECT sequence_id, match_id, period, start_minute, start_second, duration_seconds,
+       event_count, pass_count, shot_count, xt, xg, vaep,
+       start_zone, start_trigger, outcome, primary_phase,
+       final_third_entry, penalty_box_entry,
+       sequence_type,
+       has_counter_attack, has_high_transition, has_set_piece, has_direct_long,
+       has_buildup, has_midblock, has_attacking
+FROM gold.sequences
+WHERE team_id = %(team_id)s
+  AND sequence_id = ANY(%(sequence_ids)s)
+ORDER BY sequence_id
+"""
 
-
-# The possessing team's own events of the given chains, in the canonical
-# order: the same filter as SEQUENCE_EVENTS_SQL, without the match scope.
+# SEQUENCE_EVENTS_SQL without the match scope.
 PLAYER_SEQUENCE_EVENTS_SQL = """
-SELECT e.sequence_id, e.event_id, e.event_type, e.player_id,
-       e.x, e.y, e.end_x, e.end_y, e.goal_mouth_y,
+SELECT e.sequence_id,
+       e.event_id,
+       e.json_index,
+       e.event_type,
+       e.minute, e.second,
+       e.x, e.y, e.end_x, e.end_y,
+       e.outcome,
+       e.spadl_result_id,
+       e.player_id,
+       e.xg,
+       e.goal_mouth_y,
+       COALESCE(p.short_last_name, p.last_name)   AS surname,
+       COALESCE(e.jersey_number, ml.shirt_number) AS shirt_number,
        COALESCE(ARRAY(SELECT (q ->> 'qualifierId')::int
                       FROM jsonb_array_elements(e.raw_data -> 'qualifier') q),
-                ARRAY[]::int[]) AS qualifier_ids
+                ARRAY[]::int[])                    AS qualifier_ids
 FROM silver.events e
+LEFT JOIN silver.players p ON p.player_id = e.player_id
+LEFT JOIN silver.match_lineups ml
+       ON ml.match_id = e.match_id AND ml.player_id = e.player_id
 WHERE e.team_id = %(team_id)s
   AND e.sequence_id = ANY(%(sequence_ids)s)
   AND e.x IS NOT NULL
 ORDER BY e.sequence_id, e.json_index, e.event_id
 """
+
+
+def fetch_player_sequence_rows(conn, team_id: int, sequence_ids: list[str]
+                               ) -> list[dict[str, Any]]:
+    if not sequence_ids:
+        return []
+    return _rows(conn, PLAYER_SEQUENCE_ROWS_SQL,
+                 {"team_id": team_id, "sequence_ids": sequence_ids})
 
 
 def fetch_player_sequence_events(conn, team_id: int, sequence_ids: list[str]

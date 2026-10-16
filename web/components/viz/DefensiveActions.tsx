@@ -275,7 +275,8 @@ function TypeChips({
   );
 }
 
-function Chip({
+/** Exported for the player page's map-mode row, so its chips match these. */
+export function Chip({
   label,
   pressed,
   onClick,

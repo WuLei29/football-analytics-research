@@ -3,29 +3,32 @@
 /**
  * EventMap — the one pitch of screen 03, switched between eight modes.
  *
- * Renders: README-PLAYER §3b — the title (which follows the mode), the
- * `ATAQUE →` cue, the count note ("150 DE 1,284 PASES" when a cap applies),
- * eight mode pills, a horizontal pitch attacking right, and the mode's
- * legend in HTML under it.
- * Props: `maps` (the whole `maps` block), `playerName`, `teamAbbr`.
+ * Renders: a card in the match page's block form — `SectionHead` (the title
+ * follows the mode; the caption says how many marks of how many, and which
+ * way the team attacks), a row of mode chips, the pitch, and the mode's
+ * legend under it.
+ * Props: `view` (the selection's marks, `lib/data/playerFilter.ts:mapView`),
+ *        `caps`, `playerName`, `teamAbbr`.
  * Data:  `players/{player_id}.json` -> `maps` (README-PLAYER "Data
  *        contract"): `silver.events` by the player, `gold.pass_receptions`,
- *        in his team's attacking frame. Nothing is flipped here — low y is the
+ *        in his team's attacking frame, filtered to the selected matches and
+ *        capped after the filter. Nothing is flipped here — low y is the
  *        right flank and sits at the bottom, so a right back's marks are in
  *        the lower half.
  *
- * Client component: the mode is the reader's one choice on the page. It is
- * mirrored to `?vista=` (`lib/vista.ts`) so a view is shareable and the tab
- * strip can carry it to the next player.
+ * Client component: the mode is the reader's choice. It is mirrored to
+ * `?vista=` (`lib/vista.ts`) so a view is shareable and the player picker can
+ * carry it to the next player.
  *
- * Deviations from the brief, both deliberate:
- *   - `<Pitch>` stays mounted across the five arrow and heat modes (they are
- *     all children of one `ZoneHeatmap`/`Pitch` slot); `Tiros` and
- *     `Defensivas` swap in `ShotMap` and `DefensiveActions`, which own their
- *     own SVG for the hover card and the type chips. Re-implementing either
- *     to share one SVG would fork two components the match page also uses.
- *   - The shot circles use `ShotMap`'s own radius law (area ∝ xG at a smaller
- *     constant than the brief's `1.4 + sqrt(xG) * 5.2`), so a shot is the same
+ * Restyled on 16 Oct 2026 to the match page's blocks, at the review's
+ * request: the arrows use `ProgressionArrows`' weights (pass 0.28 at 0.55,
+ * carry 0.42 at 0.9 — the brief's 0.6/0.7 merged on a 150-pass map), the
+ * mode pills are `DefensiveActions`' chips, the legends name the mark as
+ * the match page does, and shots and defensive actions are the match page's
+ * components with its legends. Deliberate leftovers from the brief:
+ *   - `<Pitch>` is swapped per mode (`ShotMap` and `DefensiveActions` own
+ *     their SVG for the hover card and the type chips).
+ *   - The shot circles use `ShotMap`'s own radius law, so a shot is the same
  *     size here as on its match page.
  */
 
@@ -41,50 +44,37 @@ import {
 } from "@/lib/labels";
 import { project } from "@/lib/viz/pitch";
 import { setVista, useVista } from "@/lib/vista";
-import { PASS_FLAG, type PassRow, type PlayerMaps } from "@/lib/data/types";
+import type { MapView } from "@/lib/data/playerFilter";
+import { PASS_FLAG, type CarryRow, type PassRow, type ReceptionRow } from "@/lib/data/types";
 
+import { SectionHead } from "../shell/SectionHead";
 import { ArrowLayer, type ArrowMark } from "../viz/ActionArrows";
-import { DefensiveActions } from "../viz/DefensiveActions";
+import { Chip, DefensiveActions } from "../viz/DefensiveActions";
 import { Legend, Ramp, type LegendItem } from "../viz/Legend";
 import { Pitch } from "../viz/Pitch";
+import { PROGRESSION_STYLE } from "../viz/ProgressionArrows";
 import { ShotMap } from "../viz/ShotMap";
 import { ZoneHeatmap } from "../viz/ZoneHeatmap";
 
-/* -- Marks per mode (README-PLAYER §3b table) ------------------------------ */
+/* -- Marks per mode ---------------------------------------------------------- */
 
-function arrow(row: PassRow, style: Omit<ArrowMark, "x" | "y" | "end_x" | "end_y" | "completed">): ArrowMark {
-  return {
-    x: row[0],
-    y: row[1],
-    end_x: row[2],
-    end_y: row[3],
-    completed: (row[4] & PASS_FLAG.completed) !== 0,
-    ...style,
-  };
+type Style = Omit<ArrowMark, "x" | "y" | "end_x" | "end_y" | "completed">;
+
+function arrow(row: PassRow | CarryRow, style: Style, completed = (row[4] & PASS_FLAG.completed) !== 0): ArrowMark {
+  return { x: row[0], y: row[1], end_x: row[2], end_y: row[3], completed, ...style };
 }
 
-const PROGRESSIVE = { tone: "blue", width: 0.6, opacity: 0.9 } as const;
-const REST = { tone: "faint", width: 0.3, opacity: 0.38, head: false } as const;
+/** The quiet population of the pass map: thinner and lighter than a match
+    page pass, and headless — a head on 120 grey lines is the loudest thing
+    in the figure. */
+const REST: Style = { tone: "faint", width: 0.18, opacity: 0.45, head: false };
+const PASS: Style = PROGRESSION_STYLE.pass;
+const CARRY: Style = PROGRESSION_STYLE.carry;
 
-function passMap(rows: PassRow[]): ArrowMark[] {
-  const progressive = (r: PassRow) => (r[4] & PASS_FLAG.progressive) !== 0;
-  // The quiet population first, so every blue arrow is drawn above the grey.
-  return [
-    ...rows.filter((r) => !progressive(r)).map((r) => arrow(r, REST)),
-    ...rows.filter(progressive).map((r) => arrow(r, PROGRESSIVE)),
-  ];
-}
-
-function keyPassMap(rows: PassRow[]): ArrowMark[] {
-  const assist = (r: PassRow) => (r[4] & PASS_FLAG.assist) !== 0;
-  return [
-    ...rows.filter((r) => !assist(r)).map((r) => arrow(r, { tone: "blue", width: 0.55, opacity: 0.85 })),
-    ...rows.filter(assist).map((r) => arrow(r, { tone: "gold", width: 0.85, opacity: 0.85 })),
-  ];
-}
+const isProgressive = (r: PassRow) => (r[4] & PASS_FLAG.progressive) !== 0;
+const isAssist = (r: PassRow) => (r[4] & PASS_FLAG.assist) !== 0;
 
 interface ModeView {
-  /** How many marks are drawn, and of how many the season has. */
   shown: number;
   total: number;
   legend: LegendItem[];
@@ -93,63 +83,64 @@ interface ModeView {
 }
 
 export function EventMap({
-  maps,
+  view,
   playerName,
   teamAbbr,
 }: {
-  maps: PlayerMaps;
+  view: MapView;
   playerName: string;
   teamAbbr: string;
 }) {
   const mode = useVista();
-  const c = maps.counts;
+  const c = view.counts;
   const L = copy.legend;
 
-  const marks = useMemo(() => {
+  const marks = useMemo((): ArrowMark[] => {
     switch (mode) {
       case "pases":
-        return passMap(maps.passes);
+        // The quiet population first, so every blue arrow is drawn above it.
+        return [
+          ...view.passes.filter((r) => !isProgressive(r)).map((r) => arrow(r, REST)),
+          ...view.passes.filter(isProgressive).map((r) => arrow(r, PASS)),
+        ];
       case "progresivos":
-        return maps.progressive_passes.map((r) =>
-          arrow(r, { tone: "blue", width: 0.7, opacity: 0.88 }),
-        );
+        return view.progressive.map((r) => arrow(r, PASS));
       case "conducciones":
-        return maps.carries.map((r) =>
-          arrow(r, { tone: "gold", width: 0.75, opacity: 0.9 }),
-        );
+        return view.carries.map((r) => arrow(r, CARRY, r[4] === 1));
       case "pases-clave":
-        return keyPassMap(maps.key_passes);
+        return [
+          ...view.keyPasses.filter((r) => !isAssist(r)).map((r) => arrow(r, PASS)),
+          ...view.keyPasses.filter(isAssist).map((r) => arrow(r, CARRY)),
+        ];
       default:
         return [];
     }
-  }, [mode, maps]);
+  }, [mode, view]);
 
-  const view: Record<PlayerMapMode, ModeView> = {
+  const failed: LegendItem = { dashed: "var(--color-mid)", text: L.failed };
+  const modes: Record<PlayerMapMode, ModeView> = {
     pases: {
-      shown: maps.passes.length,
+      shown: view.passes.length,
       total: c.passes,
       legend: [
-        { bar: "var(--color-blue)", text: L.progressive },
-        { bar: "var(--color-faint)", text: L.rest },
-        { dashed: "var(--color-mid)", text: L.failed },
+        { bar: "var(--color-blue)", text: viz.legend.progressivePass },
+        { bar: "var(--color-faint)", text: L.restPasses },
+        failed,
       ],
     },
     progresivos: {
-      shown: maps.progressive_passes.length,
-      total: c.progressive_passes,
-      legend: [
-        { bar: "var(--color-blue)", text: viz.legend.progressivePass },
-        { dashed: "var(--color-mid)", text: L.failed },
-      ],
+      shown: view.progressive.length,
+      total: c.progressive,
+      legend: [{ bar: "var(--color-blue)", text: viz.legend.progressivePass }, failed],
       rule: L.progressiveRule,
     },
     conducciones: {
-      shown: maps.carries.length,
-      total: c.progressive_carries,
-      legend: [{ bar: "var(--color-gold)", text: viz.legend.carry }],
-      rule: L.carryRule,
+      shown: view.carries.length,
+      total: c.carries,
+      legend: [{ bar: "var(--color-gold)", text: viz.legend.carry }, failed],
+      rule: L.progressiveRule,
     },
-    toques: { shown: c.touches, total: c.touches, legend: [], rule: L.touchDensity },
+    toques: { shown: c.touches, total: c.touches, legend: [] },
     recepciones: {
       shown: c.receptions,
       total: c.receptions,
@@ -160,110 +151,76 @@ export function EventMap({
       ],
     },
     tiros: {
-      shown: maps.shots.length,
-      total: maps.shots.length,
+      shown: view.shots.length,
+      total: view.shots.length,
       legend: [
         { swatch: "var(--color-blue)", text: viz.legend.shotGoal },
         { swatch: "rgba(11,76,158,.45)", outline: "var(--color-blue)", text: viz.legend.shotOn },
         { outline: "var(--color-blue)", text: viz.legend.shotOff },
       ],
-      rule: L.shotSize,
+      rule: viz.legend.shotArea,
     },
     defensivas: {
-      shown: maps.defence.length,
-      total: maps.defence.length,
+      shown: view.defence.length,
+      total: view.defence.length,
       legend: [
-        { swatch: "var(--color-blue)", diamond: true, text: L.regain },
-        { swatch: "var(--color-opp)", diamond: true, text: L.lost },
+        { swatch: "var(--color-blue)", text: viz.legend.regain, diamond: true },
+        { swatch: "var(--color-opp)", text: viz.legend.duelLost, diamond: true },
       ],
+      rule: viz.legend.defenceHover,
     },
     "pases-clave": {
-      shown: maps.key_passes.length,
-      total: c.key_passes + c.assists,
+      shown: view.keyPasses.length,
+      total: c.keyPasses,
       legend: [
-        { bar: "var(--color-gold)", text: L.assist },
         { bar: "var(--color-blue)", text: L.keyPass },
+        { bar: "var(--color-gold)", text: L.assist },
       ],
     },
   };
-  const current = view[mode];
+  const current = modes[mode];
   const empty = current.total === 0;
+  const title = playerMapModes[mode].title;
 
   return (
     <article className="card flex h-full flex-col">
-      <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <div className="flex items-baseline gap-3">
-          <h2 className="font-display text-[17px] font-bold" style={{ letterSpacing: "-0.015em" }}>
-            {playerMapModes[mode].title}
-          </h2>
-          <span className="font-mono text-[8.5px] tracking-[0.1em] text-faint">{copy.mapAttack}</span>
-        </div>
-        <span className="font-mono text-[8.5px] tracking-[0.1em] uppercase text-faint">
-          {copy.mapCount(
-            num(current.shown),
-            num(current.total),
-            copy.mapNouns[mode],
-            current.shown < current.total,
-          )}
-        </span>
+      <SectionHead
+        title={title}
+        caption={copy.mapCaption(mode, num(current.shown), num(current.total), current.shown < current.total)}
+        rule="none"
+        as="h3"
+      />
+
+      <div role="group" aria-label={copy.mapModesLabel} className="mt-2 mb-[6px] flex flex-wrap gap-[4px]">
+        {PLAYER_MAP_MODES.map((m) => (
+          <Chip key={m} label={playerMapModes[m].pill} pressed={m === mode} onClick={() => setVista(m)} />
+        ))}
       </div>
 
-      <div role="tablist" className="mb-2.5 flex flex-wrap gap-[5px]">
-        {PLAYER_MAP_MODES.map((m) => {
-          const active = m === mode;
-          return (
-            <button
-              key={m}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => setVista(m)}
-              className="cursor-pointer rounded-pill border font-mono uppercase hover:border-blue"
-              style={{
-                fontSize: 9.5,
-                letterSpacing: "0.08em",
-                padding: "5px 11px",
-                background: active ? "var(--color-blue)" : "var(--color-paper)",
-                borderColor: active ? "var(--color-blue)" : "var(--color-line)",
-                color: active ? "#fff" : "var(--color-mid)",
-              }}
-            >
-              {playerMapModes[m].pill}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="flex-1">
+      <div className="mt-1 flex-1">
         {mode === "tiros" ? (
           <ShotMap
-            shots={maps.shots.map((s) => ({ ...s, side: "home" as const, name: playerName }))}
+            shots={view.shots.map((s) => ({ ...s, side: "home" as const, name: playerName }))}
             teamSide="home"
             abbr={{ home: teamAbbr, away: teamAbbr }}
           />
         ) : mode === "defensivas" ? (
-          <DefensiveActions actions={maps.defence} title={playerMapModes[mode].title} />
+          <DefensiveActions actions={view.defence} title={title} />
         ) : mode === "toques" ? (
-          <ZoneHeatmap
-            cells={maps.touch_zones.map((z) => ({ zone_id: z.zone_id, value: z.count }))}
-            title={playerMapModes[mode].title}
-          />
+          <ZoneHeatmap cells={view.touchZones} title={title} />
         ) : mode === "recepciones" ? (
-          <ZoneHeatmap
-            cells={maps.reception_zones.map((z) => ({ zone_id: z.zone_id, value: z.count }))}
-            title={playerMapModes[mode].title}
-          >
-            <ReceptionDots rows={maps.progressive_receptions} />
+          <ZoneHeatmap cells={view.receptionZones} title={title}>
+            <ReceptionDots rows={view.progressiveReceptions} />
           </ZoneHeatmap>
         ) : (
-          <Pitch title={playerMapModes[mode].title}>
+          <Pitch title={title}>
             <ArrowLayer actions={marks} />
           </Pitch>
         )}
       </div>
 
       {empty ? (
-        <p className="dek mt-2">{copy.mapEmpty}</p>
+        <p className="label mt-2">{copy.mapEmpty}</p>
       ) : (
         <>
           {mode === "toques" && <Ramp low={viz.legend.low} high={viz.legend.high} />}
@@ -281,7 +238,7 @@ export function EventMap({
  * zone heat, which counts EVERY reception; the dots are the progressive
  * subset within 5 m of the pass end (README-PLAYER §3b).
  */
-function ReceptionDots({ rows }: { rows: PlayerMaps["progressive_receptions"] }) {
+function ReceptionDots({ rows }: { rows: ReceptionRow[] }) {
   return (
     <g>
       {rows.map(([x, y, inBox], i) => {

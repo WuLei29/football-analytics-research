@@ -501,8 +501,8 @@ fixture page `/demo/jugador`. The open decisions above were built with their **d
 (route with season; outcome-coloured diamonds + type chips; caps 150 / 60; numeral fallback
 when no photo is in `web/public/players/{player_id}.jpg`), so each is still a one-line change.
 Departures from this brief, made while building it:
-- `maps.passes` ships as three lists (`passes`, `progressive_passes`, `key_passes`): the three
-  modes have different caps, and one capped list cannot serve all three.
+- ~~`maps.passes` ships as three lists~~ — superseded 16 Oct 2026 (below): one uncapped list,
+  caps applied on the site after the match filter.
 - `Tiros` and `Defensivas` mount `ShotMap` / `DefensiveActions` (their own SVG, for the hover
   card and chips); the other six modes share one `<Pitch>`. Shot radii follow `ShotMap`'s law,
   so a shot is the same size here as on its match page.
@@ -511,3 +511,24 @@ Departures from this brief, made while building it:
   the colour `TeamProfile` already ships, rather than `--blue` for the middle band.
 - Until the export has run its `squad` step, the route builds one placeholder page
   (a static export refuses a dynamic route with no params).
+
+## Review of 16 Oct 2026
+Four changes after the first look at real data:
+- **Plantilla tab** is live: `/{team}/plantilla/{season}` renders screen 03 for the first squad
+  player (GK first). Player pages mark Plantilla as the active tab. The sortable squad table
+  (WEB_PLAN 5b) is still not built.
+- **Match filter** (`MatchFilter`, `?partidos=`): season, last 5, home, away, or any ticked set.
+  It narrows the profile card, the event map and the sequences; **the percentile cards stay
+  season-wide**. The player file is per match underneath (`matches[]`, every map row tagged
+  `m`, uncapped; `sequences.index`). KPIs are rebuilt from `kpi_parts` by `KPI_FORMULAS`; the
+  export fails if the per-match rebuild does not equal gold's season value. A filtered rate
+  shows "en estos N partidos" instead of the squad rank (a season fact).
+- **Player picker** replaces the pill strip: a dropdown grouped by role, with a shirt icon
+  carrying the number. Its links carry `?vista=` and `?partidos=`.
+- **Visuals follow the match page**: arrow weights from `ProgressionArrows` (pass 0.28/.55,
+  carry 0.42/.9), mode chips from `DefensiveActions`, `SectionHead` + noun legends. The
+  sequence block is the match page's `SequenceBrowser` (one play, action by action) with the
+  player's nodes in gold, replacing the trace overlay. Chains outside the season top lists
+  are drawn from the match files, fetched on demand: a deliberate exception to "no fetching",
+  since shipping ~500 chains with actions per player would add ~1 MB per file. Player and
+  match files must come from the same export run (they share `sequence_id`).

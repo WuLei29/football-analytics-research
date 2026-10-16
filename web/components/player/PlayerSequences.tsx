@@ -2,160 +2,178 @@
 
 /**
  * PlayerSequences — screen 03 block 5: the possession chains the player was
- * part of, ranked by xT or VAEP.
+ * part of, ranked by xT or VAEP, over the matches the filter selects.
  *
- * Renders: README-PLAYER §5 — a section head with the `MetricToggle`; on the
- * left the traces pitch (`SequenceTraces`, player variant: width by value,
- * gold dot on his touch) over a four-figure aggregate strip; on the right the
- * top-10 list, the selected row inverted in `--blue`.
- * Props: `sequences` (the file's block), `surname`.
- * Data:  `players/{player_id}.json` -> `sequences` (README-PLAYER "Data
- *        contract"): `gold.sequences` ⋈ `gold.sequence_players`, chains with
- *        3+ events while his team had the ball; `points` simplified by the
- *        export with his first touch forced in.
+ * Renders: the match page's sequence block (`MatchSequences`), with the
+ * player's nodes in gold — a section head with the `MetricToggle`, a card
+ * holding a four-figure aggregate strip and the `SequenceBrowser` (one play
+ * at a time, action by action, beside the list of the top ten), and the
+ * shared `SequenceLegend`.
+ * Props: `file` (the player file), `idx` (the selected match indices, null
+ *        for the season), `team` and `season` slugs, `demo`.
+ * Data:  `players/{player_id}.json` -> `sequences.index` ranks the chains;
+ *        each chain is drawn from `matches/{match_id}.json` -> `sequences[]`
+ *        (WEB_DATA §7.3), the same entry the match page draws. The season
+ *        top lists ship inside the player file (`sequences.entries`), so the
+ *        default view fetches nothing.
  *
- * Client component: it owns the toggle and the selection. Changing the
- * toggle swaps the list (the export ships both top tens) and resets the
- * selection to the first row; a row click selects that chain.
+ * Deviation from the site rule "no fetching" (.claude/rules/web.md), on
+ * purpose (16 Oct 2026): a filtered top ten can contain any of ~500 chains,
+ * and shipping them all with their actions would add ~1 MB to every player
+ * file. Instead the page fetches the match files the selected top ten comes
+ * from — one file for one match, at most ten for a group — and caches them
+ * for the visit. `lib/data/load.ts` anticipated this path for screen 04.
  *
- * Rows are named `J7 · 42'` and the match, never `SEQ-####`: sequence ids
- * renumber on every gold rebuild, so they are not citable.
+ * Replaced on 16 Oct 2026: the trace overlay (`SequenceTraces`, player
+ * variant) and its pill list. The review asked for the match page's look.
  */
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { dec, num, signed } from "@/lib/format";
-import {
-  metricDefinitions,
-  player as copy,
-  sequenceKind,
-  type SequenceMetric,
-} from "@/lib/labels";
-import type { PlayerSequence, PlayerSequences as Sequences } from "@/lib/data/types";
+import { SectionHead } from "@/components/shell/SectionHead";
+import { dec, EMPTY, num } from "@/lib/format";
+import { metricDefinitions, player as copy, type SequenceMetric } from "@/lib/labels";
+import { rankSequences } from "@/lib/data/playerFilter";
+import { sequenceEntry } from "@/lib/data/sequences";
+import type { MatchFile, PlayerFile, PlayerSequenceEntry } from "@/lib/data/types";
 
 import { MetricToggle } from "../viz/MetricToggle";
-import { SequenceTraces, type SequenceTrace } from "../viz/SequenceTraces";
+import { SequenceBrowser } from "../viz/SequenceBrowser";
+import { SequenceLegend } from "../viz/SequenceLegend";
 
-function key(s: PlayerSequence) {
-  return String(s.id);
+type Chains = Map<string, Omit<PlayerSequenceEntry, "match_id">>;
+
+/** One promise per match file for the whole visit, shared by every player. */
+const matchFiles = new Map<string, Promise<Chains>>();
+
+function loadMatch(team: string, season: string, matchId: number): Promise<Chains> {
+  const url = `/data/teams/${team}/${season}/matches/${matchId}.json`;
+  let pending = matchFiles.get(url);
+  if (!pending) {
+    pending = fetch(url)
+      .then((r) => {
+        if (!r.ok) throw new Error(`${url}: ${r.status}`);
+        return r.json() as Promise<MatchFile>;
+      })
+      .then((f) => new Map(f.sequences.map((s) => [s.sequence_id, s])));
+    // A failed fetch is not cached: the next selection retries it.
+    pending.catch(() => matchFiles.delete(url));
+    matchFiles.set(url, pending);
+  }
+  return pending;
 }
 
-export function PlayerSequences({ sequences, surname }: { sequences: Sequences; surname: string }) {
+export function PlayerSequences({
+  file,
+  idx,
+  team,
+  season,
+  demo = false,
+}: {
+  file: PlayerFile;
+  idx: Set<number> | null;
+  team: string;
+  season: string;
+  demo?: boolean;
+}) {
   const [metric, setMetric] = useState<SequenceMetric>("xt");
-  const [selected, setSelected] = useState(0);
+  const { sequences, matches, player } = file;
 
-  const list = metric === "xt" ? sequences.top_xt : sequences.top_vaep;
-  const current = list[selected] ?? list[0];
-  const traces: SequenceTrace[] = list.map((s) => ({
-    sequence_id: key(s),
-    points: s.points,
-    ends_in_shot: s.ends_in_shot,
-    value: metric === "xt" ? s.xt : s.vaep,
-    touch: s.player_touch_index === null ? null : s.points[s.player_touch_index] ?? null,
-  }));
-  const agg = sequences.aggregates;
+  const ranked = useMemo(
+    () => rankSequences(sequences.index, idx, metric, sequences.top),
+    [sequences, idx, metric],
+  );
+
+  // Chains already in hand: the season top lists, then whatever was fetched.
+  const [fetched, setFetched] = useState<Chains>(() => new Map());
+  const [failed, setFailed] = useState(false);
+  const known = useMemo(() => {
+    const all: Chains = new Map(fetched);
+    for (const e of sequences.entries) all.set(e.sequence_id, e);
+    return all;
+  }, [sequences.entries, fetched]);
+
+  const missing = useMemo(
+    () => [...new Set(ranked.top.filter((r) => !known.has(r[1])).map((r) => matches[r[0]].match_id))],
+    [ranked, known, matches],
+  );
+  const missingKey = missing.join(".");
+
+  useEffect(() => {
+    if (!missingKey || demo) return;
+    let live = true;
+    setFailed(false);
+    Promise.all(missingKey.split(".").map((id) => loadMatch(team, season, Number(id))))
+      .then((maps) => {
+        if (!live) return;
+        setFetched((prev) => {
+          const next = new Map(prev);
+          for (const m of maps) for (const [id, s] of m) next.set(id, s);
+          return next;
+        });
+      })
+      .catch(() => live && setFailed(true));
+    return () => {
+      live = false;
+    };
+  }, [missingKey, team, season, demo]);
+
+  const list = ranked.top.flatMap(([m, id]) => {
+    const chain = known.get(id);
+    const match = matches[m];
+    return chain
+      ? [sequenceEntry(chain, copy.sequenceContext(match.matchday, match.opponent_abbr, match.is_home))]
+      : [];
+  });
+
+  const agg = ranked.aggregates;
   const abbr = metricDefinitions[metric].abbr;
+  const title = copy.sequencesHeading(player.name.last);
+  // The browser keeps its selection by index; a new list is a new browser.
+  const listKey = `${metric}:${ranked.top.map((r) => r[1]).join(",")}`;
+
+  let body;
+  if (ranked.top.length === 0) {
+    body = <p className="label">{copy.sequencesEmpty}</p>;
+  } else if (missing.length > 0) {
+    body = <p className="label">{failed ? copy.sequencesError : copy.sequencesLoading}</p>;
+  } else {
+    body = (
+      <SequenceBrowser
+        key={listKey}
+        sequences={list}
+        title={title}
+        legend={<SequenceLegend focus={player.name.last} />}
+        focusPlayerId={player.player_id}
+      />
+    );
+  }
 
   return (
-    <section className="mt-2">
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="font-display text-h2card font-bold">{copy.sequencesHeading(surname)}</h2>
-        <MetricToggle
-          value={metric}
-          onChange={(m) => {
-            setMetric(m);
-            setSelected(0);
-          }}
-        />
-      </div>
-
-      {list.length === 0 ? (
-        <p className="dek">{copy.sequencesEmpty}</p>
-      ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
-          <article className="card">
-            <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="font-display text-h3 font-bold">{copy.tracesHeading}</h3>
-              <span className="font-mono text-[8.5px] tracking-[0.1em] uppercase text-faint">
-                {copy.tracesNote}
-              </span>
-            </div>
-            <SequenceTraces
-              sequences={traces}
-              selectedId={current ? key(current) : null}
-              onSelect={(id) => setSelected(Math.max(0, list.findIndex((s) => key(s) === id)))}
-              variant="player"
-              title={copy.tracesHeading}
-            />
-            <div
-              className="grid grid-cols-2 gap-3 border-t border-line sm:grid-cols-4"
-              style={{ marginTop: 14, paddingTop: 12 }}
-            >
-              <Figure label={copy.aggregates.sequences} value={num(agg.sequences)} />
-              <Figure
-                label={copy.aggregates.xt}
-                value={agg.xt === null ? "—" : dec(agg.xt, 2)}
-                accent
-              />
-              <Figure label={copy.aggregates.shots} value={num(agg.ends_in_shot)} />
-              <Figure
-                label={copy.aggregates.passes}
-                value={agg.passes_per_sequence === null ? "—" : dec(agg.passes_per_sequence, 1)}
-              />
-            </div>
-            <p className="label mt-2" style={{ letterSpacing: 0, textTransform: "none" }}>
-              {copy.aggregatesNote(sequences.min_events)}
-            </p>
-          </article>
-
-          <article className="card">
-            <div className="mb-2.5 flex items-baseline justify-between gap-2">
-              <h3 className="font-display text-h3 font-bold">{copy.topHeading(abbr)}</h3>
-              <span className="font-mono text-[8.5px] text-faint">{copy.topHint}</span>
-            </div>
-            <ol className="flex flex-col gap-1">
-              {list.map((s, i) => {
-                const on = s === current;
-                const value = metric === "xt" ? s.xt : s.vaep;
-                return (
-                  <li key={key(s)}>
-                    <button
-                      type="button"
-                      onClick={() => setSelected(i)}
-                      aria-pressed={on}
-                      className="w-full cursor-pointer rounded-[11px] border text-left hover:border-blue"
-                      style={{
-                        padding: "8px 10px",
-                        background: on ? "var(--color-blue)" : "var(--color-paper)",
-                        borderColor: on ? "var(--color-blue)" : "var(--color-line)",
-                        color: on ? "#fff" : "var(--color-ink)",
-                      }}
-                    >
-                      <div
-                        className="flex justify-between gap-2 font-mono"
-                        style={{ fontSize: 9.5, color: on ? "rgba(255,255,255,.72)" : "var(--color-mid)" }}
-                      >
-                        <span>{copy.sequenceWhen(s.matchday, s.minute)}</span>
-                        <span>{copy.sequenceOpponent(s.opponent_abbr, s.is_home)}</span>
-                      </div>
-                      <div className="mt-0.5 font-sans" style={{ fontSize: 12 }}>
-                        {sequenceKind(s.kind)}
-                      </div>
-                      <div
-                        className="mt-0.5 flex gap-2.5 font-mono"
-                        style={{ fontSize: 9, color: on ? "rgba(255,255,255,.72)" : "var(--color-mid)" }}
-                      >
-                        <span>{copy.sequenceLine(num(s.passes), num(s.player_touches))}</span>
-                        <span>{value === null ? "—" : `${signed(value, 3)} ${abbr}`}</span>
-                      </div>
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          </article>
+    <section className="mt-8">
+      <SectionHead
+        title={title}
+        right={
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span className="font-mono text-[9px] tracking-[0.04em] text-faint">
+              {copy.sequencesCaption(ranked.top.length, num(agg.sequences), abbr)}
+            </span>
+            <MetricToggle value={metric} onChange={setMetric} />
+          </div>
+        }
+      />
+      <div className="card mt-4">
+        <div className="mb-4 grid grid-cols-2 gap-3 border-b border-line pb-3 sm:grid-cols-4">
+          <Figure label={copy.aggregates.sequences} value={num(agg.sequences)} />
+          <Figure label={copy.aggregates.xt} value={agg.xt === null ? EMPTY : dec(agg.xt, 2)} accent />
+          <Figure label={copy.aggregates.shots} value={num(agg.endsInShot)} />
+          <Figure
+            label={copy.aggregates.passes}
+            value={agg.passesPerSequence === null ? EMPTY : dec(agg.passesPerSequence, 1)}
+          />
         </div>
-      )}
+        {body}
+      </div>
     </section>
   );
 }

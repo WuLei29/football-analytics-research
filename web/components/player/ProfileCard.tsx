@@ -5,10 +5,14 @@
  * event-map card beside it (so the two columns bottom-align), with a name
  * plate and a shirt chip over it; a 12-item bio grid; a 2 x 2 hairline grid
  * of the role's four headline KPIs.
- * Props: `player`, `kpis`, `photo` (a URL under /players, or null).
+ * Props: `player`, `kpis`, `photo` (a URL under /players, or null), and
+ *        `selected` — how many matches the filter keeps, null for the season.
  * Data:  `players/{player_id}.json` -> `player`, `kpis` (README-PLAYER "Data
  *        contract"): `silver.players` bio fields and `gold.player_season_stats`
  *        counts; the KPI set per role is `PLAYER_KPIS` in src/export/config.py.
+ *        Under a match filter the counts and KPIs arrive rebuilt from the
+ *        per-match rows (`lib/data/playerFilter.ts`); age, height, foot and
+ *        position stay season facts.
  *
  * No photo source exists in the data (open decision 6). Photos are
  * hand-supplied, licensed assets; without one the block shows the shirt
@@ -34,10 +38,12 @@ export function ProfileCard({
   player,
   kpis,
   photo = null,
+  selected = null,
 }: {
   player: PlayerBio;
   kpis: PlayerKpi[];
   photo?: string | null;
+  selected?: number | null;
 }) {
   const b = copy.bio;
   const bio: [string, string][] = [
@@ -149,7 +155,7 @@ export function ProfileCard({
               {kpi.value === null ? EMPTY : `${dec(kpi.value, kpi.decimals)}${kpi.scale === "pct" ? "%" : ""}`}
             </div>
             <div className="font-mono text-[9px] text-faint" style={{ marginTop: 3 }}>
-              {kpiSub(kpi)}
+              {kpiSub(kpi, selected)}
             </div>
           </div>
         ))}
@@ -158,9 +164,14 @@ export function ProfileCard({
   );
 }
 
-/** Per-90 under a season total; the rank inside the squad under a rate. */
-function kpiSub(kpi: PlayerKpi): string {
+/**
+ * Per-90 under a total; the rank inside the squad under a season rate. A
+ * filtered rate has no squad rank (teammates are ranked on their seasons),
+ * so it says what it covers instead.
+ */
+function kpiSub(kpi: PlayerKpi, selected: number | null): string {
   if (kpi.per_90 !== null) return copy.kpiPer90(dec(kpi.per_90, 2));
+  if (selected !== null) return copy.kpiSelection(selected);
   if (kpi.squad_rank !== null && kpi.squad_n !== null) {
     return copy.kpiSquadRank(kpi.squad_rank, kpi.squad_n);
   }

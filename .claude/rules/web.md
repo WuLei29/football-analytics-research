@@ -14,7 +14,10 @@ use the `new-viz` skill.
   (`web/AGENTS.md`).
 - **Static export, data at build time.** Pages are server components that read
   `public/data/*.json` through `lib/data/load.ts`. No fetching, no client-side
-  aggregation. Keep client components as small as possible.
+  aggregation. Keep client components as small as possible. **One exception,
+  screen 03's match filter** (16 Oct 2026): KPIs are summed from per-match
+  parts (`lib/data/playerFilter.ts`, mirrored and checked in
+  `src/export/player.py`), and filtered sequences fetch their match files.
 - **Visual authority**: `design_handoff_espanyol_analytics/README.md` (+
   `README-PLAYER.md` for screen 03). Use the `:root` tokens; never hard-code a
   hex the handoff names.

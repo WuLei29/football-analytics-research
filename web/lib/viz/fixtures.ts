@@ -31,7 +31,22 @@ import type { XtCell } from "@/components/viz/HeatSurface";
 import type { ZoneCell } from "@/components/viz/ZoneHeatmap";
 import type { RollingPoint } from "@/components/viz/RollingArea";
 import { ZONE_IDS } from "@/lib/viz/pitch";
-import { SCHEMA_VERSION, type PassRow, type PlayerFile, type Squad } from "@/lib/data/types";
+import { kpiOver } from "@/lib/data/playerFilter";
+import {
+  SCHEMA_VERSION,
+  type CarryRow,
+  type DefenceRow,
+  type KpiFormula,
+  type PassRow,
+  type PlayerFile,
+  type PlayerKpi,
+  type PlayerMatch,
+  type PlayerSequenceEntry,
+  type ReceptionRow,
+  type SequenceIndexRow,
+  type Squad,
+  type ZoneRow,
+} from "@/lib/data/types";
 
 /**
  * mulberry32 — a 32-bit seeded PRNG. Four lines, uniform enough for fake
@@ -506,36 +521,80 @@ export const demoPlayerFile: PlayerFile = (() => {
   const gauss = () => (random() + random() + random() - 1.5) / 1.5;
   const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
   const r1 = (v: number) => Math.round(v * 10) / 10;
+  const r3 = (v: number) => Math.round(v * 1000) / 1000;
   const isProgressive = (x: number, y: number, ex: number, ey: number) =>
     Math.hypot(105 - ex, 34 - ey) <= 0.75 * Math.hypot(105 - x, 34 - y);
+  const PLAYER_ID = 904;
+
+  // 34 matches in date order; the filter selects among these.
+  const opponents: [string, string][] = [
+    ["GIR", "Girona"], ["VAL", "Valencia"], ["BET", "Betis"], ["SEV", "Sevilla"],
+    ["ATM", "Atlético"], ["CEL", "Celta"], ["OSA", "Osasuna"], ["RAY", "Rayo"],
+    ["MLL", "Mallorca"], ["ALA", "Alavés"], ["GET", "Getafe"], ["VIL", "Villarreal"],
+  ];
+  const matches: PlayerMatch[] = Array.from({ length: 34 }, (_, i) => {
+    const [abbr, name] = opponents[i % opponents.length];
+    const started = i % 9 !== 4;
+    const minutes = started ? (i % 4 === 0 ? 72 : 94) : 21;
+    return {
+      match_id: 4 + i,
+      matchday: i + 1 + (i > 20 ? 4 : 0),
+      // Four a month from August 2025: month 8 + i/4, rolling into 2026.
+      date: (() => {
+        const month = 7 + Math.floor(i / 4); // 0-based from January 2025
+        const y = 2025 + Math.floor(month / 12);
+        return `${y}-${String((month % 12) + 1).padStart(2, "0")}-${String(3 + (i % 4) * 7).padStart(2, "0")}`;
+      })(),
+      is_home: i % 2 === 0,
+      opponent_abbr: abbr,
+      opponent_short_name: name,
+      goals_for: Math.floor(random() * 3),
+      goals_against: Math.floor(random() * 3),
+      started,
+      subbed_off: started && minutes < 90,
+      minutes,
+      yellow_cards: i % 5 === 1 ? 1 : 0,
+      red_cards: i === 17 ? 1 : 0,
+      penalties_taken: 0,
+      penalties_scored: 0,
+      kpi_parts: {
+        vaep: r3(0.05 + random() * 0.4),
+        tackles: Math.floor(random() * 4),
+        tackles_missed: Math.floor(random() * 2),
+        dribbled_past: Math.floor(random() * 2),
+        aerials_won: Math.floor(random() * 3),
+        aerials_lost: Math.floor(random() * 3),
+        progressive_passes: Math.floor(1 + random() * 8),
+      },
+    };
+  });
+  const m = () => Math.floor(random() * matches.length);
 
   // A right back's pass: from the right flank (low y), mostly forward.
-  function pass(flags = 0): PassRow {
+  function pass(match: number, flags = 0): PassRow {
     const x = clamp(52 + gauss() * 26, 4, 100);
     const y = clamp(9 + Math.abs(gauss()) * 14, 1, 40);
     const ex = clamp(x + 4 + gauss() * 22, 1, 104);
     const ey = clamp(y + 6 + gauss() * 16, 1, 67);
     const completed = random() < 0.8 ? 1 : 0;
     const prog = isProgressive(x, y, ex, ey) ? 2 : 0;
-    return [r1(x), r1(y), r1(ex), r1(ey), completed | prog | flags];
+    return [r1(x), r1(y), r1(ex), r1(ey), completed | prog | flags, match, r3(random() * 0.05)];
   }
-
-  const passes = Array.from({ length: 150 }, () => pass());
-  const progressive: PassRow[] = [];
-  while (progressive.length < 60) {
-    const p = pass();
-    if (p[4] & 2) progressive.push(p);
-  }
-  const keyPasses: PassRow[] = Array.from({ length: 21 }, (_, i) => {
-    const x = clamp(70 + random() * 30, 60, 102);
-    const y = clamp(6 + random() * 14, 1, 30);
-    return [r1(x), r1(y), r1(92 + random() * 10), r1(26 + random() * 16), 1 | (i < 4 ? 8 : 4)];
-  });
-  const carries = Array.from({ length: 41 }, () => {
+  const passes: PassRow[] = matches
+    .flatMap((_, i) => Array.from({ length: 24 }, () => pass(i)))
+    .concat(
+      Array.from({ length: 21 }, (_, i) => {
+        const x = clamp(70 + random() * 30, 60, 102);
+        const y = clamp(6 + random() * 14, 1, 30);
+        return [r1(x), r1(y), r1(92 + random() * 10), r1(26 + random() * 16), 1 | (i < 4 ? 8 : 4), m(), r3(random() * 0.1)] as PassRow;
+      }),
+    )
+    .sort((a, b) => a[5] - b[5]);
+  const carries: CarryRow[] = Array.from({ length: 41 }, () => {
     const x = clamp(40 + random() * 45, 5, 95);
     const y = clamp(5 + random() * 15, 1, 40);
-    return [r1(x), r1(y), r1(clamp(x + 9 + random() * 18, 0, 105)), r1(clamp(y + gauss() * 6, 1, 67)), random() < 0.9 ? 1 : 0] as [number, number, number, number, number];
-  });
+    return [r1(x), r1(y), r1(clamp(x + 9 + random() * 18, 0, 105)), r1(clamp(y + gauss() * 6, 1, 67)), random() < 0.9 ? 1 : 0, m(), r3(random() * 0.06)] as CarryRow;
+  }).sort((a, b) => a[5] - b[5]);
 
   // Zone heat: strongest on the right channel (y_channel 1 = low y).
   const zoneWeight = (zone: number, peakStrip: number) => {
@@ -543,27 +602,30 @@ export const demoPlayerFile: PlayerFile = (() => {
     const channel = zone % 10;
     return Math.exp(-((channel - 1) ** 2) / 1.2) * Math.exp(-((strip - peakStrip) ** 2) / 3);
   };
-  const zones = (total: number, peak: number) => {
+  const zones = (perMatch: number, peak: number): ZoneRow[] => {
     const w = ZONE_IDS.map((z) => zoneWeight(z, peak));
     const sum = w.reduce((a, b) => a + b, 0);
-    return ZONE_IDS.map((zone_id, i) => {
-      const count = Math.round((w[i] / sum) * total);
-      return { zone_id, count, share: Math.round((1000 * count) / total) / 10 };
-    }).filter((z) => z.count > 0);
+    return matches.flatMap((_, mi) =>
+      ZONE_IDS.flatMap((zone_id, i): ZoneRow[] => {
+        const count = Math.round((w[i] / sum) * perMatch * (0.6 + random() * 0.8));
+        return count > 0 ? [[mi, zone_id, count]] : [];
+      }),
+    );
   };
 
   const shots = Array.from({ length: 14 }, (_, i) => {
     const x = r1(84 + random() * 18);
     const y = r1(clamp(34 + gauss() * 10, 14, 54));
     const outcome = i === 0 ? "goal" : ["saved", "off_target", "blocked", "off_target"][i % 4];
+    const match = matches[(i * 5) % matches.length];
     return {
       shot_id: i + 1,
-      match_id: 4 + i,
-      matchday: 2 + i * 2,
+      match_id: match.match_id,
+      matchday: match.matchday,
       minute: Math.floor(random() * 90) + 1,
       x,
       y,
-      xg: Math.round((Math.pow(random(), 2) * 0.3 + 0.02) * 1000) / 1000,
+      xg: r3(Math.pow(random(), 2) * 0.3 + 0.02),
       body_part: random() < 0.7 ? "right_foot" : "head",
       outcome,
       play_pattern: "regular_play",
@@ -575,63 +637,100 @@ export const demoPlayerFile: PlayerFile = (() => {
   });
 
   const defTypes = ["ball_recovery", "ball_recovery", "interception", "tackle", "clearance", "challenge", "blocked_pass", "attempted_tackle"];
-  const defence = Array.from({ length: 118 }, () => {
+  const defence: DefenceRow[] = Array.from({ length: 118 }, (): DefenceRow => {
     const type = defTypes[Math.floor(random() * defTypes.length)];
     const lost = type === "challenge" || type === "attempted_tackle" || (type === "tackle" && random() < 0.35);
-    return {
-      type,
-      x: r1(clamp(38 + gauss() * 26, 2, 100)),
-      y: r1(clamp(10 + Math.abs(gauss()) * 13, 1, 45)),
-      outcome: lost ? ("lost" as const) : ("won" as const),
-      minute: Math.floor(random() * 92) + 1,
-      matchday: 1 + Math.floor(random() * 38),
-    };
+    return [type, r1(clamp(38 + gauss() * 26, 2, 100)), r1(clamp(10 + Math.abs(gauss()) * 13, 1, 45)), lost ? 0 : 1, Math.floor(random() * 92) + 1, m()];
   });
 
-  const opponents = ["GIR", "VAL", "BET", "SEV", "ATM", "CEL", "OSA", "RAY", "MLL", "ALA", "GET", "VIL"];
-  const kinds = ["positional", "counter_attack", "high_transition", "buildup", "direct_long", "fast"];
-  const chain = (seed: number) => {
+  // Chains: every one ships in full, so /demo never needs a match file.
+  const teammates: [number, string, number][] = [[910, "Lozano", 10], [911, "Expósito", 8], [912, "Puado", 7], [913, "Milla", 11]];
+  const kinds = ["positional", "counter_attack", "high_transition", "buildup", "fast"];
+  const entries: PlayerSequenceEntry[] = Array.from({ length: 40 }, (_, i) => {
     const n = 4 + Math.floor(random() * 4);
+    const touch = 1 + Math.floor(random() * (n - 2));
     let x = 20 + random() * 30;
     let y = 8 + random() * 10;
     const pts: [number, number][] = [];
-    for (let i = 0; i < n; i++) {
+    for (let k = 0; k <= n; k++) {
       pts.push([r1(x), r1(y)]);
-      x = clamp(x + 6 + random() * 16, 0, 105);
-      y = clamp(y + gauss() * 14 + (i > n / 2 ? 5 : 0), 1, 67);
+      x = clamp(x + 6 + random() * 16, 0, 104);
+      y = clamp(y + gauss() * 14 + (k > n / 2 ? 5 : 0), 1, 67);
     }
-    pts.push([105, r1(30 + random() * 8)]);
-    const touch = 1 + Math.floor(random() * (n - 2));
-    return { pts, touch, seed };
-  };
-  const sequences = (metric: "xt" | "vaep") =>
-    Array.from({ length: 10 }, (_, i) => {
-      const { pts, touch } = chain(i);
-      const v = Math.round((0.42 - i * 0.033 + random() * 0.02) * 1000) / 1000;
+    const shot = i % 3 === 0;
+    const match = (i * 7) % matches.length;
+    const minute = 5 + ((i * 17) % 85);
+    const actions: SequenceAction[] = pts.slice(0, -1).map(([ax, ay], k) => {
+      const last = k === n - 1;
+      const who: [number, string, number] = k === touch ? [PLAYER_ID, "El Hilali", 23] : teammates[(k + i) % teammates.length];
+      const [ex, ey] = last && shot ? [105, r1(30 + random() * 8)] : pts[k + 1];
       return {
-        id: (metric === "xt" ? 5000 : 6000) + i,
-        match_id: 4 + i,
-        matchday: 3 + ((i * 7) % 36),
-        opponent_abbr: opponents[i % opponents.length],
-        is_home: i % 2 === 0,
-        period: i % 2 ? 2 : 1,
-        minute: 5 + ((i * 17) % 85),
-        second: (i * 23) % 60,
-        kind: kinds[i % kinds.length],
-        outcome: i % 3 === 0 ? "shot_saved" : "turnover",
-        events: pts.length + 2,
-        passes: pts.length - 1,
-        player_touches: 1 + (i % 3),
-        xt: metric === "xt" ? v : Math.round(v * 0.7 * 1000) / 1000,
-        vaep: metric === "vaep" ? v : Math.round(v * 0.6 * 1000) / 1000,
-        ends_in_shot: i % 3 === 0,
-        points: pts,
-        player_touch_index: touch,
+        kind: last && shot ? "shot" : k % 3 === 2 ? "carry" : "pass",
+        type: last && shot ? "attempt_saved" : k % 3 === 2 ? "carry" : "pass",
+        minute,
+        second: (k * 4) % 60,
+        x: ax,
+        y: ay,
+        end_x: ex,
+        end_y: ey,
+        player_id: who[0],
+        surname: who[1],
+        shirt_number: who[2],
+        outcome: "success",
+        ...(last && shot ? { xg: r3(0.05 + random() * 0.2) } : {}),
       };
     });
+    const xt = r3(0.02 + Math.pow(random(), 3) * 0.4);
+    return {
+      sequence_id: `${matches[match].match_id}_home_${String(i).padStart(3, "0")}`,
+      match_id: matches[match].match_id,
+      period: minute > 45 ? 2 : 1,
+      minute,
+      second: (i * 23) % 60,
+      duration_s: r1(6 + random() * 20),
+      events: actions.length,
+      passes: actions.filter((a) => a.kind === "pass").length,
+      xt,
+      xg: null,
+      vaep: r3(xt * (0.4 + random())),
+      start_zone: null,
+      start_trigger: "ball_recovery",
+      start_kind: "ball_recovery",
+      outcome: shot ? "shot_saved" : "turnover",
+      end_action: shot ? null : "pass",
+      primary_phase: "attacking",
+      kind: kinds[i % kinds.length],
+      final_third_entry: true,
+      penalty_box_entry: shot,
+      ends_in_shot: shot,
+      points: pts,
+      actions,
+    } as PlayerSequenceEntry;
+  });
+  const index: SequenceIndexRow[] = entries
+    .map((e): SequenceIndexRow => [
+      matches.findIndex((mm) => mm.match_id === e.match_id),
+      e.sequence_id,
+      e.xt,
+      e.vaep,
+      e.ends_in_shot ? 1 : 0,
+      e.passes,
+    ])
+    .sort((a, b) => a[0] - b[0]);
 
   const metric = (key: string, value: number | null, percentile: number | null, decimals: 0 | 1 | 2 | 3 = 2, scale: "raw" | "pct" = "raw", higher = true) =>
     ({ key, value, percentile, higher_is_better: higher, scale, decimals });
+
+  // The season KPIs are the formulas over every match, as the export checks.
+  const kpi = (key: string, scale: "raw" | "pct", decimals: 0 | 1 | 2 | 3, total: boolean, formula: KpiFormula): PlayerKpi => {
+    const base: PlayerKpi = { key, value: null, scale, decimals, per_90: null, squad_rank: null, squad_n: null, formula, total };
+    const value = kpiOver(base, matches);
+    const minutes = matches.reduce((a, mm) => a + mm.minutes, 0);
+    return total
+      ? { ...base, value, per_90: value === null ? null : Math.round((value * 9000) / minutes) / 100 }
+      : { ...base, value, squad_rank: 3 + (key.length % 5), squad_n: 18 };
+  };
+  const sum = (f: (mm: PlayerMatch) => number) => matches.reduce((a, mm) => a + f(mm), 0);
 
   return {
     schema_version: SCHEMA_VERSION,
@@ -639,7 +738,7 @@ export const demoPlayerFile: PlayerFile = (() => {
     team: { slug: "espanyol", team_id: 8, short_name: "Espanyol", abbr: "ESP" },
     season: { slug: "2025-26", label: "2025/2026", competition_name: "Primera División", through_matchday: 38 },
     player: {
-      player_id: 904,
+      player_id: PLAYER_ID,
       name: { first: "Omar", last: "El Hilali", full: "Omar El Hilali" },
       shirt_number: 23,
       nationality: "Marruecos",
@@ -652,41 +751,32 @@ export const demoPlayerFile: PlayerFile = (() => {
       role: "RB",
       is_utility: false,
       primary_position_pct: 91,
-      matches: 34,
-      starts: 31,
-      minutes: 2860,
-      subbed_off: 9,
-      yellow_cards: 7,
-      red_cards: 1,
+      matches: matches.length,
+      starts: sum((mm) => (mm.started ? 1 : 0)),
+      minutes: sum((mm) => mm.minutes),
+      subbed_off: sum((mm) => (mm.subbed_off ? 1 : 0)),
+      yellow_cards: sum((mm) => mm.yellow_cards),
+      red_cards: sum((mm) => mm.red_cards),
       penalties_taken: 0,
       penalties_scored: 0,
     },
+    matches,
     kpis: [
-      { key: "vaep_per_90", value: 0.214, scale: "raw", decimals: 3, per_90: null, squad_rank: 4, squad_n: 18 },
-      { key: "ground_duel_win_rate", value: 61.8, scale: "pct", decimals: 1, per_90: null, squad_rank: 3, squad_n: 18 },
-      { key: "aerial_win_rate", value: 48.2, scale: "pct", decimals: 1, per_90: null, squad_rank: 9, squad_n: 18 },
-      { key: "progressive_passes", value: 148, scale: "raw", decimals: 0, per_90: 4.66, squad_rank: null, squad_n: null },
+      kpi("vaep_per_90", "raw", 3, false, { num: { vaep: 1 }, den: null, per90: true }),
+      kpi("ground_duel_win_rate", "pct", 1, false, { num: { tackles: 1 }, den: { tackles: 1, tackles_missed: 1, dribbled_past: 1 }, per90: false }),
+      kpi("aerial_win_rate", "pct", 1, false, { num: { aerials_won: 1 }, den: { aerials_won: 1, aerials_lost: 1 }, per90: false }),
+      kpi("progressive_passes", "raw", 0, true, { num: { progressive_passes: 1 }, den: null, per90: false }),
     ],
     maps: {
-      counts: {
-        passes: 1284,
-        progressive_passes: 148,
-        key_passes: 17,
-        assists: 4,
-        progressive_carries: 41,
-        touches: 1960,
-        receptions: 1105,
-      },
+      caps: { passes: 150, progressive: 60 },
       passes,
-      progressive_passes: progressive,
-      key_passes: keyPasses,
       carries,
-      touch_zones: zones(1960, 3.4),
-      reception_zones: zones(1105, 4.1),
-      progressive_receptions: Array.from({ length: 64 }, () => {
+      touch_zones: zones(58, 3.4),
+      reception_zones: zones(32, 4.1),
+      progressive_receptions: Array.from({ length: 64 }, (): ReceptionRow => {
         const x = r1(clamp(60 + random() * 40, 40, 104));
         const y = r1(clamp(5 + random() * 20, 1, 50));
-        return [x, y, x > 88.5 && y > 13.84 ? 1 : 0] as [number, number, number];
+        return [x, y, x > 88.5 && y > 13.84 ? 1 : 0, m()];
       }),
       shots,
       defence,
@@ -718,11 +808,6 @@ export const demoPlayerFile: PlayerFile = (() => {
           metric("shot_creating_actions_per_90", 2.31, 76), metric("vaep_per_90", 0.214, 83, 3) ] },
       ],
     },
-    sequences: {
-      aggregates: { sequences: 412, xt: 18.74, ends_in_shot: 61, passes_per_sequence: 5.8 },
-      min_events: 3,
-      top_xt: sequences("xt"),
-      top_vaep: sequences("vaep"),
-    },
+    sequences: { min_events: 3, top: 10, index, entries },
   };
 })();

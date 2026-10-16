@@ -1,15 +1,15 @@
 /**
  * /{equipo}/jugador/{season}/{player_id} — screen 03, the player profile.
  *
- * Renders: the masthead, `PlayerView` (header, tab strip, profile card and
- * event map, percentile cards, sequences), the footer.
- * Data:  `squad.json` and `players/{player_id}.json` (WEB_DATA §8, §9), read
- *        at build time. One static page per (club, season, squad row).
+ * Renders: `PlayerRoute` (masthead, `PlayerView`, footer).
+ * Data:  `squad.json` and `players/{player_id}.json` (WEB_DATA §8, §9),
+ *        read at build time. One static page per (club, season, squad row).
  *
- * The season is in the route (README-PLAYER open decision 1): minutes,
- * percentiles and maps are all season-scoped, and a player who stays two
- * seasons has two pages. `?vista=` is read on the client only, by the event
- * map and the tab strip; the HTML is the default view.
+ * The season is in the route (README-PLAYER open decision 1): the
+ * percentiles are season-scoped, and a player who stays two seasons has two
+ * pages. `?vista=` and `?partidos=` are read on the client only, by the
+ * event map, the match filter and the player picker; the HTML is the
+ * default view.
  *
  * Until the export has run its `squad` step there is no squad.json. A static
  * export refuses a dynamic route with no params at all, so the route then
@@ -18,14 +18,7 @@
  * squad.json lists. The rest of the site is unaffected either way.
  */
 
-import { access } from "node:fs/promises";
-import path from "node:path";
-
-import { PlayerView } from "@/components/player/PlayerView";
-import { Footer } from "@/components/shell/Footer";
-import { Masthead } from "@/components/shell/Masthead";
-import { PageHeader } from "@/components/shell/PageHeader";
-import { VizDefs } from "@/components/viz/VizDefs";
+import { PlayerRoute } from "@/components/player/PlayerRoute";
 import { getManifest, getPlayer, getSquad } from "@/lib/data/load";
 import { player as copy, site } from "@/lib/labels";
 
@@ -66,60 +59,13 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-/** A hand-supplied, licensed photo, if one was dropped in public/players. */
-async function photoFor(playerId: number): Promise<string | null> {
-  try {
-    await access(path.join(process.cwd(), "public", "players", `${playerId}.jpg`));
-    return `/players/${playerId}.jpg`;
-  } catch {
-    return null;
-  }
-}
-
 export default async function PlayerPage({ params }: PageProps) {
   const { equipo, season, player_id } = await params;
-  const playerId = Number(player_id);
-
-  const manifest = await getManifest();
-  if (player_id === PENDING) {
-    return (
-      <>
-        <Masthead
-          eyebrow={site.eyebrow}
-          title={site.homeTitle}
-          dek={site.homeDek}
-          seasons={manifest.seasons}
-          team={equipo}
-          season={season}
-        />
-        <PageHeader eyebrow={copy.eyebrow} title={copy.pendingHeading} dek={copy.pendingDek} />
-        <Footer source={manifest.source} generatedAt={manifest.generated_at} />
-      </>
-    );
-  }
-
-  const squad = await getSquad(equipo, season);
-  const file = await getPlayer(equipo, season, playerId);
-
   return (
-    <>
-      <VizDefs />
-      <Masthead
-        eyebrow={site.eyebrow}
-        title={site.homeTitle}
-        dek={site.homeDek}
-        seasons={manifest.seasons}
-        team={equipo}
-        season={season}
-      />
-      <PlayerView
-        file={file}
-        squad={squad?.players ?? []}
-        team={equipo}
-        season={season}
-        photo={await photoFor(playerId)}
-      />
-      <Footer source={manifest.source} generatedAt={file.generated_at} />
-    </>
+    <PlayerRoute
+      equipo={equipo}
+      season={season}
+      playerId={player_id === PENDING ? null : Number(player_id)}
+    />
   );
 }
