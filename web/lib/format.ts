@@ -107,6 +107,17 @@ export function shortDate(iso: string): string {
   return dateShort.format(calendarDate(iso));
 }
 
+const dateNumeric = new Intl.DateTimeFormat(DATE_LOCALE, {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
+
+/** `"2003-09-12"` -> "12/09/2003". For a bio cell a long date does not fit. */
+export function numericDate(iso: string): string {
+  return dateNumeric.format(calendarDate(iso));
+}
+
 /** `generated_at` is a real instant: "7 sept 2026, 16:37". */
 export function buildStamp(isoInstant: string): string {
   return new Intl.DateTimeFormat(DATE_LOCALE, {

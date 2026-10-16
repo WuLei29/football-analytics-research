@@ -26,6 +26,8 @@
  * where everyone scores the same is a lie (§5.1).
  */
 
+import type { ReactNode } from "react";
+
 import { dec } from "@/lib/format";
 import { label, metricLabels, profileCardLabels, season as copy } from "@/lib/labels";
 import type { ProfileCard, ProfileMetric, ProfileValue } from "@/lib/data/types";
@@ -54,62 +56,105 @@ export function TeamProfile({
   return (
     <div className="mt-4 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
       {CARDS.map((card) => (
-        <article key={card} className="card">
-          <div className="flex items-baseline justify-between gap-2 border-b border-ink pb-2">
-            <h3 className="font-display text-[15px] font-bold">
-              {profileCardLabels[card]}
-            </h3>
-            <span className="font-mono text-[8.5px] tracking-[0.16em] uppercase text-faint">
-              {copy.profileVs}
-            </span>
-          </div>
-
-          <dl className="mt-3 flex flex-col gap-2.5">
-            {metrics
-              .filter((m) => m.card === card)
-              .map((metric) => (
-                <Row
+        <PercentileCard key={card} title={profileCardLabels[card]} unit={copy.profileVs}>
+          {metrics
+            .filter((m) => m.card === card)
+            .map((metric) => {
+              const value = values[metric.key] ?? { v: null, p: null };
+              return (
+                <PercentileRow
                   key={metric.key}
-                  metric={metric}
-                  value={values[metric.key] ?? { v: null, p: null }}
+                  label={label(metricLabels, metric.key)}
+                  printed={
+                    value.v === null
+                      ? copy.percentileEmpty
+                      : `${dec(value.v, metric.decimals as 0 | 1 | 2 | 3)}${metric.scale === "pct" ? " %" : ""}`
+                  }
+                  percentile={value.p}
                 />
-              ))}
-          </dl>
-        </article>
+              );
+            })}
+        </PercentileCard>
       ))}
     </div>
   );
 }
 
-function Row({ metric, value }: { metric: ProfileMetric; value: ProfileValue }) {
-  const printed =
-    value.v === null
-      ? copy.percentileEmpty
-      : `${dec(value.v, metric.decimals as 0 | 1 | 2 | 3)}${metric.scale === "pct" ? " %" : ""}`;
+/**
+ * One card of percentile rows: the 15px title, the mono unit caption, the
+ * hard ink rule. Shared with the player page's percentile block
+ * (README-PLAYER §4: "same construction as the Team profile block").
+ */
+export function PercentileCard({
+  title,
+  unit,
+  children,
+}: {
+  title: string;
+  unit: string;
+  children: ReactNode;
+}) {
+  return (
+    <article className="card">
+      <div className="flex items-baseline justify-between gap-2 border-b border-ink pb-2">
+        <h3 className="font-display text-[15px] font-bold">{title}</h3>
+        <span className="font-mono text-[8.5px] tracking-[0.16em] uppercase text-faint">
+          {unit}
+        </span>
+      </div>
+      <dl className="mt-3 flex flex-col gap-2.5">{children}</dl>
+    </article>
+  );
+}
 
+/**
+ * A label and value, then a 5px track filled to the percentile. A null
+ * percentile draws the value over an EMPTY track with "—": a metric not
+ * ranked for this player (wrong role, under its attempt floor) must not get
+ * a confident-looking bar that describes nothing.
+ */
+export function PercentileRow({
+  label: text,
+  printed,
+  percentile,
+  tintNumber = false,
+}: {
+  label: string;
+  printed: string;
+  percentile: number | null;
+  /** Print the two-digit percentile in the fill colour (screen 03) rather
+      than `--faint` (screen 01). */
+  tintNumber?: boolean;
+}) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
-        <dt className="font-sans text-[12px] font-medium text-mid">
-          {label(metricLabels, metric.key)}
-        </dt>
-        <dd className="font-mono text-[12px] font-medium text-ink">{printed}</dd>
+        <dt className="font-sans text-[12px] font-medium text-mid">{text}</dt>
+        <dd className="shrink-0 font-mono text-[12px] font-medium text-ink">{printed}</dd>
       </div>
 
       <div className="mt-1 flex items-center gap-2">
         <div className="h-[5px] flex-1 rounded-[3px] bg-paper">
-          {value.p !== null && (
+          {percentile !== null && (
             <div
               className="h-full rounded-[3px]"
               style={{
-                width: `${value.p}%`,
-                background: percentileColor(value.p),
+                width: `${percentile}%`,
+                background: percentileColor(percentile),
               }}
             />
           )}
         </div>
-        <span className="w-[18px] text-right font-mono text-[9px] text-faint">
-          {value.p === null ? copy.percentileEmpty : value.p}
+        <span
+          className="w-[18px] text-right font-mono text-[9px]"
+          style={{
+            color:
+              percentile === null || !tintNumber
+                ? "var(--color-faint)"
+                : percentileColor(percentile),
+          }}
+        >
+          {percentile === null ? copy.percentileEmpty : percentile}
         </span>
       </div>
     </div>

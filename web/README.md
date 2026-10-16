@@ -49,6 +49,8 @@ web/
       temporada/[season]/       screen 01 — the season overview
       partido/[match_id]/       screen 02 — one match, eight blocks
       partidos/[season]/        the plain match list that links them
+      jugador/[season]/[player_id]/  screen 03 — one player's season
+    demo/jugador/             screen 03 drawn from the fixture player
   content/
     narratives.ts             the authored prose: season and match readings.
                               The ONLY content not produced by the export
@@ -66,6 +68,8 @@ web/
       FormStrip.tsx             last ten matches, each a link to its page
       TeamProfile.tsx           4 cards x 6 metrics with percentile bars
       PlayerLeaders.tsx         4 boxes x 6 rows (inert until screen 03 lands)
+    player/                   screen 03: header, tab strip, profile card,
+                              event map (8 modes), percentiles, sequences
     match/                    the blocks of screen 02 that are not pitches
       MatchTotals.tsx           the fourteen stat rows with their share bars
       MatchPlayers.tsx          four player boxes, both teams
@@ -241,12 +245,14 @@ Next:
 | Phase | What |
 |---|---|
 | 5a | **built** — a fidelity pass against the design screenshots is still to do |
-| 5b | Player, squad, sequence lab, comparison, methodology |
+| 5b | **player built** (16 Oct 2026); squad, sequence lab, comparison, methodology |
 | 6 | Mobile collapse pass, share images, custom domain, Spanish copy review |
 
-Two flags to know about while iterating: `LINK_TO_PLAYER` in
-`components/season/PlayerLeaders.tsx` turns the leader rows into links to
-screen 03 the day it exists, and `content/narratives.ts` holds an empty
+Screen 03 reads `squad.json`, the one OPTIONAL file (`getSquad` returns
+null): until the export has run its `squad` step, the player route builds a
+single "en preparación" placeholder and the screen-01 leader rows stay
+unlinked; once it has, every squad row gets a page and its leader rows link.
+`content/narratives.ts` holds an empty
 `matchReadings` map — a match page shows no reading block until it has a key
 there, on purpose (`WEB_PLAN.md` §3.7).
 

@@ -154,6 +154,10 @@ def spine_block(row: Row, result: dict[str, Any], min_minutes: float,
                 "value": _display(row, m),
                 "percentile": None if rank is None else round(rank[0]),
                 "higher_is_better": higher_is_better.get(m.key, True),
+                # How the site prints the value: "%" on a pct, and the
+                # precision PLAYER_SPINE gives it.
+                "scale": m.scale,
+                "decimals": m.decimals,
             }
             if m.out_of:
                 entry["out_of"] = row.get(m.out_of)

@@ -87,22 +87,24 @@ changing it, since each one records its deviations from the handoff.
 |---|---|---|---|---|
 | `Pitch` / `PitchLines` | Markings, `underlay` + `children` slots | `orientation`, `underlay`, `lineColor`, `cased`, `title` | no | everything |
 | `VizDefs` | Shared `<defs>` arrowheads (`viz-arrow-*`) | none | no | once per page using arrows |
-| `ShotMap` | Circles, r = R0 + √xG·K; solid goal / half on target / hollow off; hover card with goal frame | `shots: Shot[]`, `teamSide`, `abbr` | yes | 02 |
-| `ProgressionArrows` | Arrows: pass `--blue` thin, carry `--gold` thicker, failed dashed | `actions: {kind, x,y,end_x,end_y, completed}[]` | no | 02 |
+| `ShotMap` | Circles, r = R0 + √xG·K; solid goal / half on target / hollow off; hover card with goal frame | `shots: Shot[]`, `teamSide`, `abbr` | yes | 02, 03 (`Tiros`) |
+| `ActionArrows` / `ArrowLayer` | Arrows with a per-arrow tone (`blue`/`gold`/`faint`), width, opacity, `head`; failed dashed. `ArrowLayer` is the bare `<g>` | `actions: ArrowMark[]` | no | 02 (via wrapper), 03 |
+| `ProgressionArrows` | Thin wrapper on `ActionArrows`: pass `--blue` thin, carry `--gold` thicker | `actions: {kind, x,y,end_x,end_y, completed}[]` | no | 02 |
 | `HeatSurface` | 12×8 **xT** grid cells | `cells: {cx, cy, xt}[]` | no | 02 |
-| `ZoneHeatmap` | 30-zone fills, optional grid | `cells: {zone_id, value}[]`, `showGrid` | no | 03 (planned), 04 |
-| `DefensiveActions` | Diamonds, blue won / grey lost, type chips, dashed line height, hover | `actions: {type,x,y,outcome,minute?,player?}[]`, `lineX`, `lineLabel` | yes | 02 |
+| `ZoneHeatmap` | 30-zone fills, optional grid, `children` above the lines (reception dots) | `cells: {zone_id, value}[]`, `showGrid`, `children` | no | 02, 03 |
+| `DefensiveActions` | Diamonds, blue won / grey lost, type chips, dashed line height, hover | `actions: {type,x,y,outcome,minute?,player?}[]`, `lineX`, `lineLabel` | yes | 02, 03 |
 | `PassNetwork` | Nodes at mean position (r by touches), edges (width by count, ≥4) | `nodes`, `edges` | no | 02 |
-| `SequenceTraces` | Polylines, start dot, end ring (big if shot), selection | `sequences: {sequence_id, points, ends_in_shot}[]`, `selectedId`, `onSelect` | no (page owns state) | 02, 03, 04 |
+| `SequenceTraces` | Polylines, start dot, end ring (big if shot), selection; `variant="player"`: width by `value`, gold dot on `touch` | `sequences: {sequence_id, points, ends_in_shot, value?, touch?}[]`, `selectedId`, `onSelect`, `variant` | no (page owns state) | 02, 03, 04 |
 | `SequenceDetail` | One chain action by action: pass arrow, curved cross, dotted carry, take-on dot, shot to goal-mouth y | `actions`, `describe` | yes | 02 |
 | `SequenceBrowser` | `SequenceDetail` + clickable list | `sequences`, `title` | yes | 02 |
 | `Momentum` | Per-minute xT bars, team above / opponent below, goal markers | `bins`, `markers` | yes | 02 |
 | `RollingArea` | Diverging area around 0 (5-match rolling xGD / xTD) | `points` | no | 01 |
 | `Legend`, `Ramp` | HTML legend with real marks; LOW→HIGH ramp | `items` or `rows` | no | all |
-| `MetricToggle` | Two-option segmented pill (xT / VAEP) | `value`, `onChange` | yes | 02 |
+| `MetricToggle` | Two-option segmented pill (xT / VAEP) | `value`, `onChange` | yes | 02, 03 |
 
 Non-pitch blocks live in `components/season` and `components/match`:
-`TeamProfile` (**the percentile cards**: README-PLAYER says reuse it for players),
+`TeamProfile` (**the percentile cards**; its `PercentileCard` / `PercentileRow`
+are what screen 03's `components/player/PlayerPercentiles` is built from),
 `KpiStrip`, `PlayerLeaders`, `MatchTotals` (mirrored stat bars), `FormStrip`,
 `LeagueTable`.
 
@@ -288,13 +290,14 @@ follow the same type scale): reuse as they are.
 
 ## 5. Known gaps to close as charts are built
 
-- **Generalise the arrow layer.** `ProgressionArrows` hard-codes pass/carry
-  colours. Pass map, key passes, crosses and progressive passes all want
-  "arrows with a per-arrow style". Extract an `ActionArrows` with
-  `{style: 'primary'|'secondary'|'muted', completed}` and keep
-  `ProgressionArrows` as a thin wrapper. This is the third caller, so extract.
-- **Dot layer.** Receptions, take-ons and player defensive actions want a plain
-  `<circle>` layer with filled/hollow. `DefensiveActions` is diamond-specific.
-- **Player export.** `src/export/player.py` isn't implemented (WEB_DATA §14 #1).
-  Each "planned" data line above is a field on `players/{id}.json`. Agree the
-  field list with the user before writing it.
+- ~~Generalise the arrow layer~~ — **done 16 Oct 2026**: `ActionArrows`
+  (per-arrow tone / width / opacity / head), `ProgressionArrows` is a wrapper.
+- **Dot layer.** The reception dots live in `components/player/EventMap.tsx`
+  (`ReceptionDots`, filled dot + ring in the box). On the next caller
+  (take-ons) lift it into `components/viz/`.
+- ~~Player export~~ — **done 16 Oct 2026**: `src/export/player.py` writes
+  `players/{id}.json` (README-PLAYER "Data contract", with `passes` split into
+  `passes` / `progressive_passes` / `key_passes` because the three modes have
+  different caps). Screen 03 is `components/player/*`; `/demo/jugador` draws it
+  from `demoPlayerFile`. The catalog entries above marked "planned" for the
+  player map are those fields.

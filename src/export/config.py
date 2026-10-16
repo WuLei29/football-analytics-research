@@ -416,3 +416,63 @@ MATCH_PLAYER_BOXES: list[tuple[str, tuple[str, ...]]] = [
     ("xg_xa", ("xg", "xa")),
 ]
 MATCH_PLAYER_ROWS = 6
+
+
+# ---------------------------------------------------------------------------
+# Screen 03: squad.json and players/{player_id}.json (§8, §9, README-PLAYER)
+# ---------------------------------------------------------------------------
+
+# Tab-strip order: GK -> CB -> FB -> MID -> W -> ST, then minutes. `role_group`
+# is the key, so an AM sits with the midfielders and RB precedes LB.
+SQUAD_ROLE_ORDER = ["GK", "CB", "RB", "LB", "MID", "AM", "W", "ST"]
+
+
+@dataclass(frozen=True)
+class PlayerKpi:
+    key: str                # column on gold.player_season_stats
+    scale: str = "raw"      # "pct" for the 0-1 rates gold stores (shipped x100)
+    decimals: int = 0
+    # A season total ships its per-90 as the sub line; a rate or a per-90
+    # ships its rank inside the squad instead (README-PLAYER §3a).
+    total: bool = True
+
+
+# The four headline KPIs of the profile card, per role (decided 16 Oct 2026).
+# VAEP, not xT, is the model value: it covers every on-ball action and charges
+# losing the ball. Season totals unless the key says /90 or the scale is pct.
+_VAEP90 = PlayerKpi("vaep_per_90", decimals=3, total=False)
+PLAYER_KPIS: dict[str, list[PlayerKpi]] = {
+    "ST": [PlayerKpi("goals"), PlayerKpi("assists"),
+           PlayerKpi("npxg", decimals=2), _VAEP90],
+    "AM": [PlayerKpi("goal_contributions"), PlayerKpi("xa", decimals=2),
+           PlayerKpi("key_passes"), _VAEP90],
+    "MID": [_VAEP90, PlayerKpi("progressive_passes"), PlayerKpi("ball_recoveries"),
+            PlayerKpi("pass_completion_rate", "pct", 1, total=False)],
+    "CB": [_VAEP90, PlayerKpi("ground_duel_win_rate", "pct", 1, total=False),
+           PlayerKpi("aerial_win_rate", "pct", 1, total=False),
+           PlayerKpi("progressive_passes")],
+    "GK": [PlayerKpi("goals_prevented", decimals=2),
+           PlayerKpi("save_pct", "pct", 1, total=False),
+           PlayerKpi("clean_sheets"),
+           PlayerKpi("gk_pass_completion_rate", "pct", 1, total=False)],
+}
+PLAYER_KPIS["W"] = PLAYER_KPIS["ST"]
+PLAYER_KPIS["RB"] = PLAYER_KPIS["CB"]
+PLAYER_KPIS["LB"] = PLAYER_KPIS["CB"]
+
+# Exposure caps of the event map (WEB_PLAN §6 level B, README-PLAYER open
+# decision 5). Shipping every pass of a season with coordinates is the
+# per-player version of the "every pass" file §6 rules out; the note on the
+# map states the cap ("150 DE 1,284 PASES").
+PLAYER_PASS_MAP_MAX = 150          # the most recent passes
+PLAYER_PROGRESSIVE_MAX = 60        # progressive passes, and carries, top by xT
+# Key passes, assists, shots, defensive actions and progressive receptions
+# ship in full: dozens a season, not thousands.
+
+# A reception whose receiver first acted more than this far from the pass end
+# is dropped from the DOTS (its first touch is not where the ball arrived),
+# never from the heat (GOLD_LAYER §4.7).
+RECEPTION_MAX_GAP_M = 5.0
+
+# The sequence block: the ten best chains by xT and by VAEP.
+PLAYER_TOP_SEQUENCES = 10

@@ -29,7 +29,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import db, league_table, manifest, match, overview
+from . import db, league_table, manifest, match, overview, player, squad
+from .player_percentiles import player_percentiles
 from .config import DEFAULT_OUT, EXPORT_TEAMS
 from .io import Writer
 from .seasons import load_seasons
@@ -37,10 +38,10 @@ from .seasons import load_seasons
 log = logging.getLogger("export")
 
 # Order matters only for readability of the log; the files are independent.
-STEPS = ["manifest", "table", "overview", "match"]
+STEPS = ["manifest", "table", "overview", "match", "squad", "player"]
 
-# Specified in WEB_DATA.md §8-§10 but not yet implemented (§14 item 1).
-PLANNED_STEPS = ["squad", "player", "sequences"]
+# Specified in WEB_DATA.md §10 but not yet implemented (§14 item 1).
+PLANNED_STEPS = ["sequences"]
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -146,6 +147,34 @@ def main(argv: list[str] | None = None) -> int:
                     for match_id in match_ids:
                         match.build(conn, writer, team_cfg, season, match_id,
                                     generated_at)
+
+        # Screen 03. The player files are one per squad.json row, so the
+        # player step reads the squad even when only it was asked for; the
+        # percentiles rank the whole league once per season.
+        if "squad" in steps or "player" in steps:
+            for season in seasons:
+                cs_id = season.competition_season_id
+                percentiles = player_percentiles(conn, cs_id) if "player" in steps else {}
+                for team_cfg in EXPORT_TEAMS:
+                    if "squad" in steps:
+                        rows = squad.build(conn, writer, team_cfg, season, generated_at)
+                    else:
+                        rows = squad.squad_order(
+                            db.fetch_squad(conn, cs_id, team_cfg.team_id))
+                    if "player" not in steps:
+                        continue
+                    matches = db.fetch_team_matches(conn, cs_id, team_cfg.team_id)
+                    log.info("%s %s: %d player files", team_cfg.slug, season.slug,
+                             len(rows))
+                    player.build(
+                        conn, writer, team_cfg, season, rows,
+                        db.fetch_player_kpi_rows(conn, cs_id, team_cfg.team_id,
+                                                 player.kpi_keys()),
+                        percentiles,
+                        db.fetch_team(conn, team_cfg.team_id),
+                        max((int(m["matchday"]) for m in matches), default=None),
+                        generated_at,
+                    )
     finally:
         conn.close()
 

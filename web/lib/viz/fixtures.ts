@@ -31,6 +31,7 @@ import type { XtCell } from "@/components/viz/HeatSurface";
 import type { ZoneCell } from "@/components/viz/ZoneHeatmap";
 import type { RollingPoint } from "@/components/viz/RollingArea";
 import { ZONE_IDS } from "@/lib/viz/pitch";
+import { SCHEMA_VERSION, type PassRow, type PlayerFile, type Squad } from "@/lib/data/types";
 
 /**
  * mulberry32 — a 32-bit seeded PRNG. Four lines, uniform enough for fake
@@ -450,3 +451,278 @@ export const demoSequenceEntries: SequenceEntry[] = [
     ],
   },
 ];
+
+/* --------------------------------------------------------------------------
+ * Screen 03 — one whole player file and its squad, for /demo/jugador.
+ *
+ * A right back on purpose: his touches, passes and defensive actions belong
+ * in the LOWER half of a horizontal pitch (low y = right flank), which is
+ * the first thing to check on a real file (README-PLAYER §3b). Shaped
+ * exactly like `players/{player_id}.json`; if a field here stops fitting
+ * `PlayerFile`, one of the two is wrong about the contract.
+ * ------------------------------------------------------------------------ */
+
+const DEMO_SURNAMES: [string, string, string, number, number][] = [
+  // first, last, role, shirt, minutes
+  ["Joan", "García", "GK", 13, 3240],
+  ["Fernando", "Calero", "CB", 5, 2980],
+  ["Leandro", "Cabrera", "CB", 6, 2710],
+  ["Marash", "Kumbulla", "CB", 4, 1220],
+  ["Omar", "El Hilali", "RB", 23, 2860],
+  ["Rubén", "Sánchez", "RB", 2, 640],
+  ["Carlos", "Romero", "LB", 22, 2590],
+  ["Pol", "Lozano", "MID", 10, 2410],
+  ["Edu", "Expósito", "MID", 8, 2950],
+  ["Urko", "González", "MID", 15, 1710],
+  ["Álvaro", "Tejero", "AM", 12, 1580],
+  ["Jofre", "Carreras", "W", 17, 1890],
+  ["Pere", "Milla", "W", 11, 2120],
+  ["Antoniu", "Roca", "W", 30, 420],
+  ["Javi", "Puado", "ST", 7, 2470],
+  ["Roberto", "Fernández", "ST", 9, 1510],
+];
+
+export const demoSquad: Squad = {
+  schema_version: SCHEMA_VERSION,
+  generated_at: "2026-10-16T00:00:00Z",
+  team: "espanyol",
+  season: "2025-26",
+  min_minutes: 855,
+  players: DEMO_SURNAMES.map(([first, last, role, shirt, minutes], i) => ({
+    player_id: 900 + i,
+    name: { first, last, full: `${first} ${last}` },
+    shirt_number: shirt,
+    position: role === "MID" ? "CM" : role === "W" ? "RW" : role,
+    position_group: role === "AM" ? "MID" : role,
+    role,
+    matches: Math.round(minutes / 80),
+    starts: Math.round(minutes / 92),
+    minutes,
+  })),
+};
+
+export const demoPlayerFile: PlayerFile = (() => {
+  const random = rng(3003);
+  const gauss = () => (random() + random() + random() - 1.5) / 1.5;
+  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+  const r1 = (v: number) => Math.round(v * 10) / 10;
+  const isProgressive = (x: number, y: number, ex: number, ey: number) =>
+    Math.hypot(105 - ex, 34 - ey) <= 0.75 * Math.hypot(105 - x, 34 - y);
+
+  // A right back's pass: from the right flank (low y), mostly forward.
+  function pass(flags = 0): PassRow {
+    const x = clamp(52 + gauss() * 26, 4, 100);
+    const y = clamp(9 + Math.abs(gauss()) * 14, 1, 40);
+    const ex = clamp(x + 4 + gauss() * 22, 1, 104);
+    const ey = clamp(y + 6 + gauss() * 16, 1, 67);
+    const completed = random() < 0.8 ? 1 : 0;
+    const prog = isProgressive(x, y, ex, ey) ? 2 : 0;
+    return [r1(x), r1(y), r1(ex), r1(ey), completed | prog | flags];
+  }
+
+  const passes = Array.from({ length: 150 }, () => pass());
+  const progressive: PassRow[] = [];
+  while (progressive.length < 60) {
+    const p = pass();
+    if (p[4] & 2) progressive.push(p);
+  }
+  const keyPasses: PassRow[] = Array.from({ length: 21 }, (_, i) => {
+    const x = clamp(70 + random() * 30, 60, 102);
+    const y = clamp(6 + random() * 14, 1, 30);
+    return [r1(x), r1(y), r1(92 + random() * 10), r1(26 + random() * 16), 1 | (i < 4 ? 8 : 4)];
+  });
+  const carries = Array.from({ length: 41 }, () => {
+    const x = clamp(40 + random() * 45, 5, 95);
+    const y = clamp(5 + random() * 15, 1, 40);
+    return [r1(x), r1(y), r1(clamp(x + 9 + random() * 18, 0, 105)), r1(clamp(y + gauss() * 6, 1, 67)), random() < 0.9 ? 1 : 0] as [number, number, number, number, number];
+  });
+
+  // Zone heat: strongest on the right channel (y_channel 1 = low y).
+  const zoneWeight = (zone: number, peakStrip: number) => {
+    const strip = Math.floor(zone / 10);
+    const channel = zone % 10;
+    return Math.exp(-((channel - 1) ** 2) / 1.2) * Math.exp(-((strip - peakStrip) ** 2) / 3);
+  };
+  const zones = (total: number, peak: number) => {
+    const w = ZONE_IDS.map((z) => zoneWeight(z, peak));
+    const sum = w.reduce((a, b) => a + b, 0);
+    return ZONE_IDS.map((zone_id, i) => {
+      const count = Math.round((w[i] / sum) * total);
+      return { zone_id, count, share: Math.round((1000 * count) / total) / 10 };
+    }).filter((z) => z.count > 0);
+  };
+
+  const shots = Array.from({ length: 14 }, (_, i) => {
+    const x = r1(84 + random() * 18);
+    const y = r1(clamp(34 + gauss() * 10, 14, 54));
+    const outcome = i === 0 ? "goal" : ["saved", "off_target", "blocked", "off_target"][i % 4];
+    return {
+      shot_id: i + 1,
+      match_id: 4 + i,
+      matchday: 2 + i * 2,
+      minute: Math.floor(random() * 90) + 1,
+      x,
+      y,
+      xg: Math.round((Math.pow(random(), 2) * 0.3 + 0.02) * 1000) / 1000,
+      body_part: random() < 0.7 ? "right_foot" : "head",
+      outcome,
+      play_pattern: "regular_play",
+      first_time: random() < 0.4,
+      big_chance: i === 0,
+      goal_mouth_y: outcome === "goal" || outcome === "saved" ? r1(46 + random() * 8) : null,
+      goal_mouth_z: outcome === "goal" || outcome === "saved" ? r1(random() * 30) : null,
+    };
+  });
+
+  const defTypes = ["ball_recovery", "ball_recovery", "interception", "tackle", "clearance", "challenge", "blocked_pass", "attempted_tackle"];
+  const defence = Array.from({ length: 118 }, () => {
+    const type = defTypes[Math.floor(random() * defTypes.length)];
+    const lost = type === "challenge" || type === "attempted_tackle" || (type === "tackle" && random() < 0.35);
+    return {
+      type,
+      x: r1(clamp(38 + gauss() * 26, 2, 100)),
+      y: r1(clamp(10 + Math.abs(gauss()) * 13, 1, 45)),
+      outcome: lost ? ("lost" as const) : ("won" as const),
+      minute: Math.floor(random() * 92) + 1,
+      matchday: 1 + Math.floor(random() * 38),
+    };
+  });
+
+  const opponents = ["GIR", "VAL", "BET", "SEV", "ATM", "CEL", "OSA", "RAY", "MLL", "ALA", "GET", "VIL"];
+  const kinds = ["positional", "counter_attack", "high_transition", "buildup", "direct_long", "fast"];
+  const chain = (seed: number) => {
+    const n = 4 + Math.floor(random() * 4);
+    let x = 20 + random() * 30;
+    let y = 8 + random() * 10;
+    const pts: [number, number][] = [];
+    for (let i = 0; i < n; i++) {
+      pts.push([r1(x), r1(y)]);
+      x = clamp(x + 6 + random() * 16, 0, 105);
+      y = clamp(y + gauss() * 14 + (i > n / 2 ? 5 : 0), 1, 67);
+    }
+    pts.push([105, r1(30 + random() * 8)]);
+    const touch = 1 + Math.floor(random() * (n - 2));
+    return { pts, touch, seed };
+  };
+  const sequences = (metric: "xt" | "vaep") =>
+    Array.from({ length: 10 }, (_, i) => {
+      const { pts, touch } = chain(i);
+      const v = Math.round((0.42 - i * 0.033 + random() * 0.02) * 1000) / 1000;
+      return {
+        id: (metric === "xt" ? 5000 : 6000) + i,
+        match_id: 4 + i,
+        matchday: 3 + ((i * 7) % 36),
+        opponent_abbr: opponents[i % opponents.length],
+        is_home: i % 2 === 0,
+        period: i % 2 ? 2 : 1,
+        minute: 5 + ((i * 17) % 85),
+        second: (i * 23) % 60,
+        kind: kinds[i % kinds.length],
+        outcome: i % 3 === 0 ? "shot_saved" : "turnover",
+        events: pts.length + 2,
+        passes: pts.length - 1,
+        player_touches: 1 + (i % 3),
+        xt: metric === "xt" ? v : Math.round(v * 0.7 * 1000) / 1000,
+        vaep: metric === "vaep" ? v : Math.round(v * 0.6 * 1000) / 1000,
+        ends_in_shot: i % 3 === 0,
+        points: pts,
+        player_touch_index: touch,
+      };
+    });
+
+  const metric = (key: string, value: number | null, percentile: number | null, decimals: 0 | 1 | 2 | 3 = 2, scale: "raw" | "pct" = "raw", higher = true) =>
+    ({ key, value, percentile, higher_is_better: higher, scale, decimals });
+
+  return {
+    schema_version: SCHEMA_VERSION,
+    generated_at: "2026-10-16T00:00:00Z",
+    team: { slug: "espanyol", team_id: 8, short_name: "Espanyol", abbr: "ESP" },
+    season: { slug: "2025-26", label: "2025/2026", competition_name: "Primera División", through_matchday: 38 },
+    player: {
+      player_id: 904,
+      name: { first: "Omar", last: "El Hilali", full: "Omar El Hilali" },
+      shirt_number: 23,
+      nationality: "Marruecos",
+      preferred_foot: "right",
+      height_cm: 180,
+      date_of_birth: "2003-09-12",
+      age: 22,
+      position: "RB",
+      position_group: "RB",
+      role: "RB",
+      is_utility: false,
+      primary_position_pct: 91,
+      matches: 34,
+      starts: 31,
+      minutes: 2860,
+      subbed_off: 9,
+      yellow_cards: 7,
+      red_cards: 1,
+      penalties_taken: 0,
+      penalties_scored: 0,
+    },
+    kpis: [
+      { key: "vaep_per_90", value: 0.214, scale: "raw", decimals: 3, per_90: null, squad_rank: 4, squad_n: 18 },
+      { key: "ground_duel_win_rate", value: 61.8, scale: "pct", decimals: 1, per_90: null, squad_rank: 3, squad_n: 18 },
+      { key: "aerial_win_rate", value: 48.2, scale: "pct", decimals: 1, per_90: null, squad_rank: 9, squad_n: 18 },
+      { key: "progressive_passes", value: 148, scale: "raw", decimals: 0, per_90: 4.66, squad_rank: null, squad_n: null },
+    ],
+    maps: {
+      counts: {
+        passes: 1284,
+        progressive_passes: 148,
+        key_passes: 17,
+        assists: 4,
+        progressive_carries: 41,
+        touches: 1960,
+        receptions: 1105,
+      },
+      passes,
+      progressive_passes: progressive,
+      key_passes: keyPasses,
+      carries,
+      touch_zones: zones(1960, 3.4),
+      reception_zones: zones(1105, 4.1),
+      progressive_receptions: Array.from({ length: 64 }, () => {
+        const x = r1(clamp(60 + random() * 40, 40, 104));
+        const y = r1(clamp(5 + random() * 20, 1, 50));
+        return [x, y, x > 88.5 && y > 13.84 ? 1 : 0] as [number, number, number];
+      }),
+      shots,
+      defence,
+    },
+    percentiles: {
+      eligible: true,
+      role: "RB",
+      peer_group: "RB",
+      peer_n: 31,
+      pooled_fb: false,
+      pooled_am: false,
+      min_minutes: 855,
+      cards: [
+        { key: "defending", metrics: [
+          metric("padj_interceptions_per_90", 1.62, 58), metric("padj_ball_recoveries_per_90", 5.31, 74),
+          metric("padj_clearances_per_90", 1.95, 33), metric("shots_blocked_per_90", 0.28, 47),
+          metric("def_actions_final_third_per_90", 1.12, 81), metric("vaep_defensive_per_90", 0.061, 66, 3) ] },
+        { key: "duels", metrics: [
+          metric("padj_tackles_per_90", 2.41, 69), metric("ground_duel_win_rate", 61.8, 72, 1, "pct"),
+          metric("dribbled_past_per_90", 0.84, 41, 2, "raw", false), metric("aerials_won_per_90", 1.06, 38),
+          metric("aerial_win_rate", 48.2, 44, 1, "pct"), metric("fouls_committed_per_90", 1.21, 29, 2, "raw", false) ] },
+        { key: "progression", metrics: [
+          metric("pass_completion_rate", 81.4, 52, 1, "pct"), metric("progressive_passes_per_90", 4.66, 77),
+          metric("progressive_carries_per_90", 1.29, 64), metric("progressive_carries_into_final_third_per_90", 0.57, 70),
+          metric("receptions_final_third_per_90", 9.84, 85), metric("take_on_success_rate", 44.0, null, 1, "pct") ] },
+        { key: "creation", metrics: [
+          metric("crosses_per_90", 3.02, 88), metric("cross_completion_rate", 26.1, 61, 1, "pct"),
+          metric("passes_into_penalty_area_per_90", 1.88, 79), metric("xa_per_90", 0.091, 73, 3),
+          metric("shot_creating_actions_per_90", 2.31, 76), metric("vaep_per_90", 0.214, 83, 3) ] },
+      ],
+    },
+    sequences: {
+      aggregates: { sequences: 412, xt: 18.74, ends_in_shot: 61, passes_per_sequence: 5.8 },
+      min_events: 3,
+      top_xt: sequences("xt"),
+      top_vaep: sequences("vaep"),
+    },
+  };
+})();

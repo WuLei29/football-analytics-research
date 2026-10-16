@@ -20,7 +20,7 @@
  * stale or half-written file looks plausible and is wrong.
  */
 
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 
@@ -31,6 +31,8 @@ import {
   type Manifest,
   type MatchFile,
   type Overview,
+  type PlayerFile,
+  type Squad,
 } from "./types";
 
 /** `public/` is served at the site root, so `public/data/x.json` is `/data/x.json`. */
@@ -98,6 +100,31 @@ export const getOverview = cache((team: string, season: string) =>
  */
 export const getMatch = cache((team: string, season: string, matchId: number) =>
   readData<MatchFile>(`teams/${team}/${season}/matches/${matchId}.json`),
+);
+
+/**
+ * `squad.json` (§8): the players with a page this season, in tab-strip order.
+ *
+ * The ONE optional file, and the one exception to "fail loudly": screen 03
+ * shipped before every export had run its `squad` step, and a site whose
+ * season and match pages refuse to build because the newest step has not
+ * run yet is worse than a site without player pages. `null` means "not
+ * exported": no player pages are built and screen 01 leaves its leader rows
+ * unlinked. A file that IS there and is stale still fails, as everywhere.
+ */
+export const getSquad = cache(async (team: string, season: string) => {
+  const relPath = `teams/${team}/${season}/squad.json`;
+  try {
+    await access(path.join(DATA_ROOT, relPath));
+  } catch {
+    return null;
+  }
+  return readData<Squad>(relPath);
+});
+
+/** Screen 03: one player's season at one club (§9, README-PLAYER). */
+export const getPlayer = cache((team: string, season: string, playerId: number) =>
+  readData<PlayerFile>(`teams/${team}/${season}/players/${playerId}.json`),
 );
 
 /* --------------------------------------------------------------------------

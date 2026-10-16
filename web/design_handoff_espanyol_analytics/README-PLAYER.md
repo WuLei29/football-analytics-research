@@ -493,3 +493,21 @@ Desktop-first, same rules as the rest of the app. Below ~1100px:
 - There are no `screenshots/10-player-*.png` in this bundle (only `01–09`, screens 01–02). Use the
   `.dc.html` for proportions.
 - The prototype runtime (`support.js`, `image-slot.js`) is design-time only; don't port it.
+
+## Built (16 Oct 2026)
+Screen 03 is implemented: `src/export/squad.py` + `player.py`, route
+`web/app/[equipo]/jugador/[season]/[player_id]`, components in `web/components/player/`,
+fixture page `/demo/jugador`. The open decisions above were built with their **defaults**
+(route with season; outcome-coloured diamonds + type chips; caps 150 / 60; numeral fallback
+when no photo is in `web/public/players/{player_id}.jpg`), so each is still a one-line change.
+Departures from this brief, made while building it:
+- `maps.passes` ships as three lists (`passes`, `progressive_passes`, `key_passes`): the three
+  modes have different caps, and one capped list cannot serve all three.
+- `Tiros` and `Defensivas` mount `ShotMap` / `DefensiveActions` (their own SVG, for the hover
+  card and chips); the other six modes share one `<Pitch>`. Shot radii follow `ShotMap`'s law,
+  so a shot is the same size here as on its match page.
+- Aerials are not on the `Defensivas` map (they are on the duel cards); `Attempted Tackle` is.
+- Percentile fill thresholds are the page-01 ones (≥70 `--pos`, ≥45 `--gold`, else `--neg`),
+  the colour `TeamProfile` already ships, rather than `--blue` for the middle band.
+- Until the export has run its `squad` step, the route builds one placeholder page
+  (a static export refuses a dynamic route with no params).

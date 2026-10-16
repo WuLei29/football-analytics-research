@@ -108,6 +108,7 @@ const TYPE_ORDER = [
   "aerial",
   "tackle",
   "challenge",
+  "attempted_tackle",
   "interception",
   "blocked_pass",
 ];

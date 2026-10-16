@@ -231,6 +231,8 @@ export function shotOutcome(key: string): string {
  */
 const defensiveTypeLabels: Record<string, string> = {
   tackle: "Entrada",
+  /** The player page only: went in and missed (README-PLAYER §3b). */
+  attempted_tackle: "Entrada fallida",
   interception: "Intercepción",
   ball_recovery: "Recuperación",
   challenge: "Regate sufrido",
@@ -776,3 +778,303 @@ const sequenceTriggerLabels: Record<string, string> = {
 export function sequenceTrigger(key: string): string {
   return label(sequenceTriggerLabels, key);
 }
+
+/* --------------------------------------------------------------------------
+ * Screen 03 — player profile (Phase 5b, README-PLAYER.md).
+ * ------------------------------------------------------------------------ */
+
+/** Primary formation-slot position (`gold.formation_slot_positions`). */
+export const positionLabels: Record<string, string> = {
+  GK: "Portero",
+  CB: "Central",
+  RB: "Lateral derecho",
+  LB: "Lateral izquierdo",
+  DM: "Mediocentro defensivo",
+  CM: "Centrocampista",
+  AM: "Mediapunta",
+  RW: "Extremo derecho",
+  LW: "Extremo izquierdo",
+  ST: "Delantero",
+};
+
+/**
+ * The percentile heading names the PEER group, plural: a pooled mediapunta
+ * reads "vs centrocampistas", a pooled full back "vs laterales".
+ */
+export const peerGroupLabels: Record<string, string> = {
+  GK: "Porteros",
+  CB: "Centrales",
+  RB: "Laterales derechos",
+  LB: "Laterales izquierdos",
+  FB: "Laterales",
+  MID: "Centrocampistas",
+  AM: "Mediapuntas",
+  W: "Extremos",
+  ST: "Delanteros",
+};
+
+const footLabels: Record<string, string> = {
+  left: "Izquierdo",
+  right: "Derecho",
+  both: "Ambos",
+};
+
+export function footLabel(key: string): string {
+  return label(footLabels, key);
+}
+
+/** The four headline KPIs of the profile card (`PLAYER_KPIS`). */
+export const playerKpiLabels: Record<string, string> = {
+  goals: "Goles",
+  assists: "Asistencias",
+  npxg: "npxG",
+  vaep_per_90: "VAEP /90",
+  goal_contributions: "Goles + asist.",
+  xa: "xA",
+  key_passes: "Pases clave",
+  progressive_passes: "Pases progresivos",
+  ball_recoveries: "Recuperaciones",
+  pass_completion_rate: "Pases %",
+  ground_duel_win_rate: "Duelos suelo %",
+  aerial_win_rate: "Duelos aéreos %",
+  goals_prevented: "Goles evitados",
+  save_pct: "Paradas %",
+  clean_sheets: "Porterías a cero",
+  gk_pass_completion_rate: "Pases %",
+};
+
+/** The card titles of the percentile block, per role (`PLAYER_SPINE`). */
+export const spineCardLabels: Record<string, string> = {
+  goalkeeping: "Portería",
+  area: "Área y salidas",
+  distribution: "Distribución",
+  value: "Valor",
+  defending: "Defensa",
+  duels: "Duelos",
+  passing: "Pase",
+  impact: "Impacto",
+  progression: "Progresión",
+  creation: "Creación",
+  passing_progression: "Pase y progresión",
+  pressing: "Presión",
+  carrying: "Conducción y regate",
+  finishing: "Finalización",
+  link_play: "Juego asociativo",
+  movement: "Desmarque y regate",
+};
+
+/**
+ * Every metric on a percentile card, with README-PLAYER §4's wording. The
+ * possession-adjusted volumes carry no "/90" because the caption above the
+ * cards already says "Por 90".
+ */
+export const spineMetricLabels: Record<string, string> = {
+  save_pct: "Paradas %",
+  goals_prevented_per_90: "Goles evitados /90",
+  saves_per_90: "Paradas /90",
+  goals_conceded_per_90: "Goles encajados /90",
+  clean_sheet_rate: "Porterías a cero %",
+  xg_faced_per_90: "xG en contra /90",
+  claims_per_90: "Blocajes /90",
+  claim_rate: "Blocajes %",
+  punches_per_90: "Despejes de puños /90",
+  keeper_sweeper_actions_per_90: "Salidas fuera del área /90",
+  sweeper_avg_x: "Altura media de salida (m)",
+  padj_clearances_per_90: "Despejes",
+  passes_per_90: "Pases /90",
+  gk_pass_completion_rate: "Pases %",
+  long_pass_completion_rate: "Pases largos (≥30 m) %",
+  gk_long_ball_pct: "Pases en largo, cuota",
+  progressive_passes_per_90: "Pases progresivos /90",
+  passes_received_per_90: "Pases recibidos /90",
+  vaep_per_90: "VAEP /90",
+  vaep_defensive_per_90: "VAEP defensivo /90",
+  vaep_offensive_per_90: "VAEP ofensivo /90",
+  errors_per_90: "Errores /90",
+  penalties_saved: "Penaltis parados",
+  padj_interceptions_per_90: "Intercepciones",
+  shots_blocked_per_90: "Tiros bloqueados /90",
+  padj_blocked_passes_per_90: "Pases bloqueados",
+  padj_ball_recoveries_per_90: "Recuperaciones",
+  padj_tackles_per_90: "Duelos en el suelo ganados",
+  ground_duel_win_rate: "Duelos en el suelo %",
+  dribbled_past_per_90: "Regateado /90",
+  aerials_won_per_90: "Duelos aéreos ganados /90",
+  aerial_win_rate: "Duelos aéreos %",
+  fouls_committed_per_90: "Faltas cometidas /90",
+  pass_completion_rate: "Pases %",
+  long_balls_per_90: "Balones largos /90",
+  long_ball_accuracy: "Balones largos %",
+  passes_into_final_third_per_90: "Pases al último tercio /90",
+  progressive_carries_per_90: "Conducciones progresivas /90",
+  headed_shots_per_90: "Remates de cabeza /90",
+  aerials_won_att_third_per_90: "Aéreos ganados en campo rival /90",
+  def_actions_final_third_per_90: "Acciones def. último tercio /90",
+  progressive_carries_into_final_third_per_90: "Cond. prog. al último tercio /90",
+  receptions_final_third_per_90: "Recepciones último tercio /90",
+  take_on_success_rate: "Regates %",
+  crosses_per_90: "Centros /90",
+  cross_completion_rate: "Centros %",
+  passes_into_penalty_area_per_90: "Pases al área /90",
+  xa_per_90: "xA /90",
+  shot_creating_actions_per_90: "Acciones de creación de tiro /90",
+  key_passes_per_90: "Pases clave /90",
+  through_balls_per_90: "Pases filtrados /90",
+  npxg_per_90: "npxG /90",
+  xt_per_90: "xT /90",
+  take_ons_per_90: "Regates /90",
+  dispossessed_per_90: "Pérdidas /90",
+  goals_non_penalty_per_90: "Goles sin penalti /90",
+  carries_into_penalty_area_per_90: "Conducciones al área /90",
+  progressive_receptions_per_90: "Recepciones progresivas /90",
+  shots_per_90: "Tiros /90",
+  touches_in_box_per_90: "Toques en el área /90",
+  npxg_per_shot: "xG por tiro (sin penaltis)",
+  receptions_in_box_per_90: "Recepciones en el área /90",
+  fouls_won_per_90: "Faltas recibidas /90",
+  xg_overperformance_per_90: "Goles − xG (sin penaltis) /90",
+};
+
+/** The eight modes of the event map (`?vista=`), in pill order. */
+export type PlayerMapMode =
+  | "pases"
+  | "progresivos"
+  | "conducciones"
+  | "toques"
+  | "recepciones"
+  | "tiros"
+  | "defensivas"
+  | "pases-clave";
+
+export const PLAYER_MAP_MODES: PlayerMapMode[] = [
+  "pases",
+  "progresivos",
+  "conducciones",
+  "toques",
+  "recepciones",
+  "tiros",
+  "defensivas",
+  "pases-clave",
+];
+
+export const playerMapModes: Record<PlayerMapMode, { pill: string; title: string }> = {
+  pases: { pill: "Pases", title: "Mapa de pases" },
+  progresivos: { pill: "Progresivos", title: "Pases progresivos" },
+  conducciones: { pill: "Conducciones", title: "Conducciones progresivas" },
+  toques: { pill: "Toques", title: "Mapa de toques" },
+  recepciones: { pill: "Recepciones", title: "Recepciones" },
+  tiros: { pill: "Tiros", title: "Mapa de tiros" },
+  defensivas: { pill: "Defensivas", title: "Acciones defensivas" },
+  "pases-clave": { pill: "Pases clave", title: "Pases clave y asistencias" },
+};
+
+export const player = {
+  eyebrow: "03 · PERFIL DE JUGADOR",
+  shirtCaption: "DORSAL",
+  /** "LATERAL DERECHO · 24 AÑOS · 1,284'" — the age only when known. */
+  metaLine: (position: string, age: number | null, minutes: string) =>
+    [position, age === null ? null : `${age} AÑOS`, `${minutes}'`]
+      .filter(Boolean)
+      .join(" · "),
+  /** "LALIGA 2025/2026 · HASTA J38". */
+  seasonLine: (season: string, matchday: number | null) =>
+    matchday === null ? `LALIGA ${season}` : `LALIGA ${season} · HASTA J${matchday}`,
+  tabsLabel: "Jugadores de la plantilla",
+
+  bio: {
+    age: "Edad",
+    born: "Nacimiento",
+    height: "Altura",
+    foot: "Pie",
+    nationality: "Nacionalidad",
+    position: "Posición",
+    matches: "Partidos",
+    starts: "Titularidades",
+    minutes: "Minutos",
+    subbedOff: "Sustituido",
+    cards: "Tarjetas",
+    penalties: "Penaltis",
+  },
+  heightCm: (cm: string) => `${cm} cm`,
+  /** "5 · 1": yellow, then red. */
+  cards: (yellow: string, red: string) => `${yellow} · ${red}`,
+  /** "3/4": scored of taken. */
+  penalties: (scored: string, taken: string) => `${scored}/${taken}`,
+  kpiPer90: (value: string) => `${value} por 90`,
+  kpiSquadRank: (rank: number, n: number) => `${rank}.º de ${n} en la plantilla`,
+  kpiUnranked: "pocos minutos para ordenar",
+
+  mapAttack: "ATAQUE →",
+  /** "150 DE 1,284 PASES" when a cap applies, else "34 PASES". */
+  mapCount: (shown: string, total: string, noun: string, capped: boolean) =>
+    capped ? `${shown} DE ${total} ${noun}` : `${total} ${noun}`,
+  mapNouns: {
+    pases: "PASES",
+    progresivos: "PASES PROGRESIVOS",
+    conducciones: "CONDUCCIONES",
+    toques: "TOQUES",
+    recepciones: "RECEPCIONES",
+    tiros: "TIROS",
+    defensivas: "ACCIONES",
+    "pases-clave": "PASES CLAVE Y ASIST.",
+  } as Record<PlayerMapMode, string>,
+  mapEmpty: "Ninguna acción de este tipo en la temporada.",
+  legend: {
+    progressive: "Azul = progresivo",
+    rest: "gris = resto",
+    failed: "discontinua = fallado",
+    progressiveRule: "Acercan el balón ≥ 25 % a la portería",
+    carryRule: "Progresivas · ≥ 25 % más cerca de portería",
+    touchDensity: "Densidad de toques",
+    receptionZones: "Zonas = recepciones",
+    receptionDot: "Punto = recepción progresiva",
+    receptionRing: "Anillo = en el área",
+    shotSize: "Tamaño = xG · relleno = resultado",
+    regain: "Azul = recupera",
+    lost: "gris = pierde",
+    assist: "Dorado = asistencia",
+    keyPass: "azul = pase clave",
+  },
+
+  percentileHeading: (group: string) => `Percentil vs LaLiga · ${group}`,
+  percentileCaption: (peerN: number | null, group: string, minMinutes: string) =>
+    `Por 90 · vs ${peerN ?? "—"} ${group.toLowerCase()} con ≥ ${minMinutes}' · ` +
+    `barra = percentil, más es mejor`,
+  percentileUnit: "percentil",
+  utilityChip: (pct: string, position: string) => `POLIVALENTE · ${pct} % ${position}`,
+  percentileIneligible: (minutes: string, minMinutes: string) =>
+    `Todavía pocos minutos: ${minutes}' de los ${minMinutes}' que hacen falta ` +
+    `para compararlo con el resto de la liga.`,
+  /** Marks a row whose percentile was flipped because lower is better. */
+  lowerIsBetter: "↓",
+
+  sequencesHeading: (surname: string) => `Jugadas con ${surname}`,
+  tracesHeading: "Trazas",
+  tracesNote: "Punto = inicio · dorado = su toque · anillo = final",
+  aggregates: {
+    sequences: "Jugadas",
+    xt: "xT en jugadas",
+    shots: "Acaban en tiro",
+    passes: "Pases por jugada (media)",
+  },
+  aggregatesNote: (min: number) => `Todas las jugadas con él y ${min} o más acciones`,
+  topHeading: (metric: string) => `Top 10 por ${metric}`,
+  topHint: "clic para trazar",
+  /** "J7 · 42'". */
+  sequenceWhen: (matchday: number, minute: number) => `J${matchday} · ${minute}'`,
+  /** "GIR (L)" / "GIR (V)". */
+  sequenceOpponent: (abbr: string, home: boolean) => `${abbr} (${home ? "L" : "V"})`,
+  sequenceLine: (passes: string, touches: string) => `${passes} pases · ${touches} toques suyos`,
+  sequencesEmpty: "Todavía no hay jugadas de tres o más acciones con él.",
+
+  /** The placeholder page built before the export has written any squad.json. */
+  pendingTitle: "Perfiles de jugador",
+  pendingHeading: { plain: "Perfiles de jugador, ", accent: "en preparación" },
+  pendingDek:
+    "Los perfiles de jugador todavía no se han generado para esta temporada. " +
+    "Aparecerán con la próxima actualización de datos.",
+
+  demoWarning:
+    "Jugador ficticio: todos los números de esta página salen de datos " +
+    "inventados y deterministas, no de la base de datos.",
+} as const;

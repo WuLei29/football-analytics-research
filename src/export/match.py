@@ -486,7 +486,8 @@ def action_type(event_type: str) -> str:
     return event_type.lower().replace("-", " ").replace(" ", "_")
 
 
-def simplify(points: list[list[float]], max_waypoints: int) -> list[list[float]]:
+def simplify(points: list[list[float]], max_waypoints: int,
+             keep: tuple[int, ...] = ()) -> list[list[float]]:
     """Start, end, and the `max_waypoints` inner points that carry the shape.
 
     The exposure rule of WEB_PLAN.md §6: a trace, not the chain's events. The
@@ -499,11 +500,17 @@ def simplify(points: list[list[float]], max_waypoints: int) -> list[list[float]]
     further than `RDP_STOP_M` from it. Even sampling, which this replaced,
     spent its six points along a straight build-up and lost the switch of
     flank in a chain that turned; here a straight stretch costs nothing.
+
+    `keep` forces indices into the result on top of the budget: the player
+    page needs the player's own touch on the line so its gold dot sits on it
+    (README-PLAYER §5). The default leaves the match file unchanged.
     """
     if len(points) <= max_waypoints + 2:
         return points
-    kept = [0, len(points) - 1]
-    while len(kept) < max_waypoints + 2:
+    kept = sorted({0, len(points) - 1, *(i for i in keep if 0 <= i < len(points))})
+    # A forced index is extra, not part of the budget of inner waypoints.
+    budget = max_waypoints + len(kept)
+    while len(kept) < budget:
         best_d, best_i, best_slot = RDP_STOP_M, -1, -1
         for slot in range(len(kept) - 1):
             a, b = points[kept[slot]], points[kept[slot + 1]]

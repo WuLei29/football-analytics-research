@@ -202,6 +202,7 @@ src/
     config.py                     #   teams, seasons, metric registries, percentile gate, caps
     db.py                         #   every export query (read-only)
     manifest.py league_table.py overview.py match.py   # one module per published file
+    squad.py player.py            #   screen 03: squad.json + players/{id}.json
     player_percentiles.py         #   screen-03 percentile ranking (pure; site gate)
 sql/
   ddl/                            # gold DDL + gold_functions.sql (geometry helpers: zone_id, in_box, is_progressive…)
@@ -348,14 +349,19 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   `md/GOLD_LAYER.md §9` (§9.4).
 - **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written
   by `python -m src.export`. Built: screen 01 (season), screen 02 (match),
-  match list, `/demo`. **Next: screen 03 (player)**, brief
-  `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
+  match list, `/demo`, and **screen 03 (player, 16 Oct 2026)**:
+  `/{team}/jugador/{season}/{player_id}` from `squad.json` +
+  `players/{id}.json` (`src/export/squad.py`, `player.py`), components in
+  `web/components/player/`, fixture page `/demo/jugador`. Until the export
+  has run `--only squad,player` against the real database the route builds
+  one "en preparación" placeholder page and the leader rows stay unlinked.
+  Brief `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
   spine is **settled (15 Oct 2026)**: per-role cards (README-PLAYER §4), roles
   `GK CB RB LB MID AM W ST` (`role_group`, AM = midfielder with ≥ 30% of
   touches in the final third), ranked by `src/export/player_percentiles.py`
   from `PLAYER_SPINE` + `gold.percentile_metrics`. Its other open decisions
-  are in README-PLAYER "Open decisions". `src/export/{squad,player,sequences}.py`
-  are specified (WEB_DATA §8–10), not implemented. Plan: `md/WEB_PLAN.md`;
+  are in README-PLAYER "Open decisions" (defaults applied). `src/export/sequences.py`
+  is specified (WEB_DATA §10), not implemented. Plan: `md/WEB_PLAN.md`;
   contract: `md/WEB_DATA.md`.
 - **Weekend run**: full order above → `python -m src.silver.events.sequences` →
   `python -m src.gold.build_gold` → gates (`GOLD_LAYER.md §9.5`) →

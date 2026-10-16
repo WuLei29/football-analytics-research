@@ -22,8 +22,13 @@ export const routes = {
   match: (team: string, matchId: number) => `/${team}/partido/${matchId}`,
   /** The sortable squad table. Phase 5b. */
   squad: (team: string, season: string) => `/${team}/plantilla/${season}`,
-  /** Screen 03 — player profile. Phase 5b. */
-  player: (team: string, playerId: number) => `/${team}/jugador/${playerId}`,
+  /**
+   * Screen 03 — player profile. A season page: minutes, percentiles and maps
+   * are all season-scoped (README-PLAYER open decision 1). `vista` is the
+   * event-map mode, carried so it stays sticky from one player to the next.
+   */
+  player: (team: string, season: string, playerId: number, vista?: string) =>
+    `/${team}/jugador/${season}/${playerId}/${vista ? `?vista=${vista}` : ""}`,
   /** Screen 04 — sequence laboratory. Phase 5b. */
   sequences: (team: string, season: string) => `/${team}/secuencias/${season}`,
   /** Screen 05 — match-group comparison. Phase 5b. */

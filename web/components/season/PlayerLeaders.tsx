@@ -8,10 +8,11 @@
  * Data:  `overview.json` -> `leaders[]` (md/WEB_DATA.md §6), from
  *        `gold.player_season_stats` for that club and season.
  *
- * The design makes every row a button into screen 03. That page is Phase 5b,
- * and a static export has no useful 404, so the rows are inert until it lands:
- * flip `LINK_TO_PLAYER` in one place when `/{equipo}/jugador/{id}` exists —
- * the same posture the masthead takes with its `ready` flags.
+ * The design makes every row a button into screen 03. A row links only when
+ * that player has a page: `linkable` is the player ids of `squad.json`, and
+ * a static export has no useful 404, so a row whose page was not built stays
+ * inert — the posture the masthead takes with its `ready` flags. Before the
+ * export has run its `squad` step the set is empty and no row links.
  */
 
 import Link from "next/link";
@@ -21,20 +22,18 @@ import { label, leaderLabels } from "@/lib/labels";
 import { routes } from "@/lib/routes";
 import type { OverviewLeaders } from "@/lib/data/types";
 
-/**
- * Screen 03 is not built (WEB_PLAN.md phase 5b). While this is false the rows
- * render as plain rows; when the player page lands, set it to true and the
- * design's behaviour returns.
- */
-const LINK_TO_PLAYER = false;
-
 export function PlayerLeaders({
   leaders,
   team,
+  season,
+  linkable,
 }: {
   leaders: OverviewLeaders[];
-  /** Team slug, for the player links once screen 03 exists. */
+  /** Team and season slugs, for the player links. */
   team: string;
+  season: string;
+  /** Player ids with a page this season (`squad.json`). */
+  linkable: ReadonlySet<number>;
 }) {
   return (
     <div className="mt-4 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
@@ -80,9 +79,9 @@ export function PlayerLeaders({
 
               return (
                 <li key={row.player_id}>
-                  {LINK_TO_PLAYER ? (
+                  {linkable.has(row.player_id) ? (
                     <Link
-                      href={routes.player(team, row.player_id)}
+                      href={routes.player(team, season, row.player_id)}
                       className={`${rowClass} hover:opacity-85`}
                       style={rowStyle}
                     >

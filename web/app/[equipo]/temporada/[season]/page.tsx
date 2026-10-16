@@ -31,7 +31,14 @@ import { PageHeader } from "@/components/shell/PageHeader";
 import { SectionHead } from "@/components/shell/SectionHead";
 import { RollingArea } from "@/components/viz/RollingArea";
 import { seasonReading } from "@/content/narratives";
-import { getLeagueTable, getManifest, getOverview, getSeason, getTeam } from "@/lib/data/load";
+import {
+  getLeagueTable,
+  getManifest,
+  getOverview,
+  getSeason,
+  getSquad,
+  getTeam,
+} from "@/lib/data/load";
 import { num } from "@/lib/format";
 import { season as copy, site, viz } from "@/lib/labels";
 import { routes } from "@/lib/routes";
@@ -69,6 +76,9 @@ export default async function SeasonPage({ params }: PageProps) {
   const seasonMeta = await getSeason(season);
   const overview = await getOverview(equipo, season);
   const table = await getLeagueTable(season);
+  // Which leader rows can link to a player page: the ones squad.json lists.
+  const squad = await getSquad(equipo, season);
+  const linkable = new Set(squad?.players.map((p) => p.player_id) ?? []);
 
   // The published club's own row of the profile block. The file carries all 20
   // clubs so that a comparison later needs no new file (§5).
@@ -196,7 +206,12 @@ export default async function SeasonPage({ params }: PageProps) {
       {/* --- Block 6: the four leader boxes ------------------------------- */}
       <section className="mt-8">
         <SectionHead title={copy.leadersHeading} caption={copy.leadersCaption} />
-        <PlayerLeaders leaders={overview.leaders} team={equipo} />
+        <PlayerLeaders
+          leaders={overview.leaders}
+          team={equipo}
+          season={season}
+          linkable={linkable}
+        />
       </section>
 
       {/* --- Block 7: the reading, at full width -------------------------- */}

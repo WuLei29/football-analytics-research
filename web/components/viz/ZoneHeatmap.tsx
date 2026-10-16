@@ -4,7 +4,8 @@
  * Renders: one translucent rectangle per occupied zone, the zone boundaries as
  * hairlines, and the pitch lines redrawn on top in the card colour.
  * Props: `cells` (zone_id + value), `orientation`, `title`, `showGrid`.
- * Data:  `players/{player_id}.json` -> `heatmap.cells` (md/WEB_DATA.md §9),
+ * Data:  `players/{player_id}.json` -> `maps.touch_zones` / `reception_zones`
+ *        (README-PLAYER §3b), `matches/{match_id}.json` -> `xt_zones`,
  *        bucketed with `gold.pitch_zones`. The sequence lab's start-zone
  *        filter (screen 04) reads the same grid.
  *
@@ -17,6 +18,8 @@
  * and looks entirely plausible, so it is worth checking against a player you
  * know: a right-back's heat belongs in the lower half.
  */
+
+import type { ReactNode } from "react";
 
 import { heatOpacity } from "@/lib/viz/scale";
 import {
@@ -42,6 +45,8 @@ interface ZoneHeatmapProps {
   title: string;
   /** Draw the 30-zone boundaries. Off by default: the fills already show them. */
   showGrid?: boolean;
+  /** Marks drawn above the pitch lines: the player page's reception dots. */
+  children?: ReactNode;
   className?: string;
 }
 
@@ -50,6 +55,7 @@ export function ZoneHeatmap({
   orientation = "horizontal",
   title,
   showGrid = false,
+  children,
   className,
 }: ZoneHeatmapProps) {
   const max = cells.reduce((m, c) => Math.max(m, c.value), 0);
@@ -82,7 +88,9 @@ export function ZoneHeatmap({
           {showGrid && <ZoneGrid orientation={orientation} />}
         </>
       }
-    />
+    >
+      {children}
+    </Pitch>
   );
 }
 

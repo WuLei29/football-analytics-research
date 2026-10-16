@@ -506,3 +506,247 @@ export interface MatchFile extends Envelope {
   sequences: MatchSequence[];
   players: MatchPlayerBox[];
 }
+
+/* ==========================================================================
+ * teams/{team}/{season}/squad.json  (WEB_DATA.md §8)
+ *
+ * Every player who has played for the club this season, in tab-strip order:
+ * GK -> CB -> RB -> LB -> MID -> AM -> W -> ST, then minutes. One player page
+ * is built per row.
+ * ======================================================================== */
+
+/** The two lines of the name block: Opta `known_name` when set. */
+export interface PlayerName {
+  /** Given name line; empty for a one-word known name. */
+  first: string;
+  /** Surname line, the H1 and the tab pill. */
+  last: string;
+  full: string;
+}
+
+export interface SquadPlayer {
+  player_id: number;
+  name: PlayerName;
+  shirt_number: number | null;
+  /** Primary formation-slot position: GK CB RB LB DM CM AM RW LW ST. */
+  position: string | null;
+  position_group: string | null;
+  /** Percentile role: GK CB RB LB MID AM W ST. */
+  role: string | null;
+  matches: number;
+  starts: number;
+  minutes: number;
+}
+
+export interface Squad extends Envelope {
+  team: string;
+  season: string;
+  /** The §3.6 percentile gate for this club so far, in minutes. */
+  min_minutes: number;
+  players: SquadPlayer[];
+}
+
+/* ==========================================================================
+ * teams/{team}/{season}/players/{player_id}.json  (WEB_DATA.md §9,
+ * README-PLAYER "Data contract")
+ *
+ * Screen 03. Every coordinate is the player's own event in his team's
+ * attacking frame: drawn as shipped, low y at the bottom.
+ * ======================================================================== */
+
+export interface PlayerBio {
+  player_id: number;
+  name: PlayerName;
+  shirt_number: number | null;
+  nationality: string | null;
+  /** `left | right | both`, from event foot qualifiers. */
+  preferred_foot: string | null;
+  height_cm: number | null;
+  date_of_birth: string | null;
+  /** On the season's last match date; null without a date of birth. */
+  age: number | null;
+  position: string | null;
+  position_group: string | null;
+  role: string;
+  /** Primary position under 60 % of minutes (GOLD_LAYER §4.6.2). */
+  is_utility: boolean;
+  /** Share of minutes in the primary position, display-scaled (62). */
+  primary_position_pct: number | null;
+  matches: number;
+  starts: number;
+  minutes: number;
+  subbed_off: number;
+  yellow_cards: number;
+  red_cards: number;
+  penalties_taken: number;
+  penalties_scored: number;
+}
+
+/** One of the four headline KPIs of the profile card, in display order. */
+export interface PlayerKpi {
+  key: string;
+  /** Display-scaled: a pct arrives as 64.2. */
+  value: number | null;
+  scale: "raw" | "pct";
+  decimals: 0 | 1 | 2 | 3;
+  /** Season totals only: the per-90 sub line. */
+  per_90: number | null;
+  /** Rates and per-90s only: rank in the squad among players past the gate. */
+  squad_rank: number | null;
+  squad_n: number | null;
+}
+
+/**
+ * A compact pass: `[x, y, end_x, end_y, flags]`. Flag bits: 1 completed,
+ * 2 progressive, 4 key pass, 8 assist (`PASS_FLAG`).
+ */
+export type PassRow = [number, number, number, number, number];
+export const PASS_FLAG = { completed: 1, progressive: 2, keyPass: 4, assist: 8 } as const;
+
+/** A compact progressive carry: `[x, y, end_x, end_y, completed 0|1]`. */
+export type CarryRow = [number, number, number, number, number];
+
+/** A progressive reception point: `[x, y, in_box 0|1]`. */
+export type ReceptionRow = [number, number, number];
+
+export interface ZoneCount {
+  zone_id: number;
+  count: number;
+  /** Share of the player's total, display-scaled. */
+  share: number | null;
+}
+
+/** The match file's `MatchShot` without `side` and `name`. */
+export interface PlayerShot {
+  shot_id: number;
+  match_id: number;
+  matchday: number;
+  minute: number;
+  x: number;
+  y: number;
+  xg: number;
+  body_part: string;
+  outcome: string;
+  play_pattern: string | null;
+  first_time: boolean | null;
+  big_chance: boolean;
+  goal_mouth_y: number | null;
+  goal_mouth_z: number | null;
+}
+
+export interface PlayerDefensiveAction {
+  type: string;
+  x: number;
+  y: number;
+  outcome: "won" | "lost";
+  minute: number;
+  matchday: number;
+}
+
+export interface PlayerMaps {
+  /** Totals behind every capped list ("150 DE 1,284 PASES"). */
+  counts: {
+    passes: number;
+    progressive_passes: number;
+    key_passes: number;
+    assists: number;
+    progressive_carries: number;
+    touches: number;
+    receptions: number;
+  };
+  /** The most recent passes, capped (PLAYER_PASS_MAP_MAX). */
+  passes: PassRow[];
+  /** Progressive passes, best xT first, capped (PLAYER_PROGRESSIVE_MAX). */
+  progressive_passes: PassRow[];
+  /** Every key pass and assist. */
+  key_passes: PassRow[];
+  /** Progressive carries, best xT first, capped. */
+  carries: CarryRow[];
+  touch_zones: ZoneCount[];
+  reception_zones: ZoneCount[];
+  /** Progressive receptions within 5 m of the pass end. */
+  progressive_receptions: ReceptionRow[];
+  shots: PlayerShot[];
+  defence: PlayerDefensiveAction[];
+}
+
+export interface PercentileMetric {
+  key: string;
+  value: number | null;
+  /** Null = shown without a bar: not ranked for this role, or under its floor. */
+  percentile: number | null;
+  /** Direction is already applied to `percentile`; this only marks the row. */
+  higher_is_better: boolean;
+  scale: "raw" | "pct";
+  decimals: 0 | 1 | 2 | 3;
+  /** "value / out_of" rows (penalties saved of faced). */
+  out_of?: number | null;
+}
+
+export interface PlayerPercentiles {
+  eligible: boolean;
+  role: string;
+  /** The role, or the pooled set it ranks in (FB, MID). */
+  peer_group: string;
+  peer_n: number | null;
+  pooled_fb: boolean;
+  pooled_am: boolean;
+  min_minutes: number;
+  /** Empty when not eligible. */
+  cards: { key: string; metrics: PercentileMetric[] }[];
+}
+
+/** One chain of the top-10 lists (README-PLAYER §5). */
+export interface PlayerSequence {
+  /** `start_event_id`: stable across gold rebuilds, unlike sequence_id. */
+  id: number;
+  match_id: number;
+  matchday: number;
+  opponent_abbr: string;
+  is_home: boolean;
+  period: number;
+  minute: number;
+  second: number;
+  /** The match page's row title key (`sequenceKind`). */
+  kind: string;
+  outcome: string;
+  events: number;
+  passes: number;
+  player_touches: number;
+  xt: number | null;
+  vaep: number | null;
+  ends_in_shot: boolean;
+  points: [number, number][];
+  /** Index into `points` of the player's first touch; the gold dot. */
+  player_touch_index: number | null;
+}
+
+export interface PlayerSequences {
+  /** Over every chain with the player and `min_events`+ events. */
+  aggregates: {
+    sequences: number;
+    xt: number | null;
+    ends_in_shot: number;
+    passes_per_sequence: number | null;
+  };
+  min_events: number;
+  top_xt: PlayerSequence[];
+  top_vaep: PlayerSequence[];
+}
+
+export interface PlayerFile extends Envelope {
+  team: { slug: string; team_id: number; short_name: string; abbr: string };
+  season: {
+    slug: string;
+    label: string;
+    competition_name: string;
+    /** The club's last matchday played: "HASTA J7". */
+    through_matchday: number | null;
+  };
+  player: PlayerBio;
+  kpis: PlayerKpi[];
+  maps: PlayerMaps;
+  /** Null only for a player with no role (never happens for a squad row). */
+  percentiles: PlayerPercentiles | null;
+  sequences: PlayerSequences;
+}

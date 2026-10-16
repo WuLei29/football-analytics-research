@@ -24,9 +24,9 @@
  * of that story. Everything else about it is identical.
  */
 
-import { project, type Orientation } from "@/lib/viz/pitch";
+import type { Orientation } from "@/lib/viz/pitch";
 
-import { Pitch } from "./Pitch";
+import { ActionArrows, type ArrowMark } from "./ActionArrows";
 
 /** One entry of `progression[]` (WEB_DATA §7). */
 export interface ProgressionAction {
@@ -46,37 +46,30 @@ interface ProgressionArrowsProps {
 }
 
 const STYLE = {
-  pass: { stroke: "var(--color-blue)", width: 0.28, opacity: 0.55, marker: "url(#viz-arrow-blue)" },
-  carry: { stroke: "var(--color-gold)", width: 0.42, opacity: 0.9, marker: "url(#viz-arrow-gold)" },
+  pass: { tone: "blue", width: 0.28, opacity: 0.55 },
+  carry: { tone: "gold", width: 0.42, opacity: 0.9 },
 } as const;
 
+/**
+ * A thin wrapper since 16 Oct 2026: the marks are `ActionArrows`, which the
+ * player page also draws with. This keeps the match page's two-style encoding
+ * in one place.
+ */
 export function ProgressionArrows({
   actions,
   orientation = "horizontal",
   title,
   className,
 }: ProgressionArrowsProps) {
+  const marks: ArrowMark[] = actions.map((a) => ({
+    x: a.x,
+    y: a.y,
+    end_x: a.end_x,
+    end_y: a.end_y,
+    completed: a.completed,
+    ...STYLE[a.kind],
+  }));
   return (
-    <Pitch orientation={orientation} title={title} className={className}>
-      {actions.map((action, i) => {
-        const from = project(orientation, action.x, action.y);
-        const to = project(orientation, action.end_x, action.end_y);
-        const style = STYLE[action.kind];
-        return (
-          <line
-            key={i}
-            x1={from.x}
-            y1={from.y}
-            x2={to.x}
-            y2={to.y}
-            stroke={style.stroke}
-            strokeWidth={style.width}
-            strokeOpacity={style.opacity}
-            strokeDasharray={action.completed ? undefined : "1.2 1"}
-            markerEnd={style.marker}
-          />
-        );
-      })}
-    </Pitch>
+    <ActionArrows actions={marks} orientation={orientation} title={title} className={className} />
   );
 }
