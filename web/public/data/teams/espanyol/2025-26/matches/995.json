@@ -1292,7 +1292,7 @@
     ],
     "line_x": 34.3
   },
-  "generated_at": "2026-09-30T01:20:46Z",
+  "generated_at": "2026-10-16T21:08:09Z",
   "match": {
     "away": {
       "abbr": "ATH",
@@ -2747,7 +2747,7 @@
       "y": 62.1
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "sequences": [
     {
       "actions": [

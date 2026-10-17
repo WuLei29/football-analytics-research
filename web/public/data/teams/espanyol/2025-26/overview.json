@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-30T01:20:46Z",
+  "generated_at": "2026-10-16T21:08:09Z",
   "kpis": [
     {
       "key": "points",
@@ -1082,7 +1082,7 @@
     ],
     "window": 5
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "season": {
     "is_final": true,
     "label": "2025/2026",

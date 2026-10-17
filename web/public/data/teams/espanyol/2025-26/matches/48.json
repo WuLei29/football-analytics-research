@@ -948,7 +948,7 @@
     ],
     "line_x": 32.5
   },
-  "generated_at": "2026-09-30T01:20:46Z",
+  "generated_at": "2026-10-16T21:08:09Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -2397,7 +2397,7 @@
       "y": 66.0
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "sequences": [
     {
       "actions": [

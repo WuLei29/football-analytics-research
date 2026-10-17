@@ -1,6 +1,6 @@
 {
   "competition_name": "Primera División",
-  "generated_at": "2026-09-30T01:20:46Z",
+  "generated_at": "2026-10-16T21:08:09Z",
   "league_complete": true,
   "matchdays_scheduled": 38,
   "profile": {
@@ -2221,7 +2221,7 @@
       }
     ]
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "season": "2025-26",
   "table": [
     {

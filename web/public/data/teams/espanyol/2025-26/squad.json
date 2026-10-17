@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T20:49:09Z",
+  "generated_at": "2026-10-16T21:08:09Z",
   "min_minutes": 855,
   "players": [
     {
@@ -378,7 +378,7 @@
       "starts": 17
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "season": "2025-26",
   "team": "espanyol"
 }
