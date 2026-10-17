@@ -356,8 +356,11 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   (`/{team}/plantilla/{season}`) opens it on the first squad player. A match
   filter (`?partidos=`) narrows card, map and sequences, not percentiles;
   filtered sequences fetch their match files, so **export player and match
-  files in the same run** (they share `sequence_id`). README-PLAYER
-  "Review of 16 Oct 2026".
+  files in the same run** (they share `sequence_id`). Every map mark has a
+  hover card, and a click opens its chain in the sequence block (map rows
+  carry `s`, `schema_version` 2); Toques / Recepciones / Defensivas switch
+  between heat and events. README-PLAYER "Review of 16 Oct 2026" and
+  "Review of 17 Oct 2026".
   Brief `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
   spine is **settled (15 Oct 2026)**: per-role cards (README-PLAYER §4), roles
   `GK CB RB LB MID AM W ST` (`role_group`, AM = midfielder with ≥ 30% of

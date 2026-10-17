@@ -17,6 +17,11 @@
  * a horizontal pitch. A half-space heatmap drawn without that flip is mirrored
  * and looks entirely plausible, so it is worth checking against a player you
  * know: a right-back's heat belongs in the lower half.
+ *
+ * `highlight` (16 Oct 2026, the player page's hover cards) outlines one
+ * zone; every filled rect carries `data-zone`, so the caller can listen on
+ * a parent element and name the hovered zone's count without a handler per
+ * rect.
  */
 
 import type { ReactNode } from "react";
@@ -47,6 +52,8 @@ interface ZoneHeatmapProps {
   showGrid?: boolean;
   /** Marks drawn above the pitch lines: the player page's reception dots. */
   children?: ReactNode;
+  /** A `zone_id` to outline: the zone under the cursor. */
+  highlight?: number | null;
   className?: string;
 }
 
@@ -56,8 +63,10 @@ export function ZoneHeatmap({
   title,
   showGrid = false,
   children,
+  highlight = null,
   className,
 }: ZoneHeatmapProps) {
+  const hot = highlight === null ? null : zoneRect(orientation, highlight);
   const max = cells.reduce((m, c) => Math.max(m, c.value), 0);
 
   return (
@@ -76,6 +85,7 @@ export function ZoneHeatmap({
               return (
                 <rect
                   key={cell.zone_id}
+                  data-zone={cell.zone_id}
                   x={r.x}
                   y={r.y}
                   width={r.width}
@@ -89,6 +99,18 @@ export function ZoneHeatmap({
         </>
       }
     >
+      {hot && (
+        <rect
+          x={hot.x}
+          y={hot.y}
+          width={hot.width}
+          height={hot.height}
+          fill="none"
+          stroke="var(--color-ink)"
+          strokeWidth={0.4}
+          pointerEvents="none"
+        />
+      )}
       {children}
     </Pitch>
   );

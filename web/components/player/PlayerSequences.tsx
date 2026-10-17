@@ -26,9 +26,14 @@
  *
  * Replaced on 16 Oct 2026: the trace overlay (`SequenceTraces`, player
  * variant) and its pill list. The review asked for the match page's look.
+ *
+ * `pinned` (16 Oct 2026, the second review): a chain opened from the event
+ * map. It opens first — in its place when it is already in the top ten,
+ * otherwise put before them — under a bar naming its match and offering the
+ * way back. Its match file is fetched like any filtered chain's.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type Ref } from "react";
 
 import { SectionHead } from "@/components/shell/SectionHead";
 import { dec, EMPTY, num } from "@/lib/format";
@@ -64,16 +69,23 @@ function loadMatch(team: string, season: string, matchId: number): Promise<Chain
 }
 
 export function PlayerSequences({
+  ref,
   file,
   idx,
   team,
   season,
+  pinned = null,
+  onUnpin,
   demo = false,
 }: {
+  ref?: Ref<HTMLElement>;
   file: PlayerFile;
   idx: Set<number> | null;
   team: string;
   season: string;
+  /** Index into `sequences.index` of the chain opened from the map. */
+  pinned?: number | null;
+  onUnpin?: () => void;
   demo?: boolean;
 }) {
   const [metric, setMetric] = useState<SequenceMetric>("xt");
@@ -83,6 +95,15 @@ export function PlayerSequences({
     () => rankSequences(sequences.index, idx, metric, sequences.top),
     [sequences, idx, metric],
   );
+
+  // What the browser lists: the top ten, with the pinned chain first when
+  // it is not one of them.
+  const pinRow = pinned === null ? null : (sequences.index[pinned] ?? null);
+  const rows = useMemo(
+    () => (pinRow && !ranked.top.some((r) => r[1] === pinRow[1]) ? [pinRow, ...ranked.top] : ranked.top),
+    [pinRow, ranked],
+  );
+  const initialIndex = pinRow ? rows.findIndex((r) => r[1] === pinRow[1]) : 0;
 
   // Chains already in hand: the season top lists, then whatever was fetched.
   const [fetched, setFetched] = useState<Chains>(() => new Map());
@@ -94,8 +115,8 @@ export function PlayerSequences({
   }, [sequences.entries, fetched]);
 
   const missing = useMemo(
-    () => [...new Set(ranked.top.filter((r) => !known.has(r[1])).map((r) => matches[r[0]].match_id))],
-    [ranked, known, matches],
+    () => [...new Set(rows.filter((r) => !known.has(r[1])).map((r) => matches[r[0]].match_id))],
+    [rows, known, matches],
   );
   const missingKey = missing.join(".");
 
@@ -118,7 +139,7 @@ export function PlayerSequences({
     };
   }, [missingKey, team, season, demo]);
 
-  const list = ranked.top.flatMap(([m, id]) => {
+  const list = rows.flatMap(([m, id]) => {
     const chain = known.get(id);
     const match = matches[m];
     return chain
@@ -130,10 +151,10 @@ export function PlayerSequences({
   const abbr = metricDefinitions[metric].abbr;
   const title = copy.sequencesHeading(player.name.last);
   // The browser keeps its selection by index; a new list is a new browser.
-  const listKey = `${metric}:${ranked.top.map((r) => r[1]).join(",")}`;
+  const listKey = `${metric}:${pinRow?.[1] ?? ""}:${rows.map((r) => r[1]).join(",")}`;
 
   let body;
-  if (ranked.top.length === 0) {
+  if (rows.length === 0) {
     body = <p className="label">{copy.sequencesEmpty}</p>;
   } else if (missing.length > 0) {
     body = <p className="label">{failed ? copy.sequencesError : copy.sequencesLoading}</p>;
@@ -145,12 +166,15 @@ export function PlayerSequences({
         title={title}
         legend={<SequenceLegend focus={player.name.last} />}
         focusPlayerId={player.player_id}
+        initialIndex={Math.max(initialIndex, 0)}
       />
     );
   }
 
+  const pinMatch = pinRow ? matches[pinRow[0]] : null;
+
   return (
-    <section className="mt-8">
+    <section ref={ref} className="mt-8 scroll-mt-4">
       <SectionHead
         title={title}
         right={
@@ -163,6 +187,22 @@ export function PlayerSequences({
         }
       />
       <div className="card mt-4">
+        {pinMatch && (
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-chip border border-gold px-3 py-2">
+            <span className="font-mono text-[10px] tracking-[0.06em] text-ink">
+              {copy.pinned.note(copy.sequenceContext(pinMatch.matchday, pinMatch.opponent_abbr, pinMatch.is_home))}
+            </span>
+            {onUnpin && (
+              <button
+                type="button"
+                onClick={onUnpin}
+                className="font-mono text-[10px] tracking-[0.06em] text-blue underline underline-offset-2"
+              >
+                {copy.pinned.back}
+              </button>
+            )}
+          </div>
+        )}
         <div className="mb-4 grid grid-cols-2 gap-3 border-b border-line pb-3 sm:grid-cols-4">
           <Figure label={copy.aggregates.sequences} value={num(agg.sequences)} />
           <Figure label={copy.aggregates.xt} value={agg.xt === null ? EMPTY : dec(agg.xt, 2)} accent />

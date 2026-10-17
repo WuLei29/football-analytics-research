@@ -411,14 +411,16 @@ no new gold tables are needed.** Every field below reads existing gold or silver
 | Header, bio | `player` | `silver.players` (names, `known_name`, nationality, `preferred_foot`, `height_cm`, `date_of_birth`) ⋈ `gold.player_season_stats` (shirt, primary position and group, `role_group`, `is_utility`, `primary_position_pct`, matches, starts, minutes, `matches_subbed_off`, `yellow_cards`, `red_cards`, `penalties_taken`, `penalties_scored`) |
 | Tab strip | from `squad.json` (WEB_DATA §8) | already specified |
 | KPIs | `kpis[]`: `{key, value, per_90?, sub?}` in display order | `gold.player_season_stats`; sets per role from `PLAYER_KPIS` |
-| `Pases`, `Progresivos`, `Pases clave` | `maps.passes`: compact rows `[x, y, end_x, end_y, flags]`, flags bits = completed, progressive, key_pass, assist | `silver.events` `Pass` by the player; `gold.is_progressive`; `value_assist` |
-| `Conducciones` | `maps.carries`: `[x, y, end_x, end_y, completed]`, progressive only | `silver.events` `Carry` + `gold.is_progressive` |
-| `Toques` | `maps.touch_zones`: `[{zone_id, touches, share}]` | touch set grouped by `gold.zone_id` |
-| `Recepciones` | `maps.reception_zones` (same shape) + `maps.progressive_receptions`: `[x, y, in_box]` | `gold.pass_receptions` (`receiver_id`, `rx_zone_id`, `rx_x/rx_y`, `is_progressive`, `rx_in_box`, `rx_gap_m ≤ 5`) |
-| `Tiros` | `maps.shots`: same `Shot` shape as the match file | `silver.events` shot set, `xg`, `goal_mouth_y/z` |
-| `Defensivas` | `maps.defence`: `[{type, x, y, outcome, minute}]` | `silver.events`, sets as in §3b |
+| `Pases`, `Progresivos`, `Pases clave` | `maps.passes`: compact rows `[x, y, end_x, end_y, flags, m, xt, minute, s]`, flags bits = completed, progressive, key_pass, assist. Every map row ends on `minute, s` (see below) | `silver.events` `Pass` by the player; `gold.is_progressive`; `value_assist` |
+| `Conducciones` | `maps.carries`: `[x, y, end_x, end_y, completed, m, xt, minute, s]`, progressive only | `silver.events` `Carry` + `gold.is_progressive` |
+| `Toques` | `maps.touch_zones`: `[m, zone_id, count]` (heat) + `maps.touches`: `[x, y, t, m, minute, s]` (events), `t` indexing `maps.touch_types` | touch set grouped by `gold.zone_id`; the same set one by one |
+| `Recepciones` | `maps.reception_zones` (same shape) + `maps.receptions`: every reception `[x, y, flags, m, minute, s]`, flags 1 = progressive (pass progressive and `rx_gap_m ≤ 5`), 2 = in the box. Replaced `progressive_receptions` on 17 Oct 2026 (`schema_version` 2) | `gold.pass_receptions` (`receiver_id`, `rx_zone_id`, `rx_x/rx_y`, `is_progressive`, `rx_in_box`, `rx_gap_m ≤ 5`) |
+| `Tiros` | `maps.shots`: same `Shot` shape as the match file, plus `s` | `silver.events` shot set, `xg`, `goal_mouth_y/z` |
+| `Defensivas` | `maps.defence`: `[type, x, y, won, minute, m, s]` | `silver.events`, sets as in §3b |
 | Percentiles | `percentiles`: `{eligible, peer_group, peer_n, pooled_fb, min_minutes, cards: [{key, metrics: [{key, value, percentile \| null, higher_is_better}]}]}` | `gold.player_season_stats` + `PLAYER_SPINE`, computed by the export (§3.6 gate) |
 | Sequences | `sequences.aggregates` + `sequences.top_xt[10]`, `top_vaep[10]` (deduplicated by match + start): `{match_id, matchday, opponent_abbr, is_home, minute, kind, passes, player_touches, xt, vaep, ends_in_shot, points, player_touch_index}` | `gold.sequences` ⋈ `gold.sequence_players`, `event_count ≥ 3`; `points` built as in WEB_DATA §7.1, with the player's first touch forced in |
+
+**Chain link `s`** (17 Oct 2026): the row's index into `sequences.index`, the chain the event belongs to; `null` when it is in no chain the page can draw (an opponent's possession, or one under three events). Share of 2025/26 rows linked: carries 100 %, receptions 97 %, passes 88 %, touches 87 %, shots 67 % (penalties and direct free kicks are one- and two-event chains), defensive actions 45 %.
 
 **Frame**: every coordinate is in metres, rounded to 0.1, in the player's team's attacking frame
 (WEB_DATA §3.1). **Determinism**: every list is sorted on a unique key.
@@ -532,3 +534,23 @@ Four changes after the first look at real data:
   are drawn from the match files, fetched on demand: a deliberate exception to "no fetching",
   since shipping ~500 chains with actions per player would add ~1 MB per file. Player and
   match files must come from the same export run (they share `sequence_id`).
+
+## Review of 17 Oct 2026
+Three requests on the event map, built on the 16 Oct export:
+- **Map → sequence link.** A click on a mark with a chain (`s` non-null) pins that chain in the
+  sequence block and scrolls to it. It opens in place when already in the top ten, otherwise
+  first; a gold-bordered bar names its match and offers "Volver a las 10 mejores". The pin
+  belongs to the match selection it was made under and is dropped when the selection changes.
+  Its match file is fetched like any filtered chain's.
+- **Heat or events.** Toques, Recepciones and Defensivas get a "VER · Mapa de calor / Eventos"
+  switch (not in the URL). Toques and Recepciones open as heat, Defensivas as marks; the
+  defensive heat map is binned on the site from the chip-filtered actions with `zoneId`
+  (`lib/viz/pitch.ts`, `gold.zone_id` word for word). Events display is uncapped.
+- **Hover on every mark.** A card names the match, matchday, venue and minute, plus the mark's
+  own facts (completed / failed and xT, xG, in the box), and "Clic: ver la jugada ↓" when it
+  links. Heat zones answer with their count and share. Arrows and dots use one delegated
+  listener (`data-i` / `data-zone`); the card is `viz/HoverCard`. `ShotMap` and
+  `DefensiveActions` take optional `context` / `linked` / `onSelect`, so the match page is
+  unchanged — except that the defensive tooltip now sits in a wrapper around the pitch alone,
+  which fixes its offset by the chip row's height.
+- Size: 2025/26 player files 2.6 MB → 3.5 MB (47 files).

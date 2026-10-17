@@ -87,12 +87,13 @@ changing it, since each one records its deviations from the handoff.
 |---|---|---|---|---|
 | `Pitch` / `PitchLines` | Markings, `underlay` + `children` slots | `orientation`, `underlay`, `lineColor`, `cased`, `title` | no | everything |
 | `VizDefs` | Shared `<defs>` arrowheads (`viz-arrow-*`) | none | no | once per page using arrows |
-| `ShotMap` | Circles, r = R0 + √xG·K; solid goal / half on target / hollow off; hover card with goal frame | `shots: Shot[]`, `teamSide`, `abbr` | yes | 02, 03 (`Tiros`) |
-| `ActionArrows` / `ArrowLayer` | Arrows with a per-arrow tone (`blue`/`gold`/`faint`), width, opacity, `head`; failed dashed. `ArrowLayer` is the bare `<g>` | `actions: ArrowMark[]` | no | 02 (via wrapper), 03 |
+| `ShotMap` | Circles, r = R0 + √xG·K; solid goal / half on target / hollow off; hover card with goal frame | `shots: Shot[]` (optional `context`, `linked`), `teamSide`, `abbr`, `onSelect` | yes | 02, 03 (`Tiros`) |
+| `ActionArrows` / `ArrowLayer` | Arrows with a per-arrow tone (`blue`/`gold`/`faint`), width, opacity, `head`; failed dashed. `ArrowLayer` is the bare `<g>`; `hoverable` adds `data-i` hit lines, `highlight` redraws one loud | `actions: ArrowMark[]`, `hoverable`, `highlight` | no | 02 (via wrapper), 03 |
+| `HoverCard` | The dark hover card at a pitch point, flips below when no headroom; title, mono lines, gold hint | `x`, `y`, `figureHeight`, `title`, `lines`, `hint` | no | 03 |
 | `ProgressionArrows` | Thin wrapper on `ActionArrows`: pass `--blue` thin, carry `--gold` thicker | `actions: {kind, x,y,end_x,end_y, completed}[]` | no | 02 |
 | `HeatSurface` | 12×8 **xT** grid cells | `cells: {cx, cy, xt}[]` | no | 02 |
-| `ZoneHeatmap` | 30-zone fills, optional grid, `children` above the lines (reception dots) | `cells: {zone_id, value}[]`, `showGrid`, `children` | no | 02, 03 |
-| `DefensiveActions` | Diamonds, blue won / grey lost, type chips, dashed line height, hover | `actions: {type,x,y,outcome,minute?,player?}[]`, `lineX`, `lineLabel` | yes | 02, 03 |
+| `ZoneHeatmap` | 30-zone fills (each rect `data-zone`), optional grid, `children` above the lines (reception dots), `highlight` outlines one zone | `cells: {zone_id, value}[]`, `showGrid`, `children`, `highlight` | no | 02, 03 |
+| `DefensiveActions` | Diamonds, blue won / grey lost, type chips, dashed line height, hover; `display="heat"` bins the chip-filtered actions into zones | `actions: {type,x,y,outcome,minute?,player?,context?,linked?}[]`, `lineX`, `lineLabel`, `display`, `onSelect` | yes | 02, 03 |
 | `PassNetwork` | Nodes at mean position (r by touches), edges (width by count, ≥4) | `nodes`, `edges` | no | 02 |
 | `SequenceTraces` | Polylines, start dot, end ring (big if shot), selection; `variant="player"`: width by `value`, gold dot on `touch` | `sequences: {sequence_id, points, ends_in_shot, value?, touch?}[]`, `selectedId`, `onSelect`, `variant` | no (page owns state) | 02, 03, 04 |
 | `SequenceDetail` | One chain action by action: pass arrow, curved cross, dotted carry, take-on dot, shot to goal-mouth y | `actions`, `describe` | yes | 02 |

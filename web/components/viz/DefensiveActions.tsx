@@ -42,19 +42,32 @@
  *
  * The tooltip is HTML, not SVG, for the reason `ShotMap` gives: its type then
  * renders at real pixel sizes whatever the pitch scales to.
+ *
+ * Added for the player page (16 Oct 2026): an action may carry `context`
+ * (which match) and `linked` (a click calls `onSelect` and opens its chain);
+ * `display="heat"` draws the chip-filtered actions as the 30-zone heat map
+ * instead of diamonds, with each zone's count on hover. The tooltip now sits
+ * in a wrapper around the pitch alone, so the chip row above no longer
+ * pushes it off its mark.
  */
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState, type MouseEvent } from "react";
 
+import { pct } from "@/lib/format";
 import { defensiveActionType, viz } from "@/lib/labels";
 import {
   project,
   projectFraction,
   projectRect,
+  zoneCentre,
+  zoneId,
   type Orientation,
 } from "@/lib/viz/pitch";
 
+import { HoverCard } from "./HoverCard";
+import { Ramp } from "./Legend";
 import { Pitch } from "./Pitch";
+import { ZoneHeatmap } from "./ZoneHeatmap";
 
 /** One entry of `defence.actions` (WEB_DATA §7). */
 export interface DefensiveAction {
@@ -66,10 +79,18 @@ export interface DefensiveAction {
   minute?: number | null;
   /** Who made it. Optional for the same reason. */
   player?: string | null;
+  /** Which match, when the map spans several: "J5 · LEV (L)". */
+  context?: string | null;
+  /** True when a click opens the action's chain (`onSelect`). */
+  linked?: boolean;
 }
 
 interface DefensiveActionsProps {
   actions: DefensiveAction[];
+  /** Diamonds (default) or the 30-zone heat map of the same actions. */
+  display?: "marks" | "heat";
+  /** Called with the index into `actions` of a clicked `linked` action. */
+  onSelect?: (index: number) => void;
   /** `defence.line_x`, in metres. Omit to leave the line off. */
   lineX?: number;
   /** Mono caption drawn beside the line — build the number with `dec()`. */
@@ -138,9 +159,13 @@ export function DefensiveActions({
   lineLabel,
   orientation = "horizontal",
   title,
+  display = "marks",
+  onSelect,
   className,
 }: DefensiveActionsProps) {
   const [hovered, setHovered] = useState<number | null>(null);
+  const [hotZone, setHotZone] = useState<number | null>(null);
+  const figureRef = useRef<HTMLDivElement>(null);
   const types = useTypeCounts(actions);
 
   // `null` means "every type", which is not the same as a set holding all of
@@ -155,6 +180,25 @@ export function DefensiveActions({
   const active = hovered === null ? null : (actions[hovered] ?? null);
   const visible = active !== null && shows(active.type) ? active : null;
 
+  // The heat map's zones, from the actions the chips keep.
+  const cells = useMemo(() => {
+    if (display !== "heat") return [];
+    const by = new Map<number, number>();
+    for (const a of actions) {
+      if (only !== null && !only.has(a.type)) continue;
+      const z = zoneId(a.x, a.y);
+      by.set(z, (by.get(z) ?? 0) + 1);
+    }
+    return [...by].map(([zone_id, value]) => ({ zone_id, value }));
+  }, [actions, only, display]);
+  const cellTotal = cells.reduce((a, c) => a + c.value, 0);
+  const hotCount = cells.find((c) => c.zone_id === hotZone)?.value ?? 0;
+
+  function overZone(e: MouseEvent) {
+    const z = (e.target as Element).getAttribute("data-zone");
+    setHotZone(z === null ? null : Number(z));
+  }
+
   function toggle(type: string) {
     setHovered(null);
     setOnly((current) => {
@@ -166,7 +210,7 @@ export function DefensiveActions({
   }
 
   return (
-    <div className={className} style={{ position: "relative" }}>
+    <div className={className}>
       <TypeChips
         types={types}
         shows={shows}
@@ -178,38 +222,58 @@ export function DefensiveActions({
         allActive={only === null}
       />
 
-      <Pitch orientation={orientation} title={title}>
-        {lineX !== undefined && (
-          <DefensiveLine orientation={orientation} lineX={lineX} label={lineLabel} />
+      <div ref={figureRef} style={{ position: "relative" }}>
+        {display === "heat" ? (
+          <div onMouseOver={overZone} onMouseLeave={() => setHotZone(null)}>
+            <ZoneHeatmap cells={cells} orientation={orientation} title={title} highlight={hotZone} />
+            {hotZone !== null && hotCount > 0 && (
+              <HoverCard
+                {...zoneCentre(hotZone)}
+                orientation={orientation}
+                figureHeight={figureRef.current?.clientHeight ?? 0}
+                title={viz.zoneHover.defence(hotCount)}
+                lines={[viz.zoneHover.share(pct((hotCount / cellTotal) * 100, 0))]}
+              />
+            )}
+          </div>
+        ) : (
+          <Pitch orientation={orientation} title={title}>
+            {lineX !== undefined && (
+              <DefensiveLine orientation={orientation} lineX={lineX} label={lineLabel} />
+            )}
+
+            {actions.map((action, i) => {
+              if (!shows(action.type)) return null;
+              const p = project(orientation, action.x, action.y);
+              return (
+                <g
+                  key={i}
+                  opacity={hovered === null || hovered === i ? 1 : 0.22}
+                  style={{ cursor: "pointer" }}
+                  onMouseEnter={() => setHovered(i)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={onSelect && action.linked ? () => onSelect(i) : undefined}
+                >
+                  <rect
+                    x={p.x - SIDE / 2}
+                    y={p.y - SIDE / 2}
+                    width={SIDE}
+                    height={SIDE}
+                    fill={action.outcome === "won" ? "var(--color-blue)" : "var(--color-opp)"}
+                    fillOpacity={FILL_OPACITY}
+                    transform={`rotate(45 ${p.x.toFixed(2)} ${p.y.toFixed(2)})`}
+                  />
+                  <circle cx={p.x} cy={p.y} r={HIT_RADIUS} fill="transparent" />
+                </g>
+              );
+            })}
+          </Pitch>
         )}
 
-        {actions.map((action, i) => {
-          if (!shows(action.type)) return null;
-          const p = project(orientation, action.x, action.y);
-          return (
-            <g
-              key={i}
-              opacity={hovered === null || hovered === i ? 1 : 0.22}
-              style={{ cursor: "pointer" }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-            >
-              <rect
-                x={p.x - SIDE / 2}
-                y={p.y - SIDE / 2}
-                width={SIDE}
-                height={SIDE}
-                fill={action.outcome === "won" ? "var(--color-blue)" : "var(--color-opp)"}
-                fillOpacity={FILL_OPACITY}
-                transform={`rotate(45 ${p.x.toFixed(2)} ${p.y.toFixed(2)})`}
-              />
-              <circle cx={p.x} cy={p.y} r={HIT_RADIUS} fill="transparent" />
-            </g>
-          );
-        })}
-      </Pitch>
+        {display === "marks" && visible && <Tooltip action={visible} orientation={orientation} />}
+      </div>
 
-      {visible && <Tooltip action={visible} orientation={orientation} />}
+      {display === "heat" && <Ramp low={viz.legend.low} high={viz.legend.high} />}
 
       {/* Only when the pitch is genuinely blank -- otherwise the marks speak
           for themselves and a standing line of small print under every match
@@ -354,12 +418,24 @@ function Tooltip({
           lineHeight: 1.6,
         }}
       >
+        {action.context && (
+          <>
+            {action.context}
+            <br />
+          </>
+        )}
         {action.minute != null && `${action.minute}' · `}
         {won ? viz.legend.regain : viz.legend.duelLost}
         {action.player && (
           <>
             <br />
             {action.player}
+          </>
+        )}
+        {action.linked && (
+          <>
+            <br />
+            <span style={{ color: "var(--color-gold)" }}>{viz.openSequence}</span>
           </>
         )}
       </div>

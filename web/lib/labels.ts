@@ -269,6 +269,7 @@ const sequenceActionTypeLabels: Record<string, string> = {
   claim: "Blocaje",
   keeper_pick_up: "Recogida del portero",
   punch: "Despeje de puños",
+  smother: "Salida a los pies",
   keeper_sweeper: "Salida del portero",
   ball_touch: "Toque",
   dispossessed: "Pérdida",
@@ -390,6 +391,17 @@ export const viz = {
   /** Read out in place of the drawing by a screen reader. */
   shotMapTitle: "Mapa de tiros del partido",
   pitchTitle: "Campo de fútbol",
+
+  /** The last line of a hover card whose mark opens its possession chain. */
+  openSequence: "Clic: ver la jugada ↓",
+
+  /** The hover card of one zone of a heat map: "34 toques" / "12 % del total". */
+  zoneHover: {
+    touches: (n: number) => (n === 1 ? "1 toque" : `${n} toques`),
+    receptions: (n: number) => (n === 1 ? "1 recepción" : `${n} recepciones`),
+    defence: (n: number) => (n === 1 ? "1 acción defensiva" : `${n} acciones defensivas`),
+    share: (pct: string) => `${pct} del total`,
+  },
 
   /** Legends. Each is a list of [swatch meaning, text]. */
   legend: {
@@ -1029,8 +1041,15 @@ export const player = {
    * The caption of the event-map card, a sentence like the match page's
    * captions. `shown`/`total` are formatted; `capped` when a cap cut the list.
    */
-  mapCaption: (mode: PlayerMapMode, shown: string, total: string, capped: boolean) => {
+  mapCaption: (
+    mode: PlayerMapMode,
+    shown: string,
+    total: string,
+    capped: boolean,
+    display: "heat" | "events" = "heat",
+  ) => {
     const attack = " · ataca hacia la derecha";
+    const how = display === "heat" ? "por zona" : "uno a uno";
     switch (mode) {
       case "pases":
         return (capped ? `Los ${shown} más recientes de ${total} pases` : `${total} pases`) + attack;
@@ -1043,19 +1062,45 @@ export const player = {
           ? `Las ${shown} de más xT de ${total} conducciones progresivas`
           : `${total} conducciones progresivas`) + attack;
       case "toques":
-        return `${total} toques con balón, por zona` + attack;
+        return `${total} toques con balón, ${how}` + attack;
       case "recepciones":
-        return `${total} pases recibidos, por zona` + attack;
+        return `${total} pases recibidos, ${how}` + attack;
       case "tiros":
         return `${total} tiros` + attack;
       case "defensivas":
-        return `${total} acciones defensivas` + attack;
+        return `${total} acciones defensivas` + (display === "heat" ? `, ${how}` : "") + attack;
       case "pases-clave":
         return `${total} pases clave y asistencias` + attack;
     }
   },
   mapModesLabel: "Qué dibuja el mapa",
   mapEmpty: "Ninguna acción de este tipo en los partidos elegidos.",
+  /** The heat / one-by-one switch of Toques, Recepciones and Defensivas. */
+  mapDisplay: {
+    label: "VER",
+    heat: "Mapa de calor",
+    events: "Eventos",
+  },
+  /** The hover card of one mark on the event map. */
+  hover: {
+    /** "J5 · LEV (L) · 57'". */
+    context: (matchday: number, abbr: string, home: boolean, minute: number | null) =>
+      `J${matchday} · ${abbr} (${home ? "L" : "V"})` + (minute === null ? "" : ` · ${minute}'`),
+    pass: "Pase",
+    progressivePass: "Pase progresivo",
+    keyPass: "Pase clave",
+    assist: "Asistencia",
+    carry: "Conducción progresiva",
+    completed: "Completado",
+    failed: "Fallado",
+    carryLost: "Perdió el balón al final",
+    xt: (value: string) => `xT ${value}`,
+    reception: "Recepción",
+    progressiveReception: "Recepción progresiva",
+    inBox: "En el área",
+    /** Under a touch: the hover title is its type. */
+    touch: "Toque con balón",
+  },
   /** Legend items in the match page's style: the mark's name, nothing else. */
   legend: {
     restPasses: "Resto de pases",
@@ -1064,8 +1109,13 @@ export const player = {
     receptionZones: "Recepciones por zona",
     receptionDot: "Recepción progresiva",
     receptionRing: "En el área",
+    /** Events display: every reception, the non-progressive ones quiet. */
+    receptionAll: "Resto de recepciones",
+    touchDot: "Toque",
     assist: "Asistencia",
     keyPass: "Pase clave",
+    /** Under every map whose marks can open their chain. */
+    hoverRule: "Pasa el cursor por una acción · clic para ver su jugada",
   },
 
   percentileHeading: (group: string) => `Percentil vs LaLiga · ${group}`,
@@ -1094,6 +1144,11 @@ export const player = {
   sequencesEmpty: "No hay jugadas de tres o más acciones con él en estos partidos.",
   sequencesLoading: "Cargando las jugadas de estos partidos…",
   sequencesError: "No se pudieron cargar las jugadas de estos partidos.",
+  /** The bar over the browser when a chain was opened from the event map. */
+  pinned: {
+    note: (context: string) => `Jugada abierta desde el mapa · ${context}`,
+    back: "Volver a las 10 mejores",
+  },
   /** "J9 · OVI (V)": which match a chain in the list is from. */
   sequenceContext: (matchday: number, abbr: string, home: boolean) =>
     `J${matchday} · ${abbr} (${home ? "L" : "V"})`,

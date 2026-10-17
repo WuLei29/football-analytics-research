@@ -30,7 +30,7 @@ import type { Shot } from "@/components/viz/ShotMap";
 import type { XtCell } from "@/components/viz/HeatSurface";
 import type { ZoneCell } from "@/components/viz/ZoneHeatmap";
 import type { RollingPoint } from "@/components/viz/RollingArea";
-import { ZONE_IDS } from "@/lib/viz/pitch";
+import { ZONE_IDS, ZONE_X_BOUNDARIES, ZONE_Y_BOUNDARIES } from "@/lib/viz/pitch";
 import { kpiOver } from "@/lib/data/playerFilter";
 import {
   SCHEMA_VERSION,
@@ -45,6 +45,7 @@ import {
   type ReceptionRow,
   type SequenceIndexRow,
   type Squad,
+  type TouchRow,
   type ZoneRow,
 } from "@/lib/data/types";
 
@@ -578,7 +579,8 @@ export const demoPlayerFile: PlayerFile = (() => {
     const ey = clamp(y + 6 + gauss() * 16, 1, 67);
     const completed = random() < 0.8 ? 1 : 0;
     const prog = isProgressive(x, y, ex, ey) ? 2 : 0;
-    return [r1(x), r1(y), r1(ex), r1(ey), completed | prog | flags, match, r3(random() * 0.05)];
+    // minute and chain (the last two) are filled once the chains exist.
+    return [r1(x), r1(y), r1(ex), r1(ey), completed | prog | flags, match, r3(random() * 0.05), null, null];
   }
   const passes: PassRow[] = matches
     .flatMap((_, i) => Array.from({ length: 24 }, () => pass(i)))
@@ -586,14 +588,14 @@ export const demoPlayerFile: PlayerFile = (() => {
       Array.from({ length: 21 }, (_, i) => {
         const x = clamp(70 + random() * 30, 60, 102);
         const y = clamp(6 + random() * 14, 1, 30);
-        return [r1(x), r1(y), r1(92 + random() * 10), r1(26 + random() * 16), 1 | (i < 4 ? 8 : 4), m(), r3(random() * 0.1)] as PassRow;
+        return [r1(x), r1(y), r1(92 + random() * 10), r1(26 + random() * 16), 1 | (i < 4 ? 8 : 4), m(), r3(random() * 0.1), null, null] as PassRow;
       }),
     )
     .sort((a, b) => a[5] - b[5]);
   const carries: CarryRow[] = Array.from({ length: 41 }, () => {
     const x = clamp(40 + random() * 45, 5, 95);
     const y = clamp(5 + random() * 15, 1, 40);
-    return [r1(x), r1(y), r1(clamp(x + 9 + random() * 18, 0, 105)), r1(clamp(y + gauss() * 6, 1, 67)), random() < 0.9 ? 1 : 0, m(), r3(random() * 0.06)] as CarryRow;
+    return [r1(x), r1(y), r1(clamp(x + 9 + random() * 18, 0, 105)), r1(clamp(y + gauss() * 6, 1, 67)), random() < 0.9 ? 1 : 0, m(), r3(random() * 0.06), null, null] as CarryRow;
   }).sort((a, b) => a[5] - b[5]);
 
   // Zone heat: strongest on the right channel (y_channel 1 = low y).
@@ -612,6 +614,26 @@ export const demoPlayerFile: PlayerFile = (() => {
       }),
     );
   };
+  // The same events one by one: each zone's count, scattered in the zone.
+  const inZone = (zone: number): [number, number] => {
+    const [s, c] = [Math.floor(zone / 10), zone % 10];
+    const lerp = (b: number[], i: number) => b[i - 1] + random() * (b[i] - b[i - 1]);
+    return [r1(lerp(ZONE_X_BOUNDARIES, s)), r1(lerp(ZONE_Y_BOUNDARIES, c))];
+  };
+  const touchTypes = ["pass", "carry", "ball_recovery", "take_on", "clearance", "ball_touch"];
+  const touchZones = zones(58, 3.4);
+  const receptionZones = zones(32, 4.1);
+  const touches: TouchRow[] = touchZones.flatMap(([mi, zone, count]) =>
+    Array.from({ length: count }, (): TouchRow => [...inZone(zone), Math.floor(random() * touchTypes.length), mi, null, null]),
+  );
+  const receptions: ReceptionRow[] = receptionZones.flatMap(([mi, zone, count]) =>
+    Array.from({ length: count }, (): ReceptionRow => {
+      const [x, y] = inZone(zone);
+      const progressive = x > 60 && random() < 0.3 ? 1 : 0;
+      const inBox = x >= 88.5 && y >= 13.84 && y <= 54.16 ? 2 : 0;
+      return [x, y, progressive | inBox, mi, null, null];
+    }),
+  );
 
   const shots = Array.from({ length: 14 }, (_, i) => {
     const x = r1(84 + random() * 18);
@@ -633,6 +655,7 @@ export const demoPlayerFile: PlayerFile = (() => {
       big_chance: i === 0,
       goal_mouth_y: outcome === "goal" || outcome === "saved" ? r1(46 + random() * 8) : null,
       goal_mouth_z: outcome === "goal" || outcome === "saved" ? r1(random() * 30) : null,
+      s: null as number | null,
     };
   });
 
@@ -640,7 +663,7 @@ export const demoPlayerFile: PlayerFile = (() => {
   const defence: DefenceRow[] = Array.from({ length: 118 }, (): DefenceRow => {
     const type = defTypes[Math.floor(random() * defTypes.length)];
     const lost = type === "challenge" || type === "attempted_tackle" || (type === "tackle" && random() < 0.35);
-    return [type, r1(clamp(38 + gauss() * 26, 2, 100)), r1(clamp(10 + Math.abs(gauss()) * 13, 1, 45)), lost ? 0 : 1, Math.floor(random() * 92) + 1, m()];
+    return [type, r1(clamp(38 + gauss() * 26, 2, 100)), r1(clamp(10 + Math.abs(gauss()) * 13, 1, 45)), lost ? 0 : 1, Math.floor(random() * 92) + 1, m(), null];
   });
 
   // Chains: every one ships in full, so /demo never needs a match file.
@@ -718,6 +741,20 @@ export const demoPlayerFile: PlayerFile = (() => {
     ])
     .sort((a, b) => a[0] - b[0]);
 
+  // Minutes and chain links, now the chains exist: about two marks in three
+  // open a chain of their own match (as in the real files, where defensive
+  // actions in the opponent's possession open none). Demo chains all ship
+  // in `entries`, so a click there needs no fetch.
+  const chainIn = (mi: number): number | null => {
+    const own = index.flatMap((r, i) => (r[0] === mi ? [i] : []));
+    return own.length && random() < 0.66 ? own[Math.floor(random() * own.length)] : null;
+  };
+  const minute = () => Math.floor(random() * 92) + 1;
+  for (const r of [...passes, ...carries]) [r[7], r[8]] = [minute(), chainIn(r[5])];
+  for (const r of [...touches, ...receptions]) [r[4], r[5]] = [minute(), chainIn(r[3])];
+  for (const r of defence) r[6] = chainIn(r[5]);
+  for (const s of shots) s.s = chainIn(matches.findIndex((mm) => mm.match_id === s.match_id));
+
   const metric = (key: string, value: number | null, percentile: number | null, decimals: 0 | 1 | 2 | 3 = 2, scale: "raw" | "pct" = "raw", higher = true) =>
     ({ key, value, percentile, higher_is_better: higher, scale, decimals });
 
@@ -771,13 +808,11 @@ export const demoPlayerFile: PlayerFile = (() => {
       caps: { passes: 150, progressive: 60 },
       passes,
       carries,
-      touch_zones: zones(58, 3.4),
-      reception_zones: zones(32, 4.1),
-      progressive_receptions: Array.from({ length: 64 }, (): ReceptionRow => {
-        const x = r1(clamp(60 + random() * 40, 40, 104));
-        const y = r1(clamp(5 + random() * 20, 1, 50));
-        return [x, y, x > 88.5 && y > 13.84 ? 1 : 0, m()];
-      }),
+      touch_zones: touchZones,
+      touch_types: touchTypes,
+      touches,
+      reception_zones: receptionZones,
+      receptions,
       shots,
       defence,
     },

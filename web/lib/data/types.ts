@@ -30,7 +30,7 @@ export interface Envelope {
  * The schema version this build of the site understands. A file stamped with
  * anything else means the export and the site are out of step.
  */
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 /* ==========================================================================
  * manifest.json  (WEB_DATA.md §4)
@@ -637,24 +637,41 @@ export interface PlayerKpi {
 }
 
 /**
- * A compact pass: `[x, y, end_x, end_y, flags, m, xt]`. Flag bits: 1
- * completed, 2 progressive, 4 key pass, 8 assist (`PASS_FLAG`). `m` indexes
- * `matches`. Chronological.
+ * Every map row ends on `minute` and `s`: the match minute, and the index
+ * into `sequences.index` of the chain the event belongs to — null when it is
+ * in no chain the page can draw (an opponent's possession, or one shorter
+ * than `sequences.min_events`). A click on a mark with an `s` opens that
+ * chain in the sequence block.
  */
-export type PassRow = [number, number, number, number, number, number, number | null];
+type Tail = [minute: number | null, s: number | null];
+
+/**
+ * A compact pass: `[x, y, end_x, end_y, flags, m, xt, minute, s]`. Flag
+ * bits: 1 completed, 2 progressive, 4 key pass, 8 assist (`PASS_FLAG`). `m`
+ * indexes `matches`. Chronological.
+ */
+export type PassRow = [number, number, number, number, number, number, number | null, ...Tail];
 export const PASS_FLAG = { completed: 1, progressive: 2, keyPass: 4, assist: 8 } as const;
 
-/** A progressive carry: `[x, y, end_x, end_y, completed 0|1, m, xt]`. */
-export type CarryRow = [number, number, number, number, number, number, number | null];
+/** A progressive carry: `[x, y, end_x, end_y, completed 0|1, m, xt, minute, s]`. */
+export type CarryRow = [number, number, number, number, number, number, number | null, ...Tail];
 
-/** A progressive reception point: `[x, y, in_box 0|1, m]`. */
-export type ReceptionRow = [number, number, number, number];
+/**
+ * A reception, every one the player had: `[x, y, flags, m, minute, s]`.
+ * Flag bits: 1 progressive (progressive pass, first action within 5 m of its
+ * end), 2 in the box (`RX_FLAG`). The point is the pass end.
+ */
+export type ReceptionRow = [number, number, number, number, ...Tail];
+export const RX_FLAG = { progressive: 1, inBox: 2 } as const;
+
+/** A touch: `[x, y, t, m, minute, s]`; `t` indexes `touch_types`. */
+export type TouchRow = [number, number, number, number, ...Tail];
 
 /** Touches or receptions in one zone of one match: `[m, zone_id, count]`. */
 export type ZoneRow = [number, number, number];
 
-/** A defensive action: `[type, x, y, won 0|1, minute, m]`. */
-export type DefenceRow = [string, number, number, number, number | null, number];
+/** A defensive action: `[type, x, y, won 0|1, minute, m, s]`. */
+export type DefenceRow = [string, number, number, number, number | null, number, number | null];
 
 /** The match file's `MatchShot` without `side` and `name`. */
 export interface PlayerShot {
@@ -672,6 +689,8 @@ export interface PlayerShot {
   big_chance: boolean;
   goal_mouth_y: number | null;
   goal_mouth_z: number | null;
+  /** The chain's index into `sequences.index`, as on every map row. */
+  s: number | null;
 }
 
 /** Every row uncapped; the site applies `caps` after the match filter. */
@@ -679,9 +698,13 @@ export interface PlayerMaps {
   caps: { passes: number; progressive: number };
   passes: PassRow[];
   carries: CarryRow[];
+  /** The heat map's source; `touches` are the same events one by one. */
   touch_zones: ZoneRow[];
+  /** Event-type keys (`ball_recovery`) a `TouchRow`'s `t` points into. */
+  touch_types: string[];
+  touches: TouchRow[];
   reception_zones: ZoneRow[];
-  progressive_receptions: ReceptionRow[];
+  receptions: ReceptionRow[];
   shots: PlayerShot[];
   defence: DefenceRow[];
 }

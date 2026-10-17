@@ -6,8 +6,9 @@ from datetime import date
 from src.export.match import simplify
 from src.export.config import PlayerKpi
 from src.export.player import (
-    FLAG_ASSIST, FLAG_COMPLETED, FLAG_PROGRESSIVE, age_on, defence_outcome,
-    kpi_value, pass_row, squad_rank, top_ids,
+    FLAG_ASSIST, FLAG_COMPLETED, FLAG_PROGRESSIVE, RX_IN_BOX, RX_PROGRESSIVE,
+    TOUCH_KEYS, age_on, defence_outcome, kpi_value, pass_row, reception_row,
+    squad_rank, top_ids, touch_key,
 )
 from src.export.squad import display_name, squad_order
 
@@ -59,9 +60,26 @@ def test_defence_outcome_follows_the_brief():
 
 def test_pass_row_flags():
     row = {"x": 10.04, "y": 5.0, "end_x": 40.0, "end_y": 6.0, "completed": True,
-           "progressive": True, "key_pass": None, "assist": False, "xt": 0.01234}
-    assert pass_row(row, 3) == [10.0, 5.0, 40.0, 6.0, FLAG_COMPLETED | FLAG_PROGRESSIVE, 3, 0.012]
-    assert pass_row({**row, "completed": False, "progressive": False, "assist": True}, 0)[4] == FLAG_ASSIST
+           "progressive": True, "key_pass": None, "assist": False, "xt": 0.01234,
+           "minute": 57}
+    assert pass_row(row, 3, 12) == [10.0, 5.0, 40.0, 6.0, FLAG_COMPLETED | FLAG_PROGRESSIVE,
+                                    3, 0.012, 57, 12]
+    assert pass_row({**row, "completed": False, "progressive": False, "assist": True},
+                    0, None)[4] == FLAG_ASSIST
+    # No drawable chain: the row ships `s` = null, never a made-up index.
+    assert pass_row(row, 0, None)[-1] is None
+
+
+def test_reception_row_flags():
+    row = {"rx_x": 95.04, "rx_y": 30.0, "progressive": True, "rx_in_box": True, "minute": 12}
+    assert reception_row(row, 2, 5) == [95.0, 30.0, RX_PROGRESSIVE | RX_IN_BOX, 2, 12, 5]
+    assert reception_row({**row, "progressive": False, "rx_in_box": False}, 0, None)[2] == 0
+
+
+def test_touch_keys_are_unique_snake_case():
+    assert len(set(TOUCH_KEYS)) == len(TOUCH_KEYS)
+    assert touch_key("Ball recovery") == "ball_recovery"
+    assert touch_key("Keeper pick-up") == "keeper_pick_up"
 
 
 def test_squad_rank_respects_the_gate_and_ties():

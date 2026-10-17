@@ -888,7 +888,7 @@ def fetch_player_matches(conn, cs_id: int, team_id: int, player_id: int,
 # on the site AFTER the filter, not here. Chronological, so "most recent" is
 # the tail of the list.
 PLAYER_PASSES_SQL = f"""
-SELECT e.match_id, e.x, e.y, e.end_x, e.end_y, e.xt,
+SELECT e.match_id, e.minute, e.sequence_id, e.x, e.y, e.end_x, e.end_y, e.xt,
        e.outcome = 'success'                       AS completed,
        gold.is_progressive(e.x, e.y, e.end_x, e.end_y) AS progressive,
        e.value_assist IN ('13', '14', '15')        AS key_pass,
@@ -909,7 +909,8 @@ def fetch_player_passes(conn, cs_id: int, team_id: int, player_id: int
 # (README-PLAYER §3b). 'Carry' is the synthesised type_id = -1. Uncapped and
 # chronological, like the passes; the site keeps the best 60 by xT.
 PLAYER_CARRIES_SQL = f"""
-SELECT e.match_id, e.x, e.y, e.end_x, e.end_y, e.xt, e.outcome = 'success' AS completed
+SELECT e.match_id, e.minute, e.sequence_id, e.x, e.y, e.end_x, e.end_y, e.xt,
+       e.outcome = 'success' AS completed
 {_PLAYER_EVENTS_FROM}
   AND e.event_type = 'Carry'
   AND e.x IS NOT NULL AND e.end_x IS NOT NULL
@@ -946,6 +947,25 @@ def fetch_player_touch_zones(conn, cs_id: int, team_id: int, player_id: int
     return _rows(conn, PLAYER_TOUCH_ZONES_SQL, params)
 
 
+# The same touches one by one, for the map's "events" layer (16 Oct 2026):
+# the zone rows above stay the heat map's source, these are its dots. Same
+# filter, so the dots of a zone add up to its count.
+PLAYER_TOUCHES_SQL = f"""
+SELECT e.match_id, e.minute, e.sequence_id, e.event_type, e.x, e.y
+{_PLAYER_EVENTS_FROM}
+  AND e.event_type = ANY(%(touch_types)s)
+  AND e.x BETWEEN 0 AND 105 AND e.y BETWEEN 0 AND 68
+ORDER BY m.match_date, e.match_id, e.json_index, e.event_id
+"""
+
+
+def fetch_player_touches(conn, cs_id: int, team_id: int, player_id: int
+                         ) -> list[dict[str, Any]]:
+    params = _player_params(cs_id, team_id, player_id)
+    params["touch_types"] = list(TOUCH_TYPES)
+    return _rows(conn, PLAYER_TOUCHES_SQL, params)
+
+
 # Receptions: gold.pass_receptions by receiver. Opta records no receiver; the
 # table resolves it as the next same-team action after a completed pass, and
 # the reception point is the pass end (GOLD_LAYER §4.7).
@@ -959,14 +979,17 @@ GROUP BY match_id, rx_zone_id
 ORDER BY match_id, rx_zone_id
 """
 
-PLAYER_PROGRESSIVE_RECEPTIONS_SQL = """
-SELECT match_id, rx_x, rx_y, rx_in_box
+# Every reception one by one (16 Oct 2026; was the progressive subset only):
+# the map's "events" layer draws them all and keeps the progressive ones --
+# progressive pass AND first action within `max_gap` of the pass end
+# (README-PLAYER §3b) -- loud. `sequence_id` is the pass's chain.
+PLAYER_RECEPTIONS_SQL = """
+SELECT match_id, minute, sequence_id, rx_x, rx_y, rx_in_box,
+       is_progressive AND rx_gap_m <= %(max_gap)s AS progressive
 FROM gold.pass_receptions
 WHERE competition_season_id = %(cs_id)s
   AND team_id = %(team_id)s
   AND receiver_id = %(player_id)s
-  AND is_progressive
-  AND rx_gap_m <= %(max_gap)s
 ORDER BY match_date, match_id, pass_event_id
 """
 
@@ -977,18 +1000,17 @@ def fetch_player_reception_zones(conn, cs_id: int, team_id: int, player_id: int
                  _player_params(cs_id, team_id, player_id))
 
 
-def fetch_player_progressive_receptions(conn, cs_id: int, team_id: int,
-                                        player_id: int, max_gap: float
-                                        ) -> list[dict[str, Any]]:
+def fetch_player_receptions(conn, cs_id: int, team_id: int, player_id: int,
+                            max_gap: float) -> list[dict[str, Any]]:
     params = _player_params(cs_id, team_id, player_id)
     params["max_gap"] = max_gap
-    return _rows(conn, PLAYER_PROGRESSIVE_RECEPTIONS_SQL, params)
+    return _rows(conn, PLAYER_RECEPTIONS_SQL, params)
 
 
 # Same columns and qualifier reads as SHOTS_SQL, so a shot here and the same
 # shot on its match page are drawn identically.
 PLAYER_SHOTS_SQL = f"""
-SELECT e.event_id, e.match_id, m.matchday,
+SELECT e.event_id, e.match_id, m.matchday, e.sequence_id,
        e.minute, e.event_type, e.x, e.y, e.xg,
        e.shot_play_pattern, e.first_time, e.goal_mouth_y, e.goal_mouth_z,
        e.raw_data -> 'qualifier' @> '[{{"qualifierId": 82}}]'  AS blocked,
@@ -1013,7 +1035,8 @@ def fetch_player_shots(conn, cs_id: int, team_id: int, player_id: int
 # Aerials are left out on purpose: they are duels on the percentile cards,
 # and on a centre back's map ~150 of them bury every other mark.
 PLAYER_DEFENCE_SQL = f"""
-SELECT e.match_id, e.event_type, e.x, e.y, e.outcome, e.minute, m.matchday
+SELECT e.match_id, e.event_type, e.x, e.y, e.outcome, e.minute, m.matchday,
+       e.sequence_id
 {_PLAYER_EVENTS_FROM}
   AND e.event_type IN ('Tackle', 'Interception', 'Ball recovery', 'Blocked Pass',
                        'Clearance', 'Attempted Tackle', 'Challenge')

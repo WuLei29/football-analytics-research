@@ -20,6 +20,11 @@
  *
  * Requires `<VizDefs />` on the page: the heads are its shared markers, one
  * per tone, never an inline `<marker>`.
+ *
+ * `hoverable` (16 Oct 2026, the player page's hover cards): each arrow also
+ * gets a wide transparent hit line carrying `data-i`, its index in
+ * `actions`, so the caller listens once on a parent `<g>` instead of
+ * binding a handler per arrow. `highlight` redraws one arrow on top.
  */
 
 import { project, type Orientation } from "@/lib/viz/pitch";
@@ -53,33 +58,76 @@ const MARKER = {
   faint: "url(#viz-arrow-faint)",
 } as const;
 
+/** Width of the invisible hit line, in metres: a 0.3 m arrow is no target. */
+const HIT_WIDTH = 1.6;
+
+function Arrow({
+  a,
+  orientation,
+  emphasis = false,
+}: {
+  a: ArrowMark;
+  orientation: Orientation;
+  emphasis?: boolean;
+}) {
+  const from = project(orientation, a.x, a.y);
+  const to = project(orientation, a.end_x, a.end_y);
+  // A hovered grey pass is redrawn blue: the quiet population has to be
+  // findable once it is the one being read.
+  const tone = emphasis && a.tone === "faint" ? "blue" : a.tone;
+  return (
+    <line
+      x1={from.x}
+      y1={from.y}
+      x2={to.x}
+      y2={to.y}
+      stroke={STROKE[tone]}
+      strokeWidth={emphasis ? Math.max(a.width * 1.8, 0.5) : a.width}
+      strokeOpacity={emphasis ? 1 : a.opacity}
+      strokeDasharray={a.completed ? undefined : "1.2 1"}
+      markerEnd={a.head === false && !emphasis ? undefined : MARKER[tone]}
+    />
+  );
+}
+
 export function ArrowLayer({
   actions,
   orientation = "horizontal",
+  hoverable = false,
+  highlight = null,
 }: {
   actions: ArrowMark[];
   orientation?: Orientation;
+  hoverable?: boolean;
+  /** Index into `actions` of the arrow to redraw loud, on top. */
+  highlight?: number | null;
 }) {
+  const hot = highlight === null ? null : (actions[highlight] ?? null);
   return (
     <g>
-      {actions.map((a, i) => {
-        const from = project(orientation, a.x, a.y);
-        const to = project(orientation, a.end_x, a.end_y);
-        return (
-          <line
-            key={i}
-            x1={from.x}
-            y1={from.y}
-            x2={to.x}
-            y2={to.y}
-            stroke={STROKE[a.tone]}
-            strokeWidth={a.width}
-            strokeOpacity={a.opacity}
-            strokeDasharray={a.completed ? undefined : "1.2 1"}
-            markerEnd={a.head === false ? undefined : MARKER[a.tone]}
-          />
-        );
-      })}
+      {actions.map((a, i) => (
+        <Arrow key={i} a={a} orientation={orientation} />
+      ))}
+      {hot && <Arrow a={hot} orientation={orientation} emphasis />}
+      {hoverable &&
+        actions.map((a, i) => {
+          const from = project(orientation, a.x, a.y);
+          const to = project(orientation, a.end_x, a.end_y);
+          return (
+            <line
+              key={i}
+              data-i={i}
+              x1={from.x}
+              y1={from.y}
+              x2={to.x}
+              y2={to.y}
+              stroke="transparent"
+              strokeWidth={HIT_WIDTH}
+              strokeLinecap="round"
+              style={{ pointerEvents: "stroke", cursor: "pointer" }}
+            />
+          );
+        })}
     </g>
   );
 }

@@ -15,9 +15,14 @@
  * The smallest client boundary that holds the filter's three readers. The
  * selection is in the URL rather than in state here, so the picker's links
  * can carry it to the next player.
+ *
+ * It also holds the one link between the map and the sequences (16 Oct
+ * 2026): a click on a mark pins that mark's chain, and the page scrolls to
+ * the sequence block, which opens it. A pin belongs to the selection it was
+ * made in — a new selection redraws the map, so the pin is dropped with it.
  */
 
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 
 import {
   filteredBio,
@@ -58,6 +63,17 @@ export function PlayerBody({
   const view = useMemo(() => mapView(file, idx), [file, idx]);
   const p = file.player;
 
+  // The chain opened from the map: an index into `sequences.index`, kept
+  // with the selection it was picked under (no effect needed to drop it).
+  const [pin, setPin] = useState<{ param: string | null; s: number } | null>(null);
+  const pinned = pin !== null && pin.param === param ? pin.s : null;
+  const sequencesRef = useRef<HTMLElement>(null);
+
+  function openSequence(s: number) {
+    setPin({ param, s });
+    sequencesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <>
       <div className="mt-4 mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -74,12 +90,28 @@ export function PlayerBody({
           photo={photo}
           selected={idx === null ? null : idx.size}
         />
-        <EventMap view={view} playerName={p.name.full} teamAbbr={file.team.abbr} />
+        <EventMap
+          view={view}
+          matches={file.matches}
+          touchTypes={file.maps.touch_types}
+          playerName={p.name.full}
+          teamAbbr={file.team.abbr}
+          onOpenSequence={openSequence}
+        />
       </section>
 
       {percentiles}
 
-      <PlayerSequences file={file} idx={idx} team={team} season={season} demo={demo} />
+      <PlayerSequences
+        ref={sequencesRef}
+        file={file}
+        idx={idx}
+        team={team}
+        season={season}
+        pinned={pinned}
+        onUnpin={() => setPin(null)}
+        demo={demo}
+      />
     </>
   );
 }

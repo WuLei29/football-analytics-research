@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUT = PROJECT_ROOT / "web" / "public" / "data"
 
 # Bumped when a field is removed or retyped in any published file (§2).
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 # ---------------------------------------------------------------------------

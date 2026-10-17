@@ -206,6 +206,31 @@ export const ZONE_CHANNELS = [
 ] as const;
 
 /**
+ * The `zone_id` of a point: `gold.zone_id(x, y)` word for word — each strip
+ * and channel includes its lower bound, the last one also its upper. For the
+ * one heat map whose zones are not shipped (the player's defensive actions,
+ * binned from the points the filter kept).
+ */
+export function zoneId(x: number, y: number): number {
+  const bin = (v: number, bounds: number[]) => {
+    let i = 1;
+    while (i < bounds.length - 1 && v >= bounds[i]) i++;
+    return i;
+  };
+  return bin(x, ZONE_X_BOUNDARIES) * 10 + bin(y, ZONE_Y_BOUNDARIES);
+}
+
+/** The centre of a zone in pitch metres: where a zone's hover card points. */
+export function zoneCentre(zoneId: number): { x: number; y: number } {
+  const strip = Math.floor(zoneId / 10);
+  const channel = zoneId % 10;
+  return {
+    x: (ZONE_X_BOUNDARIES[strip - 1] + ZONE_X_BOUNDARIES[strip]) / 2,
+    y: (ZONE_Y_BOUNDARIES[channel - 1] + ZONE_Y_BOUNDARIES[channel]) / 2,
+  };
+}
+
+/**
  * The SVG box of one of the 30 zones, from its `zone_id`.
  * `zone_id = x_strip * 10 + y_channel`, strips 1-6, channels 1-5 (GOLD_LAYER
  * §4.1.7), so 43 is strip 4, channel 3 — the centre of the attacking half.

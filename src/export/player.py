@@ -30,6 +30,11 @@ percentile cards stay season-wide. So the file is per match underneath:
   - every map row carries `m`, its index into `matches[]`, and ships
     UNCAPPED: the caps (150 recent passes, 60 best progressive) are applied
     on the site after the filter (`caps`).
+  - every map row also carries its minute and `s`, its chain's index into
+    `sequences.index` (null when the event is in no chain the page can draw:
+    an opponent's possession, or one under SEQUENCE_MIN_EVENTS). The page
+    names the match and minute on hover, and a click opens the chain in the
+    sequence block (16 Oct 2026).
   - `sequences.index` is every chain the player was in; the page ranks it for
     the selection and draws each chain from its match file, which carries
     the same actions (WEB_DATA §7.3). The season top lists ship in full in
@@ -59,8 +64,11 @@ from .match import _body_part, _sequences as match_sequences, _shot_outcome
 from .seasons import SeasonMeta
 from .squad import display_name
 
-# Bits of the compact pass row [x, y, end_x, end_y, flags, m, xt].
+# Bits of the compact pass row [x, y, end_x, end_y, flags, m, xt, minute, s].
 FLAG_COMPLETED, FLAG_PROGRESSIVE, FLAG_KEY_PASS, FLAG_ASSIST = 1, 2, 4, 8
+
+# Bits of the reception row [x, y, flags, m, minute, s].
+RX_PROGRESSIVE, RX_IN_BOX = 1, 2
 
 # README-PLAYER §3b: these two are always a duel lost (the player went in and
 # missed, or was dribbled past); a Tackle is won or lost by its outcome; every
@@ -271,14 +279,29 @@ def _kpis(role: str, player_id: int, club_rows: list[dict[str, Any]],
 # maps (§3b)
 # ---------------------------------------------------------------------------
 
-def pass_row(row: dict[str, Any], m: int) -> list[float | int | None]:
+def pass_row(row: dict[str, Any], m: int, s: int | None) -> list[float | int | None]:
     flags = ((FLAG_COMPLETED if row["completed"] else 0)
              | (FLAG_PROGRESSIVE if row["progressive"] else 0)
              | (FLAG_KEY_PASS if row["key_pass"] else 0)
              | (FLAG_ASSIST if row["assist"] else 0))
     return [r_coord(row["x"]), r_coord(row["y"]),
             r_coord(row["end_x"]), r_coord(row["end_y"]), flags, m,
-            r_value(row["xt"])]
+            r_value(row["xt"]), as_int(row["minute"]), s]
+
+
+def reception_row(row: dict[str, Any], m: int, s: int | None) -> list[float | int | None]:
+    flags = ((RX_PROGRESSIVE if row["progressive"] else 0)
+             | (RX_IN_BOX if row["rx_in_box"] else 0))
+    return [r_coord(row["rx_x"]), r_coord(row["rx_y"]), flags, m,
+            as_int(row["minute"]), s]
+
+
+def touch_key(event_type: str) -> str:
+    """`silver.events.event_type` as the site's snake_case key."""
+    return event_type.lower().replace(" ", "_").replace("-", "_")
+
+
+TOUCH_KEYS = [touch_key(t) for t in db.TOUCH_TYPES]
 
 
 def _zone_rows(rows: list[dict[str, Any]], key: str,
@@ -291,7 +314,7 @@ def _zone_rows(rows: list[dict[str, Any]], key: str,
     ]
 
 
-def _shots(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _shots(rows: list[dict[str, Any]], s) -> list[dict[str, Any]]:
     """The match file's Shot shape (§7.1) without `side` and `name`: every
     shot is the player's own, in his team's frame. The goalmouth pair is
     Opta's goal frame and is never mirrored."""
@@ -311,6 +334,7 @@ def _shots(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "big_chance": bool(row["big_chance"]),
             "goal_mouth_y": r_rate(row["goal_mouth_y"]),
             "goal_mouth_z": r_rate(row["goal_mouth_z"]),
+            "s": s(row),
         }
         for index, row in enumerate(rows, start=1)
     ]
@@ -324,8 +348,8 @@ def defence_outcome(event_type: str, outcome: str | None) -> str:
     return "won"
 
 
-def _defence(rows: list[dict[str, Any]], m) -> list[list[Any]]:
-    """[type, x, y, won 0|1, minute, m] -- compact: a centre back has 500+.
+def _defence(rows: list[dict[str, Any]], m, s) -> list[list[Any]]:
+    """[type, x, y, won 0|1, minute, m, s] -- compact: a centre back has 500+.
     `type` is the page-02 key, so the chips and tooltips reuse its labels."""
     return [
         [
@@ -335,13 +359,18 @@ def _defence(rows: list[dict[str, Any]], m) -> list[list[Any]]:
             1 if defence_outcome(row["event_type"], row["outcome"]) == "won" else 0,
             as_int(row["minute"]),
             m(row),
+            s(row),
         ]
         for row in rows
     ]
 
 
 def _maps(conn, cs_id: int, team_id: int, player_id: int,
-          index: dict[int, int]) -> dict[str, Any]:
+          index: dict[int, int], chains: dict[str, int]) -> dict[str, Any]:
+    def s(row: dict[str, Any]) -> int | None:
+        # Only a chain the sequence block can draw: the player's own, 3+ events.
+        return chains.get(row["sequence_id"])
+
     def m(row: dict[str, Any]) -> int:
         match_id = int(row["match_id"])
         if match_id not in index:
@@ -353,27 +382,35 @@ def _maps(conn, cs_id: int, team_id: int, player_id: int,
     return {
         # Applied on the site after the match filter.
         "caps": {"passes": PLAYER_PASS_MAP_MAX, "progressive": PLAYER_PROGRESSIVE_MAX},
-        "passes": [pass_row(row, m(row)) for row in db.fetch_player_passes(
+        "passes": [pass_row(row, m(row), s(row)) for row in db.fetch_player_passes(
             conn, cs_id, team_id, player_id)],
         "carries": [
             [r_coord(row["x"]), r_coord(row["y"]), r_coord(row["end_x"]),
              r_coord(row["end_y"]), 1 if row["completed"] else 0, m(row),
-             r_value(row["xt"])]
+             r_value(row["xt"]), as_int(row["minute"]), s(row)]
             for row in db.fetch_player_carries(conn, cs_id, team_id, player_id)
         ],
         "touch_zones": _zone_rows(
             db.fetch_player_touch_zones(conn, cs_id, team_id, player_id),
             "touches", index),
+        # One row per touch, [x, y, t, m, minute, s]; `t` indexes `touch_types`.
+        "touch_types": TOUCH_KEYS,
+        "touches": [
+            [r_coord(row["x"]), r_coord(row["y"]),
+             TOUCH_KEYS.index(touch_key(row["event_type"])), m(row),
+             as_int(row["minute"]), s(row)]
+            for row in db.fetch_player_touches(conn, cs_id, team_id, player_id)
+        ],
         "reception_zones": _zone_rows(
             db.fetch_player_reception_zones(conn, cs_id, team_id, player_id),
             "receptions", index),
-        "progressive_receptions": [
-            [r_coord(row["rx_x"]), r_coord(row["rx_y"]), 1 if row["rx_in_box"] else 0, m(row)]
-            for row in db.fetch_player_progressive_receptions(
+        "receptions": [
+            reception_row(row, m(row), s(row))
+            for row in db.fetch_player_receptions(
                 conn, cs_id, team_id, player_id, RECEPTION_MAX_GAP_M)
         ],
-        "shots": _shots(db.fetch_player_shots(conn, cs_id, team_id, player_id)),
-        "defence": _defence(db.fetch_player_defence(conn, cs_id, team_id, player_id), m),
+        "shots": _shots(db.fetch_player_shots(conn, cs_id, team_id, player_id), s),
+        "defence": _defence(db.fetch_player_defence(conn, cs_id, team_id, player_id), m, s),
     }
 
 
@@ -392,10 +429,8 @@ def top_ids(rows: list[dict[str, Any]], metric: str, limit: int) -> list[str]:
     return [row["sequence_id"] for row in ranked[:limit]]
 
 
-def _sequences(conn, cs_id: int, team_id: int, player_id: int,
+def _sequences(conn, team_id: int, rows: list[dict[str, Any]],
                index: dict[int, int]) -> dict[str, Any]:
-    rows = db.fetch_player_sequence_index(conn, cs_id, team_id, player_id,
-                                          SEQUENCE_MIN_EVENTS)
     season_ids = sorted(set(top_ids(rows, "xt", PLAYER_TOP_SEQUENCES))
                         | set(top_ids(rows, "vaep", PLAYER_TOP_SEQUENCES)))
     entries = match_sequences(
@@ -451,6 +486,10 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
         index = {m["match_id"]: i for i, m in enumerate(matches)}
         kpis = _kpis(role, player_id, kpi_rows, gate)
         check_against_season(player_id, matches, kpis, role, row)
+        # The chain index first: every map row points into it (`s`).
+        chain_rows = db.fetch_player_sequence_index(conn, cs_id, team_id, player_id,
+                                                    SEQUENCE_MIN_EVENTS)
+        chains = {c["sequence_id"]: i for i, c in enumerate(chain_rows)}
 
         payload = {
             "team": {
@@ -469,9 +508,9 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
             "player": _player_block(row, season),
             "matches": matches,
             "kpis": kpis,
-            "maps": _maps(conn, cs_id, team_id, player_id, index),
+            "maps": _maps(conn, cs_id, team_id, player_id, index, chains),
             "percentiles": percentiles.get((player_id, team_id)),
-            "sequences": _sequences(conn, cs_id, team_id, player_id, index),
+            "sequences": _sequences(conn, team_id, chain_rows, index),
         }
         writer.write(
             f"teams/{team_cfg.slug}/{season.slug}/players/{player_id}.json",

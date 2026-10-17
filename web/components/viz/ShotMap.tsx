@@ -35,6 +35,10 @@
  *   - **On target is now visible without hovering.** Filled/hollow alone threw
  *     away the single most-asked question of a shot map. A save and a shot
  *     into row Z now differ on the page, not only in the tooltip.
+ *
+ * On the player page (16 Oct 2026) a shot can also carry `context` (which
+ * match) and `linked`; a click on a linked shot calls `onSelect`, which
+ * opens its possession chain in the sequence block.
  */
 
 import { useRef, useState } from "react";
@@ -64,6 +68,13 @@ export interface Shot {
    */
   goal_mouth_y?: number | null;
   goal_mouth_z?: number | null;
+  /**
+   * Which match the shot is from — "J5 · LEV (L)" — when the map spans
+   * several (the player page). Drawn as a line of its own in the tooltip.
+   */
+  context?: string | null;
+  /** True when a click opens the shot's chain (`onSelect`). */
+  linked?: boolean;
 }
 
 interface ShotMapProps {
@@ -71,6 +82,8 @@ interface ShotMapProps {
   /** Which side is the published team — it gets the accent colour. */
   teamSide: "home" | "away";
   abbr: { home: string; away: string };
+  /** Called on a click on a `linked` shot. */
+  onSelect?: (shot: Shot) => void;
   className?: string;
 }
 
@@ -126,7 +139,7 @@ const GOALMOUTH_WIDTH = 96;
  * pass to place the card, which is a visible flicker under the cursor. It only
  * has to be an upper bound, and over-estimating costs one early flip.
  */
-const TOOLTIP_MAX_HEIGHT = 124;
+const TOOLTIP_MAX_HEIGHT = 152; // + the player page's match and link lines
 
 /**
  * Big shots underneath, small ones on top. Without this the drawing order is
@@ -137,7 +150,7 @@ function byDescendingXg(a: Shot, b: Shot): number {
   return b.xg - a.xg;
 }
 
-export function ShotMap({ shots, teamSide, abbr, className }: ShotMapProps) {
+export function ShotMap({ shots, teamSide, abbr, onSelect, className }: ShotMapProps) {
   const [hovered, setHovered] = useState<number | null>(null);
   const active = shots.find((s) => s.shot_id === hovered) ?? null;
   // Measured, not assumed: the tooltip needs to know how many real pixels tall
@@ -178,6 +191,7 @@ export function ShotMap({ shots, teamSide, abbr, className }: ShotMapProps) {
               style={{ cursor: "pointer" }}
               onMouseEnter={() => setHovered(shot.shot_id)}
               onMouseLeave={() => setHovered(null)}
+              onClick={onSelect && shot.linked ? () => onSelect(shot) : undefined}
             />
           );
         })}
@@ -301,9 +315,21 @@ function Tooltip({
           lineHeight: 1.5,
         }}
       >
+        {shot.context && (
+          <>
+            {shot.context}
+            <br />
+          </>
+        )}
         {shot.minute}&#39; · {shotBodyPart(shot.body_part)}
         <br />
         {dec(shot.xg, 2)} xG · {shotOutcome(shot.outcome)}
+        {shot.linked && (
+          <>
+            <br />
+            <span style={{ color: "var(--color-gold)" }}>{viz.openSequence}</span>
+          </>
+        )}
       </div>
 
       <GoalMouth shot={shot} stroke={palette.chip} />

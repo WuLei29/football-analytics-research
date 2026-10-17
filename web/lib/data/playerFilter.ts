@@ -30,6 +30,7 @@ import type {
   CarryRow,
   ReceptionRow,
   SequenceIndexRow,
+  TouchRow,
 } from "./types";
 import { PASS_FLAG } from "./types";
 
@@ -165,6 +166,10 @@ export interface DefenceMark {
   y: number;
   outcome: "won" | "lost";
   minute: number | null;
+  /** Index into `matches`. */
+  m: number;
+  /** Index into `sequences.index`; null when the event is in no drawable chain. */
+  s: number | null;
 }
 
 /** What the event map draws for the selection, caps applied. */
@@ -178,7 +183,10 @@ export interface MapView {
   carries: CarryRow[];
   touchZones: { zone_id: number; value: number }[];
   receptionZones: { zone_id: number; value: number }[];
-  progressiveReceptions: ReceptionRow[];
+  /** Every reception, one by one (the events display). */
+  receptions: ReceptionRow[];
+  /** Every touch, one by one (the events display). */
+  touches: TouchRow[];
   shots: PlayerMaps["shots"];
   defence: DefenceMark[];
   /** Totals behind each capped list ("150 DE 1,284 PASES"). */
@@ -227,11 +235,12 @@ export function mapView(file: PlayerFile, idx: Set<number> | null): MapView {
     carries: topByXt(carries, maps.caps.progressive),
     touchZones,
     receptionZones,
-    progressiveReceptions: maps.progressive_receptions.filter((r) => keep(idx, r[3])),
+    receptions: maps.receptions.filter((r) => keep(idx, r[3])),
+    touches: maps.touches.filter((r) => keep(idx, r[3])),
     shots: ids === null ? maps.shots : maps.shots.filter((s) => ids.has(s.match_id)),
     defence: maps.defence
       .filter((r: DefenceRow) => keep(idx, r[5]))
-      .map(([type, x, y, won, minute]) => ({ type, x, y, outcome: won ? "won" : "lost", minute })),
+      .map(([type, x, y, won, minute, m, s]) => ({ type, x, y, outcome: won ? "won" : "lost", minute, m, s })),
     counts: {
       passes: passes.length,
       progressive: progressiveAll.length,
