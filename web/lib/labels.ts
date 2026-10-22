@@ -672,6 +672,14 @@ export const match = {
   progressionHeading: "Progresión",
   progressionCaption: (n: number) =>
     `Los ${n} pases y conducciones progresivas de más xT`,
+  /** The hover card of one arrow: "Pase progresivo · Puado" / "57' · xT 0.124". */
+  progressionHover: {
+    pass: "Pase progresivo",
+    carry: "Conducción progresiva",
+    xt: (value: string) => `xT ${value}`,
+    failed: "Fallado",
+  },
+  progressionHint: "Pasa el cursor por una flecha para leerla",
 
   defenceHeading: "Acciones defensivas",
   defenceCaption: (n: number) =>

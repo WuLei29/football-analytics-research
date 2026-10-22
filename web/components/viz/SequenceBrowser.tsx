@@ -28,7 +28,7 @@
  * focus and Enter/Space come free, and `aria-expanded` says what the click did.
  */
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { dec } from "@/lib/format";
 import {
@@ -119,6 +119,15 @@ export function SequenceBrowser({
   const [selected, setSelected] = useState(initialIndex);
   const active = sequences[selected] ?? sequences[0] ?? null;
 
+  // A row opened from outside (the match page's maps) may be far down a list
+  // of eighty: scroll the LIST to it, not the page, which the caller scrolls.
+  const listRef = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    const list = listRef.current;
+    const row = list?.children[initialIndex] as HTMLElement | undefined;
+    if (list && row && initialIndex > 0) list.scrollTop = row.offsetTop;
+  }, [initialIndex]);
+
   /**
    * The hover card of one mark. Title "Recuperación · Calatrava (22)"; then
    * the clock (and xG on a shot); then, on the chain's first or last action, how
@@ -178,8 +187,10 @@ export function SequenceBrowser({
         </div>
 
         <ul
+          ref={listRef}
           className="flex flex-col"
           style={{
+            position: "relative",
             maxHeight: listHeight,
             overflowY: "auto",
             borderTop: "1px solid var(--color-line)",

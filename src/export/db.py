@@ -549,6 +549,7 @@ SELECT e.event_id,
        e.player_id,
        COALESCE(p.match_name, e.player_name) AS player_name,
        e.minute,
+       e.sequence_id,
        e.event_type,
        e.x, e.y, e.xg,
        e.shot_play_pattern,
@@ -621,17 +622,22 @@ def fetch_xt_zones(conn, match_id: int, team_id: int) -> list[dict[str, Any]]:
     return _rows(conn, XT_ZONES_SQL, {"match_id": match_id, "team_id": team_id})
 
 
+# `minute`, `player_name` and `sequence_id` feed the arrows' hover card and
+# the click that opens the chain (22 Oct 2026).
 PROGRESSION_SQL = """
-SELECT event_type, x, y, end_x, end_y, xt, outcome
-FROM silver.events
-WHERE match_id = %(match_id)s
-  AND team_id = %(team_id)s
-  AND event_type IN ('Pass', 'Carry')
-  AND x IS NOT NULL AND end_x IS NOT NULL
-  AND gold.is_progressive(x, y, end_x, end_y)
+SELECT e.event_type, e.x, e.y, e.end_x, e.end_y, e.xt, e.outcome,
+       e.minute, e.sequence_id,
+       COALESCE(p.match_name, e.player_name) AS player_name
+FROM silver.events e
+LEFT JOIN silver.players p ON p.player_id = e.player_id
+WHERE e.match_id = %(match_id)s
+  AND e.team_id = %(team_id)s
+  AND e.event_type IN ('Pass', 'Carry')
+  AND e.x IS NOT NULL AND e.end_x IS NOT NULL
+  AND gold.is_progressive(e.x, e.y, e.end_x, e.end_y)
 -- xT comes from a zone grid, so ties are common: without the tiebreaker the
 -- order, and which tied action makes the LIMIT, changed between runs.
-ORDER BY xt DESC NULLS LAST, json_index, event_id
+ORDER BY e.xt DESC NULLS LAST, e.json_index, e.event_id
 LIMIT %(limit)s
 """
 
@@ -659,7 +665,7 @@ def fetch_progression(conn, match_id: int, team_id: int, limit: int
 # and the 50/50 split is real, not a sampling artefact -- it is the one type
 # here that is a genuine two-sided duel. Median per team-match 102 -> 128.
 DEFENCE_SQL = """
-SELECT e.event_type, e.x, e.y, e.outcome, e.minute,
+SELECT e.event_type, e.x, e.y, e.outcome, e.minute, e.sequence_id,
        COALESCE(p.match_name, e.player_name) AS player_name
 FROM silver.events e
 LEFT JOIN silver.players p ON p.player_id = e.player_id
