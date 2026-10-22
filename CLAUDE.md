@@ -364,8 +364,7 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   **Screen 02 has the same map -> sequence click (22 Oct 2026)**: shots,
   progression and defensive actions carry `s` (index into the match file's
   `sequences[]`, null for an opponent's event or a chain under 3 actions);
-  `components/match/SequenceLink` + `MatchMaps`. Until the match files are
-  re-exported, `s` is absent and nothing links.
+  `components/match/SequenceLink` + `MatchMaps`.
   Brief `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
   spine is **settled (15 Oct 2026)**: per-role cards (README-PLAYER §4), roles
   `GK CB RB LB MID AM W ST` (`role_group`, AM = midfielder with ≥ 30% of
