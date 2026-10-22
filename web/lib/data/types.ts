@@ -374,6 +374,13 @@ export interface MatchShot {
   /** Opta's goalmouth frame (posts 45.2/54.8, crossbar 38). NOT mirrored. */
   goal_mouth_y: number | null;
   goal_mouth_z: number | null;
+  /**
+   * Index into `sequences[]` of the chain this event belongs to; null when
+   * the page cannot draw it (an opponent's event, a chain under three
+   * actions). A click on the mark opens it. Absent in files exported before
+   * 22 Oct 2026, which link nothing.
+   */
+  s?: number | null;
 }
 
 /** The 12 x 8 surface of `xt.py`, non-zero cells only (§3.3). */
@@ -402,6 +409,16 @@ export interface MatchProgression {
   end_y: number;
   xt: number | null;
   completed: boolean;
+  /** For the hover card. Absent before 22 Oct 2026, like `s`. */
+  minute?: number;
+  player?: string | null;
+  /**
+   * Index into `sequences[]` of the chain this event belongs to; null when
+   * the page cannot draw it (an opponent's event, a chain under three
+   * actions). A click on the mark opens it. Absent in files exported before
+   * 22 Oct 2026, which link nothing.
+   */
+  s?: number | null;
 }
 
 export interface MatchDefence {
@@ -414,6 +431,13 @@ export interface MatchDefence {
     outcome: "won" | "lost";
     minute: number;
     player: string | null;
+    /**
+     * Index into `sequences[]` of the chain this event belongs to; null when
+     * the page cannot draw it (an opponent's event, a chain under three
+     * actions). A click on the mark opens it. Absent in files exported before
+     * 22 Oct 2026, which link nothing.
+     */
+    s?: number | null;
   }[];
 }
 

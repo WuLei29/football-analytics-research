@@ -11,6 +11,12 @@ Reads: silver.matches, silver.events, silver.players, silver.match_lineups,
 gold.team_match_stats, gold.player_match_stats, gold.sequences.
 Writes: teams/{team}/{season}/matches/{match_id}.json.
 
+The shot, progression and defence rows carry `s`, the index into this file's
+`sequences[]` of the chain the event belongs to, or null when the page cannot
+draw that chain: an opponent's shot, or a chain under SEQUENCE_MIN_EVENTS. A
+click on the mark opens the chain in the sequence block (22 Oct 2026, as on
+the player page).
+
 Two conventions carry most of the risk in this file, both from §3:
 
   - **The event frame is per attacking team.** Every team attacks towards
@@ -26,7 +32,7 @@ from __future__ import annotations
 import logging
 import math
 from datetime import datetime
-from typing import Any
+from typing import Any, Callable
 
 from . import db
 from .config import (
@@ -51,6 +57,17 @@ PITCH_Y = 68.0
 # The four Opta event types that are a shot at goal. Everything about a shot in
 # this file -- the shot map, the `shot` action kind -- reads this set.
 SHOT_TYPES = {"Goal", "Attempt Saved", "Miss", "Post"}
+
+# An event row -> its chain's index in `sequences[]`, or None (`chain_index`).
+ChainOf = Callable[[dict[str, Any]], int | None]
+
+
+def chain_index(sequences: list[dict[str, Any]]) -> ChainOf:
+    """`s` for any event row: the position of its `sequence_id` among the
+    sequences this file ships. Only the published team's chains are there, so
+    an opponent's event, or one in a chain too short to list, gets None."""
+    index = {seq["sequence_id"]: i for i, seq in enumerate(sequences)}
+    return lambda row: index.get(row["sequence_id"])
 
 
 # ---------------------------------------------------------------------------
@@ -311,8 +328,8 @@ def _shot_outcome(row: dict[str, Any]) -> str:
     return "blocked" if row["blocked"] else "saved"
 
 
-def _shots(rows: list[dict[str, Any]], team_id: int, home_id: int
-           ) -> list[dict[str, Any]]:
+def _shots(rows: list[dict[str, Any]], team_id: int, home_id: int,
+           s: ChainOf) -> list[dict[str, Any]]:
     """Both teams, with the OPPONENT mirrored into the published team's frame.
 
     This is the only both-team figure on the site, and the only place a
@@ -343,6 +360,7 @@ def _shots(rows: list[dict[str, Any]], team_id: int, home_id: int
             # Opta's own goalmouth frame: posts at 45.2 and 54.8, crossbar 38.
             "goal_mouth_y": r_rate(row["goal_mouth_y"]),
             "goal_mouth_z": r_rate(row["goal_mouth_z"]),
+            "s": None if mirror else s(row),
         })
     return out
 
@@ -374,7 +392,7 @@ def _xt_zones(rows: list[dict[str, Any]], side: str) -> dict[str, Any]:
     }
 
 
-def _progression(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _progression(rows: list[dict[str, Any]], s: ChainOf) -> list[dict[str, Any]]:
     return [
         {
             # 'Carry' is the synthesised type_id = -1 of carries.py.
@@ -385,12 +403,15 @@ def _progression(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "end_y": r_coord(row["end_y"]),
             "xt": r_value(row["xt"]),
             "completed": row["outcome"] == "success",
+            "minute": as_int(row["minute"]),
+            "player": row["player_name"],
+            "s": s(row),
         }
         for row in rows
     ]
 
 
-def _defence(rows: list[dict[str, Any]], line_x: Any) -> dict[str, Any]:
+def _defence(rows: list[dict[str, Any]], line_x: Any, s: ChainOf) -> dict[str, Any]:
     return {
         # In the attacking frame of §3.1, so a low value is a deep line and
         # the value is drawn on a pitch attacking right, unchanged.
@@ -406,6 +427,7 @@ def _defence(rows: list[dict[str, Any]], line_x: Any) -> dict[str, Any]:
                 "outcome": "won" if row["outcome"] == "success" else "lost",
                 "minute": as_int(row["minute"]),
                 "player": row["player_name"],
+                "s": s(row),
             }
             for row in rows
         ],
@@ -814,6 +836,9 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
     sequence_events = db.fetch_sequence_events(
         conn, match_id, team_id, [row["sequence_id"] for row in sequence_rows]
     )
+    # The chain list first: the map rows point into it (`s`).
+    sequences = _sequences(sequence_rows, sequence_events)
+    s = chain_index(sequences)
 
     payload = {
         "match": _match_block(match, stats, season, team_cfg),
@@ -828,17 +853,18 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
             side,
         ),
         "totals": _totals(stats, home_id, away_id),
-        "shots": _shots(db.fetch_shots(conn, match_id), team_id, home_id),
+        "shots": _shots(db.fetch_shots(conn, match_id), team_id, home_id, s),
         "xt_grid": _xt_grid(db.fetch_xt_grid(conn, match_id, team_id), side),
         "xt_zones": _xt_zones(db.fetch_xt_zones(conn, match_id, team_id), side),
         "progression": _progression(
-            db.fetch_progression(conn, match_id, team_id, PROGRESSION_ARROWS)
+            db.fetch_progression(conn, match_id, team_id, PROGRESSION_ARROWS), s
         ),
         "defence": _defence(
             db.fetch_defensive_actions(conn, match_id, team_id),
             stats[team_id]["defensive_line_height"],
+            s,
         ),
-        "sequences": _sequences(sequence_rows, sequence_events),
+        "sequences": sequences,
         "players": _players(db.fetch_match_players(conn, match_id), home_id),
     }
 

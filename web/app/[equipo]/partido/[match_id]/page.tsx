@@ -9,9 +9,12 @@
  *        time. It is the largest file on the site (200-380 KB), which is why a
  *        match page reads its own file and never a tree of them.
  *
- * Server component. Two things on the page answer a mouse and each declares
- * its own client boundary rather than pulling the page across it: the shot map
- * (hover tooltip) and the sequence block (selection).
+ * Server component. The things on the page that answer a mouse each declare
+ * their own client boundary rather than pulling the page across it: the three
+ * event maps (hover cards) and the sequence block (selection). Since 22 Oct
+ * 2026 a click on a map mark opens its chain in the sequence block, as on the
+ * player page; `SequenceLinkProvider` carries that click across blocks 4-6,
+ * and the server sections between them pass through it unchanged.
  *
  * The header names the sides home-first, as a scoreline is written, and the
  * published club is the blue one wherever a colour distinguishes them —
@@ -21,22 +24,21 @@
 
 import Link from "next/link";
 
+import { LinkedDefence, LinkedProgression, LinkedShotMap } from "@/components/match/MatchMaps";
 import { MatchPicker } from "@/components/match/MatchPicker";
 import { MatchPlayers } from "@/components/match/MatchPlayers";
 import { MatchTotals } from "@/components/match/MatchTotals";
+import { SequenceLinkProvider } from "@/components/match/SequenceLink";
 import { Footer } from "@/components/shell/Footer";
 import { Masthead } from "@/components/shell/Masthead";
 import { Narrative } from "@/components/shell/Narrative";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { SectionHead } from "@/components/shell/SectionHead";
-import { DefensiveActions } from "@/components/viz/DefensiveActions";
 import { Legend, Ramp } from "@/components/viz/Legend";
 import { Momentum } from "@/components/viz/Momentum";
 import { PassNetwork } from "@/components/viz/PassNetwork";
-import { ProgressionArrows } from "@/components/viz/ProgressionArrows";
 import { MatchSequences } from "@/components/match/MatchSequences";
 import { SequenceLegend } from "@/components/viz/SequenceLegend";
-import { ShotMap } from "@/components/viz/ShotMap";
 import { VizDefs } from "@/components/viz/VizDefs";
 import { ZoneHeatmap } from "@/components/viz/ZoneHeatmap";
 import { matchReading } from "@/content/narratives";
@@ -245,144 +247,149 @@ export default async function MatchPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* --- Block 4: both-team shot map beside the xT surface ------------ */}
-      {/* 2.1 : 1, not 1fr : 306px. A horizontal pitch is 109 : 72 and a
-          vertical one 73 : 110, so at that ratio the two figures — the shot
-          map with its two legend rows, the zone map with its ramp — come out
-          the same height at any viewport width, and neither card has a blank
-          band under it. At the design's fixed 306px column the shot map was
-          some 250px taller than the surface beside it. */}
-      <section className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,2.1fr)_minmax(0,1fr)]">
-        <div className="card">
-          <SectionHead
-            title={copy.shotsHeading}
-            caption={copy.shotsCaption}
-            rule="none"
-            as="h3"
-          />
-          <div className="mt-2">
-            {/* Coordinates are final: the export mirrored the opponent so the
-                two sides shoot at opposite goals (§3.1). */}
-            <ShotMap
-              shots={shots}
-              teamSide={teamSide}
-              abbr={{ home: header.home.abbr, away: header.away.abbr }}
-            />
-          </div>
-          <Legend
-            rows={[
-              {
-                label: published.short_name,
-                items: [
-                  { swatch: "var(--color-blue)", text: viz.legend.shotGoal },
-                  { swatch: "rgba(11,76,158,.45)", outline: "var(--color-blue)", text: viz.legend.shotOn },
-                  { outline: "var(--color-blue)", text: viz.legend.shotOff },
-                ],
-              },
-              {
-                label: opponent.short_name,
-                items: [
-                  { swatch: "var(--color-opp-strong)", text: viz.legend.shotGoal },
-                  { swatch: "rgba(201,185,166,.60)", outline: "var(--color-faint)", text: viz.legend.shotOn },
-                  { outline: "var(--color-faint)", text: viz.legend.shotOff },
-                ],
-              },
-            ]}
-          />
-          <p className="label mt-1">{viz.legend.shotArea}</p>
-        </div>
+      {/* Blocks 4-6: a click on a map mark opens its chain in block 6. */}
+      <SequenceLinkProvider ids={file.sequences.map((s) => s.sequence_id)}>
 
-        <div className="card">
-          <SectionHead
-            title={copy.xtHeading}
-            caption={copy.xtCaption(published.short_name)}
-            rule="none"
-            as="h3"
-          />
-          <div className="mt-2">
-            {/* The 30 zones of `gold.pitch_zones`, summed by the export in
-                SQL — the same grid every other spatial block of the site
-                reads, so a zone here is the same zone as in the sequence
-                start-zone filter. The model's own 12 x 8 grid is still in
-                the file as `xt_grid` for anyone who wants it. */}
-            <ZoneHeatmap
-              cells={xt_zones.cells}
-              orientation="vertical"
+        {/* --- Block 4: both-team shot map beside the xT surface ------------ */}
+        {/* 2.1 : 1, not 1fr : 306px. A horizontal pitch is 109 : 72 and a
+            vertical one 73 : 110, so at that ratio the two figures — the shot
+            map with its two legend rows, the zone map with its ramp — come out
+            the same height at any viewport width, and neither card has a blank
+            band under it. At the design's fixed 306px column the shot map was
+            some 250px taller than the surface beside it. */}
+        <section className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,2.1fr)_minmax(0,1fr)]">
+          <div className="card">
+            <SectionHead
+              title={copy.shotsHeading}
+              caption={copy.shotsCaption}
+              rule="none"
+              as="h3"
+            />
+            <div className="mt-2">
+              {/* Coordinates are final: the export mirrored the opponent so the
+                  two sides shoot at opposite goals (§3.1). */}
+              <LinkedShotMap
+                shots={shots}
+                teamSide={teamSide}
+                abbr={{ home: header.home.abbr, away: header.away.abbr }}
+              />
+            </div>
+            <Legend
+              rows={[
+                {
+                  label: published.short_name,
+                  items: [
+                    { swatch: "var(--color-blue)", text: viz.legend.shotGoal },
+                    { swatch: "rgba(11,76,158,.45)", outline: "var(--color-blue)", text: viz.legend.shotOn },
+                    { outline: "var(--color-blue)", text: viz.legend.shotOff },
+                  ],
+                },
+                {
+                  label: opponent.short_name,
+                  items: [
+                    { swatch: "var(--color-opp-strong)", text: viz.legend.shotGoal },
+                    { swatch: "rgba(201,185,166,.60)", outline: "var(--color-faint)", text: viz.legend.shotOn },
+                    { outline: "var(--color-faint)", text: viz.legend.shotOff },
+                  ],
+                },
+              ]}
+            />
+            <p className="label mt-1">{viz.legend.shotArea}</p>
+          </div>
+
+          <div className="card">
+            <SectionHead
               title={copy.xtHeading}
-              showGrid
+              caption={copy.xtCaption(published.short_name)}
+              rule="none"
+              as="h3"
             />
+            <div className="mt-2">
+              {/* The 30 zones of `gold.pitch_zones`, summed by the export in
+                  SQL — the same grid every other spatial block of the site
+                  reads, so a zone here is the same zone as in the sequence
+                  start-zone filter. The model's own 12 x 8 grid is still in
+                  the file as `xt_grid` for anyone who wants it. */}
+              <ZoneHeatmap
+                cells={xt_zones.cells}
+                orientation="vertical"
+                title={copy.xtHeading}
+                showGrid
+              />
+            </div>
+            <Ramp low={viz.legend.low} high={viz.legend.high} />
           </div>
-          <Ramp low={viz.legend.low} high={viz.legend.high} />
-        </div>
-      </section>
+        </section>
 
-      {/* --- Block 5: progression beside the defensive actions ------------ */}
-      <section className="mt-4 grid gap-4 lg:grid-cols-2">
-        <div className="card">
-          <SectionHead
-            title={copy.progressionHeading}
-            caption={copy.progressionCaption(progression.length)}
-            rule="none"
-            as="h3"
-          />
-          <div className="mt-2">
-            <ProgressionArrows
-              actions={progression}
+        {/* --- Block 5: progression beside the defensive actions ------------ */}
+        <section className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="card">
+            <SectionHead
               title={copy.progressionHeading}
+              caption={copy.progressionCaption(progression.length)}
+              rule="none"
+              as="h3"
             />
+            <div className="mt-2">
+              <LinkedProgression
+                actions={progression}
+                title={copy.progressionHeading}
+              />
+            </div>
+            <Legend
+              items={[
+                { bar: "var(--color-blue)", text: viz.legend.progressivePass },
+                { bar: "var(--color-gold)", text: viz.legend.carry },
+              ]}
+            />
+            <p className="label mt-1">{copy.progressionHint}</p>
           </div>
-          <Legend
-            items={[
-              { bar: "var(--color-blue)", text: viz.legend.progressivePass },
-              { bar: "var(--color-gold)", text: viz.legend.carry },
-            ]}
-          />
-        </div>
 
-        <div className="card">
-          <SectionHead
-            title={copy.defenceHeading}
-            caption={copy.defenceCaption(defence.actions.length)}
-            rule="none"
-            as="h3"
-          />
-          <div className="mt-2">
-            <DefensiveActions
-              actions={defence.actions}
-              lineX={defence.line_x ?? undefined}
-              // Built from `dec()`, never typed: the decimal separator is a
-              // setting, and a caption with the digits baked in gets it wrong.
-              lineLabel={
-                defence.line_x === null
-                  ? undefined
-                  : copy.defenceLine(dec(defence.line_x, 1))
-              }
+          <div className="card">
+            <SectionHead
               title={copy.defenceHeading}
+              caption={copy.defenceCaption(defence.actions.length)}
+              rule="none"
+              as="h3"
             />
+            <div className="mt-2">
+              <LinkedDefence
+                actions={defence.actions}
+                lineX={defence.line_x ?? undefined}
+                // Built from `dec()`, never typed: the decimal separator is a
+                // setting, and a caption with the digits baked in gets it wrong.
+                lineLabel={
+                  defence.line_x === null
+                    ? undefined
+                    : copy.defenceLine(dec(defence.line_x, 1))
+                }
+                title={copy.defenceHeading}
+              />
+            </div>
+            <Legend
+              items={[
+                { swatch: "var(--color-blue)", text: viz.legend.regain, diamond: true },
+                { swatch: "var(--color-opp)", text: viz.legend.duelLost, diamond: true },
+              ]}
+            />
+            <p className="label mt-1">{viz.legend.defenceHover}</p>
           </div>
-          <Legend
-            items={[
-              { swatch: "var(--color-blue)", text: viz.legend.regain, diamond: true },
-              { swatch: "var(--color-opp)", text: viz.legend.duelLost, diamond: true },
-            ]}
-          />
-          <p className="label mt-1">{viz.legend.defenceHover}</p>
-        </div>
-      </section>
+        </section>
 
-      {/* --- Block 6: the sequence browser -------------------------------- */}
-      {/* The demo's layout, verbatim: one detailed pitch, and beside it the
-          list of every sequence of the match with three or more actions,
-          best xT first as the export ordered them, or best VAEP first when
-          the reader flips the toggle (`MatchSequences` owns that choice and
-          re-sorts). The file's `rank` (the design's "twelve best") is not
-          used here — the list IS the ranking. The entry mapping and the marks
-          legend are shared with the player page, which draws the same chains
-          (`lib/data/sequences.ts`, `SequenceLegend`). */}
-      <MatchSequences
-        sequences={file.sequences.map((s) => sequenceEntry(s))}
-        legend={<SequenceLegend />}
-      />
+        {/* --- Block 6: the sequence browser -------------------------------- */}
+        {/* The demo's layout, verbatim: one detailed pitch, and beside it the
+            list of every sequence of the match with three or more actions,
+            best xT first as the export ordered them, or best VAEP first when
+            the reader flips the toggle (`MatchSequences` owns that choice and
+            re-sorts). The file's `rank` (the design's "twelve best") is not
+            used here — the list IS the ranking. The entry mapping and the marks
+            legend are shared with the player page, which draws the same chains
+            (`lib/data/sequences.ts`, `SequenceLegend`). */}
+        <MatchSequences
+          sequences={file.sequences.map((s) => sequenceEntry(s))}
+          legend={<SequenceLegend />}
+        />
+      </SequenceLinkProvider>
 
       {/* --- Block 7: the four player boxes, both teams ------------------- */}
       <section className="mt-8">
