@@ -5,6 +5,7 @@
         "minute": 0,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "aerial",
         "x": 15.3,
         "y": 5.0
@@ -13,6 +14,7 @@
         "minute": 0,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 15.3,
         "y": 5.0
@@ -21,6 +23,7 @@
         "minute": 0,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 8.4,
         "y": 11.2
@@ -29,6 +32,7 @@
         "minute": 1,
         "outcome": "lost",
         "player": "T. Dolan",
+        "s": null,
         "type": "challenge",
         "x": 16.7,
         "y": 52.4
@@ -37,6 +41,7 @@
         "minute": 1,
         "outcome": "lost",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "challenge",
         "x": 9.7,
         "y": 54.0
@@ -45,6 +50,7 @@
         "minute": 1,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 2.7,
         "y": 39.8
@@ -53,6 +59,7 @@
         "minute": 2,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 0,
         "type": "ball_recovery",
         "x": 23.6,
         "y": 62.3
@@ -61,6 +68,7 @@
         "minute": 3,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": 15,
         "type": "clearance",
         "x": 24.8,
         "y": 14.8
@@ -69,6 +77,7 @@
         "minute": 3,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": 15,
         "type": "aerial",
         "x": 45.0,
         "y": 14.4
@@ -77,6 +86,7 @@
         "minute": 3,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 15,
         "type": "ball_recovery",
         "x": 48.1,
         "y": 16.7
@@ -85,6 +95,7 @@
         "minute": 4,
         "outcome": "lost",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "aerial",
         "x": 8.9,
         "y": 36.5
@@ -93,6 +104,7 @@
         "minute": 4,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": null,
         "type": "tackle",
         "x": 48.4,
         "y": 3.7
@@ -101,6 +113,7 @@
         "minute": 5,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 2.9,
         "y": 7.5
@@ -109,6 +122,7 @@
         "minute": 5,
         "outcome": "lost",
         "player": "Roberto Fernández",
+        "s": null,
         "type": "challenge",
         "x": 67.7,
         "y": 61.9
@@ -117,6 +131,7 @@
         "minute": 6,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 29.2,
         "y": 9.0
@@ -125,6 +140,7 @@
         "minute": 6,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 62,
         "type": "tackle",
         "x": 12.0,
         "y": 20.3
@@ -133,6 +149,7 @@
         "minute": 6,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 62,
         "type": "ball_recovery",
         "x": 16.3,
         "y": 24.1
@@ -141,6 +158,7 @@
         "minute": 7,
         "outcome": "lost",
         "player": "C. Riedel",
+        "s": null,
         "type": "tackle",
         "x": 14.7,
         "y": 7.6
@@ -149,6 +167,7 @@
         "minute": 7,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "aerial",
         "x": 10.5,
         "y": 26.2
@@ -157,6 +176,7 @@
         "minute": 7,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 10.5,
         "y": 26.2
@@ -165,6 +185,7 @@
         "minute": 7,
         "outcome": "lost",
         "player": "Javi Hernández",
+        "s": null,
         "type": "aerial",
         "x": 18.0,
         "y": 21.8
@@ -173,6 +194,7 @@
         "minute": 8,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 6.6,
         "y": 21.7
@@ -181,6 +203,7 @@
         "minute": 8,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 12.6,
         "y": 42.2
@@ -189,6 +212,7 @@
         "minute": 8,
         "outcome": "won",
         "player": "Roberto Fernández",
+        "s": null,
         "type": "clearance",
         "x": 1.8,
         "y": 43.9
@@ -197,6 +221,7 @@
         "minute": 9,
         "outcome": "won",
         "player": "Roberto Fernández",
+        "s": 25,
         "type": "aerial",
         "x": 54.2,
         "y": 13.8
@@ -205,6 +230,7 @@
         "minute": 9,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "interception",
         "x": 40.5,
         "y": 56.8
@@ -213,6 +239,7 @@
         "minute": 10,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "aerial",
         "x": 35.6,
         "y": 48.8
@@ -221,6 +248,7 @@
         "minute": 10,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 35.6,
         "y": 48.8
@@ -229,6 +257,7 @@
         "minute": 10,
         "outcome": "lost",
         "player": "C. Riedel",
+        "s": null,
         "type": "aerial",
         "x": 7.8,
         "y": 31.6
@@ -237,6 +266,7 @@
         "minute": 11,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 53,
         "type": "ball_recovery",
         "x": 16.9,
         "y": 36.2
@@ -245,6 +275,7 @@
         "minute": 12,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": 18,
         "type": "ball_recovery",
         "x": 64.0,
         "y": 24.6
@@ -253,6 +284,7 @@
         "minute": 13,
         "outcome": "won",
         "player": "Roberto Fernández",
+        "s": 5,
         "type": "aerial",
         "x": 96.7,
         "y": 31.7
@@ -261,6 +293,7 @@
         "minute": 14,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "aerial",
         "x": 48.3,
         "y": 61.7
@@ -269,6 +302,7 @@
         "minute": 14,
         "outcome": "lost",
         "player": "L. Cabrera",
+        "s": null,
         "type": "aerial",
         "x": 36.0,
         "y": 57.2
@@ -277,6 +311,7 @@
         "minute": 15,
         "outcome": "lost",
         "player": "Javi Hernández",
+        "s": null,
         "type": "challenge",
         "x": 59.0,
         "y": 46.4
@@ -285,6 +320,7 @@
         "minute": 15,
         "outcome": "won",
         "player": "M. Dmitrović",
+        "s": null,
         "type": "clearance",
         "x": 15.9,
         "y": 46.9
@@ -293,6 +329,7 @@
         "minute": 15,
         "outcome": "won",
         "player": "Roberto Fernández",
+        "s": 37,
         "type": "ball_recovery",
         "x": 64.4,
         "y": 42.0
@@ -301,6 +338,7 @@
         "minute": 17,
         "outcome": "lost",
         "player": "C. Riedel",
+        "s": null,
         "type": "aerial",
         "x": 28.6,
         "y": 14.0
@@ -309,6 +347,7 @@
         "minute": 19,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 6.6,
         "y": 59.8
@@ -317,6 +356,7 @@
         "minute": 19,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "aerial",
         "x": 36.8,
         "y": 47.9
@@ -325,6 +365,7 @@
         "minute": 20,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": 11,
         "type": "ball_recovery",
         "x": 49.3,
         "y": 35.8
@@ -333,6 +374,7 @@
         "minute": 20,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": null,
         "type": "aerial",
         "x": 81.2,
         "y": 7.8
@@ -341,6 +383,7 @@
         "minute": 20,
         "outcome": "lost",
         "player": "Edu Expósito",
+        "s": null,
         "type": "aerial",
         "x": 93.0,
         "y": 13.2
@@ -349,6 +392,7 @@
         "minute": 20,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": null,
         "type": "ball_recovery",
         "x": 45.5,
         "y": 61.2
@@ -357,6 +401,7 @@
         "minute": 21,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "aerial",
         "x": 4.5,
         "y": 32.5
@@ -365,6 +410,7 @@
         "minute": 21,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 38,
         "type": "clearance",
         "x": 4.5,
         "y": 32.5
@@ -373,6 +419,7 @@
         "minute": 24,
         "outcome": "lost",
         "player": "Marcos Fernández",
+        "s": null,
         "type": "aerial",
         "x": 50.6,
         "y": 13.0
@@ -381,6 +428,7 @@
         "minute": 26,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": 54,
         "type": "clearance",
         "x": 11.7,
         "y": 16.5
@@ -389,6 +437,7 @@
         "minute": 26,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 54,
         "type": "ball_recovery",
         "x": 5.9,
         "y": 5.2
@@ -397,6 +446,7 @@
         "minute": 27,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "clearance",
         "x": 28.9,
         "y": 51.7
@@ -405,6 +455,7 @@
         "minute": 27,
         "outcome": "lost",
         "player": "T. Dolan",
+        "s": null,
         "type": "challenge",
         "x": 3.6,
         "y": 61.9
@@ -413,6 +464,7 @@
         "minute": 29,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": 71,
         "type": "ball_recovery",
         "x": 60.3,
         "y": 46.9
@@ -421,6 +473,7 @@
         "minute": 30,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "blocked_pass",
         "x": 83.2,
         "y": 65.5
@@ -429,6 +482,7 @@
         "minute": 31,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": null,
         "type": "aerial",
         "x": 75.3,
         "y": 46.8
@@ -437,6 +491,7 @@
         "minute": 31,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "interception",
         "x": 46.8,
         "y": 34.1
@@ -445,6 +500,7 @@
         "minute": 31,
         "outcome": "lost",
         "player": "C. Riedel",
+        "s": null,
         "type": "challenge",
         "x": 23.1,
         "y": 27.1
@@ -453,6 +509,7 @@
         "minute": 34,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": null,
         "type": "clearance",
         "x": 2.1,
         "y": 54.2
@@ -461,6 +518,7 @@
         "minute": 35,
         "outcome": "lost",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "aerial",
         "x": 7.5,
         "y": 55.8
@@ -469,6 +527,7 @@
         "minute": 35,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "clearance",
         "x": 7.6,
         "y": 55.2
@@ -477,6 +536,7 @@
         "minute": 35,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": null,
         "type": "blocked_pass",
         "x": 14.5,
         "y": 62.0
@@ -485,6 +545,7 @@
         "minute": 35,
         "outcome": "lost",
         "player": "O. El Hilali",
+        "s": null,
         "type": "tackle",
         "x": 39.1,
         "y": 5.7
@@ -493,6 +554,7 @@
         "minute": 35,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": 47,
         "type": "ball_recovery",
         "x": 41.3,
         "y": 13.9
@@ -501,6 +563,7 @@
         "minute": 35,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": 10,
         "type": "tackle",
         "x": 26.6,
         "y": 20.4
@@ -509,6 +572,7 @@
         "minute": 35,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": 10,
         "type": "ball_recovery",
         "x": 22.8,
         "y": 18.2
@@ -517,6 +581,7 @@
         "minute": 36,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "ball_recovery",
         "x": 55.4,
         "y": 59.2
@@ -525,6 +590,7 @@
         "minute": 37,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 20.2,
         "y": 54.8
@@ -533,6 +599,7 @@
         "minute": 38,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 80,
         "type": "blocked_pass",
         "x": 39.4,
         "y": 17.3
@@ -541,6 +608,7 @@
         "minute": 38,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": 80,
         "type": "ball_recovery",
         "x": 54.9,
         "y": 27.0
@@ -549,6 +617,7 @@
         "minute": 38,
         "outcome": "lost",
         "player": "T. Dolan",
+        "s": null,
         "type": "aerial",
         "x": 93.3,
         "y": 38.8
@@ -557,6 +626,7 @@
         "minute": 40,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": 55,
         "type": "ball_recovery",
         "x": 76.9,
         "y": 10.3
@@ -565,6 +635,7 @@
         "minute": 40,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 4.9,
         "y": 37.8
@@ -573,6 +644,7 @@
         "minute": 41,
         "outcome": "lost",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "aerial",
         "x": 6.2,
         "y": 49.2
@@ -581,6 +653,7 @@
         "minute": 41,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": null,
         "type": "clearance",
         "x": 13.1,
         "y": 36.7
@@ -589,6 +662,7 @@
         "minute": 41,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "aerial",
         "x": 11.6,
         "y": 56.7
@@ -597,6 +671,7 @@
         "minute": 41,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": 9,
         "type": "ball_recovery",
         "x": 11.9,
         "y": 52.0
@@ -605,6 +680,7 @@
         "minute": 43,
         "outcome": "lost",
         "player": "Marcos Fernández",
+        "s": null,
         "type": "challenge",
         "x": 56.4,
         "y": 33.3
@@ -613,6 +689,7 @@
         "minute": 43,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 4.6,
         "y": 14.4
@@ -621,6 +698,7 @@
         "minute": 43,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": null,
         "type": "clearance",
         "x": 14.0,
         "y": 30.4
@@ -629,6 +707,7 @@
         "minute": 43,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": null,
         "type": "clearance",
         "x": 14.2,
         "y": 36.0
@@ -637,6 +716,7 @@
         "minute": 44,
         "outcome": "lost",
         "player": "Edu Expósito",
+        "s": null,
         "type": "aerial",
         "x": 72.4,
         "y": 38.5
@@ -645,6 +725,7 @@
         "minute": 44,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 64,
         "type": "aerial",
         "x": 67.3,
         "y": 24.6
@@ -653,6 +734,7 @@
         "minute": 45,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": null,
         "type": "ball_recovery",
         "x": 24.7,
         "y": 57.4
@@ -661,6 +743,7 @@
         "minute": 45,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": 27,
         "type": "ball_recovery",
         "x": 47.5,
         "y": 35.3
@@ -669,6 +752,7 @@
         "minute": 46,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": 56,
         "type": "ball_recovery",
         "x": 42.0,
         "y": 28.1
@@ -677,6 +761,7 @@
         "minute": 46,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": 67,
         "type": "ball_recovery",
         "x": 42.2,
         "y": 42.6
@@ -685,6 +770,7 @@
         "minute": 46,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "aerial",
         "x": 33.3,
         "y": 43.2
@@ -693,6 +779,7 @@
         "minute": 46,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 19,
         "type": "clearance",
         "x": 33.3,
         "y": 43.2
@@ -701,6 +788,7 @@
         "minute": 47,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": 19,
         "type": "ball_recovery",
         "x": 52.8,
         "y": 34.5
@@ -709,6 +797,7 @@
         "minute": 47,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "tackle",
         "x": 23.4,
         "y": 3.8
@@ -717,6 +806,7 @@
         "minute": 48,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 69,
         "type": "tackle",
         "x": 20.9,
         "y": 3.5
@@ -725,6 +815,7 @@
         "minute": 48,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 69,
         "type": "ball_recovery",
         "x": 30.2,
         "y": 3.1
@@ -733,6 +824,7 @@
         "minute": 49,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 8.2,
         "y": 33.8
@@ -741,6 +833,7 @@
         "minute": 49,
         "outcome": "lost",
         "player": "Javi Hernández",
+        "s": null,
         "type": "tackle",
         "x": 25.1,
         "y": 4.6
@@ -749,6 +842,7 @@
         "minute": 50,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 4,
         "type": "ball_recovery",
         "x": 36.0,
         "y": 15.9
@@ -757,6 +851,7 @@
         "minute": 50,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 81,
         "type": "tackle",
         "x": 37.4,
         "y": 55.9
@@ -765,6 +860,7 @@
         "minute": 50,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 81,
         "type": "ball_recovery",
         "x": 39.9,
         "y": 55.4
@@ -773,6 +869,7 @@
         "minute": 52,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 21,
         "type": "clearance",
         "x": 11.3,
         "y": 36.2
@@ -781,6 +878,7 @@
         "minute": 52,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 21,
         "type": "clearance",
         "x": 13.1,
         "y": 50.9
@@ -789,6 +887,7 @@
         "minute": 52,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": 21,
         "type": "ball_recovery",
         "x": 29.9,
         "y": 46.6
@@ -797,6 +896,7 @@
         "minute": 53,
         "outcome": "lost",
         "player": "Marcos Fernández",
+        "s": null,
         "type": "aerial",
         "x": 74.0,
         "y": 22.7
@@ -805,6 +905,7 @@
         "minute": 53,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 78,
         "type": "ball_recovery",
         "x": 61.0,
         "y": 52.8
@@ -813,6 +914,7 @@
         "minute": 54,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 63,
         "type": "ball_recovery",
         "x": 20.9,
         "y": 58.9
@@ -821,6 +923,7 @@
         "minute": 54,
         "outcome": "lost",
         "player": "Marcos Fernández",
+        "s": null,
         "type": "aerial",
         "x": 62.3,
         "y": 40.0
@@ -829,6 +932,7 @@
         "minute": 54,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 17,
         "type": "interception",
         "x": 24.8,
         "y": 24.3
@@ -837,6 +941,7 @@
         "minute": 55,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": null,
         "type": "blocked_pass",
         "x": 74.9,
         "y": 8.3
@@ -845,6 +950,7 @@
         "minute": 55,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": 13,
         "type": "ball_recovery",
         "x": 67.5,
         "y": 28.2
@@ -853,6 +959,7 @@
         "minute": 56,
         "outcome": "lost",
         "player": "Roberto Fernández",
+        "s": null,
         "type": "aerial",
         "x": 70.0,
         "y": 20.5
@@ -861,6 +968,7 @@
         "minute": 58,
         "outcome": "won",
         "player": "Edu Expósito",
+        "s": 57,
         "type": "clearance",
         "x": 19.0,
         "y": 22.4
@@ -869,6 +977,7 @@
         "minute": 58,
         "outcome": "won",
         "player": "T. Dolan",
+        "s": 49,
         "type": "ball_recovery",
         "x": 31.5,
         "y": 11.8
@@ -877,6 +986,7 @@
         "minute": 59,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 82,
         "type": "clearance",
         "x": 10.3,
         "y": 39.1
@@ -885,6 +995,7 @@
         "minute": 59,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": 82,
         "type": "clearance",
         "x": 16.4,
         "y": 48.7
@@ -893,6 +1004,7 @@
         "minute": 59,
         "outcome": "won",
         "player": "Marcos Fernández",
+        "s": 82,
         "type": "clearance",
         "x": 25.5,
         "y": 40.7
@@ -901,6 +1013,7 @@
         "minute": 60,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "clearance",
         "x": 20.7,
         "y": 54.2
@@ -909,6 +1022,7 @@
         "minute": 60,
         "outcome": "lost",
         "player": "O. El Hilali",
+        "s": null,
         "type": "challenge",
         "x": 29.0,
         "y": 4.4
@@ -917,6 +1031,7 @@
         "minute": 61,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": null,
         "type": "tackle",
         "x": 15.5,
         "y": 11.7
@@ -925,6 +1040,7 @@
         "minute": 61,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "aerial",
         "x": 5.4,
         "y": 27.9
@@ -933,6 +1049,7 @@
         "minute": 61,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 5.4,
         "y": 27.9
@@ -941,6 +1058,7 @@
         "minute": 63,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 26.2,
         "y": 41.0
@@ -949,6 +1067,7 @@
         "minute": 63,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": null,
         "type": "interception",
         "x": 26.5,
         "y": 6.9
@@ -957,6 +1076,7 @@
         "minute": 63,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 83,
         "type": "tackle",
         "x": 9.2,
         "y": 2.4
@@ -965,6 +1085,7 @@
         "minute": 63,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 83,
         "type": "ball_recovery",
         "x": 10.7,
         "y": 2.9
@@ -973,6 +1094,7 @@
         "minute": 63,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 58,
         "type": "blocked_pass",
         "x": 24.9,
         "y": 4.4
@@ -981,6 +1103,7 @@
         "minute": 65,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 59,
         "type": "ball_recovery",
         "x": 14.4,
         "y": 5.9
@@ -989,6 +1112,7 @@
         "minute": 65,
         "outcome": "lost",
         "player": "O. El Hilali",
+        "s": null,
         "type": "tackle",
         "x": 11.7,
         "y": 6.7
@@ -997,6 +1121,7 @@
         "minute": 66,
         "outcome": "won",
         "player": "Gabriel Moscardo",
+        "s": 36,
         "type": "ball_recovery",
         "x": 48.4,
         "y": 15.6
@@ -1005,6 +1130,7 @@
         "minute": 66,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": 41,
         "type": "clearance",
         "x": 30.7,
         "y": 18.8
@@ -1013,6 +1139,7 @@
         "minute": 67,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": 41,
         "type": "ball_recovery",
         "x": 46.1,
         "y": 16.9
@@ -1021,6 +1148,7 @@
         "minute": 68,
         "outcome": "lost",
         "player": "Gabriel Moscardo",
+        "s": null,
         "type": "tackle",
         "x": 45.4,
         "y": 44.1
@@ -1029,6 +1157,7 @@
         "minute": 68,
         "outcome": "lost",
         "player": "Javi Hernández",
+        "s": null,
         "type": "challenge",
         "x": 40.2,
         "y": 10.1
@@ -1037,6 +1166,7 @@
         "minute": 69,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 21.7,
         "y": 21.6
@@ -1045,6 +1175,7 @@
         "minute": 69,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "clearance",
         "x": 27.3,
         "y": 55.1
@@ -1053,6 +1184,7 @@
         "minute": 71,
         "outcome": "lost",
         "player": "Roberto Fernández",
+        "s": null,
         "type": "aerial",
         "x": 74.0,
         "y": 11.0
@@ -1061,6 +1193,7 @@
         "minute": 71,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 40.1,
         "y": 22.5
@@ -1069,6 +1202,7 @@
         "minute": 72,
         "outcome": "won",
         "player": "Gabriel Moscardo",
+        "s": null,
         "type": "tackle",
         "x": 26.8,
         "y": 22.6
@@ -1077,6 +1211,7 @@
         "minute": 72,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 9.4,
         "y": 22.1
@@ -1085,6 +1220,7 @@
         "minute": 73,
         "outcome": "won",
         "player": "Gabriel Moscardo",
+        "s": null,
         "type": "clearance",
         "x": 15.6,
         "y": 43.7
@@ -1093,6 +1229,7 @@
         "minute": 73,
         "outcome": "lost",
         "player": "Roberto Fernández",
+        "s": null,
         "type": "challenge",
         "x": 28.8,
         "y": 16.6
@@ -1101,6 +1238,7 @@
         "minute": 73,
         "outcome": "lost",
         "player": "Javi Hernández",
+        "s": null,
         "type": "challenge",
         "x": 29.4,
         "y": 25.2
@@ -1109,6 +1247,7 @@
         "minute": 73,
         "outcome": "won",
         "player": "Javi Hernández",
+        "s": 45,
         "type": "ball_recovery",
         "x": 33.6,
         "y": 27.5
@@ -1117,6 +1256,7 @@
         "minute": 74,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 13.9,
         "y": 37.0
@@ -1125,6 +1265,7 @@
         "minute": 74,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 10.9,
         "y": 34.7
@@ -1133,6 +1274,7 @@
         "minute": 75,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 13.8,
         "y": 26.0
@@ -1141,6 +1283,7 @@
         "minute": 77,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 8.3,
         "y": 30.1
@@ -1149,6 +1292,7 @@
         "minute": 77,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 7.6,
         "y": 33.5
@@ -1157,6 +1301,7 @@
         "minute": 77,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 3.8,
         "y": 27.3
@@ -1165,6 +1310,7 @@
         "minute": 81,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "interception",
         "x": 31.1,
         "y": 18.0
@@ -1173,6 +1319,7 @@
         "minute": 82,
         "outcome": "lost",
         "player": "Pere Milla",
+        "s": null,
         "type": "aerial",
         "x": 75.9,
         "y": 14.2
@@ -1181,6 +1328,7 @@
         "minute": 82,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": 50,
         "type": "ball_recovery",
         "x": 22.2,
         "y": 60.7
@@ -1189,6 +1337,7 @@
         "minute": 83,
         "outcome": "won",
         "player": "Cala",
+        "s": 61,
         "type": "interception",
         "x": 21.6,
         "y": 7.5
@@ -1197,6 +1346,7 @@
         "minute": 85,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 8.9,
         "y": 25.2
@@ -1205,6 +1355,7 @@
         "minute": 85,
         "outcome": "won",
         "player": "O. El Hilali",
+        "s": null,
         "type": "clearance",
         "x": 6.6,
         "y": 21.9
@@ -1213,6 +1364,7 @@
         "minute": 85,
         "outcome": "lost",
         "player": "Pere Milla",
+        "s": null,
         "type": "tackle",
         "x": 20.6,
         "y": 12.5
@@ -1221,6 +1373,7 @@
         "minute": 86,
         "outcome": "won",
         "player": "C. Riedel",
+        "s": null,
         "type": "clearance",
         "x": 23.2,
         "y": 27.1
@@ -1229,6 +1382,7 @@
         "minute": 86,
         "outcome": "lost",
         "player": "Cala",
+        "s": null,
         "type": "aerial",
         "x": 60.0,
         "y": 37.1
@@ -1237,6 +1391,7 @@
         "minute": 87,
         "outcome": "won",
         "player": "Urko González de Zárate",
+        "s": null,
         "type": "clearance",
         "x": 5.2,
         "y": 19.4
@@ -1245,6 +1400,7 @@
         "minute": 87,
         "outcome": "lost",
         "player": "Cala",
+        "s": null,
         "type": "tackle",
         "x": 29.8,
         "y": 14.1
@@ -1253,6 +1409,7 @@
         "minute": 87,
         "outcome": "won",
         "player": "Pere Milla",
+        "s": null,
         "type": "ball_recovery",
         "x": 34.4,
         "y": 9.7
@@ -1261,6 +1418,7 @@
         "minute": 89,
         "outcome": "lost",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "aerial",
         "x": 30.9,
         "y": 62.6
@@ -1269,6 +1427,7 @@
         "minute": 89,
         "outcome": "won",
         "player": "Cala",
+        "s": 35,
         "type": "blocked_pass",
         "x": 30.0,
         "y": 32.3
@@ -1277,6 +1436,7 @@
         "minute": 89,
         "outcome": "won",
         "player": "Pere Milla",
+        "s": 35,
         "type": "ball_recovery",
         "x": 46.6,
         "y": 33.3
@@ -1285,6 +1445,7 @@
         "minute": 89,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": null,
         "type": "clearance",
         "x": 9.0,
         "y": 35.9
@@ -1293,6 +1454,7 @@
         "minute": 89,
         "outcome": "won",
         "player": "Roger Hinojo",
+        "s": null,
         "type": "clearance",
         "x": 12.8,
         "y": 40.5
@@ -1301,6 +1463,7 @@
         "minute": 91,
         "outcome": "won",
         "player": "Pere Milla",
+        "s": 23,
         "type": "aerial",
         "x": 67.0,
         "y": 13.9
@@ -1309,6 +1472,7 @@
         "minute": 92,
         "outcome": "won",
         "player": "L. Cabrera",
+        "s": 84,
         "type": "clearance",
         "x": 22.7,
         "y": 49.0
@@ -1317,6 +1481,7 @@
         "minute": 92,
         "outcome": "won",
         "player": "Bryan Zaragoza",
+        "s": 84,
         "type": "ball_recovery",
         "x": 46.2,
         "y": 63.9
@@ -1324,7 +1489,7 @@
     ],
     "line_x": 26.1
   },
-  "generated_at": "2026-10-16T21:08:09Z",
+  "generated_at": "2026-10-22T21:31:42Z",
   "match": {
     "away": {
       "abbr": "ESP",
@@ -2510,6 +2675,9 @@
       "end_x": 96.7,
       "end_y": 31.7,
       "kind": "pass",
+      "minute": 13,
+      "player": "T. Dolan",
+      "s": 5,
       "x": 94.9,
       "xt": 0.223,
       "y": 63.0
@@ -2519,6 +2687,9 @@
       "end_x": 100.4,
       "end_y": 29.0,
       "kind": "pass",
+      "minute": 36,
+      "player": "O. El Hilali",
+      "s": 2,
       "x": 96.2,
       "xt": 0.223,
       "y": 2.8
@@ -2528,6 +2699,9 @@
       "end_x": 99.2,
       "end_y": 33.7,
       "kind": "pass",
+      "minute": 2,
+      "player": "Marcos Fernández",
+      "s": 0,
       "x": 98.9,
       "xt": 0.211,
       "y": 16.6
@@ -2537,6 +2711,9 @@
       "end_x": 101.5,
       "end_y": 35.4,
       "kind": "pass",
+      "minute": 16,
+      "player": "O. El Hilali",
+      "s": 1,
       "x": 98.2,
       "xt": 0.211,
       "y": 15.3
@@ -2546,6 +2723,9 @@
       "end_x": 92.5,
       "end_y": 36.6,
       "kind": "carry",
+      "minute": 50,
+      "player": "T. Dolan",
+      "s": 4,
       "x": 78.5,
       "xt": 0.084,
       "y": 17.3
@@ -2555,6 +2735,9 @@
       "end_x": 90.6,
       "end_y": 30.2,
       "kind": "pass",
+      "minute": 64,
+      "player": "Edu Expósito",
+      "s": 3,
       "x": 84.8,
       "xt": 0.073,
       "y": 34.5
@@ -2564,6 +2747,9 @@
       "end_x": 94.1,
       "end_y": 32.8,
       "kind": "pass",
+      "minute": 80,
+      "player": "L. Cabrera",
+      "s": 6,
       "x": 92.0,
       "xt": 0.053,
       "y": 25.0
@@ -2573,6 +2759,9 @@
       "end_x": 97.0,
       "end_y": 45.6,
       "kind": "carry",
+      "minute": 88,
+      "player": "Bryan Zaragoza",
+      "s": 7,
       "x": 75.6,
       "xt": 0.04,
       "y": 57.6
@@ -2582,6 +2771,9 @@
       "end_x": 88.1,
       "end_y": 12.6,
       "kind": "pass",
+      "minute": 35,
+      "player": "Marcos Fernández",
+      "s": 10,
       "x": 37.2,
       "xt": 0.028,
       "y": 26.0
@@ -2591,6 +2783,9 @@
       "end_x": 98.9,
       "end_y": 16.9,
       "kind": "pass",
+      "minute": 2,
+      "player": "O. El Hilali",
+      "s": 0,
       "x": 63.8,
       "xt": 0.028,
       "y": 12.5
@@ -2600,6 +2795,9 @@
       "end_x": 98.2,
       "end_y": 15.3,
       "kind": "pass",
+      "minute": 16,
+      "player": "Edu Expósito",
+      "s": 1,
       "x": 65.3,
       "xt": 0.027,
       "y": 20.3
@@ -2609,6 +2807,9 @@
       "end_x": 100.5,
       "end_y": 47.1,
       "kind": "pass",
+      "minute": 42,
+      "player": "Javi Hernández",
+      "s": null,
       "x": 104.7,
       "xt": 0.027,
       "y": 0.4
@@ -2618,6 +2819,9 @@
       "end_x": 101.6,
       "end_y": 23.3,
       "kind": "pass",
+      "minute": 80,
+      "player": "Edu Expósito",
+      "s": null,
       "x": 104.5,
       "xt": 0.027,
       "y": 0.3
@@ -2627,6 +2831,9 @@
       "end_x": 91.8,
       "end_y": 56.6,
       "kind": "carry",
+      "minute": 64,
+      "player": "T. Dolan",
+      "s": 3,
       "x": 72.6,
       "xt": 0.019,
       "y": 65.6
@@ -2636,6 +2843,9 @@
       "end_x": 100.5,
       "end_y": 58.3,
       "kind": "pass",
+      "minute": 42,
+      "player": "Edu Expósito",
+      "s": 12,
       "x": 85.8,
       "xt": 0.019,
       "y": 64.5
@@ -2645,6 +2855,9 @@
       "end_x": 98.4,
       "end_y": 54.5,
       "kind": "carry",
+      "minute": 55,
+      "player": "T. Dolan",
+      "s": 13,
       "x": 85.2,
       "xt": 0.019,
       "y": 62.5
@@ -2654,6 +2867,9 @@
       "end_x": 99.6,
       "end_y": 58.5,
       "kind": "carry",
+      "minute": 78,
+      "player": "Cala",
+      "s": 8,
       "x": 79.5,
       "xt": 0.019,
       "y": 59.6
@@ -2663,6 +2879,9 @@
       "end_x": 79.5,
       "end_y": 59.6,
       "kind": "pass",
+      "minute": 78,
+      "player": "Gabriel Moscardo",
+      "s": 8,
       "x": 32.5,
       "xt": 0.017,
       "y": 56.2
@@ -2672,6 +2891,9 @@
       "end_x": 78.5,
       "end_y": 17.3,
       "kind": "pass",
+      "minute": 50,
+      "player": "O. El Hilali",
+      "s": 4,
       "x": 25.3,
       "xt": 0.016,
       "y": 4.4
@@ -2681,6 +2903,9 @@
       "end_x": 79.3,
       "end_y": 15.1,
       "kind": "pass",
+      "minute": 3,
+      "player": "Javi Hernández",
+      "s": 15,
       "x": 44.9,
       "xt": 0.015,
       "y": 19.9
@@ -2690,6 +2915,9 @@
       "end_x": 75.6,
       "end_y": 53.1,
       "kind": "carry",
+      "minute": 41,
+      "player": "Javi Hernández",
+      "s": 9,
       "x": 35.0,
       "xt": 0.014,
       "y": 63.7
@@ -2699,6 +2927,9 @@
       "end_x": 81.0,
       "end_y": 3.3,
       "kind": "pass",
+      "minute": 38,
+      "player": "C. Riedel",
+      "s": 14,
       "x": 50.3,
       "xt": 0.013,
       "y": 25.0
@@ -2708,6 +2939,9 @@
       "end_x": 95.1,
       "end_y": 11.1,
       "kind": "carry",
+      "minute": 20,
+      "player": "O. El Hilali",
+      "s": 11,
       "x": 87.4,
       "xt": 0.013,
       "y": 1.8
@@ -2717,6 +2951,9 @@
       "end_x": 76.0,
       "end_y": 54.2,
       "kind": "pass",
+      "minute": 45,
+      "player": "L. Cabrera",
+      "s": 24,
       "x": 31.1,
       "xt": 0.013,
       "y": 43.2
@@ -2726,6 +2963,9 @@
       "end_x": 75.6,
       "end_y": 57.6,
       "kind": "pass",
+      "minute": 88,
+      "player": "M. Dmitrović",
+      "s": 7,
       "x": 35.8,
       "xt": 0.012,
       "y": 15.3
@@ -2735,6 +2975,9 @@
       "end_x": 85.6,
       "end_y": 37.0,
       "kind": "pass",
+      "minute": 64,
+      "player": "Edu Expósito",
+      "s": 3,
       "x": 77.8,
       "xt": 0.011,
       "y": 38.6
@@ -2744,6 +2987,9 @@
       "end_x": 78.9,
       "end_y": 33.1,
       "kind": "pass",
+      "minute": 29,
+      "player": "T. Dolan",
+      "s": 39,
       "x": 71.3,
       "xt": 0.011,
       "y": 50.3
@@ -2753,6 +2999,9 @@
       "end_x": 65.6,
       "end_y": 62.5,
       "kind": "pass",
+      "minute": 22,
+      "player": "Roger Hinojo",
+      "s": 38,
       "x": 13.5,
       "xt": 0.01,
       "y": 65.1
@@ -2762,6 +3011,9 @@
       "end_x": 67.0,
       "end_y": 13.9,
       "kind": "pass",
+      "minute": 91,
+      "player": "M. Dmitrović",
+      "s": 23,
       "x": 4.5,
       "xt": 0.009,
       "y": 28.0
@@ -2771,6 +3023,9 @@
       "end_x": 70.0,
       "end_y": 11.3,
       "kind": "carry",
+      "minute": 55,
+      "player": "O. El Hilali",
+      "s": 17,
       "x": 59.4,
       "xt": 0.009,
       "y": 1.7
@@ -15695,6 +15950,7 @@
       "outcome": "goal",
       "play_pattern": "regular_play",
       "player_id": 2359,
+      "s": 0,
       "shot_id": 1,
       "side": "away",
       "x": 99.2,
@@ -15712,6 +15968,7 @@
       "outcome": "off_target",
       "play_pattern": "regular_play",
       "player_id": 1718,
+      "s": null,
       "shot_id": 2,
       "side": "home",
       "x": 8.9,
@@ -15729,6 +15986,7 @@
       "outcome": "off_target",
       "play_pattern": "regular_play",
       "player_id": 1719,
+      "s": null,
       "shot_id": 3,
       "side": "home",
       "x": 14.8,
@@ -15746,6 +16004,7 @@
       "outcome": "off_target",
       "play_pattern": "regular_play",
       "player_id": 1726,
+      "s": null,
       "shot_id": 4,
       "side": "home",
       "x": 7.8,
@@ -15763,6 +16022,7 @@
       "outcome": "goal",
       "play_pattern": "regular_play",
       "player_id": 2359,
+      "s": 1,
       "shot_id": 5,
       "side": "away",
       "x": 101.5,
@@ -15780,6 +16040,7 @@
       "outcome": "saved",
       "play_pattern": "regular_play",
       "player_id": 2376,
+      "s": null,
       "shot_id": 6,
       "side": "away",
       "x": 76.5,
@@ -15797,6 +16058,7 @@
       "outcome": "saved",
       "play_pattern": "set_piece",
       "player_id": 1701,
+      "s": null,
       "shot_id": 7,
       "side": "home",
       "x": 9.2,
@@ -15814,6 +16076,7 @@
       "outcome": "off_target",
       "play_pattern": "regular_play",
       "player_id": 1726,
+      "s": null,
       "shot_id": 8,
       "side": "home",
       "x": 22.0,
@@ -15831,6 +16094,7 @@
       "outcome": "off_target",
       "play_pattern": "regular_play",
       "player_id": 2376,
+      "s": 55,
       "shot_id": 9,
       "side": "away",
       "x": 77.1,
@@ -15848,6 +16112,7 @@
       "outcome": "blocked",
       "play_pattern": "from_corner",
       "player_id": 2366,
+      "s": null,
       "shot_id": 10,
       "side": "away",
       "x": 86.0,
@@ -15865,6 +16130,7 @@
       "outcome": "saved",
       "play_pattern": "regular_play",
       "player_id": 1719,
+      "s": null,
       "shot_id": 11,
       "side": "home",
       "x": 32.0,
@@ -15882,6 +16148,7 @@
       "outcome": "blocked",
       "play_pattern": "regular_play",
       "player_id": 1715,
+      "s": null,
       "shot_id": 12,
       "side": "home",
       "x": 20.2,
@@ -15899,6 +16166,7 @@
       "outcome": "blocked",
       "play_pattern": "free_kick",
       "player_id": 1715,
+      "s": null,
       "shot_id": 13,
       "side": "home",
       "x": 19.6,
@@ -15916,6 +16184,7 @@
       "outcome": "off_target",
       "play_pattern": "set_piece",
       "player_id": 4230,
+      "s": null,
       "shot_id": 14,
       "side": "home",
       "x": 20.8,
@@ -15933,6 +16202,7 @@
       "outcome": "blocked",
       "play_pattern": "from_corner",
       "player_id": 2346,
+      "s": null,
       "shot_id": 15,
       "side": "away",
       "x": 101.6,
@@ -15950,6 +16220,7 @@
       "outcome": "saved",
       "play_pattern": "set_piece",
       "player_id": 4230,
+      "s": null,
       "shot_id": 16,
       "side": "home",
       "x": 9.7,
@@ -15967,6 +16238,7 @@
       "outcome": "saved",
       "play_pattern": "throw_in_set_piece",
       "player_id": 1715,
+      "s": null,
       "shot_id": 17,
       "side": "home",
       "x": 19.8,
