@@ -299,6 +299,16 @@ Project skills in `.claude/skills/`. Consult them before working in their area:
 | **`vaep-model`** | `vaep.py`, `_build_features`, `models/vaep/*.json`, `vaep_*` columns. **Read before any feature-set change** (it's mirrored in the training repo). |
 | **`karpathy-guidelines`** | Writing, reviewing or refactoring code: surgical changes, stated assumptions, verifiable success criteria. |
 | **`grill-me`** | The user asks to stress-test a plan or design. |
+| **`impeccable`** | Redesigning, critiquing, auditing or polishing the look of `web/` (third-party, v4.7.0). Its launcher downloads a binary on first run; it reads/writes `PRODUCT.md` and `DESIGN.md` at the repo root. |
+| **`better-accessibility`** | Keyboard, focus, ARIA, contrast and screen-reader checks on `web/` (third-party). |
+| **`better-colors`** | Palette, token naming and contrast measurement for `web/` (third-party). |
+
+**Precedence in `web/`:** the third-party design skills above (`impeccable`,
+`better-*`) are for critique, redesign and review. Until the handoff is
+formally superseded, `web/design_handoff_espanyol_analytics/` stays the visual
+authority and `espanyol-viz-design` the chart authority; a redesign that
+replaces the handoff must update or mark it superseded in the same change.
+Metric definitions always come from `football-metrics`.
 
 Path-scoped rules in `.claude/rules/` load automatically when you work in
 `src/silver`, `src/gold` + `sql`, `src/export` or `web/`. They hold the
