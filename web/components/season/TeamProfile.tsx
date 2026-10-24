@@ -1,11 +1,10 @@
 /**
- * TeamProfile — the four cards of screen 01, block 5: Defensa, Posesión,
- * Progresión, Finalización, six metrics each.
+ * TeamProfile — the four panels of screen 01's profile: Defensa, Posesión,
+ * Progresión, Finalización, six metrics each. Pizarra world.
  *
- * Renders: `repeat(4, 1fr)` cards. Each card head is a 15px title with a mono
- * "VS LA LIGA" caption over a hard ink rule; each row is a label and a value
- * on the first line, then a 5px percentile track and a two-digit percentile on
- * the second.
+ * Renders: four panels (one column on a phone, two at sm, four at xl). Each
+ * is an 18px title and six rows: a label and a value on the first line, then
+ * a round-capped percentile track and the percentile on the second.
  * Props: `metrics` (the 24 descriptors, in the design order) and `values` (one
  * club's `{v, p}` per key).
  * Data:  `league/{season}/table.json` -> `profile` (md/WEB_DATA.md §5.1),
@@ -24,6 +23,17 @@
  * A null percentile is a real state, not a bug: the export drops it when the
  * 20 clubs show no variance on a metric, because a full green bar on a column
  * where everyone scores the same is a lie (§5.1).
+ *
+ * Changed from the handoff (24 Oct 2026, DESIGN.md "Chart colour mapping"):
+ * the tiers keep the handoff's green / amber / red (top ≥ 70, bottom < 45;
+ * the author found them clearer than blue / slate / red, 24 Oct 2026), on a
+ * chalk track drawn as a marker stroke;
+ * no ink rule under the title and no "VS LA LIGA" caption, which the section
+ * line already says. The thresholds are unchanged.
+ *
+ * `PercentileCard` and `PercentileRow` below are still the HANDOFF drawing:
+ * screen 03 (`components/player/PlayerPercentiles.tsx`) imports them and has
+ * not moved to Pizarra yet. They go, or move to Pizarra, when it does.
  */
 
 import type { ReactNode } from "react";
@@ -38,6 +48,18 @@ import type { ProfileCard, ProfileMetric, ProfileValue } from "@/lib/data/types"
  * read as a second accent rather than as "average"; gold is the traffic-light
  * middle and the only warm token the palette has.
  */
+/** Pizarra tiers: the handoff's thresholds and its green / amber / red. */
+function tierColor(p: number): string {
+  if (p >= 70) return "var(--color-good)";
+  if (p >= 45) return "var(--color-fair-fill)";
+  return "var(--color-bad)";
+}
+
+/** The same tier as text: the amber fill is too light to read (`fair`). */
+function tierText(p: number): string {
+  return p >= 45 && p < 70 ? "var(--color-fair)" : tierColor(p);
+}
+
 function percentileColor(p: number): string {
   if (p >= 70) return "var(--color-pos)";
   if (p >= 45) return "var(--color-gold)";
@@ -54,28 +76,69 @@ export function TeamProfile({
   values: Record<string, ProfileValue>;
 }) {
   return (
-    <div className="mt-4 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {CARDS.map((card) => (
-        <PercentileCard key={card} title={profileCardLabels[card]} unit={copy.profileVs}>
-          {metrics
-            .filter((m) => m.card === card)
-            .map((metric) => {
-              const value = values[metric.key] ?? { v: null, p: null };
-              return (
-                <PercentileRow
-                  key={metric.key}
-                  label={label(metricLabels, metric.key)}
-                  printed={
-                    value.v === null
-                      ? copy.percentileEmpty
-                      : `${dec(value.v, metric.decimals as 0 | 1 | 2 | 3)}${metric.scale === "pct" ? " %" : ""}`
-                  }
-                  percentile={value.p}
-                />
-              );
-            })}
-        </PercentileCard>
+        <article key={card} className="rounded-panel bg-panel p-6">
+          <h3 className="text-[18px] font-semibold tracking-[-0.01em]">{profileCardLabels[card]}</h3>
+          <dl className="mt-5 flex flex-col gap-4">
+            {metrics
+              .filter((m) => m.card === card)
+              .map((metric) => {
+                const value = values[metric.key] ?? { v: null, p: null };
+                return (
+                  <ProfileRow
+                    key={metric.key}
+                    label={label(metricLabels, metric.key)}
+                    printed={
+                      value.v === null
+                        ? copy.percentileEmpty
+                        : `${dec(value.v, metric.decimals as 0 | 1 | 2 | 3)}${metric.scale === "pct" ? " %" : ""}`
+                    }
+                    percentile={value.p}
+                  />
+                );
+              })}
+          </dl>
+        </article>
       ))}
+    </div>
+  );
+}
+
+/**
+ * One profile row: label and value, then the track. A null percentile keeps
+ * the track empty and prints "—": no confident bar that describes nothing.
+ */
+function ProfileRow({ label: text, printed, percentile }: { label: string; printed: string; percentile: number | null }) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-3 text-[14px]">
+        <dt className="text-slate">{text}</dt>
+        <dd className="shrink-0 font-medium text-ink tabular-nums">{printed}</dd>
+      </div>
+      <div className="mt-1.5 flex items-center gap-3">
+        <svg viewBox="0 0 100 6" preserveAspectRatio="none" className="h-1.5 flex-1" aria-hidden="true">
+          <line x1="3" y1="3" x2="97" y2="3" stroke="var(--color-chalk)" strokeWidth="6" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+          {percentile !== null && percentile > 0 && (
+            <line
+              x1="3"
+              y1="3"
+              x2={3 + (94 * percentile) / 100}
+              y2="3"
+              stroke={tierColor(percentile)}
+              strokeWidth="6"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          )}
+        </svg>
+        <span
+          className="w-[3ch] text-right text-[13px] tabular-nums"
+          style={{ color: percentile === null ? "var(--color-slate)" : tierText(percentile) }}
+        >
+          {percentile === null ? copy.percentileEmpty : percentile}
+        </span>
+      </div>
     </div>
   );
 }

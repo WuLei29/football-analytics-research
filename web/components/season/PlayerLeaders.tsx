@@ -1,9 +1,10 @@
 /**
- * PlayerLeaders — the four boxes of screen 01, block 6: Goles, xT por 90,
- * Pases progresivos, Conducciones al último tercio.
+ * PlayerLeaders — the four lists of screen 01: Goles, VAEP por 90, Pases
+ * progresivos, Conducciones al último tercio. Pizarra world.
  *
- * Renders: `repeat(4, 1fr)` cards of six rows each, sorted descending, with
- * row 1 inverted (blue ground, white text) and the rest on `--paper`.
+ * Renders: four panels (one column on a phone, two at sm, four at xl) of six
+ * rows each, sorted descending. Row 1 is a team-filled row with white text
+ * (hover team-deep); the rest sit on the panel and step to panel-deep on hover and focus.
  * Props: `leaders` — `overview.leaders`, four entries in the export order.
  * Data:  `overview.json` -> `leaders[]` (md/WEB_DATA.md §6), from
  *        `gold.player_season_stats` for that club and season.
@@ -13,6 +14,11 @@
  * a static export has no useful 404, so a row whose page was not built stays
  * inert — the posture the masthead takes with its `ready` flags. Before the
  * export has run its `squad` step the set is empty and no row links.
+ *
+ * Changed from the handoff (24 Oct 2026): no ink rule under the title, the
+ * rows are the board's rounded rows rather than paper chips, mono became the
+ * board face with tabular figures, and hover is one tone step (DESIGN.md
+ * "The Tone Step Rule") instead of an opacity fade.
  */
 
 import Link from "next/link";
@@ -36,61 +42,55 @@ export function PlayerLeaders({
   linkable: ReadonlySet<number>;
 }) {
   return (
-    <div className="mt-4 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {leaders.map((box) => (
-        <article key={box.key} className="card">
-          <h3 className="border-b border-ink pb-2 font-display text-[15px] font-bold">
-            {label(leaderLabels, box.key)}
-          </h3>
+        <article key={box.key} className="rounded-panel bg-panel p-6">
+          <h3 className="text-[18px] font-semibold tracking-[-0.01em]">{label(leaderLabels, box.key)}</h3>
 
-          <ol className="mt-3 flex flex-col gap-1.5">
+          <ol className="-mx-3 mt-4 flex flex-col gap-1">
             {box.rows.map((row, index) => {
               const leading = index === 0;
 
               const content = (
                 <>
-                  <span className="flex min-w-0 items-baseline gap-2">
+                  <span className="flex min-w-0 items-baseline gap-2.5">
                     <span
-                      className="font-mono text-[8px]"
-                      style={{ color: leading ? "rgba(246,239,230,.7)" : "var(--color-faint)" }}
+                      className={`w-[2ch] shrink-0 text-right text-[13px] tabular-nums ${leading ? "text-white/80" : "text-slate"}`}
                     >
                       {row.shirt_number ?? index + 1}
                     </span>
                     {/* Names are long ("Luca Warrick Daeovie Koleosho"), the
-                        cards are a quarter of the page wide, and the value on
-                        the right must never be pushed out: one line, clipped. */}
-                    <span className="truncate font-sans text-[12px] font-medium">
+                        panels are a quarter of the page wide, and the value
+                        on the right must never be pushed out: one line,
+                        clipped. */}
+                    <span className={`truncate text-[15px] ${leading ? "font-semibold" : "font-medium"}`}>
                       {row.name}
                     </span>
                   </span>
 
-                  <span className="shrink-0 font-mono text-[12px] font-medium">
+                  <span className={`shrink-0 text-[15px] tabular-nums ${leading ? "font-semibold" : ""}`}>
                     {Number.isInteger(row.value) ? num(row.value) : dec(row.value, 2)}
                   </span>
                 </>
               );
 
-              const rowClass =
-                "flex items-baseline justify-between gap-2 rounded-chip px-2.5 py-1.5";
-              const rowStyle = {
-                background: leading ? "var(--color-blue)" : "var(--color-paper)",
-                color: leading ? "var(--color-on-dark)" : undefined,
-              };
+              const rowClass = `flex items-baseline justify-between gap-3 rounded-row px-3 py-2 ${
+                leading ? "bg-team text-white" : ""
+              }`;
 
               return (
                 <li key={row.player_id}>
                   {linkable.has(row.player_id) ? (
                     <Link
                       href={routes.player(team, season, row.player_id)}
-                      className={`${rowClass} hover:opacity-85`}
-                      style={rowStyle}
+                      className={`${rowClass} transition-colors ${
+                        leading ? "hover:bg-team-deep focus-visible:bg-team-deep" : "hover:bg-panel-deep focus-visible:bg-panel-deep"
+                      }`}
                     >
                       {content}
                     </Link>
                   ) : (
-                    <div className={rowClass} style={rowStyle}>
-                      {content}
-                    </div>
+                    <div className={rowClass}>{content}</div>
                   )}
                 </li>
               );
