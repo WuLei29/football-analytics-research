@@ -1,8 +1,15 @@
 /*
  * globals.css — the design system, as code.
  *
- * Source of truth: web/design_handoff_espanyol_analytics/README.md,
- * section "Design Tokens". Every value below is copied from that table; if the
+ * TWO WORLDS, while the site moves from one to the other (24 Oct 2026):
+ *   - the handoff tokens (paper, card, blue, Outfit/Figtree/DM Mono), still
+ *     used by every page under app/(handoff)/;
+ *   - the Pizarra tokens further down (board, panel, team, rival, Hanken
+ *     Grotesk), whose source of truth is DESIGN.md at the repo root, used by
+ *     the landing and by each page as it moves over.
+ *
+ * Handoff section — source of truth: web/design_handoff_espanyol_analytics/
+ * README.md, section "Design Tokens". Every value below is copied from that table; if the
  * two ever disagree, the handoff wins and this file is wrong.
  *
  * Tailwind v4 has no `tailwind.config.ts`. Tokens are declared here inside
@@ -59,6 +66,39 @@
   --text-narrative: 20px;
   --text-narrative--line-height: 1.42;
 
+  /* ---- Pizarra: the tactics-board world (DESIGN.md) ---------------------
+     White enamel board, flat panels one tone step apart. Blue says "this is
+     Espanyol"; green / amber / red say good / middling / bad (revised 24 Oct
+     2026 at the author's request: the verdict colours read faster than two
+     inks). The one highlight panel per screen is a light Espanyol blue
+     ("spot"); only the nav and the headline figures are raised. */
+  --color-board: #f4f5f2; /* the board: page ground                       */
+  --color-panel: #eceee9; /* a panel pinned on the board                  */
+  --color-panel-deep: #e3e6e0; /* hover/focus step, secondary pills         */
+  --color-chalk: #d3d6d0; /* zero lines, empty tracks, pitch lines        */
+  --color-slate: #5a5f66; /* secondary text (5.2:1 on panel-deep)         */
+  --color-team: #123e8c; /* Espanyol: identity, selection, the club's line */
+  --color-team-deep: #0c2d68; /* hover of team-filled controls              */
+  --color-rival: #c4372b; /* the opponent's marks (4.6:1 on panel)        */
+  --color-spot: #dfe7f4; /* the one light-blue highlight panel           */
+  --color-spot-deep: #cfdbef; /* hover/focus step on spot                   */
+  --color-spot-line: #a3b6d8; /* pitch lines and ticks on spot              */
+  --color-spot-text: #3f4f6e; /* secondary text on spot (6.6:1)             */
+  --color-good: #17703f; /* good: positive delta, top tier (4.9:1 on spot) */
+  --color-fair: #8a6414; /* middling, as text (4.3:1 on spot, 4.6 panel)  */
+  --color-fair-fill: #e0b33a; /* middling, as a fill (bars, draw disc)      */
+  --color-bad: #b3261e; /* bad: negative delta, bottom tier (5.3:1 spot) */
+
+  /* Raised: only the floating nav and the headline figure cards. */
+  --shadow-raised: 0 1px 2px rgb(18 28 45 / 0.06), 0 8px 24px -6px rgb(18 28 45 / 0.12);
+  --shadow-float: 0 1px 2px rgb(18 28 45 / 0.08), 0 14px 36px -10px rgb(18 28 45 / 0.28);
+
+  --font-board: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
+
+  --radius-board: 28px;
+  --radius-panel: 22px;
+  --radius-row: 18px;
+
   /* ---- Shape ------------------------------------------------------------ */
   --radius-card: 14px;
   --radius-chip: 10px;
@@ -85,6 +125,38 @@
   ::selection {
     background: var(--color-blue);
     color: var(--color-on-dark);
+  }
+
+  /* ---- Pizarra pages: their root element carries .pizarra --------------- */
+  html:has(.pizarra) {
+    background: var(--color-board);
+    scrollbar-color: var(--color-chalk) var(--color-board);
+  }
+
+  .pizarra {
+    font-family: var(--font-board);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pizarra ::selection {
+    background: var(--color-team);
+    color: #fff;
+  }
+
+  .pizarra :focus-visible {
+    outline: 2px solid var(--color-team);
+    outline-offset: 3px;
+  }
+
+  .pizarra a {
+    text-underline-offset: 3px;
+  }
+
+  .pizarra :is(p, li, figcaption) {
+    text-wrap: pretty;
   }
 }
 
@@ -120,6 +192,37 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-mid);
+  }
+
+  /* Pizarra: a possession drawn as a marker stroke (ChainPitch). The path has
+     pathLength=1, so one dash of length 1 is the whole stroke. */
+  .chain-stroke {
+    stroke-dasharray: 1;
+    animation: chain-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes chain-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chain-stroke {
+      animation: none;
+    }
+  }
+
+  /* Keyboard focus on a shot mark: a ring drawn inside the figure. */
+  .shot-ring {
+    opacity: 0;
+  }
+
+  g:focus-visible > .shot-ring {
+    opacity: 1;
   }
 
   /* Dek / note: the italic Figtree line beside a heading. */

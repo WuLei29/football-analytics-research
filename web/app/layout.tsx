@@ -1,12 +1,14 @@
 /**
  * layout.tsx — the root layout: the <html> document every page is rendered
- * into, the three fonts, and the page padding of the design.
+ * into, and the fonts.
  *
- * Renders: <html lang="es"> with the font variables attached, and a <body>
- * whose only job is the 34px/40px/60px page padding from the handoff.
+ * Renders: <html lang="es"> with the font variables attached, and a bare
+ * <body>. The handoff's page padding moved to `app/(handoff)/layout.tsx` on
+ * 24 Oct 2026: the landing (the new "Pizarra" world) runs its photo edge to
+ * edge and draws its own frame.
  * Props: `children` — the page.
  *
- * The three faces are loaded with `next/font/google`, which downloads them at
+ * The faces are loaded with `next/font/google`, which downloads them at
  * BUILD time and self-hosts the files. Nothing is fetched from Google when a
  * reader opens the site: no third-party request, no layout shift while a font
  * swaps in. Each face exposes a CSS variable, and `app/globals.css` maps those
@@ -14,7 +16,7 @@
  */
 
 import type { Metadata } from "next";
-import { DM_Mono, Figtree, Outfit } from "next/font/google";
+import { DM_Mono, Figtree, Hanken_Grotesk, Outfit } from "next/font/google";
 
 import { site } from "@/lib/labels";
 
@@ -45,6 +47,17 @@ const dmMono = DM_Mono({
   display: "swap",
 });
 
+/**
+ * The one face of the Pizarra world (landing first, the other pages as they
+ * move over): figures at 300, text at 400-500, headings at 600. Variable, so
+ * one file covers every weight.
+ */
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: site.name,
@@ -69,14 +82,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${outfit.variable} ${figtree.variable} ${dmMono.variable}`}
+      className={`${outfit.variable} ${figtree.variable} ${dmMono.variable} ${hanken.variable}`}
     >
-      {/* Page padding from the handoff: 34px top, 40px sides, 60px bottom.
-          Desktop-first and fluid, as the design is (WEB_PLAN.md §3.1); the
-          mobile collapse pass is Phase 6. */}
-      <body className="mx-auto max-w-[1440px] px-5 pt-6 pb-14 md:px-10 md:pt-[34px] md:pb-[60px]">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

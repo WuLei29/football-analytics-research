@@ -1,21 +1,16 @@
 # `public/brand/`
 
-The two image slots of the hero. Both are empty on purpose
-(`md/WEB_PLAN.md` §9.4 decision C), and the layout is designed to work with
-either one missing.
+The site's images. Nothing ships here whose rights are not clear.
 
-| Slot | Status | Why |
+| File / slot | Status | Why |
 |---|---|---|
-| Hero photo | **empty** | Only a photo whose rights you hold may ship — taken by you, or Creative Commons with attribution. `web/resources/banner.jpg` has unconfirmed provenance and is deliberately not wired up. |
-| Club crest | **not shipped, and not coming** | The crest is a trademark of RCD Espanyol. A monogram tile stands in its place, and the site states that it is unaffiliated. |
+| `estadio-rcde-2400.jpg`, `estadio-rcde-1200.jpg` | **shipped** (24 Oct 2026) | The stadium photo of the Pizarra world (landing). Wikimedia Commons, [EstadioRCDE Pano.jpg](https://commons.wikimedia.org/wiki/File:EstadioRCDE_Pano.jpg) by Elemaki, **CC BY 3.0**, cropped (4 % left, 6.5 % right, removing two white video boards) and resized from 3978 px. The licence requires the credit, which the landing footer shows (`lib/brand.ts` → `stadiumPhoto.credit`). The origin is also embedded in each JPEG's comment field. |
+| Handoff hero photo (`brand.heroPhoto`) | **empty** | The pages still in the handoff world render their masthead on the navy ground. Left alone on purpose: those pages are redesigned in the new world rather than patched. |
+| Club crest | **not shipped, and not coming** | The crest is a trademark of RCD Espanyol. The site states that it is unaffiliated. |
 
-To add a photo you own:
+`web/resources/banner.jpg` has unconfirmed provenance and is deliberately not
+used anywhere.
 
-1. Drop the file here, e.g. `public/brand/hero.jpg` (~1600×600, it sits behind
-   a dark scrim so detail in the shadows is wasted).
-2. In `web/lib/brand.ts`, set `heroPhoto: "/brand/hero.jpg"`.
-3. If it is Creative Commons, fill `heroPhotoCredit` with the attribution the
-   licence requires.
-
-With `heroPhoto` left `null` the hero renders on the navy ground the scrim was
-designed over. That is the intended fallback, not a degraded state.
+To add another photo: only one you took, or Creative Commons with
+attribution. Resize it (2400 and 1200 px wide is enough), drop it here, wire it
+through `lib/brand.ts` with its credit, and show the credit wherever it appears.

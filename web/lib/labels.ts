@@ -52,6 +52,97 @@ export const home = {
   throughDate: (date: string) => `Datos hasta el ${date}`,
 } as const;
 
+/**
+ * The landing, `/`, in the Pizarra world (24 Oct 2026). Every sentence with a
+ * number in it is built from the data, never typed: the headline states two
+ * ranks side by side and leaves the judgement to the reader (and to
+ * `content/narratives.ts`, which is where a judgement belongs).
+ */
+export const landing = {
+  navLabel: "Navegación principal",
+  homeLink: "Inicio",
+  /** "15º con 7 puntos." */
+  headline: (position: number, points: number) =>
+    `${position}º con ${points} ${points === 1 ? "punto" : "puntos"}.`,
+  /** The second line, in blue: the same club, ranked by xG difference. */
+  xgLine: (rank: number) => `En diferencia de xG,\u00a0${rank}º.`,
+  /** "7 partidos de la temporada 2026/2027: 2 victorias, 1 empate y 4 derrotas; 10 goles a favor y 10 en contra." */
+  record: (
+    played: number,
+    label: string,
+    won: number,
+    drawn: number,
+    lost: number,
+    gf: number,
+    ga: number,
+  ) =>
+    `${played} ${played === 1 ? "partido" : "partidos"} de la temporada ${label}: ` +
+    `${won} ${won === 1 ? "victoria" : "victorias"}, ${drawn} ${drawn === 1 ? "empate" : "empates"} ` +
+    `y ${lost} ${lost === 1 ? "derrota" : "derrotas"}; ${gf} goles a favor y ${ga} en contra.`,
+  figurePoints: "puntos",
+  figureXg: "diferencia de xG",
+  figurePossession: "posesión",
+  rankOf: (rank: number, of: number) => `${rank}º de ${of}`,
+  trendCaption: "xG a favor menos xG en contra, partido a partido",
+  trendTitle: (n: number) =>
+    `Diferencia de xG de cada uno de los ${n} partidos: por encima de la línea, el Espanyol generó más que su rival.`,
+  ctaSeason: "Ver la temporada",
+  ctaLatest: (title: string) => `Último partido: ${title}`,
+  byline: "Análisis de",
+  linkedin: "LinkedIn",
+  github: "GitHub",
+  status: (matchday: number, date: string) => `Datos hasta la jornada ${matchday} · ${date}`,
+  /** Shown when the current season has no match yet and the page falls back. */
+  previousSeasonNote: (label: string) => `La nueva temporada aún no ha empezado: esto es ${label}.`,
+
+  indexHeading: "Cada nivel abre el siguiente",
+  indexDek: "De la tabla al partido, del partido a la posesión, de la posesión al jugador.",
+  soon: "Pronto",
+  /** The current level in the numbered exits at the foot of a page. */
+  exitsCurrent: "Estás aquí",
+  chapters: {
+    season: { title: "Temporada", dek: (seasons: number) => `Tabla, forma, xG y xT · ${seasons} temporadas` },
+    match: { title: "Partido", dek: (n: number) => `${n} partidos con mapa de tiros y momentum` },
+    sequence: { title: "Secuencia", dek: "Cada posesión, acción por acción" },
+    player: { title: "Jugador", dek: (n: number) => `${n} jugadores · percentiles por rol` },
+    method: { title: "Método", dek: "Cómo se calcula cada métrica" },
+  },
+  /** Thumbnail descriptions, for screen readers. */
+  thumbSeason: "Diferencia de xG por partido",
+  thumbMatch: "Tiros del último partido",
+  thumbSequence: "Una posesión del último partido",
+  thumbPlayer: (name: string, value: string, what: string) => `${name}, ${value} ${what}`,
+
+  latestHeading: "El último partido, tiro a tiro",
+  latestMeta: (matchday: number, date: string) => `Jornada ${matchday} · ${date}`,
+  latestHint:
+    "Pasa el cursor por un tiro del Espanyol, o llega a él con el teclado: " +
+    "se dibuja la posesión que lo creó.",
+  shotLabel: (minute: number, name: string, xg: string, outcome: string) =>
+    `Minuto ${minute}, ${name}, xG ${xg}, ${outcome}. Dibujar la posesión.`,
+  rivalShotsLabel: (abbr: string, n: number) => `${n} tiros de ${abbr}, en rojo`,
+  unlinkedShotsLabel: (n: number) => `${n} tiros más del Espanyol, sin posesión dibujable`,
+  legendUnlinked: "Más claros: tiros sin posesión dibujable (menos de tres acciones)",
+  chainCaption: (minute: number, name: string, xg: string, outcome: string) =>
+    `${minute}' · ${name} · xG ${xg} · ${outcome}`,
+  chainDetail: (events: number, passes: number, seconds: number) =>
+    `Posesión de ${events} acciones y ${passes} ${passes === 1 ? "pase" : "pases"}, ${seconds} s`,
+  chainXt: (xt: string) => ` · xT ${xt}`,
+  noChain: "Este tiro no tiene una posesión dibujable (menos de tres acciones).",
+  legendTeam: (abbr: string) => `${abbr}: relleno = gol, medio = a puerta, hueco = fuera`,
+  legendRival: (abbr: string) => `${abbr}`,
+  legendSize: "Tamaño = xG",
+  openMatch: "Ver el partido completo",
+
+  authorHeading: "Quién está detrás",
+  authorBody:
+    "Este sitio es la última pieza de una cadena construida de principio a fin: " +
+    "ingesta de los datos de eventos de Opta, una base de datos por capas, " +
+    "modelos propios de xG, xT y VAEP, secuencias de posesión y fases de juego, " +
+    "y estas visualizaciones.",
+  repoLink: "El código, en GitHub",
+} as const;
+
 /* --------------------------------------------------------------------------
  * Provenance. Shown in the footer and expanded on the methodology page.
  * WEB_PLAN.md §6: the source is named, the derivations are the author's.
@@ -609,6 +700,48 @@ export const season = {
 
   readingEyebrow: "LECTURA DE LA TEMPORADA",
   matchesLinkN: (n: string) => `Ver los ${n} partidos`,
+
+  /* ---- Pizarra (24 Oct 2026) ------------------------------------------ */
+  /** The h1 before matchday 1, when there is no position to state. */
+  titleEmpty: (team: string, label: string) => `El ${team} en ${label}.`,
+  seasonsNav: "Temporadas",
+  figuresHeading: "Las cifras de la temporada",
+  /** Under a figure: "1.0 por partido". */
+  rankOf: (rank: number, of: number) => `${rank}º de ${of}`,
+  readingHeading: "La lectura",
+  spotHeading: "Partido a partido",
+  spotDek: "Cada resultado con su xG, y debajo la tendencia: partido a partido y en media móvil.",
+  formHeadingN: (n: number) => (n === 1 ? "El primer partido" : `Los últimos ${n}`),
+  /** The result badge, in the letters of the table's G / E / P columns. */
+  resultLetter: { W: "G", D: "E", L: "P" },
+  resultWord: { W: "victoria", D: "empate", L: "derrota" },
+  formLegend: "Verde: victoria · ámbar: empate · rojo: derrota · barras: xG a favor (azul) y en contra (rojo)",
+  /** Accessible name of one form cell (it is a link to the match). */
+  formCellLabel: (
+    matchday: number,
+    opponent: string,
+    home: boolean,
+    result: string,
+    gf: number,
+    ga: number,
+    xgd: string,
+  ) =>
+    `Jornada ${matchday}, ${home ? "en casa" : "fuera"} ante ${opponent}: ` +
+    `${result} ${gf}–${ga}, xG neto ${xgd}. Abrir el partido.`,
+  /* The trend chart (SeasonTrend). */
+  trendXg: "xG",
+  trendXt: "xT",
+  trendSwitch: "Métrica del gráfico",
+  trendLegend: (window: number) => `Barras: diferencia de cada partido · línea: media de ${window}`,
+  trendChartLabel: (metric: string, n: number) =>
+    `Diferencia de ${metric} de ${n} partidos. Las flechas izquierda y derecha recorren la temporada.`,
+  trendMatchdayShort: "J",
+  trendMatchday: (n: number) => `Jornada ${n}`,
+  trendForAgainst: (metric: string) => `${metric} a favor – en contra`,
+  trendRolling: (window: number) => `Media de ${window} partidos`,
+  trendRollingNone: (window: number) => `empieza en el partido ${window}`,
+  trendHint: "Pasa el cursor o toca una barra para leer el partido; con el teclado, usa las flechas.",
+  zoneLegend: "Barra verde: Champions (1–4) y Europa League (5) · roja: descenso",
 } as const;
 
 /* --------------------------------------------------------------------------

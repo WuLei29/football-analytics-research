@@ -1,5 +1,14 @@
 # Handoff: RCD Espanyol Analytics Platform
 
+> **Being superseded (24 Oct 2026).** The site is moving to a new visual world,
+> "Pizarra" (the tactics board): see `DESIGN.md` at the repo root and the direction
+> contract in `.impeccable/surfaces/web-app-page-tsx.md`. The landing `/` is the first
+> page built in it. Until each remaining page moves (screens 01–03, the match list,
+> `/demo`, all under `web/app/(handoff)/`), this handoff stays the visual authority
+> **for those pages only**. Chart marks and encodings keep coming from the
+> `espanyol-viz-design` skill in both worlds; only their colours change. When the
+> last page moves, mark this file fully superseded.
+
 ## Overview
 A five-page football analytics web app built on Opta event data for RCD Espanyol. It is a portfolio-grade
 analytics product: season overview, match analysis, player profile, sequence laboratory, and match-group

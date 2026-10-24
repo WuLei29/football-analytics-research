@@ -78,7 +78,7 @@ the browser, and pages never query a database.
 
 - Add a seeded fixture to `web/lib/viz/fixtures.ts`, typed with the component's
   exported interface.
-- Add a card to `web/app/demo/page.tsx`. The layer has to look right in
+- Add a card to `web/app/(handoff)/demo/page.tsx`. The layer has to look right in
   isolation before it touches a page.
 
 ## 5. Component

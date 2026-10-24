@@ -18,9 +18,14 @@ use the `new-viz` skill.
   screen 03's match filter** (16 Oct 2026): KPIs are summed from per-match
   parts (`lib/data/playerFilter.ts`, mirrored and checked in
   `src/export/player.py`), and filtered sequences fetch their match files.
-- **Visual authority**: `design_handoff_espanyol_analytics/README.md` (+
-  `README-PLAYER.md` for screen 03). Use the `:root` tokens; never hard-code a
-  hex the handoff names.
+- **Two visual worlds while the site moves over (24 Oct 2026).** The landing
+  `app/page.tsx` (and every page moved out of `app/(handoff)/`) is the new
+  **Pizarra** world: `DESIGN.md` at the repo root, tokens `board`/`panel`/
+  `team`/`rival`/`spot`/`good`/`fair`/`bad` in `globals.css`, root element `.pizarra`, components in
+  `components/landing/` and `components/shell/` (PillNav, Arrow, Exits,
+  BoardFooter). Pages still under `app/(handoff)/` keep the handoff
+  (`design_handoff_espanyol_analytics/README.md`, + `README-PLAYER.md` for screen
+  03). Use the tokens of the page's own world; never hard-code a hex either names.
 - **No Spanish strings in components.** They go in `lib/labels.ts`; numbers go
   through `lib/format.ts`.
 - **Every chart composes on `<Pitch>`.** Geometry and flips live in

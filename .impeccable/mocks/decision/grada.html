@@ -1,0 +1,45 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--deep:#0A1630;--b1:#0D3F8F;--b2:#164FA8;--b3:#2A62BD;--w:#FFFFFF;--soft:#B8CCEF}
+html,body{width:1440px;height:900px;overflow:hidden;background:var(--b1);color:var(--w);font-family:Archivo,sans-serif}
+.photo{position:absolute;inset:0 0 auto 0;height:360px;background:url(../../../web/resources/EstadioRCDE_Pano.jpg) center 40%/cover}
+.photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,63,143,0) 30%,#0D3F8F 100%)}
+.pill{position:absolute;top:22px;left:50%;transform:translateX(-50%);display:flex;gap:26px;align-items:center;background:rgba(10,22,48,.72);border-radius:999px;padding:8px 8px 8px 22px;font-size:14px;font-weight:500;z-index:3}
+.pill .go{background:#fff;color:var(--b1);border-radius:999px;padding:9px 16px;font-weight:700}
+.wrap{position:absolute;left:40px;right:40px;top:210px;bottom:28px;display:grid;grid-template-columns:1.55fr 1fr;gap:14px;z-index:2}
+.block{background:var(--b2);border-radius:20px;padding:30px 34px}
+.lab{font-size:13px;color:var(--soft);font-weight:500}
+.mosaic{font-stretch:125%;font-weight:900;font-size:150px;letter-spacing:-.02em;line-height:.85;margin-top:12px}
+.mosaic small{font-size:40px;font-weight:700}
+h1{font-size:30px;font-weight:600;letter-spacing:-.02em;margin-top:18px}
+.figs{display:flex;gap:44px;margin-top:22px}
+.figs b{display:block;font-size:44px;font-weight:300;letter-spacing:-.03em}
+.figs small{font-size:13px;color:var(--soft)}
+.btn{display:inline-block;margin-top:24px;background:#fff;color:var(--b1);border-radius:999px;padding:13px 22px;font-weight:700}
+.idx{display:grid;grid-template-rows:repeat(5,1fr);gap:8px}
+.sec{background:var(--b3);border-radius:16px;padding:12px 20px;display:flex;align-items:center;gap:18px}
+.sec .n{font-stretch:125%;font-weight:900;font-size:30px;width:56px}
+.sec h3{font-size:19px;font-weight:700}.sec p{font-size:13px;color:var(--soft)}
+.deep{background:var(--deep)}
+</style></head><body>
+<div class="photo"></div>
+<div class="pill"><b>Espanyol Analytics</b><span>Temporada</span><span>Partidos</span><span>Plantilla</span><span>Método</span><span class="go">2026/27</span></div>
+<div class="wrap">
+ <section class="block">
+  <span class="lab">2026/27 · tras 7 partidos · datos hasta J7</span>
+  <div class="mosaic">15º <small>7 pts</small></div>
+  <h1>El xG lo pone 6º: la tabla aún no lo refleja.</h1>
+  <div class="figs"><div><b>−0,1</b><small>dif. xG · 6º</small></div><div><b>49,5%</b><small>posesión · 9º</small></div><div><b>10–10</b><small>goles</small></div></div>
+  <span class="btn">Ver la temporada →</span>
+ </section>
+ <nav class="idx">
+  <div class="sec"><span class="n">01</span><div><h3>Temporada</h3><p>Tabla, forma, xG y xT</p></div></div>
+  <div class="sec deep"><span class="n">02</span><div><h3>Partido</h3><p>45 partidos · Elche 3–1 ESP</p></div></div>
+  <div class="sec"><span class="n">03</span><div><h3>Secuencia</h3><p>La posesión, acción por acción</p></div></div>
+  <div class="sec"><span class="n">04</span><div><h3>Jugador</h3><p>25 jugadores · percentiles</p></div></div>
+  <div class="sec"><span class="n">05</span><div><h3>Método</h3><p>Pronto</p></div></div>
+ </nav>
+</div>
+</body></html>

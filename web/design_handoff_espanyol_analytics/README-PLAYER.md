@@ -498,7 +498,7 @@ Desktop-first, same rules as the rest of the app. Below ~1100px:
 
 ## Built (16 Oct 2026)
 Screen 03 is implemented: `src/export/squad.py` + `player.py`, route
-`web/app/[equipo]/jugador/[season]/[player_id]`, components in `web/components/player/`,
+`web/app/(handoff)/[equipo]/jugador/[season]/[player_id]`, components in `web/components/player/`,
 fixture page `/demo/jugador`. The open decisions above were built with their **defaults**
 (route with season; outcome-coloured diamonds + type chips; caps 150 / 60; numeral fallback
 when no photo is in `web/public/players/{player_id}.jpg`), so each is still a one-line change.

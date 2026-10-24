@@ -1,0 +1,46 @@
+{
+  "title": "Landing: choose the structure",
+  "question": "Same world (handoff tokens). Three structures for `/`: season snapshot first, then a glimpse of what the site offers. Lock one, steer, or re-roll.",
+  "options": [
+    {
+      "id": "portada",
+      "kind": "assigned",
+      "label": "Portada de jornada",
+      "kicker": "THE ROLL",
+      "thesis": "The landing is the matchday front page: the season is the lead story, the rest of the site is the columns beside it.",
+      "palette": ["#FAEDE1", "#FFFBF5", "#17181C", "#0B4C9E"],
+      "materials": ["handoff cards", "ink rules", "real mini-charts"],
+      "viewport": "Lead story (2/3): 2026/27 position, points, xG difference trend, reading headline, 'Ver la temporada'. Side column: latest match with mini shot map, last season's line. Bottom: three glimpse items and the provenance strip.",
+      "risk": "A multi-column front page gets dense on a phone; it has to collapse into one clear reading order.",
+      "html": ".impeccable/mocks/decision/portada.html",
+      "comp": ".impeccable/mocks/decision/portada.png"
+    },
+    {
+      "id": "escalera",
+      "kind": "dealt",
+      "label": "Escalera de profundidad",
+      "thesis": "Season, match, chain, action: the page zooms one level per step, and depth itself is the pitch.",
+      "palette": ["#FAEDE1", "#FFFBF5", "#17181C", "#0B4C9E"],
+      "materials": ["handoff cards", "stepped indents", "real mini-charts"],
+      "viewport": "Full-width season snapshot band on top. Below it, four rungs step right and narrow: Temporada, Partido, Secuencia, Acción, each a real thumbnail with a link into the live page.",
+      "risk": "The rungs below the fold carry the 'what else' story, so a visitor who never scrolls sees only the season.",
+      "html": ".impeccable/mocks/decision/escalera.html",
+      "comp": ".impeccable/mocks/decision/escalera.png"
+    },
+    {
+      "id": "indice",
+      "kind": "dealt",
+      "label": "Índice",
+      "thesis": "A magazine contents page: the season is the cover and every section is a numbered chapter with a live preview and count.",
+      "palette": ["#FAEDE1", "#FFFBF5", "#17181C", "#0B4C9E"],
+      "materials": ["handoff cards", "numbered chapter rows", "DM Mono counts"],
+      "viewport": "Left: cover column with the 2026/27 snapshot and 2025/26 final line. Right: chapters 01 to 05 (Temporada, Partidos, Jugadores, Secuencias, Método), each with a thumbnail and a real count.",
+      "risk": "A contents list can read as navigation rather than proof unless every chapter thumbnail is real data.",
+      "html": ".impeccable/mocks/decision/indice.html",
+      "comp": ".impeccable/mocks/decision/indice.png"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "buildPath": { "value": "code", "toggle": false }
+}

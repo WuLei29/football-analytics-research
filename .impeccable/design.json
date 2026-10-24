@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T00:00:00Z",
+  "title": "Design System: Espanyol Analytics",
+  "extensions": {
+    "colorMeta": {
+      "board": {
+        "role": "neutral",
+        "displayName": "White Enamel",
+        "canonical": "oklch(96.9% 0.004 122)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#242422",
+          "#3f403e",
+          "#5d5e5b",
+          "#7d7e7b",
+          "#9e9f9c",
+          "#c3c4c2",
+          "#eeefec"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Pinned Panel",
+        "canonical": "oklch(94.6% 0.007 124)",
+        "tonalRamp": [
+          "#0a0c09",
+          "#232521",
+          "#3f403c",
+          "#5d5e5a",
+          "#7c7e79",
+          "#9d9f9a",
+          "#c3c5c0",
+          "#edefea"
+        ]
+      },
+      "panel-deep": {
+        "role": "neutral",
+        "displayName": "Deep Panel",
+        "canonical": "oklch(92.1% 0.009 129)",
+        "tonalRamp": [
+          "#0a0c08",
+          "#232520",
+          "#3e413c",
+          "#5c5f59",
+          "#7c7e79",
+          "#9d9f9a",
+          "#c2c5bf",
+          "#edf0ea"
+        ]
+      },
+      "chalk": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "canonical": "oklch(87.2% 0.009 129)",
+        "tonalRamp": [
+          "#0a0c08",
+          "#232520",
+          "#3e413c",
+          "#5c5f59",
+          "#7c7e79",
+          "#9d9f9a",
+          "#c2c5bf",
+          "#edf0ea"
+        ]
+      },
+      "slate": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "canonical": "oklch(48.4% 0.013 257)",
+        "tonalRamp": [
+          "#080b11",
+          "#20242a",
+          "#3b4047",
+          "#595e65",
+          "#787e85",
+          "#999fa7",
+          "#bfc5cd",
+          "#e9eff7"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(21.0% 0.008 275)",
+        "tonalRamp": [
+          "#0a0b0f",
+          "#232428",
+          "#3e3f44",
+          "#5c5d62",
+          "#7c7d82",
+          "#9d9ea3",
+          "#c2c4c9",
+          "#edeef4"
+        ]
+      },
+      "team": {
+        "role": "primary",
+        "displayName": "Espanyol Marker Blue",
+        "canonical": "oklch(38.5% 0.139 261)",
+        "tonalRamp": [
+          "#000044",
+          "#001865",
+          "#0d3a87",
+          "#2d5aaa",
+          "#4c7bcf",
+          "#6c9df4",
+          "#90c4ff",
+          "#b9efff"
+        ]
+      },
+      "rival": {
+        "role": "secondary",
+        "displayName": "Marker Red",
+        "canonical": "oklch(54.8% 0.180 29)",
+        "tonalRamp": [
+          "#3b0000",
+          "#600000",
+          "#860000",
+          "#ac1c14",
+          "#d34638",
+          "#fa6a59",
+          "#ff917e",
+          "#ffbca7"
+        ]
+      },
+      "night": {
+        "role": "night",
+        "displayName": "Night Slate",
+        "canonical": "oklch(21.3% 0.013 264)",
+        "tonalRamp": [
+          "#080b11",
+          "#21242a",
+          "#3c4047",
+          "#5a5e65",
+          "#797d85",
+          "#9a9ea7",
+          "#c0c4cd",
+          "#eaeff7"
+        ]
+      },
+      "night-line": {
+        "role": "night",
+        "displayName": "Night Line",
+        "canonical": "oklch(43.3% 0.020 259)",
+        "tonalRamp": [
+          "#060b14",
+          "#1e242e",
+          "#39404b",
+          "#575e69",
+          "#767e8a",
+          "#979fab",
+          "#bcc5d2",
+          "#e7effd"
+        ]
+      },
+      "night-text": {
+        "role": "night",
+        "displayName": "Night Text",
+        "canonical": "oklch(74.6% 0.015 258)",
+        "tonalRamp": [
+          "#080b11",
+          "#20242b",
+          "#3b4048",
+          "#595e66",
+          "#787e86",
+          "#999fa8",
+          "#bec5ce",
+          "#e9eff9"
+        ]
+      },
+      "team-lit": {
+        "role": "night",
+        "displayName": "Lit Blue",
+        "canonical": "oklch(75.5% 0.092 261)",
+        "tonalRamp": [
+          "#000431",
+          "#08214f",
+          "#233e70",
+          "#405d91",
+          "#5e7db4",
+          "#7f9fd8",
+          "#a3c5ff",
+          "#cdf0ff"
+        ]
+      },
+      "rival-lit": {
+        "role": "night",
+        "displayName": "Lit Red",
+        "canonical": "oklch(75.9% 0.113 27)",
+        "tonalRamp": [
+          "#2c0000",
+          "#4d0001",
+          "#70201d",
+          "#93403a",
+          "#b76158",
+          "#dc8278",
+          "#ffa79d",
+          "#ffd1c6"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The page's single h1: two lines of fact."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Headline numbers, large and light."
+      },
+      "figure-medium": {
+        "displayName": "Figure medium",
+        "purpose": "Score line on the night panel."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Night panel heading."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings on the board."
+      },
+      "row-title": {
+        "displayName": "Row title",
+        "purpose": "Depth index row titles."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Factual line under the h1; author body."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default .pizarra text."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Pill labels."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Meta, status line, captions, nav."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Thumbnail captions only."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "chain-draw",
+        "value": "stroke-dashoffset 1 -> 0, 0.9s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "A possession drawing itself; no animation under prefers-reduced-motion."
+      },
+      {
+        "name": "row-arrow",
+        "value": "opacity + translate, 200ms",
+        "purpose": "Arrow sliding in on depth-index hover and focus."
+      },
+      {
+        "name": "colour-step",
+        "value": "background-color / color, 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Every hover: colour only, one tone step."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ],
+    "chartMapping": {
+      "team": "team (team-lit on night)",
+      "opponent": "rival outline; solid rival fill only for goals",
+      "carries": "team ink, dashed (two inks only; no gold)",
+      "heat": "ramp panel -> team",
+      "deltas": "team positive, rival negative",
+      "percentileTiers": "team / slate / rival",
+      "pitchLines": "chalk on light panels, night-line on night"
+    },
+    "legacy": {
+      "note": "Handoff tokens in web/app/globals.css (paper, card, line, mid, faint, blue, blue2, pos, neg, gold, track, opp, opp-strong, pitch, grid, on-dark, navy; Outfit / Figtree / DM Mono; h1 / kpi / h2card / h3 / narrative sizes; card / chip / hero radii; .card / .eyebrow / .label / .dek) serve only pages under web/app/(handoff)/, whose authority is web/design_handoff_espanyol_analytics/README.md. Never use them on Pizarra pages."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button (ink)",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "The main action on a panel, with the drawn arrow.",
+      "html": "<button class=\"ds-btn-ink\">Ver la temporada<svg viewBox=\"0 0 16 16\" width=\"1em\" height=\"1em\" aria-hidden=\"true\" style=\"vertical-align:-0.125em;margin-left:4px\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2.5 8h11M9 3.5 13.5 8 9 12.5\"/></svg></button>",
+      "css": ".ds-btn-ink { font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); font-size: 15px; font-weight: 600; border: none; border-radius: 999px; padding: 14px 24px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); background: #17181c; color: #fff; } .ds-btn-ink:hover { background: #123e8c; } .ds-btn-ink:focus-visible { outline: 2px solid #123e8c; outline-offset: 3px; }"
+    },
+    {
+      "name": "Tone Button",
+      "kind": "button",
+      "refersTo": "button-tone",
+      "description": "Second action or outbound link; one tone step above the panel.",
+      "html": "<button class=\"ds-btn-tone\">Último partido</button>",
+      "css": ".ds-btn-tone { font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); font-size: 15px; font-weight: 600; border: none; border-radius: 999px; padding: 14px 24px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); background: #e3e6e0; color: #17181c; } .ds-btn-tone:hover { background: #d3d6d0; } .ds-btn-tone:focus-visible { outline: 2px solid #123e8c; outline-offset: 3px; }"
+    },
+    {
+      "name": "Team Button",
+      "kind": "button",
+      "refersTo": "button-team",
+      "description": "Season pill in the nav, LinkedIn in the author block.",
+      "html": "<button class=\"ds-btn-team\">2026/27</button>",
+      "css": ".ds-btn-team { font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); font-size: 15px; font-weight: 600; border: none; border-radius: 999px; padding: 14px 24px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); padding: 12px 20px; background: #123e8c; color: #fff; } .ds-btn-team:hover { background: #17181c; } .ds-btn-team:focus-visible { outline: 2px solid #123e8c; outline-offset: 3px; }"
+    },
+    {
+      "name": "Night Button",
+      "kind": "button",
+      "refersTo": "button-night",
+      "description": "The action on the night panel.",
+      "html": "<div class=\"ds-night-wrap\"><button class=\"ds-btn-night\">Abrir el partido</button></div>",
+      "css": ".ds-night-wrap { background: #16191f; padding: 24px; border-radius: 22px; } .ds-btn-night { font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); font-size: 15px; font-weight: 600; border: none; border-radius: 999px; padding: 14px 24px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); background: #fff; color: #17181c; } .ds-btn-night:hover { background: #8fb0ea; } .ds-btn-night:focus-visible { outline: 2px solid #8fb0ea; outline-offset: 3px; }"
+    },
+    {
+      "name": "Pill Nav",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "One opaque floating pill: name, built sections, season pill. No blur, no shadow.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-name\" href=\"#\">Espanyol Analytics</a><a class=\"ds-nav-link\" href=\"#\">Temporada</a><a class=\"ds-nav-link\" href=\"#\">Partidos</a><a class=\"ds-nav-season\" href=\"#\">2026/27</a></nav>",
+      "css": ".ds-nav { display: inline-flex; align-items: center; gap: 4px; background: #f4f5f2; border-radius: 999px; padding: 6px 6px 6px 20px; font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); font-size: 14px; font-weight: 500; } .ds-nav a { text-decoration: none; } .ds-nav-name { color: #17181c; font-weight: 600; letter-spacing: -0.01em; margin-right: 12px; } .ds-nav-link { color: #5a5f66; padding: 8px 12px; border-radius: 999px; transition: background-color 150ms, color 150ms; } .ds-nav-link:hover { background: #e3e6e0; color: #17181c; } .ds-nav-season { margin-left: 8px; background: #123e8c; color: #fff; font-weight: 600; padding: 8px 16px; border-radius: 999px; transition: background-color 150ms; } .ds-nav-season:hover { background: #17181c; } .ds-nav a:focus-visible { outline: 2px solid #123e8c; outline-offset: 3px; }"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "A flat panel pinned on the board: one tone step, no border, no shadow.",
+      "html": "<div class=\"ds-board\"><section class=\"ds-panel\"><h2>2º · 18 puntos</h2><p>8 partidos de la temporada 2026/27.</p><div class=\"ds-fig\">+4.2</div><div class=\"ds-fig-label\">Diferencia de xG · 3º de 20</div></section></div>",
+      "css": ".ds-board { background: #f4f5f2; padding: 24px; border-radius: 28px 28px 0 0; } .ds-panel { background: #eceee9; border-radius: 22px; padding: 32px; font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); color: #17181c; font-variant-numeric: tabular-nums; } .ds-panel h2 { margin: 0; font-size: 34px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; } .ds-panel p { margin: 12px 0 20px; font-size: 17px; line-height: 1.5; color: #5a5f66; } .ds-fig { font-size: 48px; font-weight: 300; letter-spacing: -0.04em; line-height: 0.9; } .ds-fig-label { margin-top: 8px; font-size: 14px; color: #5a5f66; }"
+    },
+    {
+      "name": "Depth Index Row",
+      "kind": "custom",
+      "refersTo": "index-row",
+      "description": "Whole-row numbered link; hover/focus steps one tone darker, title turns team blue, arrow slides in.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-row-n\">01</span><span><span class=\"ds-row-t\">Temporada<span class=\"ds-row-a\"><svg viewBox=\"0 0 16 16\" width=\"1em\" height=\"1em\" aria-hidden=\"true\" style=\"vertical-align:-0.125em;margin-left:4px\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2.5 8h11M9 3.5 13.5 8 9 12.5\"/></svg></span></span><span class=\"ds-row-d\">Dos temporadas, partido a partido</span></span><svg viewBox=\"0 0 112 32\" width=\"112\" height=\"32\" aria-hidden=\"true\"><line x1=\"0\" y1=\"16\" x2=\"112\" y2=\"16\" stroke=\"#d3d6d0\" stroke-width=\"1.5\"/><path d=\"M5 20 L25 12 L45 18 L65 8 L85 14 L107 6\" fill=\"none\" stroke=\"#123e8c\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"107\" cy=\"6\" r=\"3.5\" fill=\"#123e8c\"/></svg></a>",
+      "css": ".ds-row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 16px; background: #eceee9; border-radius: 18px; padding: 16px 20px; color: #17181c; text-decoration: none; font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); transition: background-color 150ms; } .ds-row:hover, .ds-row:focus-visible { background: #e3e6e0; } .ds-row:focus-visible { outline: 2px solid #123e8c; outline-offset: 3px; } .ds-row-n { font-size: 26px; font-weight: 300; line-height: 1; color: #123e8c; font-variant-numeric: tabular-nums; } .ds-row-t { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; transition: color 150ms; } .ds-row:hover .ds-row-t, .ds-row:focus-visible .ds-row-t { color: #123e8c; } .ds-row-a { opacity: 0; transform: translateX(-4px); transition: opacity 200ms, transform 200ms; } .ds-row:hover .ds-row-a, .ds-row:focus-visible .ds-row-a { opacity: 1; transform: none; } .ds-row-d { display: block; font-size: 14px; color: #5a5f66; }"
+    },
+    {
+      "name": "Chain Stroke (night panel)",
+      "kind": "custom",
+      "refersTo": "panel-night",
+      "description": "Signature: a team shot on the night pitch draws its possession as one lit marker stroke.",
+      "html": "<div class=\"ds-night\"><svg viewBox=\"0 0 105 68\" width=\"100%\" aria-hidden=\"true\"><rect x=\"0.5\" y=\"0.5\" width=\"104\" height=\"67\" fill=\"none\" stroke=\"#4a515c\" stroke-width=\"0.4\"/><line x1=\"52.5\" y1=\"0.5\" x2=\"52.5\" y2=\"67.5\" stroke=\"#4a515c\" stroke-width=\"0.4\"/><rect x=\"88.5\" y=\"13.84\" width=\"16\" height=\"40.32\" fill=\"none\" stroke=\"#4a515c\" stroke-width=\"0.4\"/><path class=\"ds-chain\" pathLength=\"1\" d=\"M30 50 L48 40 L66 46 L84 30 L95 34\" fill=\"none\" stroke=\"#8fb0ea\" stroke-width=\"0.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"30\" cy=\"50\" r=\"0.9\" fill=\"#8fb0ea\"/><circle cx=\"95\" cy=\"34\" r=\"2.4\" fill=\"#8fb0ea\" stroke=\"#fff\" stroke-width=\"0.55\"/><circle cx=\"14\" cy=\"30\" r=\"1.8\" fill=\"none\" stroke=\"#f0948a\" stroke-width=\"0.3\"/></svg><p class=\"ds-cap\">63′ · Disparo · 0.41 xG · gol</p><p class=\"ds-sub\">7 acciones · 5 pases · 14 s</p></div>",
+      "css": ".ds-night { background: #16191f; border-radius: 22px; padding: 32px; font-family: var(--font-board, 'Hanken Grotesk', system-ui, sans-serif); } .ds-chain { stroke-dasharray: 1; animation: ds-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; } @keyframes ds-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } } @media (prefers-reduced-motion: reduce) { .ds-chain { animation: none; } } .ds-cap { margin: 16px 0 0; font-size: 17px; font-weight: 600; color: #fff; } .ds-sub { margin: 0; font-size: 14px; color: #a7adb6; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Pizarra",
+    "overview": "The site is the coach's tactics board the analysis is drawn on. The ground is white enamel; flat panels are pinned on it one tone step apart; data is drawn on them in two marker inks, Espanyol blue for the team and marker red for the opponent. Nothing has a border or a shadow. Depth comes only from one surface overlapping another: the board rises over the stadium photo, a panel sits on the board, a pill nav floats over both.\n\nThe board is calm and dense in the way a real tactics board is: large light figures, short factual lines, and strokes that look drawn by hand (round caps, round joins, straight segments). Each screen has at most one dark panel, a \"night\" board where the inks lighten so they keep contrast. Exits are numbered only where the order carries information (the depth ladder season, match, possession, player, method).\n\nPizarra is the new world, built first on the landing (`/`, 24 Oct 2026) and replacing the older design handoff page by page. Light theme only: there is no dark mode, and the night panel is a surface inside the light page, not a theme.",
+    "keyCharacteristics": [
+      "White enamel board, flat tonal panels, no borders, no shadows; depth by overlap only.",
+      "Two inks: team (blue) and rival (red); lit versions on the one night panel.",
+      "One face, Hanken Grotesk: figures at 300, text at 400 to 500, headings at 600.",
+      "Pills for every control; generous radii for board, panel and row.",
+      "Data drawn as round-capped marker strokes; a possession draws itself."
+    ],
+    "rules": [
+      {
+        "name": "The Two Inks Rule",
+        "body": "Every mark on a Pizarra page is team or rival (team-lit or rival-lit on night). A third hue for data is not allowed; distinguish within an ink by fill, opacity, dash or size.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Night Rule",
+        "body": "At most one night panel per screen. It is where the signature interaction lives, and its rarity is what makes it read as a second board.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tone Step Rule",
+        "body": "Surfaces separate by one lightness step (board, panel, panel-deep, chalk), never by a border. Hover and focus move a surface exactly one step darker.",
+        "section": "colors"
+      },
+      {
+        "name": "The Light Figure Rule",
+        "body": "Numbers that matter are large and light (300), never bold. Weight goes to the words that name them.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Eyebrow Rule",
+        "body": "No kicker or uppercase label above a heading. Context (season, match count) goes in the line under the heading.",
+        "section": "typography"
+      },
+      {
+        "name": "The en-GB Numbers Rule",
+        "body": "The site is in Spanish, but numbers use the decimal point (`en-GB`, `NUMBER_LOCALE` in `web/lib/format.ts`). This is deliberate; do not hand-format numbers.",
+        "section": "typography"
+      },
+      {
+        "name": "The Overlap-Only Rule",
+        "body": "If something must read as \"above\", make it overlap, not cast a shadow. The floating nav is an opaque board-coloured pill over the photo, with no backdrop blur.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** put `.pizarra` on the root element of every page that moves into this world; it sets the face, size, tabular numbers, selection and focus.",
+      "**Do** use only the Pizarra tokens (board, panel, panel-deep, chalk, slate, ink, team, rival, night, night-line, night-text, team-lit, rival-lit) and the board / panel / row / pill radii.",
+      "**Do** separate surfaces by one tone step and show hover and focus as one step darker.",
+      "**Do** draw data as round-capped strokes in the two inks, and remap legacy charts with the chart colour mapping above.",
+      "**Do** name the author on every Pizarra page and credit the stadium photo (Elemaki, CC BY 3.0) wherever it appears.",
+      "**Do** keep numbers formatted through `web/lib/format.ts` (en-GB).",
+      "**Do** respect `prefers-reduced-motion`: drawn strokes appear without animating."
+    ],
+    "donts": [
+      "**Don't** use borders or shadows on any surface, or backdrop blur on the nav.",
+      "**Don't** add a third data colour; carries are dashed team ink, not gold.",
+      "**Don't** use more than one night panel on a screen, or add a dark mode.",
+      "**Don't** put kickers or uppercase eyebrows above headings, or decorative section numbers; numbers are allowed only where order carries meaning.",
+      "**Don't** use Unicode glyphs as icons; use the drawn arrow.",
+      "**Don't** use the legacy handoff tokens on a Pizarra page (see below)."
+    ]
+  }
+}

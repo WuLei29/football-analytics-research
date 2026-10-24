@@ -209,11 +209,13 @@ sql/
   seed/                           # formation_slot_positions
   fixes/                          # dated one-off data repairs
 web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
-  app/                            #   routes: /[equipo]/temporada, /partidos, /partido/[match_id], /demo
+  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/temporada; (handoff)/ = /partidos, /partido/[match_id], /plantilla, /jugador, /demo
+  components/landing/             #   landing blocks: SeasonHighlight, DepthIndex, ChainPitch, Thumbs, XgStroke
+  components/shell/               #   Pizarra shell: PillNav, Arrow, Exits, BoardFooter (+ legacy handoff Masthead/Footer)
   components/viz/                 #   pitch + chart layers (inventory: espanyol-viz-design §2)
   lib/                            #   data loaders + types, labels (Spanish), format, viz geometry
   public/data/                    #   exported JSON (committed; the deploy artifact)
-  design_handoff_espanyol_analytics/  # visual authority (README.md, README-PLAYER.md, screenshots)
+  design_handoff_espanyol_analytics/  # visual authority for app/(handoff)/ pages only, being superseded by DESIGN.md
 ```
 
 ### Architectural Patterns
@@ -357,6 +359,11 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   `formation_slot_positions` (seeded), `pass_receptions`,
   `match_game_states` + view `team_game_states`. Manual and row counts:
   `md/GOLD_LAYER.md §9` (§9.4).
+- **Visual redesign (24 Oct 2026, branch `redesign/visual-world`)**: new
+  "Pizarra" world (`DESIGN.md`), landing `/` and screen 01 (season) rebuilt
+  in it; the other pages still use the handoff under `web/app/(handoff)/` and
+  move over one by one
+  (`md/REDESIGN_HANDOFF.md`). Pre-redesign snapshot: tag `pre-redesign-2026-10-23`.
 - **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written
   by `python -m src.export`. Built: screen 01 (season), screen 02 (match),
   match list, `/demo`, and **screen 03 (player, 16 Oct 2026)**:

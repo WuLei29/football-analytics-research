@@ -1,0 +1,40 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:#0E2D66;color:#F3F1EA;font-family:"Bricolage Grotesque",sans-serif}
+.pill{position:absolute;top:22px;left:50%;transform:translateX(-50%);display:flex;gap:26px;align-items:center;background:#F3F1EA;color:#0E2D66;border-radius:999px;padding:8px 8px 8px 22px;font-size:14px;font-weight:500}
+.pill .go{background:#0E2D66;color:#F3F1EA;border-radius:999px;padding:9px 16px}
+.mono{font-family:"Spline Sans Mono",monospace;font-size:12px;color:#A9B8D8}
+.grid{position:absolute;left:48px;right:48px;top:96px;bottom:32px;display:grid;grid-template-columns:1.55fr 1fr;gap:28px}
+h1{font-size:52px;font-weight:500;letter-spacing:-.03em;line-height:1;margin-top:10px}
+.weave{margin-top:22px;display:flex;flex-direction:column;gap:3px}
+.r{height:7px;border-radius:4px;background:linear-gradient(90deg,#F3F1EA var(--a),#3E6FC4 var(--a),#3E6FC4 var(--b),#1B3F86 var(--b))}
+.lift{height:22px;border-radius:6px;background:#C9A646;color:#0E2D66;font-size:12px;font-weight:700;padding:3px 10px}
+.btn{display:inline-block;margin-top:20px;background:#F3F1EA;color:#0E2D66;border-radius:999px;padding:13px 22px;font-weight:700}
+.idx{display:flex;flex-direction:column;gap:10px;padding-top:30px}
+.row{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;background:#163A7C;border-radius:16px;padding:16px 18px}
+.row h3{font-size:19px;font-weight:700}.row p{font-size:13px;color:#A9B8D8}
+</style></head><body>
+<div class="pill"><b>Espanyol Analytics</b><span>Temporada</span><span>Partidos</span><span>Plantilla</span><span>Método</span><span class="go">2026/27</span></div>
+<div class="grid">
+ <section>
+  <span class="mono">TEMPORADA 2026/27 · 7 PARTIDOS · 2025/26 · 38</span>
+  <h1>15º con 7 puntos. El xG lo pone 6º.</h1>
+  <div class="weave">
+   <div class="r" style="--a:40%;--b:62%"></div><div class="r" style="--a:22%;--b:70%"></div><div class="r" style="--a:55%;--b:60%"></div><div class="r" style="--a:30%;--b:52%"></div><div class="r" style="--a:48%;--b:80%"></div><div class="r" style="--a:18%;--b:44%"></div>
+   <div class="lift">J7 · Elche 3–1 ESP</div>
+   <div class="r" style="--a:36%;--b:58%;opacity:.55"></div><div class="r" style="--a:44%;--b:66%;opacity:.55"></div><div class="r" style="--a:28%;--b:72%;opacity:.55"></div><div class="r" style="--a:52%;--b:61%;opacity:.55"></div><div class="r" style="--a:33%;--b:49%;opacity:.55"></div><div class="r" style="--a:41%;--b:77%;opacity:.55"></div><div class="r" style="--a:24%;--b:57%;opacity:.55"></div><div class="r" style="--a:46%;--b:63%;opacity:.55"></div>
+  </div>
+  <p class="mono" style="margin-top:10px">CADA FILA, UN PARTIDO · BLANCO: xG A FAVOR · AZUL: EN CONTRA</p>
+  <span class="btn">Ver la temporada →</span>
+ </section>
+ <nav class="idx">
+  <div class="row"><span class="mono">01 · PATRÓN</span><div><h3>Temporada</h3><p>Tabla, forma, xG, xT</p></div></div>
+  <div class="row"><span class="mono">02 · FILA</span><div><h3>Partido</h3><p>45 partidos</p></div></div>
+  <div class="row"><span class="mono">03 · HILO</span><div><h3>Secuencia</h3><p>Cada posesión</p></div></div>
+  <div class="row"><span class="mono">04 · NUDO</span><div><h3>Jugador</h3><p>25 jugadores</p></div></div>
+  <div class="row"><span class="mono">05 · TARJETA</span><div><h3>Método</h3><p>Pronto</p></div></div>
+ </nav>
+</div>
+</body></html>
