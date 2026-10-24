@@ -751,24 +751,52 @@ export const season = {
  * ------------------------------------------------------------------------ */
 
 export const matchList = {
-  eyebrow: "PARTIDOS",
-  title: { plain: "Los partidos, ", accent: "uno a uno" },
-  dek:
-    "Cada partido de la temporada con su marcador y su xG. Abre uno para ver " +
-    "el análisis completo.",
-  columns: {
-    matchday: "J",
-    date: "Fecha",
-    venue: "",
-    opponent: "Rival",
-    score: "Resultado",
-    xg: "xG",
-  },
+  /* Pizarra (24 Oct 2026): the page moved out of the handoff. The old
+     eyebrow, title, dek and column labels went with it. */
   home: "Casa",
   away: "Fuera",
   homeShort: "L",
   awayShort: "V",
   empty: "No hay partidos cargados en esta temporada.",
+  /** The h1, two facts: how many matches, then the record in team blue. */
+  title: (n: number, label: string) => (n === 1 ? `El partido de ${label}` : `Los ${n} partidos de ${label}`),
+  titleEmpty: (label: string) => `Los partidos de ${label}`,
+  recordLine: (w: number, d: number, l: number) =>
+    `${w} ${w === 1 ? "victoria" : "victorias"}, ${d} ${d === 1 ? "empate" : "empates"}, ` +
+    `${l} ${l === 1 ? "derrota" : "derrotas"}`,
+  lead: (gf: number, ga: number, xgf: string, xga: string) =>
+    `Goles ${gf}–${ga}, xG ${xgf}–${xga}. Abre cualquiera para ver sus tiros, ` +
+    `el momentum, la red de pases y cada posesión.`,
+  leadEmpty: "La temporada aún no ha empezado.",
+  /* The spot panel. */
+  latestHeading: "El último partido",
+  latestMeta: (matchday: number, date: string, home: boolean) =>
+    `Jornada ${matchday} · ${date} · ${home ? "en casa" : "fuera"}`,
+  latestPitchLabel: (team: number, rival: number) =>
+    `Mapa de tiros del último partido: ${team} del Espanyol y ${rival} del rival.`,
+  legendTeam: (abbr: string) => `${abbr}: relleno = gol, medio = a puerta, hueco = fuera`,
+  legendRival: (abbr: string) => `${abbr}: relleno = gol`,
+  legendSize: "Tamaño = xG",
+  xgPair: "xG a favor – en contra",
+  /* The list. */
+  listHeading: "Todos los partidos",
+  listDek: "Del más reciente al primero · barras: xG a favor (azul) y en contra (rojo), en una misma escala",
+  matchdayShort: (n: number) => `J${n}`,
+  thumbLabel: (opponent: string) => `Tiros del Espanyol ante ${opponent}`,
+  /** Accessible name of one row (it is a link to the match). */
+  rowLabel: (
+    matchday: number,
+    date: string,
+    opponent: string,
+    home: boolean,
+    result: string,
+    gf: number,
+    ga: number,
+    xgf: string,
+    xga: string,
+  ) =>
+    `Jornada ${matchday}, ${date}, ${home ? "en casa" : "fuera"} ante ${opponent}: ` +
+    `${result} ${gf}–${ga}, xG ${xgf}–${xga}. Abrir el partido.`,
 } as const;
 
 /* --------------------------------------------------------------------------

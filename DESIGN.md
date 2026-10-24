@@ -326,6 +326,10 @@ The foot of every page but the landing (`components/shell/Exits`): the depth ind
 - **Percentile track:** a 6px round-capped chalk stroke with the fill in the tier colour (good ≥ 70, fair-fill, bad < 45); the percentile number in good / fair / bad, "—" with an empty track when null.
 - **Leader rows:** row radius, 15px; the leader is a team row in white (hover team-deep), the rest step to panel-deep.
 
+### Match list blocks (24 Oct 2026)
+- **Latest match (spot panel):** heading, meta line (matchday, date, venue), a 32px result disc with the scoreline at figure-medium (home–away order), the xG for–against at 32px light (for in team, against in rival) with the net in good / bad, the shot legend, the primary pill. Beside it `MatchShots`: every shot of the match on a spot-line pitch, `ChainPitch`'s encoding, static (one labelled image; nothing to focus).
+- **Match rows (`MatchIndex`):** whole-row links on panel, 18px radius, 8px apart, newest first. Matchday · date · venue in 14px slate over the opponent as the 18px/600 row title; a 28px result disc and the score at 22px light; a flat pair of 4px round-capped xG strokes (for over against, 120px, one scale for the list, floor 2.0) with the values in slate and the net in good / bad; a 112px Espanyol shot thumb (lg only). Hover and focus as the depth index (panel-deep, title team, arrow slides in). On a phone the xG line drops under the title.
+
 ### Marker strokes and thumbnails
 - **xG stroke:** a chalk zero line (1.5) and one team stroke through each match's value, round caps, ending in a dot on the latest match. Lead size 220 by 64 (stroke 3.5, dot 5.5); thumb 112 by 32 (2.5, 3.5). Symmetric around zero, never flatter than plus or minus 1.
 - **Pitch thumbs:** chalk markings; shots as team circles (filled for goals); a chain as a 2px team stroke ending in a dot.

@@ -10,6 +10,27 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 24 Oct 2026 — Match list moved to Pizarra
+
+- `/{equipo}/partidos/{season}` left `app/(handoff)/` for `app/[equipo]/partidos/`.
+  Structure agreed with `/impeccable shape`: h1 (match count; the record in
+  team blue), goals + xG line, season pills (they now switch the match list,
+  not the season page), status top-right; the **spot panel holds the latest
+  match** (result disc, scoreline, xG for–against with the net, every shot on
+  a spot-line pitch via the new static `components/matches/MatchShots`, the
+  primary pill to screen 02); then **every match as a whole-row link**, newest
+  first (`components/matches/MatchIndex`): matchday · date · venue, opponent,
+  result disc + score, a flat xG stroke pair on one scale (floor 2.0) with the
+  values and the net in good / bad, and a 112 px pitch of Espanyol's shots
+  from the match file (lg only). Exits (Partido current) and BoardFooter.
+- Fields and encodings unchanged (the handoff row's plus the form strip's
+  colours); the handoff's mono chips, borders and `pos`/`neg`/`faint` went.
+  `matchList` labels rewritten (old eyebrow/title/dek/columns removed; the
+  `homeShort`/`awayShort` keys other components use are kept).
+- **Checks**: typecheck and build pass; detect clean on the source files and
+  the rendered URL; no horizontal scroll at 390 px; one h1; rows reachable by
+  Tab with the team focus ring and a full accessible name.
+
 ## 24 Oct 2026 — Pizarra revised after the author's review (landing + season)
 
 - **Highlight panel**: the dark `night` panel (#16191F, lit inks) read as too
