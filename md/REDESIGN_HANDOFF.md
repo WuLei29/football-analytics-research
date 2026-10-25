@@ -10,12 +10,14 @@ when `web/app/(handoff)/` is empty.
   design: tag `pre-redesign-2026-10-23`.
 - **Done**: the landing `web/app/page.tsx` (components in
   `web/components/landing/`), **screen 01** `web/app/[equipo]/temporada/`
-  and the **match list** `web/app/[equipo]/partidos/` (components in
-  `web/components/matches/`), all 24 Oct 2026. Shared Pizarra parts are in `web/components/shell/`:
+  the **match list** `web/app/[equipo]/partidos/` (components in
+  `web/components/matches/`) and **screen 02** `web/app/[equipo]/partido/`
+  (spot panel `components/match/MatchExplorer`), all 24 Oct 2026. Shared
+  charts are recoloured on Pizarra pages by the `.pizarra-viz` adapter in
+  `globals.css` until the player page moves. Shared Pizarra parts are in `web/components/shell/`:
   `PillNav` (`active`), `Arrow`, `Exits` (numbered exits), `BoardFooter`
   (`photoCredit`). The trend chart is `components/season/SeasonTrend`.
 - **Still in the handoff world**, under `web/app/(handoff)/` (URLs unchanged):
-  screen 02 match `/[equipo]/partido/[match_id]`,
   squad and player `/[equipo]/plantilla/[season]`,
   `/[equipo]/jugador/[season]/[player_id]`, and `/demo`, `/demo/jugador`.
 
@@ -72,7 +74,7 @@ One page per session, in this order (each depends on less than the next):
 
 1. ~~**Screen 01, season**~~ — done 24 Oct 2026 (`md/CHANGELOG.md`).
 2. ~~**Match list.**~~ — done 24 Oct 2026.
-3. **Screen 02, match** — the spot panel goes to the map → sequence block.
+3. ~~**Screen 02, match**~~ — done 24 Oct 2026.
 4. **Squad + player (screen 03).**
 5. **`/demo` pages**, then delete the `(handoff)` group, its layout, the
    handoff tokens in `globals.css`, the old `Masthead`/`Footer`, and mark the

@@ -1,20 +1,26 @@
 /**
- * MatchTotals — the eighteen stat rows of screen 02, block 3.
+ * MatchTotals — the eighteen stat rows of screen 02.
  *
- * Renders: a two-column grid of rows. Each row is [home value] [centred mono
- * label] [away value] over a 7px rounded track filled to the home share.
- * Props: `totals` (the eighteen rows in the export order) and the two
- * `abbr`eviations, plus `teamSide` so the published club is the blue one.
+ * Renders: a grid of rows (one column on a phone, two from md, three from
+ * xl). Each row is [home value] [label] [away value] over a 6px round-capped
+ * chalk track holding two strokes that meet: the home share from the left,
+ * the away share from the right, in team blue for the published club and
+ * rival red for the opponent.
+ * Props: `totals` (the eighteen rows in the export order) and `teamSide`, so
+ * the published club is the blue one.
  * Data:  `matches/{match_id}.json` -> `totals[]` (md/WEB_DATA.md §7.2), from
  *        both rows of `gold.team_match_stats`.
  *
- * The share the track is filled to is computed here, not exported: it is
- * `home / (home + away)`, which is a rendering decision about a bar and not a
- * number about the match. `possession_pct` already sums to 100 and lands in
- * the same place either way.
+ * The share is computed here, not exported: `home / (home + away)` is a
+ * rendering decision about a bar, not a number about the match. A row where
+ * both sides are 0 (red cards, usually) draws an empty track: "neither", not
+ * "one each".
  *
- * A row where both sides are 0 (red cards, usually) fills nothing rather than
- * half: an empty track reads as "neither", a half-full one as "one each".
+ * Pizarra (24 Oct 2026): the handoff's mono label, bold display figures and
+ * one-colour bar became 14px slate labels, light figures and a two-ink bar,
+ * so the opponent's share is drawn and not only implied by the gap. Which
+ * side is which is said once, in the panel's caption, rather than by an
+ * abbreviation row that three columns made ambiguous.
  */
 
 import { dec, num, orEmpty } from "@/lib/format";
@@ -40,67 +46,44 @@ function print(key: string, value: number | null): string {
 
 export function MatchTotals({
   totals,
-  abbr,
   teamSide,
 }: {
   totals: MatchTotal[];
-  abbr: { home: string; away: string };
   teamSide: "home" | "away";
 }) {
-  const teamColor = "var(--color-blue)";
-  const oppColor = "var(--color-mid)";
+  const ink = (side: "home" | "away") => (side === teamSide ? "var(--color-team)" : "var(--color-rival)");
 
   return (
     <>
-      <div className="mt-3 flex items-baseline justify-between font-mono text-[9px] tracking-[0.16em] uppercase">
-        <span style={{ color: teamSide === "home" ? teamColor : oppColor }}>
-          {abbr.home}
-        </span>
-        <span style={{ color: teamSide === "away" ? teamColor : oppColor }}>
-          {abbr.away}
-        </span>
-      </div>
-
-      <div className="mt-2 grid gap-x-7 gap-y-3.5 md:grid-cols-2">
+      <div className="grid gap-x-10 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
         {totals.map((total) => {
           const home = total.home ?? 0;
           const away = total.away ?? 0;
           const sum = home + away;
           const homeShare = sum > 0 ? (home / sum) * 100 : 0;
+          const awayShare = sum > 0 ? 100 - homeShare : 0;
 
           return (
             <div key={total.key}>
-              <div className="flex items-baseline justify-between gap-2">
-                <span
-                  className="font-display text-[17px] font-bold"
-                  style={{ color: teamSide === "home" ? teamColor : oppColor }}
-                >
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-[20px] leading-none font-light tracking-[-0.02em] tabular-nums">
                   {print(total.key, total.home)}
                 </span>
-
-                <span className="label flex-1 text-center">
-                  {label(matchTotalLabels, total.key)}
-                </span>
-
-                <span
-                  className="font-display text-[17px] font-bold"
-                  style={{ color: teamSide === "away" ? teamColor : oppColor }}
-                >
+                <span className="flex-1 text-center text-[14px] text-slate">{label(matchTotalLabels, total.key)}</span>
+                <span className="text-[20px] leading-none font-light tracking-[-0.02em] tabular-nums">
                   {print(total.key, total.away)}
                 </span>
               </div>
 
-              <div className="mt-1 h-[7px] rounded-pill bg-track">
-                <div
-                  className="h-full rounded-pill"
-                  style={{
-                    width: `${homeShare}%`,
-                    // The bar is always filled from the home end, so the two
-                    // rows of the page cannot disagree about which side is
-                    // which; the colour follows the published club.
-                    background: teamSide === "home" ? teamColor : "var(--color-opp-strong)",
-                  }}
-                />
+              {/* Two round-capped strokes on one chalk track, meeting at
+                  the split with a small gap so they read as two. */}
+              <div className="mt-2 flex h-1.5 gap-[3px] rounded-full bg-chalk" aria-hidden="true">
+                {homeShare > 0 && (
+                  <div className="h-full rounded-full" style={{ width: `${homeShare}%`, background: ink("home") }} />
+                )}
+                {awayShare > 0 && (
+                  <div className="h-full flex-1 rounded-full" style={{ background: ink("away") }} />
+                )}
               </div>
             </div>
           );

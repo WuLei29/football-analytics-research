@@ -10,6 +10,48 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 24 Oct 2026 — Screen 02 (match) moved to Pizarra
+
+- `/{equipo}/partido/{match_id}` left `app/(handoff)/` for `app/[equipo]/partido/`.
+  Structure agreed with `/impeccable shape` ("reading first", "one map +
+  switch"): h1 = scoreline (home first) + the result read against the xG in
+  team blue; competition / venue / date / half-time line; match picker (tone
+  pill) and "Todos los partidos" top-right; five raised figures (xG, xT,
+  possession, shots with on target, big chances: club value in team, rival
+  under it); the reading card when one is written; momentum; **the spot
+  panel** `components/match/MatchExplorer` (one client island); totals; pass
+  network beside the xT surface; the four player boxes; Exits; BoardFooter.
+- **MatchExplorer**: Tiros / Progresión / Defensa switch (defence keeps the
+  type filter as pills), the map on a spot-line pitch, a white `aria-live`
+  readout instead of the black hover cards, the opened chain beside it
+  (`SequenceDetail` + its numbers + "acción por acción" in words), and the
+  110-chain list sorted by xT or VAEP. **Keyboard**: every mark is a labelled
+  `role="button"`; one tab stop per map (roving tabindex), arrows walk the
+  marks in match order, Home / End, Enter / Space opens the chain. Measured on
+  match 2060: 33 / 30 / 143 marks, 0 unlabelled, 1 tab stop each (was 0 of
+  523 reachable). Rival shots and unlinked marks are reachable and say why
+  no chain opens. Replaces `MatchMaps`, `MatchSequences` and `SequenceLink`
+  (deleted; the player page never used them).
+- Encodings kept, colours remapped: shots as `ShotMap`; progression pass solid
+  team, carry **dotted** team, failed at a third of the opacity (the handoff
+  dashed failures, but dashes now mean carry); defence diamonds team-filled
+  (won) / team outline (lost), line dashed slate. Totals: two-ink split bars
+  (team / rival), sides named in the caption. Player boxes: coloured
+  abbreviations, leader row white.
+- **Chart adapter** `.pizarra-viz` (globals.css, transitional): remaps the
+  handoff tokens the shared charts name (Momentum, PassNetwork, ZoneHeatmap,
+  SequenceDetail, VizDefs) to Pizarra values inside the wrapper, so the player
+  page keeps its handoff look. Momentum gained `--viz-*` hooks (opponent ink
+  and opacity, label size, case, tracking) with the handoff values as
+  fallbacks; its two rgba fills became the same colours as `var()` + opacity.
+  Momentum keeps a min width of 820 px and scrolls inside its panel on a
+  phone, so its labels stay legible.
+- **Checks**: typecheck and build pass; detect clean on the source files; on
+  the rendered URL one "tiny text" flag on the pass-network names (`fontSize
+  3` is pitch units, rendered 12–15 px: false positive); no horizontal page
+  scroll at 390 px; one h1. Known, inherited: pass-network names overlap in a
+  crowded midfield.
+
 ## 24 Oct 2026 — Match list moved to Pizarra
 
 - `/{equipo}/partidos/{season}` left `app/(handoff)/` for `app/[equipo]/partidos/`.

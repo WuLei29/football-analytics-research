@@ -17,6 +17,9 @@
  * navigation on change, which is why this file is the client boundary and
  * the page header around it stays static HTML.
  *
+ * Pizarra (24 Oct 2026): a tone pill (panel-deep, hover chalk) in the
+ * header's top-right corner instead of the handoff's bordered mono chip.
+ *
  * Why it exists: the match list is the only other way from one match to the
  * next, and reading a season match by match meant a round trip through it
  * every time (review of 11 Sep 2026).
@@ -46,7 +49,7 @@ export function MatchPicker({
   const ordered = [...matches].sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return (
-    <label className="relative flex items-center gap-2">
+    <label className="relative inline-flex items-center">
       <span className="sr-only">{copy.label}</span>
 
       {/* A calendar glyph drawn inline. The design ships no icon set, so
@@ -57,7 +60,7 @@ export function MatchPicker({
         viewBox="0 0 16 16"
         width="14"
         height="14"
-        className="pointer-events-none absolute left-2.5 text-mid"
+        className="pointer-events-none absolute left-4 text-slate"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.3"
@@ -70,7 +73,7 @@ export function MatchPicker({
       <select
         value={current}
         onChange={(e) => router.push(routes.match(team, Number(e.target.value)))}
-        className="cursor-pointer appearance-none rounded-chip border border-line bg-card py-1.5 pr-7 pl-8 font-mono text-[10px] tracking-[0.12em] uppercase text-ink hover:border-blue focus:border-blue focus:outline-none"
+        className="w-full max-w-[340px] cursor-pointer appearance-none truncate rounded-full bg-panel-deep py-2.5 pr-10 pl-10 text-[14px] font-semibold text-ink transition-colors hover:bg-chalk"
       >
         {ordered.map((m) => (
           <option key={m.match_id} value={m.match_id}>
@@ -92,7 +95,7 @@ export function MatchPicker({
         viewBox="0 0 10 6"
         width="10"
         height="6"
-        className="pointer-events-none absolute right-2.5 text-mid"
+        className="pointer-events-none absolute right-4 text-slate"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.3"

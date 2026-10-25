@@ -209,7 +209,7 @@ sql/
   seed/                           # formation_slot_positions
   fixes/                          # dated one-off data repairs
 web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
-  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/temporada, [equipo]/partidos; (handoff)/ = /partido/[match_id], /plantilla, /jugador, /demo
+  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/temporada, [equipo]/partidos, [equipo]/partido; (handoff)/ = /plantilla, /jugador, /demo
   components/landing/             #   landing blocks: SeasonHighlight, DepthIndex, ChainPitch, Thumbs, XgStroke
   components/matches/             #   match list blocks: MatchIndex (rows), MatchShots (static shot pitch)
   components/shell/               #   Pizarra shell: PillNav, Arrow, Exits, BoardFooter (+ legacy handoff Masthead/Footer)
@@ -361,8 +361,8 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   `match_game_states` + view `team_game_states`. Manual and row counts:
   `md/GOLD_LAYER.md §9` (§9.4).
 - **Visual redesign (24 Oct 2026, branch `redesign/visual-world`)**: new
-  "Pizarra" world (`DESIGN.md`), landing `/`, screen 01 (season) and the
-  match list rebuilt in it; the other pages still use the handoff under `web/app/(handoff)/` and
+  "Pizarra" world (`DESIGN.md`), landing `/`, screen 01 (season), the
+  match list and screen 02 (match) rebuilt in it; the other pages still use the handoff under `web/app/(handoff)/` and
   move over one by one
   (`md/REDESIGN_HANDOFF.md`). Pre-redesign snapshot: tag `pre-redesign-2026-10-23`.
 - **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written
@@ -382,7 +382,8 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   **Screen 02 has the same map -> sequence click (22 Oct 2026)**: shots,
   progression and defensive actions carry `s` (index into the match file's
   `sequences[]`, null for an opponent's event or a chain under 3 actions);
-  `components/match/SequenceLink` + `MatchMaps`.
+  since 24 Oct 2026 all inside the spot panel `components/match/MatchExplorer`
+  (one map + switch, keyboard-reachable marks, chain beside it).
   Brief `web/design_handoff_espanyol_analytics/README-PLAYER.md`. Its percentile
   spine is **settled (15 Oct 2026)**: per-role cards (README-PLAYER §4), roles
   `GK CB RB LB MID AM W ST` (`role_group`, AM = midfielder with ≥ 30% of

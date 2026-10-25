@@ -158,6 +158,48 @@
   .pizarra :is(p, li, figcaption) {
     text-wrap: pretty;
   }
+
+  /* ---- The chart adapter (24 Oct 2026, transitional) ---------------------
+   * The shared viz components (Momentum, PassNetwork, ZoneHeatmap,
+   * SequenceDetail) still name the handoff's tokens, because the player page
+   * draws them in the handoff world too. Inside `.pizarra-viz` those names
+   * resolve to Pizarra values, which is DESIGN.md's chart colour mapping in
+   * one place: team for the club and for carries (the gold is retired),
+   * rival for the opponent, chalk for markings and grids, slate for
+   * secondary ink, the board face for SVG text. `--viz-ground` is the
+   * surface the chart sits on (white card or panel), for the halos drawn in
+   * the "card" colour. Delete this block with the handoff tokens once
+   * `app/(handoff)/` is empty and the components name Pizarra tokens. */
+  .pizarra-viz {
+    --viz-ground: white;
+    --viz-opponent: var(--color-rival);
+    --color-blue: var(--color-team);
+    --color-gold: var(--color-team);
+    --color-opp: var(--color-rival);
+    --color-opp-strong: var(--color-rival);
+    --color-mid: var(--color-slate);
+    --color-faint: var(--color-slate);
+    --color-card: var(--viz-ground);
+    --color-pitch: var(--color-chalk);
+    --color-grid: var(--color-chalk);
+    --color-line: var(--color-chalk);
+    --color-track: var(--color-chalk);
+    --color-pos: var(--color-good);
+    --color-neg: var(--color-bad);
+    --font-mono: var(--font-board);
+    --font-sans: var(--font-board);
+    --font-display: var(--font-board);
+    /* Momentum's in-SVG labels: board face, sentence case, legible size. */
+    --viz-text: 16px;
+    --viz-tracking: 0;
+    --viz-case: none;
+    --viz-name-weight: 600;
+    --viz-opponent-opacity: 0.22;
+  }
+
+  .pizarra-viz.on-panel {
+    --viz-ground: var(--color-panel);
+  }
 }
 
 /* --------------------------------------------------------------------------

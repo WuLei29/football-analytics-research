@@ -52,9 +52,19 @@
  * `scale` below.
  */
 
+import type { CSSProperties } from "react";
+
 import { divergingAreaPath, rollingMean } from "@/lib/viz/scale";
 
 /** One entry of `momentum.bins` (WEB_DATA §7). Both sides are positive. */
+/** The two team names: handoff capitals unless the Pizarra adapter says otherwise. */
+const NAME_STYLE = {
+  fontSize: "var(--viz-text, 9px)",
+  letterSpacing: "var(--viz-tracking, 1.4px)",
+  textTransform: "var(--viz-case, uppercase)",
+  fontWeight: "var(--viz-name-weight, 400)",
+} as CSSProperties;
+
 export interface MomentumBin {
   period: 1 | 2;
   minute: number;
@@ -239,7 +249,11 @@ export function Momentum({
 
   // A marker belongs to whoever it happened to; a period end to nobody.
   const colorOf = (side: MomentumMarker["side"]) =>
-    side === null ? "var(--color-faint)" : side === teamSide ? "var(--color-blue)" : "var(--color-mid)";
+    side === null
+      ? "var(--color-faint)"
+      : side === teamSide
+        ? "var(--color-blue)"
+        : "var(--viz-opponent, var(--color-mid))";
 
   return (
     <svg
@@ -255,8 +269,12 @@ export function Momentum({
         <line key={y} x1={0} y1={y} x2={VIEW.width} y2={y} stroke="var(--color-grid)" strokeWidth={1} />
       ))}
 
-      <path d={divergingAreaPath(series, VIEW.zeroY, 1)} fill="rgba(11,76,158,.28)" />
-      <path d={divergingAreaPath(series, VIEW.zeroY, -1)} fill="rgba(154,141,126,.35)" />
+      <path d={divergingAreaPath(series, VIEW.zeroY, 1)} fill="var(--color-blue)" fillOpacity={0.28} />
+      <path
+        d={divergingAreaPath(series, VIEW.zeroY, -1)}
+        fill="var(--viz-opponent, var(--color-faint))"
+        style={{ fillOpacity: "var(--viz-opponent-opacity, 0.35)" }}
+      />
 
       <line
         x1={0}
@@ -291,7 +309,7 @@ export function Momentum({
                 x={x + 8}
                 y={iconY + 3}
                 fontFamily="var(--font-mono)"
-                fontSize={8.5}
+                style={{ fontSize: "var(--viz-text, 8.5px)" }}
                 fontWeight={600}
                 fill={color}
               >
@@ -320,7 +338,7 @@ export function Momentum({
             x={halfTimeX + 4}
             y={244}
             fontFamily="var(--font-mono)"
-            fontSize={9.5}
+            style={{ fontSize: "var(--viz-text, 9.5px)" }}
             fontWeight={600}
             fill={colorOf(null)}
           >
@@ -359,7 +377,7 @@ export function Momentum({
           y={262}
           textAnchor="middle"
           fontFamily="var(--font-mono)"
-          fontSize={9}
+          style={{ fontSize: "var(--viz-text, 9px)" }}
           fill="var(--color-faint)"
         >
           {t.minute}&#39;
@@ -370,11 +388,13 @@ export function Momentum({
           they stay in the SVG — nothing about them depends on the data. The
           top one sits a few units above the y = 30 gridline rather than on
           it, so its baseline does not merge with the rule. */}
-      <text x={0} y={25} fontFamily="var(--font-mono)" fontSize={9} letterSpacing={1.4} fill="var(--color-blue)">
-        {teamName.toUpperCase()}
+      {/* `--viz-*` are set by the Pizarra chart adapter (globals.css); without
+          it the names keep the handoff's 9 px tracked capitals. */}
+      <text x={0} y={25} fontFamily="var(--font-mono)" fill="var(--color-blue)" style={NAME_STYLE}>
+        {teamName}
       </text>
-      <text x={0} y={222} fontFamily="var(--font-mono)" fontSize={9} letterSpacing={1.4} fill="var(--color-mid)">
-        {opponentName.toUpperCase()}
+      <text x={0} y={222} fontFamily="var(--font-mono)" fill="var(--viz-opponent, var(--color-mid))" style={NAME_STYLE}>
+        {opponentName}
       </text>
     </svg>
   );

@@ -873,6 +873,108 @@ export const match = {
   backToList: "Todos los partidos",
 } as const;
 
+/* --------------------------------------------------------------------------
+ * Screen 02 in the Pizarra world (24 Oct 2026). The handoff keys of `match`
+ * above stay for the headings they still name; these are the new page's.
+ * ------------------------------------------------------------------------ */
+export const matchPage = {
+  /** The h1's second line: the result, read against the xG. */
+  /** The h1's second line: the result, read against the xG (the pair is in the figures). */
+  verdict: (result: "W" | "D" | "L", xgd: number) => {
+    if (result === "W") return xgd >= 0 ? "Victoria, también en xG" : "Victoria pese a perder el xG";
+    if (result === "L") return xgd > 0 ? "Derrota pese a ganar el xG" : "Derrota, también en xG";
+    return xgd > 0 ? "Empate con más xG" : xgd < 0 ? "Empate con menos xG" : "Empate, también en xG";
+  },
+
+  lead: (competition: string, matchday: number, venue: string | null, date: string, ht: string | null) =>
+    [`${competition}, jornada ${matchday}`, venue, date, ht ? `descanso ${ht}` : null].filter(Boolean).join(" · ") + ".",
+  figuresHeading: "Las cifras del partido",
+  /** Under a figure: the rival's value. */
+  rivalValue: (abbr: string, value: string) => `${abbr} ${value}`,
+  figure: {
+    xg: "xG",
+    xt: "xT generado",
+    possession: "Posesión",
+    shots: "Tiros",
+    shotsOnTarget: (n: string) => `${n} a puerta`,
+    bigChances: "Ocasiones claras",
+  },
+  readingHeading: "La lectura",
+  momentumHeading: "Momentum",
+  momentumCaption: (window: number, team: string, rival: string) =>
+    `xT por minuto, media móvil de ${window} minutos: arriba el ${team}, abajo el ${rival}`,
+  totalsHeading: "Datos del partido",
+  totalsCaption: (home: string, away: string) =>
+    `${home} a la izquierda, ${away} a la derecha; cada barra reparte la fila entre los dos`,
+  networkHeading: "Red de pases",
+  networkCaption: (min: number) => `Once inicial: posición media y combinaciones (${min} o más). Tamaño = pases`,
+  xtHeading: "Superficie de xT",
+  xtCaption: (team: string) => `Amenaza generada por el ${team}, por zona: más oscuro, más xT`,
+  playersHeading: "Destacados del partido",
+  playersCaption: "Los dos equipos, seis jugadores por métrica",
+  backToList: "Todos los partidos",
+  pickerLabel: "Cambiar de partido",
+} as const;
+
+/** The spot panel of screen 02: the map -> sequence explorer. */
+export const matchExplorer = {
+  heading: "Del mapa a la jugada",
+  dek: "Elige un mapa, pasa por una marca o recórrelas con Tab y las flechas, y ábrela con un clic o Intro: la jugada que la contiene se dibuja al lado.",
+  modesLabel: "Mapa",
+  modes: {
+    shots: (n: number) => `Tiros · ${n}`,
+    progression: (n: number) => `Progresión · ${n}`,
+    defence: (n: number) => `Defensa · ${n}`,
+  },
+  mapLabel: {
+    shots: (n: number) => `Mapa de tiros, ${n} marcas. Las flechas recorren los tiros por minuto; Intro abre la jugada.`,
+    progression: (n: number) =>
+      `Pases y conducciones progresivas, ${n} flechas. Las flechas del teclado las recorren por minuto; Intro abre la jugada.`,
+    defence: (n: number) =>
+      `Acciones defensivas, ${n} marcas. Las flechas las recorren por minuto; Intro abre la jugada.`,
+  },
+  filterLabel: "Tipo de acción",
+  filterAll: (n: number) => `Todas · ${n}`,
+  filterType: (type: string, n: number) => `${type} · ${n}`,
+  /* The readout under the map. */
+  idle: "Pasa el cursor por una marca, o entra en el mapa con Tab y recórrelo con las flechas.",
+  open: "Clic o Intro: ver la jugada",
+  opened: "Es la jugada que se ve al lado",
+  noChain: "Sin jugada dibujable: del rival, o de menos de tres acciones",
+  shotTitle: (name: string, abbr: string) => `${name} · ${abbr}`,
+  shotLine: (minute: number, xg: string, outcome: string, body: string) => `${minute}' · ${xg} xG · ${outcome} · ${body}`,
+  progressionTitle: { pass: "Pase progresivo", carry: "Conducción progresiva" },
+  progressionLine: (minute: number | null, xt: string | null, failed: boolean) =>
+    [minute == null ? null : `${minute}'`, failed ? "fallado (0 xT)" : xt ? `xT ${xt}` : null].filter(Boolean).join(" · "),
+  defenceLine: (minute: number, won: boolean) => `${minute}' · ${won ? "balón ganado" : "duelo perdido"}`,
+  /** A mark's accessible name: its readout in one sentence. */
+  markLabel: (title: string, line: string, linked: boolean) => `${title}. ${line}.${linked ? " Abre la jugada." : ""}`,
+  legend: {
+    shotTeam: (abbr: string) => `${abbr}: relleno = gol, medio = a puerta, hueco = fuera`,
+    shotRival: (abbr: string) => `${abbr}: relleno = gol`,
+    size: "Tamaño = xG",
+    pass: "Pase",
+    carry: "Conducción",
+    failed: "Claro = fallado",
+    won: "Ganada",
+    lost: "Perdida",
+    line: (m: string) => `Línea defensiva media, ${m} m`,
+  },
+  /* The chain card. */
+  chainHeading: "La jugada",
+  chainEmpty: "No hay jugadas de tres o más acciones en este partido.",
+  chainMeta: (clock: string, ending: string) => `${clock} · ${ending}`,
+  chainActions: (n: number) => `Acción por acción (${n})`,
+  chainActionLine: (clock: string | null, what: string, who: string | null) =>
+    [clock, who ? `${what} · ${who}` : what].filter(Boolean).join(" · "),
+  chainPitch: "La jugada dibujada en el campo",
+  /* The list. */
+  listHeading: "Todas las jugadas",
+  listCaption: (n: number) => `${n} posesiones de tres o más acciones`,
+  sortLabel: "Ordenar por",
+  rowValue: (metric: string, value: string) => `${value} ${metric}`,
+} as const;
+
 /** The match dropdown in the header of screen 02 (`MatchPicker`). */
 export const matchPicker = {
   label: "Cambiar de partido",
