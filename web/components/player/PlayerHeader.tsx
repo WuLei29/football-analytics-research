@@ -1,19 +1,18 @@
 /**
- * PlayerHeader — the top of screen 03: eyebrow, shirt block, name block, and
- * two mono meta lines on the right.
+ * PlayerHeader — the top of screen 03, in the Pizarra world.
  *
- * Renders: README-PLAYER §1 — a flex row over the hard ink rule; the shirt
- * number in a 2px ink box with its DORSAL caption; the given name in blue
- * mono above the 52px surname; position, age and minutes, then the season
- * and the matchday the data runs to.
+ * Renders: the page's <h1>, two lines: the player's name, then his position
+ * and shirt number in team blue; under it his age and minutes; and the
+ * season with the matchday the data runs to, locked top-right as on the
+ * other Pizarra pages.
  * Props: `player`, `seasonLabel`, `throughMatchday`.
  * Data:  `players/{player_id}.json` -> `player`, `season` (README-PLAYER
  *        "Data contract"), from `silver.players` and
  *        `gold.player_season_stats`.
  *
- * Not `PageHeader`: that one's H1 is a plain + accent sentence at 46px, and
- * this one is a shirt and a name at 52px. Same rule, same spacing, same
- * eyebrow underneath.
+ * Pizarra (24 Oct 2026): the handoff's eyebrow, ink-boxed shirt, blue mono
+ * given name and upper-case mono meta lines became the season page's
+ * heading: a two-line h1, a slate line, the status corner. Same facts.
  */
 
 import { num } from "@/lib/format";
@@ -29,43 +28,22 @@ export function PlayerHeader({
   seasonLabel: string;
   throughMatchday: number | null;
 }) {
-  const position = player.position ? label(positionLabels, player.position) : "—";
+  const position = player.position ? label(positionLabels, player.position) : null;
 
   return (
-    <header className="mt-8 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-ink pb-3">
+    <header className="flex flex-col gap-4 lg:flex-row-reverse lg:items-start lg:justify-between lg:gap-10">
+      <p className="text-[14px] text-slate lg:pt-3 lg:text-right">{copy.status(seasonLabel, throughMatchday)}</p>
       <div>
-        <p className="eyebrow mb-1.5">{copy.eyebrow}</p>
-        <div className="flex items-end gap-4">
-          <div className="rounded-[11px] border-2 border-ink bg-card px-3 pt-1.5 pb-1 text-center">
-            <div className="font-display text-[34px] font-bold leading-[0.86]">
-              {player.shirt_number ?? "—"}
-            </div>
-            <div className="mt-1 font-mono text-[7px] tracking-[0.16em] text-faint">
-              {copy.shirtCaption}
-            </div>
-          </div>
-          <div>
-            {player.name.first && (
-              <div className="font-mono text-[10px] tracking-[0.22em] uppercase text-blue">
-                {player.name.first}
-              </div>
-            )}
-            <h1
-              className="font-display font-bold"
-              style={{ fontSize: 52, lineHeight: 0.95, letterSpacing: "-0.04em" }}
-            >
-              {player.name.last}
-            </h1>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="font-mono text-[10px] tracking-[0.12em] uppercase text-mid md:text-right"
-        style={{ lineHeight: 1.7 }}
-      >
-        <div>{copy.metaLine(position, player.age, num(player.minutes))}</div>
-        <div>{copy.seasonLine(seasonLabel, throughMatchday)}</div>
+        <h1 className="text-[clamp(34px,3.9vw,58px)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance">
+          {player.name.full}
+          {(position || player.shirt_number !== null) && (
+            <>
+              <br />
+              <span className="text-team">{copy.roleLine(position, player.shirt_number)}</span>
+            </>
+          )}
+        </h1>
+        <p className="mt-4 max-w-[62ch] text-[17px] leading-[1.5] text-slate">{copy.lead(player.age, num(player.minutes))}</p>
       </div>
     </header>
   );

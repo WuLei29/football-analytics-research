@@ -1253,6 +1253,16 @@ export const player = {
   /** "LALIGA 2025/2026 · HASTA J38". */
   seasonLine: (season: string, matchday: number | null) =>
     matchday === null ? `LALIGA ${season}` : `LALIGA ${season} · HASTA J${matchday}`,
+  /* Pizarra header (24 Oct 2026). */
+  /** The h1's second line: "Lateral derecho, dorsal 2". */
+  roleLine: (position: string | null, shirt: number | null) =>
+    [position, shirt === null ? null : `dorsal ${shirt}`].filter(Boolean).join(", "),
+  /** "24 años · 1,284 minutos en la temporada." */
+  lead: (age: number | null, minutes: string) =>
+    [age === null ? null : `${age} años`, `${minutes} minutos en la temporada`].filter(Boolean).join(" · ") + ".",
+  /** The status corner: "LaLiga 2025/2026 · datos hasta la jornada 38". */
+  status: (season: string, matchday: number | null) =>
+    matchday === null ? `LaLiga ${season}` : `LaLiga ${season} · datos hasta la jornada ${matchday}`,
   tabsLabel: "Jugadores de la plantilla",
   /** The player picker (replaces the pill strip, 16 Oct 2026). */
   pickerLabel: "Cambiar de jugador",
@@ -1334,10 +1344,16 @@ export const player = {
     }
   },
   mapModesLabel: "Qué dibuja el mapa",
+  /** The map's accessible name: what it draws and how to walk it. */
+  mapLabel: (title: string, n: number) =>
+    `${title}, ${n} marcas. Las flechas del teclado las recorren por orden; Intro abre la jugada.`,
+  /** The readout line of a defensive action. */
+  legendWon: "balón ganado",
+  legendLost: "duelo perdido",
   mapEmpty: "Ninguna acción de este tipo en los partidos elegidos.",
   /** The heat / one-by-one switch of Toques, Recepciones and Defensivas. */
   mapDisplay: {
-    label: "VER",
+    label: "Ver",
     heat: "Mapa de calor",
     events: "Eventos",
   },
@@ -1375,7 +1391,8 @@ export const player = {
     assist: "Asistencia",
     keyPass: "Pase clave",
     /** Under every map whose marks can open their chain. */
-    hoverRule: "Pasa el cursor por una acción · clic para ver su jugada",
+    hoverRule:
+      "Pasa el cursor por una acción, o entra en el mapa con Tab y recórrelo con las flechas; un clic o Intro abre su jugada.",
   },
 
   percentileHeading: (group: string) => `Percentil vs LaLiga · ${group}`,
@@ -1383,12 +1400,12 @@ export const player = {
     `Por 90 · vs ${peerN ?? "—"} ${group.toLowerCase()} con ≥ ${minMinutes}' · ` +
     `barra = percentil, más es mejor`,
   percentileUnit: "percentil",
-  utilityChip: (pct: string, position: string) => `POLIVALENTE · ${pct} % ${position}`,
+  utilityChip: (pct: string, position: string) => `Polivalente · ${pct} % como ${position}`,
   percentileIneligible: (minutes: string, minMinutes: string) =>
     `Todavía pocos minutos: ${minutes}' de los ${minMinutes}' que hacen falta ` +
     `para compararlo con el resto de la liga.`,
   /** Marks a row whose percentile was flipped because lower is better. */
-  lowerIsBetter: "↓",
+  lowerIsBetter: "(menos es mejor)",
 
   sequencesHeading: (surname: string) => `Jugadas con ${surname}`,
   aggregates: {
@@ -1400,7 +1417,7 @@ export const player = {
   /** "Las 10 mejores de sus 1,107 jugadas de tres o más acciones, por xT. …" */
   sequencesCaption: (shown: number, total: string, metric: string) =>
     `Las ${shown} mejores de sus ${total} jugadas de tres o más acciones, ` +
-    `por ${metric}. Elige una para leerla; en dorado, él.`,
+    `por ${metric}. Elige una para leerla; en azul claro, él.`,
   sequencesEmpty: "No hay jugadas de tres o más acciones con él en estos partidos.",
   sequencesLoading: "Cargando las jugadas de estos partidos…",
   sequencesError: "No se pudieron cargar las jugadas de estos partidos.",

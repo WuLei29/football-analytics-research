@@ -1,10 +1,10 @@
 /**
  * ProfileCard — the left column of screen 03: photo, bio grid, four KPIs.
  *
- * Renders: README-PLAYER §3a. A photo block that FLEXES to the height of the
- * event-map card beside it (so the two columns bottom-align), with a name
- * plate and a shirt chip over it; a 12-item bio grid; a 2 x 2 hairline grid
- * of the role's four headline KPIs.
+ * Renders: README-PLAYER §3a, in the Pizarra world: a panel whose photo
+ * block FLEXES to the height of the event-map panel beside it (so the two
+ * columns bottom-align), with a white name plate and a team shirt chip over
+ * it; a 12-item bio grid; the role's four headline KPIs as white cards.
  * Props: `player`, `kpis`, `photo` (a URL under /players, or null), and
  *        `selected` — how many matches the filter keeps, null for the season.
  * Data:  `players/{player_id}.json` -> `player`, `kpis` (README-PLAYER "Data
@@ -16,9 +16,9 @@
  *
  * No photo source exists in the data (open decision 6). Photos are
  * hand-supplied, licensed assets; without one the block shows the shirt
- * number as a large `--line` numeral on the photo ground, the brief's
- * proposed fallback. The plate and chip keep their dark surfaces either way:
- * they exist so the type passes contrast over ANY photo.
+ * number as a large light chalk numeral on the panel-deep ground. The plate
+ * and chip stay opaque (white, team) so the type passes contrast over ANY
+ * photo; Pizarra has no black fills, so the handoff's dark plate is white.
  */
 
 import { dec, EMPTY, num, numericDate } from "@/lib/format";
@@ -30,9 +30,6 @@ import {
   positionLabels,
 } from "@/lib/labels";
 import type { PlayerBio, PlayerKpi } from "@/lib/data/types";
-
-/** The handoff's #EFE3D4, which is the `--color-track` token. */
-const PHOTO_GROUND = "var(--color-track)";
 
 export function ProfileCard({
   player,
@@ -67,99 +64,54 @@ export function ProfileCard({
   ];
 
   return (
-    <article
-      className="flex h-full flex-col overflow-hidden rounded-card border border-line bg-card"
-      style={{ padding: 2 }}
-    >
-      {/* 1 · Photo, flexing to the height of the pitch card. */}
-      <div
-        className="relative flex-1 overflow-hidden"
-        style={{
-          minHeight: 206,
-          margin: "-2px -2px 0",
-          borderRadius: "14px 14px 0 0",
-          background: PHOTO_GROUND,
-        }}
-      >
+    <article className="flex h-full flex-col gap-4 rounded-panel bg-panel p-3 sm:p-4">
+      {/* 1 · Photo, flexing to the height of the map panel. */}
+      <div className="relative min-h-[220px] flex-1 overflow-hidden rounded-row bg-panel-deep">
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element -- static export, no optimiser
           <img src={photo} alt="" className="absolute inset-0 size-full object-cover" />
         ) : (
           <div
             aria-hidden
-            className="absolute inset-0 flex items-center justify-center font-display font-bold text-line"
-            style={{ fontSize: 150, lineHeight: 1, letterSpacing: "-0.04em" }}
+            className="absolute inset-0 flex items-center justify-center text-[150px] leading-none font-light tracking-[-0.04em] text-chalk"
           >
             {player.shirt_number ?? ""}
           </div>
         )}
-        <div className="pointer-events-none absolute" style={{ left: 14, bottom: 11 }}>
-          <div
-            className="inline-block"
-            style={{ background: "rgba(23,24,28,.82)", borderRadius: 9, padding: "5px 10px 6px" }}
-          >
-            {player.name.first && (
-              <div
-                className="font-mono uppercase"
-                style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(255,255,255,.8)" }}
-              >
-                {player.name.first}
-              </div>
-            )}
-            <div
-              className="font-display font-bold text-white"
-              style={{ fontSize: 24, lineHeight: 1.05, letterSpacing: "-0.03em" }}
-            >
-              {player.name.last}
-            </div>
-          </div>
+        <div className="pointer-events-none absolute bottom-3 left-3 rounded-[14px] bg-white px-3 py-2">
+          {player.name.first && <div className="text-[13px] text-slate">{player.name.first}</div>}
+          <div className="text-[22px] leading-tight font-semibold tracking-[-0.02em]">{player.name.last}</div>
         </div>
         {player.shirt_number !== null && (
-          <div
-            className="pointer-events-none absolute bg-ink font-display font-bold text-white"
-            style={{ right: 12, top: 12, borderRadius: 9, padding: "4px 9px 3px", fontSize: 20 }}
-          >
+          <div className="pointer-events-none absolute top-3 right-3 flex size-10 items-center justify-center rounded-full bg-team text-[17px] font-semibold text-white">
             {player.shirt_number}
           </div>
         )}
       </div>
 
       {/* 2 · Bio grid: two columns of six. */}
-      <dl
-        className="grid grid-cols-2 border-b border-line"
-        style={{ columnGap: 14, padding: "12px 16px" }}
-      >
+      <dl className="grid grid-cols-2 gap-x-5 gap-y-1.5 px-2">
         {bio.map(([key, value]) => (
-          <div key={key} className="flex items-baseline justify-between gap-2" style={{ padding: "3px 0" }}>
-            <dt className="font-mono text-[8.5px] tracking-[0.12em] uppercase text-faint">{key}</dt>
-            <dd className="truncate text-right font-sans text-[12px] font-semibold text-ink">{value}</dd>
+          <div key={key} className="flex items-baseline justify-between gap-2">
+            <dt className="text-[13px] text-slate">{key}</dt>
+            <dd className="min-w-0 text-right text-[14px] font-medium break-words">{value}</dd>
           </div>
         ))}
       </dl>
 
-      {/* 3 · Four KPIs, a collapsed hairline grid. */}
-      <div className="grid grid-cols-2">
+      {/* 3 · Four KPIs, white cards on the panel. */}
+      <dl className="grid grid-cols-2 gap-2">
         {kpis.map((kpi, i) => (
-          <div key={kpi.key} className="border border-line" style={{ padding: "14px 16px", margin: -0.5 }}>
-            <div className="font-mono text-[9px] tracking-[0.14em] uppercase text-mid">
-              {label(playerKpiLabels, kpi.key)}
-            </div>
-            <div
-              className="mt-1.5 font-display font-bold"
-              style={{
-                fontSize: 42,
-                lineHeight: 0.86,
-                color: i === 0 ? "var(--color-blue)" : "var(--color-ink)",
-              }}
-            >
-              {kpi.value === null ? EMPTY : `${dec(kpi.value, kpi.decimals)}${kpi.scale === "pct" ? "%" : ""}`}
-            </div>
-            <div className="font-mono text-[9px] text-faint" style={{ marginTop: 3 }}>
-              {kpiSub(kpi, selected)}
-            </div>
+          <div key={kpi.key} className="flex flex-col rounded-row bg-white px-4 py-3.5">
+            <dt className="text-[13px] leading-snug font-medium">{label(playerKpiLabels, kpi.key)}</dt>
+            <dd className={`mt-2 text-[36px] leading-[0.95] font-light tracking-[-0.04em] tabular-nums ${i === 0 ? "text-team" : ""}`}>
+              {kpi.value === null ? EMPTY : dec(kpi.value, kpi.decimals)}
+              {kpi.value !== null && kpi.scale === "pct" && <span className="ml-0.5 text-[0.5em] tracking-normal">%</span>}
+            </dd>
+            <dd className="mt-auto pt-2 text-[13px] leading-snug text-slate">{kpiSub(kpi, selected)}</dd>
           </div>
         ))}
-      </div>
+      </dl>
     </article>
   );
 }

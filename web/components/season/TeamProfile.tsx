@@ -31,9 +31,9 @@
  * no ink rule under the title and no "VS LA LIGA" caption, which the section
  * line already says. The thresholds are unchanged.
  *
- * `PercentileCard` and `PercentileRow` below are still the HANDOFF drawing:
- * screen 03 (`components/player/PlayerPercentiles.tsx`) imports them and has
- * not moved to Pizarra yet. They go, or move to Pizarra, when it does.
+ * `PercentileCard` and `PercentileRow` below are the same drawing for screen
+ * 03 (`components/player/PlayerPercentiles.tsx`), moved to Pizarra with it
+ * on 24 Oct 2026 (README-PLAYER §4: "same construction as the Team profile").
  */
 
 import type { ReactNode } from "react";
@@ -58,12 +58,6 @@ function tierColor(p: number): string {
 /** The same tier as text: the amber fill is too light to read (`fair`). */
 function tierText(p: number): string {
   return p >= 45 && p < 70 ? "var(--color-fair)" : tierColor(p);
-}
-
-function percentileColor(p: number): string {
-  if (p >= 70) return "var(--color-pos)";
-  if (p >= 45) return "var(--color-gold)";
-  return "var(--color-neg)";
 }
 
 const CARDS: ProfileCard[] = ["defensive", "possession", "progression", "finishing"];
@@ -105,11 +99,42 @@ export function TeamProfile({
   );
 }
 
-/**
- * One profile row: label and value, then the track. A null percentile keeps
- * the track empty and prints "—": no confident bar that describes nothing.
- */
+/** One profile row: the shared `PercentileRow`. */
 function ProfileRow({ label: text, printed, percentile }: { label: string; printed: string; percentile: number | null }) {
+  return <PercentileRow label={text} printed={printed} percentile={percentile} />;
+}
+
+/**
+ * One card of percentile rows: a panel, the 18px title and, on the player
+ * page, the unit in slate beside it.
+ */
+export function PercentileCard({
+  title,
+  unit,
+  children,
+}: {
+  title: string;
+  unit?: string;
+  children: ReactNode;
+}) {
+  return (
+    <article className="rounded-panel bg-panel p-6">
+      <div className="flex items-baseline justify-between gap-2">
+        <h3 className="text-[18px] font-semibold tracking-[-0.01em]">{title}</h3>
+        {unit && <span className="text-[13px] text-slate">{unit}</span>}
+      </div>
+      <dl className="mt-5 flex flex-col gap-4">{children}</dl>
+    </article>
+  );
+}
+
+/**
+ * A label and value, then the chalk track filled to the percentile in its
+ * tier (green ≥ 70, amber, red < 45), the number in the tier's text colour.
+ * A null percentile keeps the track empty and prints "—": no confident bar
+ * that describes nothing (a metric not ranked for this player).
+ */
+export function PercentileRow({ label: text, printed, percentile }: { label: string; printed: string; percentile: number | null }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 text-[14px]">
@@ -135,87 +160,6 @@ function ProfileRow({ label: text, printed, percentile }: { label: string; print
         <span
           className="w-[3ch] text-right text-[13px] tabular-nums"
           style={{ color: percentile === null ? "var(--color-slate)" : tierText(percentile) }}
-        >
-          {percentile === null ? copy.percentileEmpty : percentile}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/**
- * One card of percentile rows: the 15px title, the mono unit caption, the
- * hard ink rule. Shared with the player page's percentile block
- * (README-PLAYER §4: "same construction as the Team profile block").
- */
-export function PercentileCard({
-  title,
-  unit,
-  children,
-}: {
-  title: string;
-  unit: string;
-  children: ReactNode;
-}) {
-  return (
-    <article className="card">
-      <div className="flex items-baseline justify-between gap-2 border-b border-ink pb-2">
-        <h3 className="font-display text-[15px] font-bold">{title}</h3>
-        <span className="font-mono text-[8.5px] tracking-[0.16em] uppercase text-faint">
-          {unit}
-        </span>
-      </div>
-      <dl className="mt-3 flex flex-col gap-2.5">{children}</dl>
-    </article>
-  );
-}
-
-/**
- * A label and value, then a 5px track filled to the percentile. A null
- * percentile draws the value over an EMPTY track with "—": a metric not
- * ranked for this player (wrong role, under its attempt floor) must not get
- * a confident-looking bar that describes nothing.
- */
-export function PercentileRow({
-  label: text,
-  printed,
-  percentile,
-  tintNumber = false,
-}: {
-  label: string;
-  printed: string;
-  percentile: number | null;
-  /** Print the two-digit percentile in the fill colour (screen 03) rather
-      than `--faint` (screen 01). */
-  tintNumber?: boolean;
-}) {
-  return (
-    <div>
-      <div className="flex items-baseline justify-between gap-3">
-        <dt className="font-sans text-[12px] font-medium text-mid">{text}</dt>
-        <dd className="shrink-0 font-mono text-[12px] font-medium text-ink">{printed}</dd>
-      </div>
-
-      <div className="mt-1 flex items-center gap-2">
-        <div className="h-[5px] flex-1 rounded-[3px] bg-paper">
-          {percentile !== null && (
-            <div
-              className="h-full rounded-[3px]"
-              style={{
-                width: `${percentile}%`,
-                background: percentileColor(percentile),
-              }}
-            />
-          )}
-        </div>
-        <span
-          className="w-[18px] text-right font-mono text-[9px]"
-          style={{
-            color:
-              percentile === null || !tintNumber
-                ? "var(--color-faint)"
-                : percentileColor(percentile),
-          }}
         >
           {percentile === null ? copy.percentileEmpty : percentile}
         </span>

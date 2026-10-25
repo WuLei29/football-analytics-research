@@ -3,7 +3,8 @@
  *
  * Renders: README-PLAYER "Page structure", top to bottom — page header, the
  * toolbar (player picker, match filter), profile card beside the event map,
- * the percentile cards, and the sequence block.
+ * the percentile cards, and the sequence block. Pizarra since 24 Oct 2026;
+ * the order is the handoff's.
  * Props: the player file, the squad (for the picker), the team and season
  *        slugs, an optional photo URL, and `demo` for the /demo fixture page.
  * Data:  `players/{player_id}.json` and `squad.json` (WEB_DATA §8, §9),
@@ -49,9 +50,7 @@ export function PlayerView({
       />
 
       {demo && (
-        <p className="mt-3 rounded-chip border border-line bg-card px-3 py-2 font-mono text-[10px] tracking-[0.08em] text-neg">
-          {copy.demoWarning}
-        </p>
+        <p className="mt-4 rounded-row bg-panel px-4 py-3 text-[14px] font-medium text-bad">{copy.demoWarning}</p>
       )}
 
       <PlayerBody

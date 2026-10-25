@@ -29,7 +29,9 @@ export default async function DemoPlayerPage() {
   const manifest = await getManifest();
   return (
     <>
-      <VizDefs />
+      <div className="pizarra-viz">
+        <VizDefs />
+      </div>
       <Masthead
         eyebrow={site.eyebrow}
         title={site.homeTitle}
@@ -37,13 +39,17 @@ export default async function DemoPlayerPage() {
         seasons={manifest.seasons}
         team={manifest.default.team}
       />
-      <PlayerView
-        file={demoPlayerFile}
-        squad={demoSquad.players}
-        team={demoSquad.team}
-        season={demoSquad.season}
-        demo
-      />
+      {/* The player view moved to Pizarra on 24 Oct 2026; this fixture page
+          moves with the rest of /demo (md/REDESIGN_HANDOFF.md step 5). */}
+      <div className="pizarra mt-8">
+        <PlayerView
+          file={demoPlayerFile}
+          squad={demoSquad.players}
+          team={demoSquad.team}
+          season={demoSquad.season}
+          demo
+        />
+      </div>
       <Footer source={manifest.source} generatedAt={demoPlayerFile.generated_at} />
     </>
   );

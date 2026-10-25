@@ -4,11 +4,11 @@
  * PlayerSequences — screen 03 block 5: the possession chains the player was
  * part of, ranked by xT or VAEP, over the matches the filter selects.
  *
- * Renders: the match page's sequence block (`MatchSequences`), with the
- * player's nodes in gold — a section head with the `MetricToggle`, a card
- * holding a four-figure aggregate strip and the `SequenceBrowser` (one play
- * at a time, action by action, beside the list of the top ten), and the
- * shared `SequenceLegend`.
+ * Renders: the page's light-blue spot panel (Pizarra, 24 Oct 2026): the
+ * heading with the xT / VAEP switch, a white strip of four aggregate
+ * figures, then the match page's sequence halves (`SequenceParts`): the
+ * selected chain large on the left, with his nodes in the adapter's light
+ * blue, and the top ten on the right.
  * Props: `file` (the player file), `idx` (the selected match indices, null
  *        for the season), `team` and `season` slugs, `demo`.
  * Data:  `players/{player_id}.json` -> `sequences.index` ranks the chains;
@@ -33,18 +33,16 @@
  * way back. Its match file is fetched like any filtered chain's.
  */
 
-import { useEffect, useMemo, useState, type Ref } from "react";
+import { useEffect, useMemo, useState, type ReactNode, type Ref } from "react";
 
-import { SectionHead } from "@/components/shell/SectionHead";
 import { dec, EMPTY, num } from "@/lib/format";
 import { metricDefinitions, player as copy, type SequenceMetric } from "@/lib/labels";
 import { rankSequences } from "@/lib/data/playerFilter";
 import { sequenceEntry } from "@/lib/data/sequences";
 import type { MatchFile, PlayerFile, PlayerSequenceEntry } from "@/lib/data/types";
 
-import { MetricToggle } from "../viz/MetricToggle";
-import { SequenceBrowser } from "../viz/SequenceBrowser";
-import { SequenceLegend } from "../viz/SequenceLegend";
+import { ChainCard, MetricSwitch, SequenceList } from "../sequences/SequenceParts";
+import type { SequenceEntry } from "../viz/SequenceBrowser";
 
 type Chains = Map<string, Omit<PlayerSequenceEntry, "match_id">>;
 
@@ -153,81 +151,119 @@ export function PlayerSequences({
   // The browser keeps its selection by index; a new list is a new browser.
   const listKey = `${metric}:${pinRow?.[1] ?? ""}:${rows.map((r) => r[1]).join(",")}`;
 
+  const pinMatch = pinRow ? matches[pinRow[0]] : null;
+  const pinBar = pinMatch && (
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-[12px] bg-spot px-3 py-2">
+      <span className="text-[14px] text-spot-text">
+        {copy.pinned.note(copy.sequenceContext(pinMatch.matchday, pinMatch.opponent_abbr, pinMatch.is_home))}
+      </span>
+      {onUnpin && (
+        <button type="button" onClick={onUnpin} className="rounded-full text-[14px] font-semibold text-team underline-offset-2 hover:underline">
+          {copy.pinned.back}
+        </button>
+      )}
+    </div>
+  );
+
   let body;
   if (rows.length === 0) {
-    body = <p className="label">{copy.sequencesEmpty}</p>;
+    body = <p className="rounded-row bg-white p-5 text-[15px] text-slate">{copy.sequencesEmpty}</p>;
   } else if (missing.length > 0) {
-    body = <p className="label">{failed ? copy.sequencesError : copy.sequencesLoading}</p>;
+    body = (
+      <p aria-live="polite" className="rounded-row bg-white p-5 text-[15px] text-slate">
+        {failed ? copy.sequencesError : copy.sequencesLoading}
+      </p>
+    );
   } else {
     body = (
-      <SequenceBrowser
+      <Browser
         key={listKey}
-        sequences={list}
-        title={title}
-        legend={<SequenceLegend focus={player.name.last} />}
+        list={list}
+        initial={pinRow?.[1] ?? list[0]?.sequence_id ?? null}
+        metric={metric}
         focusPlayerId={player.player_id}
-        initialIndex={Math.max(initialIndex, 0)}
+        focusName={player.name.last}
+        pinBar={pinBar}
+        pinnedId={pinRow?.[1] ?? null}
       />
     );
   }
 
-  const pinMatch = pinRow ? matches[pinRow[0]] : null;
-
   return (
-    <section ref={ref} className="mt-8 scroll-mt-4">
-      <SectionHead
-        title={title}
-        right={
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="font-mono text-[9px] tracking-[0.04em] text-faint">
-              {copy.sequencesCaption(ranked.top.length, num(agg.sequences), abbr)}
-            </span>
-            <MetricToggle value={metric} onChange={setMetric} />
-          </div>
-        }
-      />
-      <div className="card mt-4">
-        {pinMatch && (
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-chip border border-gold px-3 py-2">
-            <span className="font-mono text-[10px] tracking-[0.06em] text-ink">
-              {copy.pinned.note(copy.sequenceContext(pinMatch.matchday, pinMatch.opponent_abbr, pinMatch.is_home))}
-            </span>
-            {onUnpin && (
-              <button
-                type="button"
-                onClick={onUnpin}
-                className="font-mono text-[10px] tracking-[0.06em] text-blue underline underline-offset-2"
-              >
-                {copy.pinned.back}
-              </button>
-            )}
-          </div>
-        )}
-        <div className="mb-4 grid grid-cols-2 gap-3 border-b border-line pb-3 sm:grid-cols-4">
-          <Figure label={copy.aggregates.sequences} value={num(agg.sequences)} />
-          <Figure label={copy.aggregates.xt} value={agg.xt === null ? EMPTY : dec(agg.xt, 2)} accent />
-          <Figure label={copy.aggregates.shots} value={num(agg.endsInShot)} />
-          <Figure
-            label={copy.aggregates.passes}
-            value={agg.passesPerSequence === null ? EMPTY : dec(agg.passesPerSequence, 1)}
-          />
+    <section ref={ref} aria-labelledby="jugadas-titulo" className="mt-6 flex scroll-mt-24 flex-col gap-4 rounded-panel bg-spot p-4 sm:p-6 lg:mt-8">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 px-2 pt-2">
+        <div>
+          <h2 id="jugadas-titulo" className="text-[26px] leading-tight font-semibold tracking-[-0.02em]">
+            {title}
+          </h2>
+          <p className="mt-2 max-w-[70ch] text-[15px] text-spot-text">
+            {copy.sequencesCaption(ranked.top.length, num(agg.sequences), abbr)}
+          </p>
         </div>
-        {body}
+        <MetricSwitch value={metric} onChange={setMetric} />
       </div>
+
+      <dl className="grid grid-cols-2 gap-3 rounded-row bg-white p-4 sm:grid-cols-4 sm:p-5">
+        <Figure label={copy.aggregates.sequences} value={num(agg.sequences)} />
+        <Figure label={copy.aggregates.xt} value={agg.xt === null ? EMPTY : dec(agg.xt, 2)} accent />
+        <Figure label={copy.aggregates.shots} value={num(agg.endsInShot)} />
+        <Figure
+          label={copy.aggregates.passes}
+          value={agg.passesPerSequence === null ? EMPTY : dec(agg.passesPerSequence, 1)}
+        />
+      </dl>
+
+      {body}
     </section>
+  );
+}
+
+/** The chain and the top ten; keyed by its list, so a new list starts fresh. */
+function Browser({
+  list,
+  initial,
+  metric,
+  focusPlayerId,
+  focusName,
+  pinBar,
+  pinnedId,
+}: {
+  list: SequenceEntry[];
+  initial: string | null;
+  metric: SequenceMetric;
+  focusPlayerId: number;
+  focusName: string;
+  pinBar: ReactNode;
+  pinnedId: string | null;
+}) {
+  const [selected, setSelected] = useState<string | null>(initial);
+  const chain = list.find((s) => s.sequence_id === selected) ?? list[0] ?? null;
+  if (!chain) return null;
+  return (
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <ChainCard
+        chain={chain}
+        focusPlayerId={focusPlayerId}
+        focusName={focusName}
+        top={chain.sequence_id === pinnedId ? pinBar : null}
+      />
+      <SequenceList
+        rows={list.map((seq) => ({ key: seq.sequence_id, seq }))}
+        selectedKey={chain.sequence_id}
+        onSelect={setSelected}
+        metric={metric}
+      />
+    </div>
   );
 }
 
 function Figure({ label: text, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <div>
-      <div className="font-mono text-[8.5px] tracking-[0.14em] uppercase text-mid">{text}</div>
-      <div
-        className="font-display font-bold"
-        style={{ fontSize: 26, lineHeight: 1.05, color: accent ? "var(--color-blue)" : "var(--color-ink)" }}
-      >
+      <dt className="text-[13px] text-slate">{text}</dt>
+      <dd className={`mt-1 text-[32px] leading-none font-light tracking-[-0.03em] tabular-nums ${accent ? "text-team" : ""}`}>
         {value}
-      </div>
+      </dd>
     </div>
   );
 }

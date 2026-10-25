@@ -37,16 +37,16 @@ export function Shirt({ number, size = 24 }: { number: number | null; size?: num
     <svg aria-hidden viewBox="0 0 32 30" width={size} height={(size * 30) / 32} className="shrink-0">
       <path
         d="M11 1.5 4.2 4.6 1 11.2l5 2.3 1.4-2.4V28.5h17.2V11.1l1.4 2.4 5-2.3-3.2-6.6L21 1.5c-.8 2.4-2.6 3.8-5 3.8s-4.2-1.4-5-3.8Z"
-        fill="var(--color-blue)"
+        fill="var(--color-team)"
       />
       <text
         x={16}
         y={21.2}
         textAnchor="middle"
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-board)"
         fontSize={number !== null && number >= 10 ? 10.5 : 11.5}
         fontWeight={600}
-        fill="var(--color-card)"
+        fill="white"
       >
         {number ?? ""}
       </text>
@@ -91,34 +91,27 @@ export function PlayerPicker({
       }
     >
       {(close) => (
-        <nav aria-label={copy.tabsLabel} className="max-h-[420px] overflow-y-auto py-1.5">
+        <nav aria-label={copy.tabsLabel} className="max-h-[420px] overflow-y-auto pb-2">
           {groups.map((g) => (
             <div key={g.role}>
-              <p className="label px-3 pt-2 pb-1">{label(peerGroupLabels, g.role)}</p>
+              <p className="px-4 pt-3 pb-1 text-[13px] text-slate">{label(peerGroupLabels, g.role)}</p>
               <ul>
                 {g.players.map((p) => {
                   const isCurrent = p.player_id === currentId;
                   const row = (
                     <>
                       <Shirt number={p.shirt_number} />
-                      <span className="min-w-0 flex-1 truncate font-sans text-[13px] font-medium normal-case tracking-normal text-ink">
-                        {p.name.full}
-                      </span>
-                      <span className="font-mono text-[9.5px] text-faint">{num(p.minutes)}&apos;</span>
+                      <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-ink">{p.name.full}</span>
+                      <span className="text-[13px] text-slate tabular-nums">{num(p.minutes)}&apos;</span>
                     </>
                   );
-                  const className = "flex items-center gap-2.5 px-3 py-1.5";
+                  const className = "mx-1.5 flex items-center gap-2.5 rounded-[12px] px-2.5 py-1.5";
                   return (
                     <li key={p.player_id}>
                       {demo || isCurrent ? (
                         <span
-                          className={className}
+                          className={`${className} ${isCurrent ? "bg-spot" : ""}`}
                           aria-current={isCurrent ? "page" : undefined}
-                          style={
-                            isCurrent
-                              ? { background: "rgba(11,76,158,.06)", boxShadow: "inset 2px 0 0 var(--color-blue)" }
-                              : undefined
-                          }
                         >
                           {row}
                         </span>
@@ -126,7 +119,7 @@ export function PlayerPicker({
                         <Link
                           href={routes.player(team, season, p.player_id, query)}
                           onClick={close}
-                          className={`${className} hover:bg-[rgba(11,76,158,.04)]`}
+                          className={`${className} transition-colors hover:bg-panel`}
                         >
                           {row}
                         </Link>

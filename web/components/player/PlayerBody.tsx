@@ -76,14 +76,14 @@ export function PlayerBody({
 
   return (
     <>
-      <div className="mt-4 mb-4 flex flex-wrap items-center justify-between gap-2">
+      <div className="mt-6 mb-6 flex flex-wrap items-center justify-between gap-2 lg:mt-8">
         <PlayerPicker players={squad} currentId={p.player_id} team={team} season={season} demo={demo} />
         <MatchFilter matches={file.matches} selection={selection} idx={idx} />
       </div>
 
       {/* 340px card beside the pitch; the card's photo flexes to the pitch
           card's height so the two columns bottom-align. Stacks below lg. */}
-      <section className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)]">
+      <section className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-8">
         <ProfileCard
           player={filteredBio(p, file.matches, idx)}
           kpis={filteredKpis(file.kpis, file.matches, idx)}
@@ -94,8 +94,7 @@ export function PlayerBody({
           view={view}
           matches={file.matches}
           touchTypes={file.maps.touch_types}
-          playerName={p.name.full}
-          teamAbbr={file.team.abbr}
+          openedS={pinned}
           onOpenSequence={openSequence}
         />
       </section>

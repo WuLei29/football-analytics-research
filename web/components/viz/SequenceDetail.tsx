@@ -372,7 +372,8 @@ export function SequenceDetail({
             const focus = focusPlayerId !== undefined && node.player_id === focusPlayerId;
             // Gold fill marks the page's player; the finisher keeps its
             // inverted blue unless he is the finisher too.
-            const fill = focus ? "var(--color-gold)" : node.isFinal ? "var(--color-blue)" : "var(--color-card)";
+            // `--viz-focus` is the Pizarra adapter's colour for him (globals.css).
+            const fill = focus ? "var(--viz-focus, var(--color-gold))" : node.isFinal ? "var(--color-blue)" : "var(--color-card)";
             const ink = focus ? "var(--color-ink)" : node.isFinal ? "var(--color-card)" : "var(--color-blue)";
             return (
               <g key={`${node.player_id}-${node.index}`}>
@@ -381,7 +382,7 @@ export function SequenceDetail({
                   cy={p.y}
                   r={nodeRadius}
                   fill={fill}
-                  stroke={focus && !node.isFinal ? "var(--color-gold)" : "var(--color-blue)"}
+                  stroke={focus && !node.isFinal ? "var(--viz-focus, var(--color-gold))" : "var(--color-blue)"}
                   strokeWidth={0.3}
                 />
                 <text

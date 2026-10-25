@@ -209,7 +209,7 @@ sql/
   seed/                           # formation_slot_positions
   fixes/                          # dated one-off data repairs
 web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
-  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/temporada, [equipo]/partidos, [equipo]/partido; (handoff)/ = /plantilla, /jugador, /demo
+  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, every [equipo]/ page; (handoff)/ = /demo only
   components/landing/             #   landing blocks: SeasonHighlight, DepthIndex, ChainPitch, Thumbs, XgStroke
   components/matches/             #   match list blocks: MatchIndex (rows), MatchShots (static shot pitch)
   components/shell/               #   Pizarra shell: PillNav, Arrow, Exits, BoardFooter (+ legacy handoff Masthead/Footer)
@@ -362,7 +362,8 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   `md/GOLD_LAYER.md §9` (§9.4).
 - **Visual redesign (24 Oct 2026, branch `redesign/visual-world`)**: new
   "Pizarra" world (`DESIGN.md`), landing `/`, screen 01 (season), the
-  match list and screen 02 (match) rebuilt in it; the other pages still use the handoff under `web/app/(handoff)/` and
+  match list, screen 02 (match) and screen 03 (squad + player) rebuilt in
+  it; only `/demo` is left in the handoff; the other pages still use the handoff under `web/app/(handoff)/` and
   move over one by one
   (`md/REDESIGN_HANDOFF.md`). Pre-redesign snapshot: tag `pre-redesign-2026-10-23`.
 - **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written

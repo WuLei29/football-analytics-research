@@ -9,17 +9,21 @@ when `web/app/(handoff)/` is empty.
 - **Branch** `redesign/visual-world`. `main` is untouched. Snapshot of the old
   design: tag `pre-redesign-2026-10-23`.
 - **Done**: the landing `web/app/page.tsx` (components in
-  `web/components/landing/`), **screen 01** `web/app/[equipo]/temporada/`
+  `web/components/landing/`), **screen 01** `web/app/[equipo]/temporada/`,
   the **match list** `web/app/[equipo]/partidos/` (components in
   `web/components/matches/`) and **screen 02** `web/app/[equipo]/partido/`
-  (handoff block order; maps `components/match/MatchMap`, spot panel on the sequence block `MatchSequences`), all 24 Oct 2026. Shared
-  charts are recoloured on Pizarra pages by the `.pizarra-viz` adapter in
-  `globals.css` until the player page moves. Shared Pizarra parts are in `web/components/shell/`:
+  (handoff block order; maps `components/match/MatchMap`, spot panel on the
+  sequence block `MatchSequences`) and **screen 03**, squad + player
+  `web/app/[equipo]/plantilla/`, `web/app/[equipo]/jugador/` (shell
+  `components/player/PlayerRoute`, keyboard event map `player/EventMap`,
+  sequence halves shared in `components/sequences/SequenceParts`), all 24 Oct
+  2026. Shared charts are recoloured on Pizarra pages by the `.pizarra-viz`
+  adapter in `globals.css` until the handoff tokens go. Shared Pizarra parts are in `web/components/shell/`:
   `PillNav` (`active`), `Arrow`, `Exits` (numbered exits), `BoardFooter`
   (`photoCredit`). The trend chart is `components/season/SeasonTrend`.
 - **Still in the handoff world**, under `web/app/(handoff)/` (URLs unchanged):
-  squad and player `/[equipo]/plantilla/[season]`,
-  `/[equipo]/jugador/[season]/[player_id]`, and `/demo`, `/demo/jugador`.
+  `/demo` and `/demo/jugador` (the latter already draws the Pizarra
+  `PlayerView`, wrapped in `.pizarra`). After them: the cleanup of step 5.
 
 ## The authorities
 
@@ -75,7 +79,7 @@ One page per session, in this order (each depends on less than the next):
 1. ~~**Screen 01, season**~~ — done 24 Oct 2026 (`md/CHANGELOG.md`).
 2. ~~**Match list.**~~ — done 24 Oct 2026.
 3. ~~**Screen 02, match**~~ — done 24 Oct 2026.
-4. **Squad + player (screen 03).**
+4. ~~**Squad + player (screen 03).**~~ — done 24 Oct 2026.
 5. **`/demo` pages**, then delete the `(handoff)` group, its layout, the
    handoff tokens in `globals.css`, the old `Masthead`/`Footer`, and mark the
    handoff README fully superseded.

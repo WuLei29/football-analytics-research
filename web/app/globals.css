@@ -173,6 +173,9 @@
   .pizarra-viz {
     --viz-ground: white;
     --viz-opponent: var(--color-rival);
+    /* The player page's player in a chain: light blue, between the white
+       nodes of his teammates and the team-filled finisher. */
+    --viz-focus: var(--color-spot-line);
     --color-blue: var(--color-team);
     --color-gold: var(--color-team);
     --color-opp: var(--color-rival);

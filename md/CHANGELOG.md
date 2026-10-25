@@ -10,6 +10,43 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 24 Oct 2026 — Squad + player (screen 03) moved to Pizarra
+
+- `/{equipo}/plantilla/{season}` and `/{equipo}/jugador/{season}/{id}` left
+  `app/(handoff)/`. Blocks and order kept (the author's preference from
+  screen 02): header, toolbar (player picker, match filter), profile card
+  beside the event map, percentiles, the sequence block; then Exits (Jugador
+  current) and BoardFooter. `PlayerRoute` is the Pizarra shell.
+- **Header**: two-line h1 (name; position and shirt in team blue), age and
+  minutes, the status corner. **Dropdowns** (`shell/Dropdown`): tone pills,
+  white panels with a hairline ring, no shadow. **Profile card**: panel,
+  white name plate and team shirt chip over the photo block, bio in slate,
+  the four KPIs as white cards. **Percentiles**: `PercentileCard` /
+  `PercentileRow` now Pizarra (the screen-01 team profile drawing, shared);
+  "↓" became "(menos es mejor)"; the utility chip a pill.
+- **EventMap** rewritten: one SVG for all eight modes (no more `ShotMap` /
+  `DefensiveActions` / black hover cards on this page), a white `aria-live`
+  readout, and the match page's keyboard model: every mark and every heat
+  zone a labelled `role="button"`, one roving tab stop, arrows, Enter opens
+  the chain; delegated handlers. Colours per DESIGN.md (carries dotted team,
+  assists thicker team with an end dot instead of gold, failed faint, rest of
+  passes slate). Defence type filter as single-select pills. Vertical pitch
+  under 640 px. Measured on Edu Expósito 2025/26: pases 150, toques heat 29
+  zones, recepciones 128, tiros 44, defensivas 324, conducciones 37, pases
+  clave 79 marks; 0 unlabelled, 1 tab stop each; Enter on a shot opened its
+  chain (fetched from the match file) under the "abierta desde el mapa" bar.
+- **Sequences**: on the spot panel; `components/sequences/SequenceParts`
+  (`ChainCard`, `SequenceList`, `MetricSwitch`) is now shared with screen 02's
+  `MatchSequences`, and gained the marks key the handoff's `SequenceLegend`
+  drew (missing from the first screen-02 pass). The player's nodes use the
+  adapter's new `--viz-focus` (spot-line light blue) instead of gold.
+- `/demo/jugador` (still handoff) wraps `PlayerView` in `.pizarra` until
+  /demo moves; it shows two h1s meanwhile.
+- **Checks**: typecheck and build pass; detect clean on the source files; on
+  the URL one low-contrast flag on the decorative shirt numeral of the photo
+  placeholder (aria-hidden, by design); no horizontal scroll at 390 px; no
+  page errors.
+
 ## 24 Oct 2026 (later) — Screen 02 back to the handoff's distribution
 
 - The author liked the Pizarra look but not the regrouped page. The page now

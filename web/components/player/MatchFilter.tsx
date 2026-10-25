@@ -27,7 +27,6 @@ import { setPartidos } from "@/lib/vista";
 import type { PlayerMatch } from "@/lib/data/types";
 
 import { Dropdown } from "../shell/Dropdown";
-import { Chip } from "../viz/DefensiveActions";
 
 const PRESETS: MatchPreset[] = ["season", "last5", "home", "away"];
 
@@ -83,7 +82,7 @@ export function MatchFilter({
             viewBox="0 0 16 16"
             width="14"
             height="14"
-            className="shrink-0 text-mid"
+            className="shrink-0 text-slate"
             fill="none"
             stroke="currentColor"
             strokeWidth="1.3"
@@ -97,35 +96,37 @@ export function MatchFilter({
       }
     >
       <div className="p-3">
-        <div role="group" aria-label={copy.filter.label} className="flex flex-wrap gap-[4px]">
+        <div role="group" aria-label={copy.filter.label} className="flex flex-wrap gap-1.5">
           {PRESETS.map((p) => (
-            <Chip
+            <button
               key={p}
-              label={presetLabel(p)}
-              pressed={selection.kind === p}
+              type="button"
+              aria-pressed={selection.kind === p}
               onClick={() => choose({ kind: p })}
-            />
+              className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+                selection.kind === p ? "bg-team text-white" : "bg-panel-deep text-ink hover:bg-chalk"
+              }`}
+            >
+              {presetLabel(p)}
+            </button>
           ))}
         </div>
 
-        <p className="label mt-3 mb-1">{copy.filter.pick}</p>
-        <ul
-          className="max-h-[300px] overflow-y-auto"
-          style={{ borderTop: "1px solid var(--color-line)" }}
-        >
+        <p className="mt-3 mb-1 text-[13px] text-slate">{copy.filter.pick}</p>
+        <ul className="max-h-[300px] overflow-y-auto">
           {[...matches.keys()].reverse().map((i) => {
             const m = matches[i];
             const on = idx === null || idx.has(i);
             return (
-              <li key={m.match_id} style={{ borderBottom: "1px solid var(--color-line)" }}>
-                <label className="flex cursor-pointer items-center gap-2.5 px-1 py-[6px] hover:bg-[rgba(11,76,158,.04)]">
+              <li key={m.match_id}>
+                <label className="flex cursor-pointer items-center gap-2.5 rounded-[12px] px-2 py-1.5 transition-colors hover:bg-panel">
                   <input
                     type="checkbox"
                     checked={on}
                     onChange={() => toggle(i)}
-                    className="size-3.5 shrink-0 cursor-pointer accent-[var(--color-blue)]"
+                    className="size-4 shrink-0 cursor-pointer accent-[var(--color-team)]"
                   />
-                  <span className="min-w-0 flex-1 truncate font-mono text-[10px] tracking-[0.04em] text-ink">
+                  <span className="min-w-0 flex-1 truncate text-[14px] text-ink">
                     {matchPicker.option(
                       m.matchday,
                       shortDate(m.date),
@@ -135,16 +136,14 @@ export function MatchFilter({
                       m.goals_against,
                     )}
                   </span>
-                  <span className="font-mono text-[9.5px] text-faint">{num(m.minutes)}&apos;</span>
+                  <span className="text-[13px] text-slate tabular-nums">{num(m.minutes)}&apos;</span>
                 </label>
               </li>
             );
           })}
         </ul>
 
-        <p className="label mt-2" style={{ letterSpacing: 0, textTransform: "none" }}>
-          {copy.filter.scope}
-        </p>
+        <p className="mt-2 text-[13px] text-slate">{copy.filter.scope}</p>
       </div>
     </Dropdown>
   );

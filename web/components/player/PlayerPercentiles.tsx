@@ -4,9 +4,9 @@
  *
  * Renders: README-PLAYER §4 — the section head ("Percentil vs LaLiga ·
  * Laterales derechos"), its caption with the peer count and the minutes
- * gate, the POLIVALENTE chip when the primary position is under 60 % of
- * minutes, and `repeat(4, 1fr)` cards built from `PercentileCard` /
- * `PercentileRow` — the page-01 team profile's own construction.
+ * gate, the "polivalente" pill when the primary position is under 60 % of
+ * minutes, and four panels built from `PercentileCard` / `PercentileRow`,
+ * the page-01 team profile's own construction (Pizarra, 24 Oct 2026).
  * Props: `percentiles`, `minutes`, `position` (Spanish, for the chip).
  * Data:  `players/{player_id}.json` -> `percentiles` (WEB_DATA §3.6, §9),
  *        ranked by `src/export/player_percentiles.py` from
@@ -30,7 +30,6 @@ import {
 } from "@/lib/labels";
 import type { PercentileMetric, PlayerPercentiles as Percentiles } from "@/lib/data/types";
 
-import { SectionHead } from "../shell/SectionHead";
 import { PercentileCard, PercentileRow } from "../season/TeamProfile";
 
 function printed(m: PercentileMetric): string {
@@ -55,42 +54,38 @@ export function PlayerPercentiles({
   const group = label(peerGroupLabels, percentiles.peer_group);
 
   return (
-    <section className="mt-6">
-      <SectionHead
-        title={copy.percentileHeading(group)}
-        rule="none"
-        right={
-          <div className="flex flex-wrap items-center gap-2">
-            {isUtility && primaryPct !== null && (
-              <span className="rounded-pill border border-line bg-paper px-2 py-0.5 font-mono text-[8.5px] tracking-[0.12em] text-mid">
-                {copy.utilityChip(dec(primaryPct, 0), position.toUpperCase())}
-              </span>
-            )}
-            <span className="font-mono text-[9px] tracking-[0.12em] uppercase text-faint">
-              {copy.percentileCaption(percentiles.peer_n, group, num(percentiles.min_minutes))}
-            </span>
-          </div>
-        }
-      />
+    <section aria-labelledby="percentiles" className="mt-10 lg:mt-14">
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+        <h2 id="percentiles" className="text-[22px] font-semibold tracking-[-0.02em]">
+          {copy.percentileHeading(group)}
+        </h2>
+        {isUtility && primaryPct !== null && (
+          <span className="rounded-full bg-panel-deep px-3 py-1 text-[13px] font-semibold">
+            {copy.utilityChip(dec(primaryPct, 0), position.toLowerCase())}
+          </span>
+        )}
+      </div>
+      <p className="mt-1 max-w-[70ch] text-[15px] text-slate">
+        {copy.percentileCaption(percentiles.peer_n, group, num(percentiles.min_minutes))}
+      </p>
 
       {percentiles.eligible ? (
-        <div className="mt-3 mb-5 grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {percentiles.cards.map((card) => (
-            <PercentileCard key={card.key} title={label(spineCardLabels, card.key)} unit={copy.percentileUnit}>
+            <PercentileCard key={card.key} title={label(spineCardLabels, card.key)}>
               {card.metrics.map((m) => (
                 <PercentileRow
                   key={m.key}
                   label={`${label(spineMetricLabels, m.key)}${m.higher_is_better ? "" : ` ${copy.lowerIsBetter}`}`}
                   printed={printed(m)}
                   percentile={m.out_of !== undefined ? null : m.percentile}
-                  tintNumber
                 />
               ))}
             </PercentileCard>
           ))}
         </div>
       ) : (
-        <p className="dek mt-3 mb-5">
+        <p className="mt-5 rounded-panel bg-panel p-6 text-[15px] text-slate">
           {copy.percentileIneligible(num(minutes), num(percentiles.min_minutes))}
         </p>
       )}
