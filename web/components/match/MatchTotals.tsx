@@ -1,8 +1,7 @@
 /**
  * MatchTotals — the eighteen stat rows of screen 02.
  *
- * Renders: a grid of rows (one column on a phone, two from md, three from
- * xl). Each row is [home value] [label] [away value] over a 6px round-capped
+ * Renders: a grid of rows (one column on a phone, two from md). Each row is [home value] [label] [away value] over a 6px round-capped
  * chalk track holding two strokes that meet: the home share from the left,
  * the away share from the right, in team blue for the published club and
  * rival red for the opponent.
@@ -55,7 +54,7 @@ export function MatchTotals({
 
   return (
     <>
-      <div className="grid gap-x-10 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-x-10 gap-y-4 md:grid-cols-2">
         {totals.map((total) => {
           const home = total.home ?? 0;
           const away = total.away ?? 0;

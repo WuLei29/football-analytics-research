@@ -12,7 +12,7 @@ when `web/app/(handoff)/` is empty.
   `web/components/landing/`), **screen 01** `web/app/[equipo]/temporada/`
   the **match list** `web/app/[equipo]/partidos/` (components in
   `web/components/matches/`) and **screen 02** `web/app/[equipo]/partido/`
-  (spot panel `components/match/MatchExplorer`), all 24 Oct 2026. Shared
+  (handoff block order; maps `components/match/MatchMap`, spot panel on the sequence block `MatchSequences`), all 24 Oct 2026. Shared
   charts are recoloured on Pizarra pages by the `.pizarra-viz` adapter in
   `globals.css` until the player page moves. Shared Pizarra parts are in `web/components/shell/`:
   `PillNav` (`active`), `Arrow`, `Exits` (numbered exits), `BoardFooter`

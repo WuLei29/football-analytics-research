@@ -878,27 +878,16 @@ export const match = {
  * above stay for the headings they still name; these are the new page's.
  * ------------------------------------------------------------------------ */
 export const matchPage = {
-  /** The h1's second line: the result, read against the xG. */
-  /** The h1's second line: the result, read against the xG (the pair is in the figures). */
+  /** The h1's second line: the result, read against the xG (the pair is in the lead). */
   verdict: (result: "W" | "D" | "L", xgd: number) => {
     if (result === "W") return xgd >= 0 ? "Victoria, también en xG" : "Victoria pese a perder el xG";
     if (result === "L") return xgd > 0 ? "Derrota pese a ganar el xG" : "Derrota, también en xG";
     return xgd > 0 ? "Empate con más xG" : xgd < 0 ? "Empate con menos xG" : "Empate, también en xG";
   },
-
-  lead: (competition: string, matchday: number, venue: string | null, date: string, ht: string | null) =>
-    [`${competition}, jornada ${matchday}`, venue, date, ht ? `descanso ${ht}` : null].filter(Boolean).join(" · ") + ".",
-  figuresHeading: "Las cifras del partido",
-  /** Under a figure: the rival's value. */
-  rivalValue: (abbr: string, value: string) => `${abbr} ${value}`,
-  figure: {
-    xg: "xG",
-    xt: "xT generado",
-    possession: "Posesión",
-    shots: "Tiros",
-    shotsOnTarget: (n: string) => `${n} a puerta`,
-    bigChances: "Ocasiones claras",
-  },
+  lead: (competition: string, matchday: number, venue: string | null, date: string, ht: string | null, xg: string) =>
+    [`${competition}, jornada ${matchday}`, venue, date, ht ? `descanso ${ht}` : null, `xG ${xg}`]
+      .filter(Boolean)
+      .join(" · ") + ".",
   readingHeading: "La lectura",
   momentumHeading: "Momentum",
   momentumCaption: (window: number, team: string, rival: string) =>
@@ -906,6 +895,12 @@ export const matchPage = {
   totalsHeading: "Datos del partido",
   totalsCaption: (home: string, away: string) =>
     `${home} a la izquierda, ${away} a la derecha; cada barra reparte la fila entre los dos`,
+  shotsHeading: "Mapa de tiros",
+  shotsCaption: "Los dos equipos, cada uno atacando hacia su portería",
+  progressionHeading: "Progresión",
+  progressionCaption: (n: number) => `Los ${n} pases y conducciones progresivas de más xT`,
+  defenceHeading: "Acciones defensivas",
+  defenceCaption: (n: number) => `Las ${n} acciones defensivas del equipo, y la línea media`,
   networkHeading: "Red de pases",
   networkCaption: (min: number) => `Once inicial: posición media y combinaciones (${min} o más). Tamaño = pases`,
   xtHeading: "Superficie de xT",
@@ -916,16 +911,8 @@ export const matchPage = {
   pickerLabel: "Cambiar de partido",
 } as const;
 
-/** The spot panel of screen 02: the map -> sequence explorer. */
+/** Screen 02's maps (`MatchMap`) and sequence block (`MatchSequences`). */
 export const matchExplorer = {
-  heading: "Del mapa a la jugada",
-  dek: "Elige un mapa, pasa por una marca o recórrelas con Tab y las flechas, y ábrela con un clic o Intro: la jugada que la contiene se dibuja al lado.",
-  modesLabel: "Mapa",
-  modes: {
-    shots: (n: number) => `Tiros · ${n}`,
-    progression: (n: number) => `Progresión · ${n}`,
-    defence: (n: number) => `Defensa · ${n}`,
-  },
   mapLabel: {
     shots: (n: number) => `Mapa de tiros, ${n} marcas. Las flechas recorren los tiros por minuto; Intro abre la jugada.`,
     progression: (n: number) =>
@@ -968,9 +955,11 @@ export const matchExplorer = {
   chainActionLine: (clock: string | null, what: string, who: string | null) =>
     [clock, who ? `${what} · ${who}` : what].filter(Boolean).join(" · "),
   chainPitch: "La jugada dibujada en el campo",
-  /* The list. */
-  listHeading: "Todas las jugadas",
-  listCaption: (n: number) => `${n} posesiones de tres o más acciones`,
+  /* The sequence block (the spot panel). */
+  sequencesHeading: (metric: string) => `Jugadas por ${metric}`,
+  sequencesDek: (n: number) =>
+    `Las ${n} posesiones de tres o más acciones. Elige una en la lista, o abre la de cualquier marca de los mapas de arriba.`,
+  listHeading: "Jugadas",
   sortLabel: "Ordenar por",
   rowValue: (metric: string, value: string) => `${value} ${metric}`,
 } as const;

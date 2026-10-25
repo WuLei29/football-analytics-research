@@ -10,6 +10,24 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 24 Oct 2026 (later) — Screen 02 back to the handoff's distribution
+
+- The author liked the Pizarra look but not the regrouped page. The page now
+  keeps the handoff's blocks and order: header, momentum, totals beside the
+  pass network, shot map beside the xT surface (2.1 : 1), progression beside
+  defensive actions, the sequence block (chain large on the left, list on
+  the right), player boxes, the reading last. The five figure cards are gone
+  (the xG pair moved into the lead line); the spot panel is the sequence block.
+- `MatchExplorer` split into `components/match/MatchMap` (one per map, same
+  keyboard model and encodings: one tab stop per map, arrows, Enter opens,
+  white `aria-live` readout, defence type pills) and
+  `components/match/MatchSequences` (the spot). `SequenceLink` is back to
+  carry a map click to the sequence block (and now exposes `ids`, so a map
+  rings the mark whose chain is open). Measured on match 2060: 33 / 30 / 143
+  marks, 0 unlabelled, 1 tab stop per map; a keyboard Enter on a progression
+  arrow selected its chain and its list row.
+- Checks: typecheck and build pass; no horizontal page scroll at 390 px.
+
 ## 24 Oct 2026 — Screen 02 (match) moved to Pizarra
 
 - `/{equipo}/partido/{match_id}` left `app/(handoff)/` for `app/[equipo]/partido/`.
