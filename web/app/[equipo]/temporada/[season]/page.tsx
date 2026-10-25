@@ -20,7 +20,7 @@
  * "reading first"): interpretation frames the charts (PRODUCT.md principle
  * 3), so the reading sits with the figures at the top instead of last. The
  * data and chart encodings are the handoff's; only the interface changed
- * (md/REDESIGN_HANDOFF.md). The fixtures block of the handoff stays absent:
+ * (md/CHANGELOG.md, 24 Oct 2026). The fixtures block of the handoff stays absent:
  * no fixture data exists in silver (WEB_PLAN.md §9.4 decision B).
  *
  * Revised the same day after the author's review: figures raised and

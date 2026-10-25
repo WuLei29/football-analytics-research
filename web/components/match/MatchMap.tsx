@@ -20,7 +20,7 @@
  * layout is the handoff's (shots beside the xT surface, progression beside
  * defence); what changed is the colours and the keyboard.
  *
- * Keyboard (md/REDESIGN_HANDOFF.md: the critique of 22 Oct found 523 of 523
+ * Keyboard (the critique of 22 Oct 2026 found 523 of 523
  * map marks unreachable). Every mark is a labelled `role="button"`. Each map
  * is ONE tab stop (a roving tabindex): Tab enters on the last mark visited,
  * the arrow keys walk the marks in match order, Home / End jump to the ends,

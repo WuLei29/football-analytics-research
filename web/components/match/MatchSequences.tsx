@@ -24,7 +24,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { matchExplorer as copy, metricDefinitions, type SequenceMetric } from "@/lib/labels";
 
 import { ChainCard, MetricSwitch, SequenceList } from "@/components/sequences/SequenceParts";
-import type { SequenceEntry } from "@/components/viz/SequenceBrowser";
+import type { SequenceEntry } from "@/lib/data/sequences";
 
 import { useSequenceLink } from "./SequenceLink";
 

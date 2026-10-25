@@ -4,7 +4,7 @@ description: >
   End-to-end workflow for adding a chart, a visual mode or a data block to the
   Espanyol site: definitions check → export field (src/export, WEB_DATA.md,
   types.ts) → fixture and /demo card → component → page → verification
-  (typecheck, build, browser screenshot against the handoff) → docs. Encodes
+  (typecheck, build, browser screenshot against DESIGN.md) → docs. Encodes
   the path screens 01 and 02 were built with, so each new chart follows it
   without being re-explained.
 
@@ -30,8 +30,8 @@ wait for approval. Steps 3–7 are execution.
 From the catalog entry, write down:
 - **Question** the chart answers, in one sentence.
 - **Every metric or flag** it uses. Look each one up in `football-metrics`.
-- **Conflicts**: wherever the handoff (`README.md` / `README-PLAYER.md`)
-  defines a metric differently, uses a grid the repo doesn't, or names a table
+- **Conflicts**: wherever a brief (the superseded handoff `README.md` /
+  `README-PLAYER.md`, or a new one) defines a metric differently, uses a grid the repo doesn't, or names a table
   that doesn't exist (football-metrics §8 lists the known ones). These go to
   the user as questions with a recommended answer. Don't resolve them silently.
 - **Scope**: which team(s), season(s), player(s); per match or per season.
@@ -78,7 +78,7 @@ the browser, and pages never query a database.
 
 - Add a seeded fixture to `web/lib/viz/fixtures.ts`, typed with the component's
   exported interface.
-- Add a card to `web/app/(handoff)/demo/page.tsx`. The layer has to look right in
+- Add a panel to `web/app/demo/page.tsx`. The layer has to look right in
   isolation before it touches a page.
 
 ## 5. Component
@@ -87,14 +87,16 @@ the browser, and pages never query a database.
   On the third copy of a pattern, extract it.
 - New file in `web/components/viz/`. Open it with the house header comment:
   `Renders:` / `Props:` / `Data:` (export key and WEB_DATA §), then the *why*
-  of each deviation from the handoff.
+  of each deviation from DESIGN.md.
 - Compose on `<Pitch>`: heat in `underlay`, marks in `children`, element order
   = z-order. Use `project` / `zoneRect` / `xtCellRect` from `lib/viz/pitch.ts`.
   Never hand-roll coordinates or flips.
 - Server component unless it answers a mouse. If it does, make the smallest
   client boundary possible (web/README.md §2).
 - Strings come from `lib/labels.ts` (Spanish), numbers from `lib/format.ts`.
-  Furniture (title, note, legend, tooltip) is HTML around the SVG.
+  Furniture (title, note, key, readout card) is HTML around the SVG. Colours
+  by DESIGN.md's chart colour mapping. Interactive marks: the keyboard model
+  of `match/MatchMap` (catalog rule 8).
 - This is Next.js 16. Before using any framework API you aren't sure of, read
   the guide in `web/node_modules/next/dist/docs/` (web/AGENTS.md).
 
@@ -107,8 +109,8 @@ the browser, and pages never query a database.
   2. `npm run build` (static export; a missing or stale export file fails here,
      by design)
   3. `npm run dev`, then open the page and `/demo` in the browser
-     (claude-in-chrome) and **screenshot** it. Compare against the handoff's
-     `screenshots/` and its spec values (sizes, tokens, draw order).
+     and **screenshot** it at 1440 and 390 px. Compare against DESIGN.md
+     (tokens, type, the one spot panel, no borders, keyboard reachability).
 - Sanity checks that catch real bugs:
   - **Orientation**: a right-sided player's marks sit in the lower half of a
     horizontal pitch, and attack goes right.
@@ -123,7 +125,6 @@ the browser, and pages never query a database.
 
 - `espanyol-viz-design` SKILL.md: add or update the catalog entry (set "planned"
   to the real export key) and the component inventory row.
-- `md/WEB_PLAN.md`: record deviations from the handoff in the current phase's
-  "what changed" section (§3.x style).
+- `DESIGN.md`: a new component or rule; `md/CHANGELOG.md`: a dated entry.
 - New metric definitions go in `football-metrics` (and GOLD_LAYER if gold changed).
 - Commit only when the user asks: code, `web/public/data` and docs together.

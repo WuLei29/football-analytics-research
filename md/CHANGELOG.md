@@ -10,6 +10,42 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 24 Oct 2026 — Redesign finished: /demo moved, the handoff world deleted
+
+- **/demo** and **/demo/jugador** moved to `app/demo/` in Pizarra (pill nav,
+  panels, footer). `/demo` now shows the components the live pages use:
+  `MatchMap` (shots, progression, defence), `ZoneHeatmap`, `PassNetwork`, a
+  chain with its list (`sequences/DemoSequences` on `SequenceParts`, on the
+  spot), `SeasonTrend` (new fixture `demoTrendRows`, replacing the two rolling
+  series) and `Momentum`.
+- **Deleted**: the `app/(handoff)/` route group and its layout; the handoff
+  viz components `ShotMap`, `DefensiveActions`, `ActionArrows`,
+  `ProgressionArrows`, `HoverCard`, `HeatSurface`, `SequenceTraces`,
+  `SequenceBrowser`, `SequenceLegend`, `RollingArea`, `Legend`,
+  `MetricToggle`; the shell's `Masthead`, `Footer`, `PageHeader`,
+  `SectionHead`, `Narrative`, `SeasonSwitcher`; the handoff tokens, type
+  scale, radii and `.card` / `.eyebrow` / `.label` / `.dek` in `globals.css`;
+  the Outfit, Figtree and DM Mono faces in `layout.tsx`; the `.pizarra-viz`
+  adapter; dead labels (`home`, `match`, eyebrows, the handoff's hover and
+  axis strings); `md/REDESIGN_HANDOFF.md` (it asked to be deleted when
+  `(handoff)` was empty). Types moved: `SequenceEntry` to
+  `lib/data/sequences.ts`, `XtCell` to `lib/viz/pitch.ts`; fixtures typed on
+  `MapShot` / `MapProgression` / `MapDefence`.
+- **Charts on Pizarra tokens directly**: `Pitch`, `ZoneHeatmap`,
+  `PassNetwork`, `SequenceDetail`, `Momentum`, `VizDefs` (arrowheads
+  `viz-arrow-team` / `viz-arrow-slate`). Their ground colour comes from
+  `--viz-ground`, set by `bg-panel` / `bg-spot` / `bg-white`. Momentum's
+  `--viz-*` hooks folded into fixed Pizarra values.
+- **Superseded**: the design handoff `README.md` (banner), `README-PLAYER.md`
+  (look superseded, data contract kept). Updated: `DESIGN.md`, `CLAUDE.md`,
+  `.claude/rules/web.md` (one world, the keyboard rule), the
+  `espanyol-viz-design` skill (authority, grammar rule 8, component
+  inventory, catalog "Use" lines), `new-viz`, `web/README.md`.
+- **Checks**: typecheck and build pass; every page (landing, season, match
+  list, match, player, squad, /demo, /demo/jugador) at 1440 and 390 px: one
+  h1, the board face, no text under 12 px, no console errors, no horizontal
+  scroll (after a `min-w-0` fix on /demo's panels).
+
 ## 24 Oct 2026 — Squad + player (screen 03) moved to Pizarra
 
 - `/{equipo}/plantilla/{season}` and `/{equipo}/jugador/{season}/{id}` left

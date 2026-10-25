@@ -1,5 +1,11 @@
 # Handoff: Screen 03 · Player profile
 
+> **Look superseded (24 Oct 2026).** Screen 03 is built in the "Pizarra" world
+> (`DESIGN.md` at the repo root): the tokens, type, chips, gold and hover cards
+> below no longer apply. What still holds is the **data contract**, the
+> percentile spine, the modes and the decisions and reviews recorded here; the
+> site follows them with Pizarra's interface (`md/CHANGELOG.md`, 24 Oct 2026).
+
 Companion to `README.md` (RCD Espanyol Analytics Platform). Its design tokens, pitch geometry, the
 HTML-over-SVG axis rule and the implementation notes apply unchanged. This file specifies
 **screen 03** at the same fidelity as screens 01 and 02, and supersedes the "first-pass" note for

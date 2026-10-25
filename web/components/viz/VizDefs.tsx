@@ -5,14 +5,15 @@
  * Props: none.
  * Data:  none.
  *
- * Markers are referenced by id (`url(#viz-arrow-blue)`), and an id has to be
+ * Markers are referenced by id (`url(#viz-arrow-team)`), and an id has to be
  * unique in the document — so they are declared once per page rather than once
- * per chart. Render this component near the top of any page that uses
- * `ProgressionArrows`; the design prototype does exactly the same thing.
+ * per chart. Render this component near the top of any page that draws a
+ * `SequenceDetail` (the match and player pages, /demo).
  *
  * `markerUnits` defaults to `strokeWidth`, so an arrowhead scales with the line
- * that carries it: the gold carry arrows come out larger than the blue pass
- * arrows without a second marker size, which is the design's intent.
+ * that carries it, without a second marker size. Two inks since the Pizarra
+ * move (24 Oct 2026): team for the shot, slate for the passes; the handoff's
+ * gold head went with the gold.
  *
  * The head is 4 stroke-widths long rather than the prototype's 5: with thirty
  * progression arrows on one pitch the heads were the loudest thing in the
@@ -23,9 +24,8 @@ export function VizDefs() {
   return (
     <svg width={0} height={0} style={{ position: "absolute" }} aria-hidden="true">
       <defs>
-        <Arrowhead id="viz-arrow-blue" fill="var(--color-blue)" />
-        <Arrowhead id="viz-arrow-gold" fill="var(--color-gold)" />
-        <Arrowhead id="viz-arrow-faint" fill="var(--color-faint)" />
+        <Arrowhead id="viz-arrow-team" fill="var(--color-team)" />
+        <Arrowhead id="viz-arrow-slate" fill="var(--color-slate)" />
       </defs>
     </svg>
   );

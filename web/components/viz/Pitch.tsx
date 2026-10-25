@@ -9,6 +9,12 @@
  * in the card colour, `title` for screen readers.
  * Data:  none. Every layer component supplies its own.
  *
+ * Pizarra (24 Oct 2026, the last handoff page moved): drawn in the Pizarra
+ * tokens directly, by DESIGN.md's chart colour mapping (team for the club,
+ * rival for the opponent, slate for secondary marks, chalk for markings).
+ * `--viz-ground` is the surface the chart sits on, set by the panel classes
+ * in globals.css, for the halos and node fills drawn "in the ground colour".
+ *
  * The two slots are the z-order ladder of the espanyol-viz-design skill (§5)
  * expressed as element order: heat fills and zone rectangles (z 1-3) go in
  * `underlay`, pitch lines are z 4, and marks, arrows and player nodes (z 5+)
@@ -53,7 +59,7 @@ export function Pitch({
   orientation = "horizontal",
   underlay,
   children,
-  lineColor = "var(--color-pitch)",
+  lineColor = "var(--color-chalk)",
   lineOpacity = 1,
   cased = false,
   className,
@@ -107,7 +113,7 @@ export function Pitch({
  */
 export function PitchLines({
   orientation,
-  color = "var(--color-pitch)",
+  color = "var(--color-chalk)",
   opacity = 1,
   cased = false,
 }: {
@@ -139,7 +145,7 @@ export function PitchLines({
       {cased && (
         <g
           fill="none"
-          stroke="var(--color-card)"
+          stroke="var(--viz-ground, white)"
           strokeOpacity={0.85}
           // Three times the line: enough halo to read against a full-strength
           // cell, still thin enough that the pitch does not look inflated.

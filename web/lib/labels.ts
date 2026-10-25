@@ -19,38 +19,11 @@ export const site = {
   name: "Espanyol Analytics",
   /** The one-line description under the title and in page metadata. */
   tagline: "La temporada del RCD Espanyol, medida con datos de eventos.",
-  /** Shown on the hero, above the H1. */
-  eyebrow: "RCD Espanyol · Analítica",
-  /** Landing page H1. The second half renders in blue. */
-  homeTitle: { plain: "El Espanyol, ", accent: "en datos" },
-  homeDek:
-    "Un proyecto personal de análisis: cada pase, tiro y secuencia de la " +
-    "temporada, procesados desde datos de eventos y convertidos en xG, xT, " +
-    "VAEP y fases de juego.",
 } as const;
 
 /* --------------------------------------------------------------------------
  * The landing page
  * ------------------------------------------------------------------------ */
-
-export const home = {
-  coverageHeading: "Estado de los datos",
-  coverageDek:
-    "Lo que hay cargado ahora mismo. Se actualiza tras cada jornada, " +
-    "ejecutando el pipeline y publicando de nuevo.",
-  pagesHeading: "Secciones",
-  pagesDek: "Las páginas del sitio, y cuáles están construidas.",
-  ready: "Disponible",
-  pending: "En construcción",
-  seasonFinal: "Temporada completa",
-  seasonRunning: "En curso",
-  matchdaysComplete: (complete: number, scheduled: number) =>
-    `Jornadas completas: ${complete} de ${scheduled}`,
-  matchesPlayed: (n: number) => (n === 1 ? "1 partido" : `${n} partidos`),
-  leagueComplete: "Liga completa",
-  leagueRunning: "Liga en curso",
-  throughDate: (date: string) => `Datos hasta el ${date}`,
-} as const;
 
 /**
  * The landing, `/`, in the Pizarra world (24 Oct 2026). Every sentence with a
@@ -60,7 +33,6 @@ export const home = {
  */
 export const landing = {
   navLabel: "Navegación principal",
-  homeLink: "Inicio",
   /** "15º con 7 puntos." */
   headline: (position: number, points: number) =>
     `${position}º con ${points} ${points === 1 ? "punto" : "puntos"}.`,
@@ -111,7 +83,6 @@ export const landing = {
   thumbSeason: "Diferencia de xG por partido",
   thumbMatch: "Tiros del último partido",
   thumbSequence: "Una posesión del último partido",
-  thumbPlayer: (name: string, value: string, what: string) => `${name}, ${value} ${what}`,
 
   latestHeading: "El último partido, tiro a tiro",
   latestMeta: (matchday: number, date: string) => `Jornada ${matchday} · ${date}`,
@@ -479,12 +450,8 @@ export function sequenceEnding(outcome: string, endAction: string | null | undef
 }
 
 export const viz = {
-  /** Read out in place of the drawing by a screen reader. */
-  shotMapTitle: "Mapa de tiros del partido",
   pitchTitle: "Campo de fútbol",
 
-  /** The last line of a hover card whose mark opens its possession chain. */
-  openSequence: "Clic: ver la jugada ↓",
 
   /** The hover card of one zone of a heat map: "34 toques" / "12 % del total". */
   zoneHover: {
@@ -507,15 +474,9 @@ export const viz = {
     progressivePass: "Pase progresivo",
     carry: "Conducción",
     clearance: "Despeje",
-    otherAction: "Otra acción · pasa el cursor para leerla",
-    regain: "Recuperación",
-    duelLost: "Duelo perdido",
     low: "Bajo",
     high: "Alto",
     nodeSize: "Tamaño = toques · enlace = 4+ combinaciones",
-    selectedChain: "Cadena seleccionada en azul · punto = inicio · anillo = tiro",
-    shotArea: "Área ∝ xG · pasa el cursor por un tiro",
-    defenceHover: "Pasa el cursor por una acción para ver el minuto y el tipo",
   defenceFilter: "FILTRAR",
   defenceFilterAll: "Todas",
   /** Chip caption: the type name with how many of them the match holds. */
@@ -524,28 +485,16 @@ export const viz = {
 
     /* The v1 sequence legend, in its original four terms plus the three marks
        the detailed view also draws (espanyol-viz-design §7 and §8). */
-    participants: "Participantes",
     finisher: "Finalización",
     pass: "Pase",
     cross: "Centro",
-    takeOn: "Regate",
     shot: "Tiro",
     /* The two marks of the 20 Sep 2026 review: where the chain began, where
        the ball was won. The instruction sits under the legend in italics. */
     sequenceStart: "Inicio de la jugada",
     sequenceRegain: "Balón recuperado",
-    sequenceHover: "Pasa el cursor por una acción para leerla.",
-    /** The player page's gold node: "Romero". */
-    focusPlayer: (surname: string) => surname,
   },
 
-  /** The hover card of one action in the detailed sequence view. */
-  sequenceTooltip: {
-    /** "Inicio · Saque de banda" — the role, then how the chain began. */
-    startedBy: (trigger: string) => `Inicio · ${trigger}`,
-    /** "Final · Pérdida · pase largo fallado". */
-    endedBy: (ending: string) => `Final · ${ending}`,
-  },
 
   /** The panel beside the sequence pitch: what `gold.sequences` says about it. */
   sequencePanel: {
@@ -580,12 +529,6 @@ export const viz = {
     period: (minute: number) => `DESCANSO ${minute}'`,
   } as Record<string, (minute: number) => string>,
 
-  /** Axis captions for the two rolling charts of screen 01. */
-  axis: {
-    matchday: "Jornada",
-    rollingXgd: "XGD · MEDIA 5",
-    rollingXt: "XT · MEDIA 5",
-  },
 } as const;
 
 /* --------------------------------------------------------------------------
@@ -597,7 +540,7 @@ export const viz = {
  * ------------------------------------------------------------------------ */
 
 export const demo = {
-  eyebrow: "04 · PRIMITIVAS",
+  metaTitle: "Piezas gráficas",
   title: { plain: "Las piezas, ", accent: "por separado" },
   dek:
     "Cada bloque gráfico del sitio, dibujado con datos inventados. Sirve para " +
@@ -619,17 +562,13 @@ export const demo = {
     network: "Red de pases",
     networkDek: "Posición media, toques y combinaciones del equipo publicado.",
     progression: "Progresión",
-    progressionDek: "Pases progresivos y conducciones; discontinuo = fallado.",
+    progressionDek: "Pases progresivos y conducciones (punteadas); claro = fallado.",
     defence: "Acciones defensivas",
     defenceDek: "Todas las acciones del equipo, más la línea defensiva media.",
-    sequences: "Secuencias",
-    sequencesDek: "Cadenas de posesión. Haz clic para seleccionar una.",
     sequenceDetail: "Jugadas del partido",
-    sequenceDetailDek:
-      "Elige una jugada en la lista: pase, centro, conducción, regate y tiro.",
-    defLine: (metres: string) => `LÍNEA DEF. ${metres} M`,
-    rolling: "Media móvil de 5 partidos",
-    rollingDek: "xGD y xT, con la misma altura y escalas distintas.",
+    sequenceDetailDek: "Elige una jugada en la lista: pase, centro, conducción, regate y tiro.",
+    rolling: "Tendencia de la temporada",
+    rollingDek: "Diferencia de xG o xT de cada partido y su media de 5.",
     momentum: "Momentum",
     momentumDek: "xT neto por minuto, suavizado con una ventana de 5 minutos.",
   },
@@ -644,7 +583,6 @@ export const demo = {
  * ------------------------------------------------------------------------ */
 
 export const season = {
-  eyebrow: "01 · TEMPORADA",
   title: { plain: "La temporada, ", accent: "medida" },
   /** The italic dek to the right of the H1. `matches` arrives formatted. */
   dek: (team: string, label: string, matches: string) =>
@@ -676,29 +614,19 @@ export const season = {
     points: "Pts",
   },
 
-  formHeading: "Forma · últimos 10",
-  formCaption: "Resultado, marcador y xG neto de cada partido",
   formEmpty: "Todavía no hay partidos jugados.",
 
   rollingHeading: "Tendencia",
-  rollingCaption: (window: number) =>
-    `Media móvil de ${window} partidos · xGD y xT netos por partido`,
-  rollingEmpty: (window: number) =>
-    `La media móvil arranca en el partido ${window}: aún no hay suficientes ` +
-    `jornadas cargadas.`,
 
   profileHeading: "Perfil del equipo",
   profileCaption:
     "Valor por partido · la barra es el percentil entre los 20 equipos de la " +
     "categoría, más alto es mejor",
-  /** The small caption in each profile card head. */
-  profileVs: "VS LA LIGA",
   percentileEmpty: "—",
 
   leadersHeading: "Jugadores destacados",
   leadersCaption: "Totales de la temporada, de mayor a menor",
 
-  readingEyebrow: "LECTURA DE LA TEMPORADA",
   matchesLinkN: (n: string) => `Ver los ${n} partidos`,
 
   /* ---- Pizarra (24 Oct 2026) ------------------------------------------ */
@@ -800,82 +728,8 @@ export const matchList = {
 } as const;
 
 /* --------------------------------------------------------------------------
- * Screen 02 — match analysis (Phase 5a).
- * ------------------------------------------------------------------------ */
-
-export const match = {
-  eyebrow: "02 · ANÁLISIS DEL PARTIDO",
-  /** Right-aligned meta, three mono lines. */
-  meta: (competition: string, matchday: number) =>
-    `${competition} · Jornada ${matchday}`,
-  venueLine: (venue: string | null, date: string) =>
-    venue ? `${venue} · ${date}` : date,
-  xgLine: (home: string, away: string) => `${home} xG – ${away} xG`,
-  halfTime: (home: number, away: number) => `Descanso ${home}–${away}`,
-
-  momentumHeading: "Momentum",
-  momentumCaption: (window: number) =>
-    `xT por minuto, media móvil de ${window} minutos`,
-
-  networkHeading: "Red de pases",
-  networkCaption: (min: number) =>
-    `Once inicial · posición media y combinaciones (${min} o más)`,
-
-  totalsHeading: "Datos del partido",
-  totalsCaption: "La barra reparte cada fila entre los dos equipos",
-
-  shotsHeading: "Mapa de tiros",
-  shotsCaption: "Los dos equipos, cada uno atacando hacia su portería",
-
-  xtHeading: "Superficie de xT",
-  xtCaption: (team: string) => `Amenaza generada por el ${team}, por zona`,
-
-  progressionHeading: "Progresión",
-  progressionCaption: (n: number) =>
-    `Los ${n} pases y conducciones progresivas de más xT`,
-  /** The hover card of one arrow: "Pase progresivo · Puado" / "57' · xT 0.124". */
-  progressionHover: {
-    pass: "Pase progresivo",
-    carry: "Conducción progresiva",
-    xt: (value: string) => `xT ${value}`,
-    failed: "Fallado",
-  },
-  progressionHint: "Pasa el cursor por una flecha para leerla",
-
-  defenceHeading: "Acciones defensivas",
-  defenceCaption: (n: number) =>
-    `Las ${n} acciones defensivas del equipo, y la línea media`,
-  defenceLine: (metres: string) => `LÍNEA DEF. ${metres} M`,
-
-  /** The block title follows the metric the list is sorted by. */
-  sequencesHeading: (metric: SequenceMetric) =>
-    `Jugadas por ${metricDefinitions[metric].abbr} (${metricDefinitions[metric].name})`,
-  sequencesCaption: (n: number, metric: SequenceMetric) =>
-    `Las ${n} secuencias de posesión de tres o más acciones, de más a menos ` +
-    `${metric === "xt" ? "amenaza" : "valor"}. Elige una para leerla en detalle.`,
-  /** The xT / VAEP toggle beside the title. */
-  sequencesSortLabel: "Ordenar por",
-  sequencesEmpty: "No hay secuencias de tres o más acciones en este partido.",
-  sequenceDetailHeading: "La jugada, en detalle",
-  /** A row of the sequence list: "SEC-04 · 23 min". */
-  sequenceRow: (rank: number, minute: number) =>
-    `SEC-${String(rank).padStart(2, "0")} · ${minute} min`,
-  /** Its second line: "6 pases · 14.2 s · 0.184 xT". */
-  sequenceSummary: (passes: string, seconds: string, xt: string) =>
-    `${passes} pases · ${seconds} s · ${xt} xT`,
-  sequenceDescription: (trigger: string, outcome: string) =>
-    `${trigger} → ${outcome}`,
-
-  playersHeading: "Destacados del partido",
-  playersCaption: "Los dos equipos, seis jugadores por métrica",
-
-  readEyebrow: "LECTURA DEL PARTIDO",
-  backToList: "Todos los partidos",
-} as const;
-
-/* --------------------------------------------------------------------------
- * Screen 02 in the Pizarra world (24 Oct 2026). The handoff keys of `match`
- * above stay for the headings they still name; these are the new page's.
+ * Screen 02 — match analysis (Pizarra since 24 Oct 2026; the handoff's
+ * `match` keys went with the handoff).
  * ------------------------------------------------------------------------ */
 export const matchPage = {
   /** The h1's second line: the result, read against the xG (the pair is in the lead). */
@@ -948,7 +802,6 @@ export const matchExplorer = {
     line: (m: string) => `Línea defensiva media, ${m} m`,
   },
   /* The chain card. */
-  chainHeading: "La jugada",
   chainEmpty: "No hay jugadas de tres o más acciones en este partido.",
   chainMeta: (clock: string, ending: string) => `${clock} · ${ending}`,
   chainActions: (n: number) => `Acción por acción (${n})`,
@@ -1243,16 +1096,6 @@ export const playerMapModes: Record<PlayerMapMode, { pill: string; title: string
 };
 
 export const player = {
-  eyebrow: "03 · PERFIL DE JUGADOR",
-  shirtCaption: "DORSAL",
-  /** "LATERAL DERECHO · 24 AÑOS · 1,284'" — the age only when known. */
-  metaLine: (position: string, age: number | null, minutes: string) =>
-    [position, age === null ? null : `${age} AÑOS`, `${minutes}'`]
-      .filter(Boolean)
-      .join(" · "),
-  /** "LALIGA 2025/2026 · HASTA J38". */
-  seasonLine: (season: string, matchday: number | null) =>
-    matchday === null ? `LALIGA ${season}` : `LALIGA ${season} · HASTA J${matchday}`,
   /* Pizarra header (24 Oct 2026). */
   /** The h1's second line: "Lateral derecho, dorsal 2". */
   roleLine: (position: string | null, shirt: number | null) =>
@@ -1399,7 +1242,6 @@ export const player = {
   percentileCaption: (peerN: number | null, group: string, minMinutes: string) =>
     `Por 90 · vs ${peerN ?? "—"} ${group.toLowerCase()} con ≥ ${minMinutes}' · ` +
     `barra = percentil, más es mejor`,
-  percentileUnit: "percentil",
   utilityChip: (pct: string, position: string) => `Polivalente · ${pct} % como ${position}`,
   percentileIneligible: (minutes: string, minMinutes: string) =>
     `Todavía pocos minutos: ${minutes}' de los ${minMinutes}' que hacen falta ` +

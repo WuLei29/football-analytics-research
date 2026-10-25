@@ -7,7 +7,7 @@
  * Renders: the page's light-blue spot panel (Pizarra, 24 Oct 2026): the
  * heading with the xT / VAEP switch, a white strip of four aggregate
  * figures, then the match page's sequence halves (`SequenceParts`): the
- * selected chain large on the left, with his nodes in the adapter's light
+ * selected chain large on the left, with his nodes in spot-line light
  * blue, and the top ten on the right.
  * Props: `file` (the player file), `idx` (the selected match indices, null
  *        for the season), `team` and `season` slugs, `demo`.
@@ -42,7 +42,7 @@ import { sequenceEntry } from "@/lib/data/sequences";
 import type { MatchFile, PlayerFile, PlayerSequenceEntry } from "@/lib/data/types";
 
 import { ChainCard, MetricSwitch, SequenceList } from "../sequences/SequenceParts";
-import type { SequenceEntry } from "../viz/SequenceBrowser";
+import type { SequenceEntry } from "@/lib/data/sequences";
 
 type Chains = Map<string, Omit<PlayerSequenceEntry, "match_id">>;
 

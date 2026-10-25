@@ -209,14 +209,15 @@ sql/
   seed/                           # formation_slot_positions
   fixes/                          # dated one-off data repairs
 web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
-  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, every [equipo]/ page; (handoff)/ = /demo only
+  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/{temporada,partidos,partido,plantilla,jugador}, demo/
   components/landing/             #   landing blocks: SeasonHighlight, DepthIndex, ChainPitch, Thumbs, XgStroke
   components/matches/             #   match list blocks: MatchIndex (rows), MatchShots (static shot pitch)
-  components/shell/               #   Pizarra shell: PillNav, Arrow, Exits, BoardFooter (+ legacy handoff Masthead/Footer)
-  components/viz/                 #   pitch + chart layers (inventory: espanyol-viz-design §2)
+  components/shell/               #   Pizarra shell: PillNav, Arrow, Exits, BoardFooter, Dropdown
+  components/match/ player/ season/ sequences/  # page blocks (inventory: espanyol-viz-design §2)
+  components/viz/                 #   shared chart primitives: Pitch, ZoneHeatmap, PassNetwork, SequenceDetail, Momentum, VizDefs
   lib/                            #   data loaders + types, labels (Spanish), format, viz geometry
   public/data/                    #   exported JSON (committed; the deploy artifact)
-  design_handoff_espanyol_analytics/  # visual authority for app/(handoff)/ pages only, being superseded by DESIGN.md
+  design_handoff_espanyol_analytics/  # the original design handoff: SUPERSEDED by DESIGN.md (24 Oct 2026); README-PLAYER keeps the screen-03 data contract
 ```
 
 ### Architectural Patterns
@@ -292,7 +293,7 @@ Project skills in `.claude/skills/`. Consult them before working in their area:
 | Skill | Use when |
 |---|---|
 | **`football-metrics`** | Any metric name, in a request, brief, legend, percentile card or query. The glossary: one-line definition + where it's computed + what Opta doesn't have. **Design briefs aren't the authority on definitions**; its §8 lists the open conflicts with `README-PLAYER.md`. |
-| **`espanyol-viz-design`** | Building or changing any chart in `web/`. The v2 **chart catalog** (question, data, component to reuse, marks, traps for every chart type) + component inventory. The v1 matplotlib language is in its `references/`. Visual authority stays with the design handoff. |
+| **`espanyol-viz-design`** | Building or changing any chart in `web/`. The v2 **chart catalog** (question, data, component to reuse, marks, traps for every chart type) + component inventory. The v1 matplotlib language is in its `references/`. Visual authority is `DESIGN.md`. |
 | **`new-viz`** | Adding a chart, pitch mode, block or page end to end: definitions → export → fixture/demo → component → page → screenshot check → docs. |
 | **`football-silver-schema`** | Ingestion scripts, silver SQL, FK resolution, idempotency, gold table design. |
 | **`opta-events-reference`** | Event pipeline files, event-level SQL, typeIds, qualifiers, JSONP, carries. |
@@ -307,10 +308,11 @@ Project skills in `.claude/skills/`. Consult them before working in their area:
 | **`better-colors`** | Palette, token naming and contrast measurement for `web/` (third-party). |
 
 **Precedence in `web/`:** the third-party design skills above (`impeccable`,
-`better-*`) are for critique, redesign and review. Until the handoff is
-formally superseded, `web/design_handoff_espanyol_analytics/` stays the visual
-authority and `espanyol-viz-design` the chart authority; a redesign that
-replaces the handoff must update or mark it superseded in the same change.
+`better-*`) are for critique, redesign and review. `DESIGN.md` at the repo
+root (the "Pizarra" world) is the visual authority since 24 Oct 2026, when it
+formally superseded `web/design_handoff_espanyol_analytics/`;
+`espanyol-viz-design` is the chart authority. A change to the look updates
+`DESIGN.md` in the same change.
 Metric definitions always come from `football-metrics`.
 
 Path-scoped rules in `.claude/rules/` load automatically when you work in
@@ -360,12 +362,14 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   `formation_slot_positions` (seeded), `pass_receptions`,
   `match_game_states` + view `team_game_states`. Manual and row counts:
   `md/GOLD_LAYER.md §9` (§9.4).
-- **Visual redesign (24 Oct 2026, branch `redesign/visual-world`)**: new
-  "Pizarra" world (`DESIGN.md`), landing `/`, screen 01 (season), the
-  match list, screen 02 (match) and screen 03 (squad + player) rebuilt in
-  it; only `/demo` is left in the handoff; the other pages still use the handoff under `web/app/(handoff)/` and
-  move over one by one
-  (`md/REDESIGN_HANDOFF.md`). Pre-redesign snapshot: tag `pre-redesign-2026-10-23`.
+- **Visual redesign done (24 Oct 2026, branch `redesign/visual-world`)**: the
+  whole site is in the "Pizarra" world (`DESIGN.md`): landing, screen 01,
+  match list, screen 02, screen 03 and `/demo`. The handoff route group, its
+  tokens, fonts and components are deleted; the design handoff is marked
+  superseded. Every interactive map mark is keyboard-reachable and labelled.
+  Page-by-page record: `md/CHANGELOG.md`. Pre-redesign snapshot: tag
+  `pre-redesign-2026-10-23`. Open for the author: merge the branch into
+  `main`; the number locale (en-GB kept); the stale 2026/27 season reading.
 - **Web**: Next.js 16 static site in `web/`, reading `web/public/data` written
   by `python -m src.export`. Built: screen 01 (season), screen 02 (match),
   match list, `/demo`, and **screen 03 (player, 16 Oct 2026)**:
@@ -375,8 +379,9 @@ traps for those areas. The harness plan and its status: `md/HARNESS_PLAN.md`.
   (`/{team}/plantilla/{season}`) opens it on the first squad player. A match
   filter (`?partidos=`) narrows card, map and sequences, not percentiles;
   filtered sequences fetch their match files, so **export player and match
-  files in the same run** (they share `sequence_id`). Every map mark has a
-  hover card, and a click opens its chain in the sequence block (map rows
+  files in the same run** (they share `sequence_id`). Every map mark is a
+  keyboard-reachable button with a readout, and a click or Enter opens its
+  chain in the sequence block (map rows
   carry `s`, `schema_version` 2); Toques / Recepciones / Defensivas switch
   between heat and events. README-PLAYER "Review of 16 Oct 2026" and
   "Review of 17 Oct 2026".

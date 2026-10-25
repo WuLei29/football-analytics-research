@@ -9,6 +9,12 @@
  *        with `touches` from `gold.player_match_stats`; edges are unordered
  *        pair counts with the >= 4 threshold applied by the export.
  *
+ * Pizarra (24 Oct 2026, the last handoff page moved): drawn in the Pizarra
+ * tokens directly, by DESIGN.md's chart colour mapping (team for the club,
+ * rival for the opponent, slate for secondary marks, chalk for markings).
+ * `--viz-ground` is the surface the chart sits on, set by the panel classes
+ * in globals.css, for the halos and node fills drawn "in the ground colour".
+ *
  * Encoding (handoff, screen 02 block 3):
  *   node radius   1.7 -> 2.96, proportional to touches
  *   edge width    0.35 -> 1.85, proportional to combinations, at 0.28 opacity
@@ -68,7 +74,7 @@ export function PassNetwork({
 
   return (
     <Pitch orientation={orientation} title={title} className={className}>
-      <g stroke="var(--color-blue)" strokeOpacity={0.28}>
+      <g stroke="var(--color-team)" strokeOpacity={0.28}>
         {edges.map((edge) => {
           const a = positions.get(edge.from);
           const b = positions.get(edge.to);
@@ -97,8 +103,8 @@ export function PassNetwork({
               cx={p.x}
               cy={p.y}
               r={radius(node.touches)}
-              fill="var(--color-blue)"
-              stroke="var(--color-card)"
+              fill="var(--color-team)"
+              stroke="var(--viz-ground, white)"
               strokeWidth={0.5}
             />
             {/* The one label that has to live inside the SVG: it is positioned
@@ -107,7 +113,7 @@ export function PassNetwork({
               x={p.x}
               y={p.y - 3.3}
               textAnchor="middle"
-              fontFamily="var(--font-mono)"
+              fontFamily="var(--font-board)"
               fontSize={3}
               fontWeight={500}
               fill="var(--color-ink)"

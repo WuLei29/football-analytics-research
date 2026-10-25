@@ -13,6 +13,12 @@
  * Data:  `matches/{match_id}.json` -> `sequences[].actions` (md/WEB_DATA.md
  *        §7), from `silver.events` ordered by `(json_index, event_id)`.
  *
+ * Pizarra (24 Oct 2026, the last handoff page moved): drawn in the Pizarra
+ * tokens directly, by DESIGN.md's chart colour mapping (team for the club,
+ * rival for the opponent, slate for secondary marks, chalk for markings).
+ * `--viz-ground` is the surface the chart sits on, set by the panel classes
+ * in globals.css, for the halos and node fills drawn "in the ground colour".
+ *
  * This is the v1 Streamlit "sequence pitch" ported: the mark vocabulary is
  * `espanyol-viz-design` §7 and the marker radii are its
  * `references/web-translation.md` §4. It is the detailed counterpart to
@@ -73,9 +79,8 @@
  * Two deliberate departures from v1, both recorded in `WEB_PLAN.md` §3.6:
  *
  *   - v1 marked a cross origin in **orange**, "the only orange in the system".
- *     The v2 palette has no orange; `--gold` is the nearest token and is free
- *     inside this chart (its usual meaning, carries, is carried here by the
- *     dotted line instead).
+ *     v2 used `--gold`; Pizarra has no gold (amber means "middling"), so the
+ *     origin dot is team ink and the curve alone says "cross".
  *   - v1's player node is `s=200`, about r 0.86 in pitch units. That was sized
  *     for a three-column small multiple. On a full-width pitch a 0.86 circle
  *     cannot hold a shirt number; the default here was 1.9 until 20 Sep 2026
@@ -141,7 +146,7 @@ interface SequenceDetailProps {
    */
   describe?: (action: SequenceAction, role: ActionRole) => ActionTooltip;
   /**
-   * The player page's player: his nodes are drawn in `--gold` so a reader
+   * The player page's player: his nodes are drawn in spot-line light blue so a reader
    * sees where in the chain he was (README-PLAYER §5). Absent on the match
    * page, which draws every node alike.
    */
@@ -229,10 +234,10 @@ export function SequenceDetail({
                   <polyline
                     key={i}
                     points={`${from.x},${from.y} ${mid.x},${mid.y} ${to.x},${to.y}`}
-                    stroke="var(--color-mid)"
+                    stroke="var(--color-slate)"
                     strokeWidth={0.35}
                     strokeOpacity={faded}
-                    markerMid="url(#viz-arrow-faint)"
+                    markerMid="url(#viz-arrow-slate)"
                   />
                 );
               }
@@ -241,10 +246,10 @@ export function SequenceDetail({
                   <path
                     key={i}
                     d={arcPath(from, to, 0.3)}
-                    stroke="var(--color-mid)"
+                    stroke="var(--color-slate)"
                     strokeWidth={0.35}
                     strokeOpacity={faded}
-                    markerEnd="url(#viz-arrow-faint)"
+                    markerEnd="url(#viz-arrow-slate)"
                   />
                 );
               case "clearance":
@@ -255,11 +260,11 @@ export function SequenceDetail({
                     y1={from.y}
                     x2={to.x}
                     y2={to.y}
-                    stroke="var(--color-mid)"
+                    stroke="var(--color-slate)"
                     strokeWidth={0.35}
                     strokeOpacity={faded}
                     strokeDasharray="2 1"
-                    markerEnd="url(#viz-arrow-faint)"
+                    markerEnd="url(#viz-arrow-slate)"
                   />
                 );
               case "carry":
@@ -270,7 +275,7 @@ export function SequenceDetail({
                     y1={from.y}
                     x2={to.x}
                     y2={to.y}
-                    stroke="var(--color-mid)"
+                    stroke="var(--color-slate)"
                     strokeWidth={0.4}
                     strokeOpacity={faded}
                     strokeDasharray="0.9 0.9"
@@ -285,10 +290,10 @@ export function SequenceDetail({
                     y1={from.y}
                     x2={to.x}
                     y2={to.y}
-                    stroke="var(--color-blue)"
+                    stroke="var(--color-team)"
                     strokeWidth={0.5}
                     strokeOpacity={0.9 * opacityOf(i)}
-                    markerEnd="url(#viz-arrow-blue)"
+                    markerEnd="url(#viz-arrow-team)"
                   />
                 );
               default:
@@ -312,7 +317,7 @@ export function SequenceDetail({
                   cx={from.x}
                   cy={from.y}
                   r={TAKE_ON_DOT}
-                  fill="var(--color-blue)"
+                  fill="var(--color-team)"
                   fillOpacity={0.7 * opacity}
                 />
               );
@@ -325,9 +330,9 @@ export function SequenceDetail({
                   <path
                     key={i}
                     d={diamondPath(from, REGAIN_DIAMOND)}
-                    fill="var(--color-blue)"
+                    fill="var(--color-team)"
                     fillOpacity={0.85 * opacity}
-                    stroke="var(--color-card)"
+                    stroke="var(--viz-ground, white)"
                     strokeWidth={0.2}
                   />
                 );
@@ -340,8 +345,8 @@ export function SequenceDetail({
                   cx={from.x}
                   cy={from.y}
                   r={EVENT_DOT * 1.6}
-                  fill="var(--color-card)"
-                  stroke="var(--color-mid)"
+                  fill="var(--viz-ground, white)"
+                  stroke="var(--color-slate)"
                   strokeWidth={0.3}
                   opacity={opacity}
                 />
@@ -355,10 +360,10 @@ export function SequenceDetail({
                   r={EVENT_DOT}
                   // The cross is the one action whose origin is called out: it is
                   // where the delivery came from, which is the thing being read.
-                  fill={action.kind === "cross" ? "var(--color-gold)" : "var(--color-mid)"}
+                  fill={action.kind === "cross" ? "var(--color-team)" : "var(--color-slate)"}
                 />
                 {action.kind === "carry" && (
-                  <circle cx={to.x} cy={to.y} r={EVENT_DOT} fill="var(--color-mid)" />
+                  <circle cx={to.x} cy={to.y} r={EVENT_DOT} fill="var(--color-slate)" />
                 )}
               </g>
             );
@@ -370,11 +375,11 @@ export function SequenceDetail({
           {playerNodes(actions).map((node) => {
             const p = at(node.x, node.y);
             const focus = focusPlayerId !== undefined && node.player_id === focusPlayerId;
-            // Gold fill marks the page's player; the finisher keeps its
-            // inverted blue unless he is the finisher too.
-            // `--viz-focus` is the Pizarra adapter's colour for him (globals.css).
-            const fill = focus ? "var(--viz-focus, var(--color-gold))" : node.isFinal ? "var(--color-blue)" : "var(--color-card)";
-            const ink = focus ? "var(--color-ink)" : node.isFinal ? "var(--color-card)" : "var(--color-blue)";
+            // The page's player in spot-line light blue, between his
+            // teammates' white nodes and the team-filled finisher (unless he
+            // is the finisher too).
+            const fill = focus ? "var(--color-spot-line)" : node.isFinal ? "var(--color-team)" : "var(--viz-ground, white)";
+            const ink = focus ? "var(--color-ink)" : node.isFinal ? "white" : "var(--color-team)";
             return (
               <g key={`${node.player_id}-${node.index}`}>
                 <circle
@@ -382,14 +387,14 @@ export function SequenceDetail({
                   cy={p.y}
                   r={nodeRadius}
                   fill={fill}
-                  stroke={focus && !node.isFinal ? "var(--viz-focus, var(--color-gold))" : "var(--color-blue)"}
+                  stroke={focus && !node.isFinal ? "var(--color-spot-line)" : "var(--color-team)"}
                   strokeWidth={0.3}
                 />
                 <text
                   x={p.x}
                   y={p.y + 0.65}
                   textAnchor="middle"
-                  fontFamily="var(--font-mono)"
+                  fontFamily="var(--font-board)"
                   fontSize={1.8}
                   fontWeight={600}
                   fill={ink}
@@ -409,7 +414,7 @@ export function SequenceDetail({
             cy={at(first.x, first.y).y}
             r={nodeRadius + 0.7}
             fill="none"
-            stroke="var(--color-blue)"
+            stroke="var(--color-team)"
             strokeWidth={0.35}
             opacity={opacityOf(0)}
           />
@@ -500,7 +505,7 @@ function Tooltip({
         left: `${at.x * 100}%`,
         top: `${at.y * 100}%`,
         transform: above ? "translate(-50%,-124%)" : "translate(-50%,24%)",
-        background: "var(--color-ink)",
+        background: "var(--color-team-deep)",
         borderRadius: 9,
         padding: "6px 8px",
         pointerEvents: "none",
@@ -510,11 +515,11 @@ function Tooltip({
     >
       <div
         style={{
-          fontFamily: "var(--font-sans)",
+          fontFamily: "var(--font-board)",
           fontSize: 12,
           fontWeight: 600,
           lineHeight: 1.25,
-          color: "var(--color-on-dark)",
+          color: "white",
           marginBottom: 2,
         }}
       >
@@ -522,9 +527,9 @@ function Tooltip({
       </div>
       <div
         style={{
-          fontFamily: "var(--font-mono)",
+          fontFamily: "var(--font-board)",
           fontSize: 9,
-          color: "rgba(246,239,230,.72)",
+          color: "rgb(255 255 255 / 0.78)",
           lineHeight: 1.5,
         }}
       >

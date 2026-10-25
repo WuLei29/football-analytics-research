@@ -26,8 +26,8 @@
  * preferred the handoff's distribution, so this keeps its blocks and order
  * and changes only the interface. The maps are `MatchMap` (keyboard-
  * reachable, labelled marks); the shared charts (Momentum, PassNetwork,
- * ZoneHeatmap, SequenceDetail) are recoloured by the `.pizarra-viz` adapter
- * in globals.css, because the player page still draws them in the handoff.
+ * ZoneHeatmap, SequenceDetail) draw in the Pizarra tokens (since the last
+ * handoff page moved, 24 Oct 2026).
  *
  * The published club is the blue one wherever a colour distinguishes the
  * sides; `match.team_side` says which side that is (§7).
@@ -182,11 +182,8 @@ export default async function MatchPage({ params }: PageProps) {
       <PillNav team={equipo} season={season} seasonLabel={season.replace("-", "/")} active="matches" />
 
       <main className="mx-auto max-w-[1440px] px-4 pt-[88px] sm:px-8 sm:pt-[104px] lg:px-10">
-        {/* The arrowheads `SequenceDetail` references, once, inside the
-            adapter so they take the Pizarra inks. */}
-        <div className="pizarra-viz">
-          <VizDefs />
-        </div>
+        {/* The arrowheads `SequenceDetail` references, once. */}
+        <VizDefs />
 
         <div className="mx-auto max-w-[1360px]">
           {/* --- The heading ------------------------------------------------ */}
@@ -223,7 +220,7 @@ export default async function MatchPage({ params }: PageProps) {
             {/* On a phone the chart keeps a readable width and scrolls inside
                 its panel rather than shrinking its labels to specks. */}
             <div className="-mx-2 mt-4 overflow-x-auto px-2">
-              <div className="pizarra-viz on-panel min-w-[820px]">
+              <div className="min-w-[820px]">
                 <Momentum
                   bins={momentum.bins}
                   markers={markers}
@@ -253,7 +250,7 @@ export default async function MatchPage({ params }: PageProps) {
                 {copy.networkHeading}
               </h2>
               <p className="mt-1 text-[14px] text-slate">{copy.networkCaption(network.min_combinations)}</p>
-              <div className="pizarra-viz on-panel mx-auto mt-5 max-w-[320px]">
+              <div className="mx-auto mt-5 max-w-[320px]">
                 <PassNetwork nodes={network.nodes} edges={network.edges} title={copy.networkHeading} />
               </div>
             </section>
@@ -298,7 +295,7 @@ export default async function MatchPage({ params }: PageProps) {
                   {copy.xtHeading}
                 </h2>
                 <p className="mt-1 text-[14px] text-slate">{copy.xtCaption(published.short_name)}</p>
-                <div className="pizarra-viz on-panel mx-auto mt-5 max-w-[320px]">
+                <div className="mx-auto mt-5 max-w-[320px]">
                   <ZoneHeatmap cells={xt_zones.cells} orientation="vertical" title={copy.xtHeading} showGrid />
                 </div>
                 <div className="mx-auto mt-4 flex max-w-[320px] items-center gap-3 text-[13px] text-slate" aria-hidden="true">

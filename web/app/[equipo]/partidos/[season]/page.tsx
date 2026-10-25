@@ -18,7 +18,7 @@
  * played), a shot pitch on every row (the depth behind a scoreline, PRODUCT.md
  * principle 1), one flat list without filters. The fields and encodings are
  * the handoff row's and the form strip's; only the interface changed
- * (md/REDESIGN_HANDOFF.md).
+ * (md/CHANGELOG.md, 24 Oct 2026).
  */
 
 import Link from "next/link";

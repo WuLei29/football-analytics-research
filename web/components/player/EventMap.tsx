@@ -396,7 +396,7 @@ export function EventMap({
         </div>
       )}
 
-      <div className="pizarra-viz on-panel mt-4 flex-1">
+      <div className="mt-4 flex-1">
         <svg
           ref={svgRef}
           viewBox={PITCH_VIEWBOX[o]}

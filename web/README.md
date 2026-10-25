@@ -41,58 +41,49 @@ see locally is what deploys.
 ```
 web/
   app/                      routes; one folder per URL segment (App Router)
-    layout.tsx                the <html> document, the three fonts, page padding
-    globals.css               THE DESIGN SYSTEM — tokens, base, the four idioms
+    layout.tsx                the <html> document and the one font (Hanken Grotesk)
+    globals.css               THE DESIGN SYSTEM, as code — the Pizarra tokens
     page.tsx                  "/" — the landing page
-    demo/page.tsx             "/demo" — the drawing primitives, with fake data
     [equipo]/
       temporada/[season]/       screen 01 — the season overview
-      partido/[match_id]/       screen 02 — one match, eight blocks
-      partidos/[season]/        the plain match list that links them
+      partidos/[season]/        the match list
+      partido/[match_id]/       screen 02 — one match
+      plantilla/[season]/       the squad tab: screen 03 on the first player
       jugador/[season]/[player_id]/  screen 03 — one player's season
+    demo/page.tsx             "/demo" — the drawing primitives, with fake data
     demo/jugador/             screen 03 drawn from the fixture player
   content/
     narratives.ts             the authored prose: season and match readings.
                               The ONLY content not produced by the export
   components/
-    shell/
-      Masthead.tsx            the dark hero + the section nav
-      SeasonSwitcher.tsx      the season chips ("use client" — see below)
-      PageHeader.tsx          eyebrow + H1 + dek over the hard ink rule
-      SectionHead.tsx         a section or card heading with its mono caption
-      Narrative.tsx           the bordered prose block that closes 01 and 02
-      Footer.tsx              provenance: source, derivations, build stamp
-    season/                   the blocks of screen 01, one component each
-      KpiStrip.tsx              the five cards, with their rank chips
-      LeagueTable.tsx           20 rows, zone markers, the club highlighted
-      FormStrip.tsx             last ten matches, each a link to its page
-      TeamProfile.tsx           4 cards x 6 metrics with percentile bars
-      PlayerLeaders.tsx         4 boxes x 6 rows (inert until screen 03 lands)
-    player/                   screen 03: header, tab strip, profile card,
-                              event map (8 modes), percentiles, sequences
-    match/                    the blocks of screen 02 that are not pitches
-      MatchTotals.tsx           the fourteen stat rows with their share bars
-      MatchPlayers.tsx          four player boxes, both teams
-    viz/                      one component per graphical block
+    shell/                    PillNav, Arrow, Exits (numbered exits),
+                              BoardFooter, Dropdown
+    landing/                  SeasonHighlight, DepthIndex, ChainPitch, Thumbs, XgStroke
+    season/                   screen 01: KpiStrip, LeagueTable, FormStrip,
+                              SeasonTrend, TeamProfile (+ PercentileCard/Row),
+                              PlayerLeaders
+    matches/                  the match list: MatchIndex, MatchShots
+    match/                    screen 02: MatchMap (the three event maps),
+                              SequenceLink, MatchSequences, MatchTotals,
+                              MatchPlayers, MatchPicker
+    player/                   screen 03: PlayerRoute (the page shell), header,
+                              picker, match filter, profile card, EventMap
+                              (8 modes), percentiles, sequences
+    sequences/                SequenceParts (ChainCard, SequenceList,
+                              MetricSwitch), shared by 02, 03 and /demo
+    viz/                      the shared primitives
       Pitch.tsx                 the pitch itself, both orientations
-      ShotMap.tsx               shots, both teams, area ∝ xG ("use client")
-      HeatSurface.tsx           the 12 × 8 xT surface
       ZoneHeatmap.tsx           the 30 zones of gold.pitch_zones
       PassNetwork.tsx           nodes and edges on a vertical pitch
-      ProgressionArrows.tsx     progressive passes and carries
-      DefensiveActions.tsx      diamonds + the defensive line ("use client")
-      SequenceTraces.tsx        12 possession chains as polylines, with selection
-                                (built, not on /demo — for screen 02)
       SequenceDetail.tsx        ONE sequence, action by action (the v1 port)
-      SequenceBrowser.tsx       that pitch + a selectable list of plays ("use client")
-      RollingArea.tsx           the diverging 5-match rolling chart
       Momentum.tsx              per-minute net xT over one match
-      Legend.tsx                the mark legend and the LOW->HIGH heat ramp
       VizDefs.tsx               the arrowhead markers, declared once per page
   lib/
     data/
       types.ts                the data contract, as TypeScript
       load.ts                 how a page reads a JSON file
+      sequences.ts            a match file's chain as the sequence block reads it
+      playerFilter.ts         screen 03's match filter (sums per-match parts)
     viz/
       pitch.ts                metres → SVG: the only conversion in the codebase
       scale.ts                linear scales, rolling means, area paths
@@ -100,18 +91,19 @@ web/
     format.ts                 every number (point decimal) and date (es-ES)
     labels.ts                 every Spanish string
     routes.ts                 every URL the site can produce
-    brand.ts                  the hero photo and crest slots
+    brand.ts                  the stadium photo and its credit
   public/
     data/                     ← written by `python -m src.export`; committed
-    brand/                    the two image slots (see its README)
+    brand/                    the image slots (see its README)
   design_handoff_espanyol_analytics/
-                              the design system and the five-screen prototype
+                              the original design system and prototype (superseded)
 ```
 
-Nothing in `design_handoff_espanyol_analytics/` is imported. It is reference:
-open `Espanyol Analytics.dc.html` in a browser to see the target, and read its
-`README.md` for exact values. Its `support.js` and `image-slot.js` are
-prototype runtime and are not ported.
+Nothing in `design_handoff_espanyol_analytics/` is imported, and since 24 Oct
+2026 it is not the visual authority either: `DESIGN.md` at the repo root is
+(the "Pizarra" world). The handoff stays as history; `README-PLAYER.md` still
+documents screen 03's data contract and decisions. The pre-redesign site is
+the tag `pre-redesign-2026-10-23`.
 
 ---
 
@@ -138,44 +130,43 @@ HTML, and sends no JavaScript. A file that starts with `"use client"` ships as
 JavaScript because it has to answer a click.
 
 Keep client components small and at the leaves: a page that loads data stays a
-server component and passes slices down to the interactive bits. There are four
-so far — `shell/SeasonSwitcher.tsx`, and three in `viz/`: `ShotMap.tsx` and
-`DefensiveActions.tsx` (both answer a hover) and `SequenceBrowser.tsx` (it owns
-a selection). `/demo` itself is still a server component, which is the point:
-each of those declares its own boundary rather than pulling the page across it.
+server component and passes slices down to the interactive bits — the maps
+(`match/MatchMap`, `player/EventMap`, `landing/ChainPitch`), the sequence
+blocks, `season/SeasonTrend`, the dropdowns. `/demo` itself is still a
+server component, which is the point: each of those declares its own boundary
+rather than pulling the page across it.
 
-There are two patterns for a selection and both are worth knowing:
+`SequenceDetail` stays a pure drawing of whatever chain it is handed; the
+selection lives in the block around it (`MatchSequences`, `PlayerSequences`,
+`DemoSequences`). That split is what lets screen 04 reuse the same pitch with
+the selection coming from filters instead.
 
-- `SequenceTraces` takes `selectedId` as a prop and calls an optional
-  `onSelect`, so the *caller* owns the state — and a page that renders it with
-  nothing selected ships no JavaScript at all.
-- `SequenceBrowser` owns its own selection, because the selection is the whole
-  point of the component. It still delegates the drawing to `SequenceDetail`,
-  which stays a pure server-renderable component that draws whatever it is
-  handed. That split is what lets screen 04 reuse the same pitch with the
-  selection coming from filters instead.
+Every interactive map mark is a labelled `role="button"` in one roving tab
+stop per map: Tab enters, the arrow keys walk the marks, Enter opens the
+chain, and a white `aria-live` readout says what is under the cursor or the
+keyboard. Copy that model for any new interactive layer.
 
 ### 3. The design system is CSS, not a config file
 
-`app/globals.css` is the whole design system. Its `@theme` block declares the
-eleven colour tokens, the three font families, the type scale and the radii —
-copied verbatim from `design_handoff_espanyol_analytics/README.md`. Tailwind v4
-turns each declaration into **both** a CSS custom property and a utility class:
+`app/globals.css` is the whole design system, and `DESIGN.md` at the repo root
+is its specification. Its `@theme` block declares the Pizarra tokens (board,
+panel, panel-deep, chalk, slate, ink, team, team-deep, rival, spot and its
+three companions, good, fair, fair-fill, bad), the one face, the two shadows
+and the radii. Tailwind v4 turns each declaration into **both** a CSS custom
+property and a utility class:
 
 ```
---color-blue: #0B4C9E   ⇒   var(--color-blue)   and   bg-blue / text-blue / border-blue
+--color-team: #123E8C   ⇒   var(--color-team)   and   bg-team / text-team
 ```
 
 So a component can use whichever reads better — utilities in markup, the raw
-variable inside an SVG or a gradient.
+variable inside an SVG or a gradient. There is no `tailwind.config.ts`.
 
-There is no `tailwind.config.ts`. Tailwind v4 replaced it with `@theme`.
-(`WEB_PLAN.md` v0.4 §3 still names the config file; the tokens are the same,
-the file they live in is not.)
-
-Four idioms repeat on every screen and are component classes rather than
-repeated utility strings: `.card`, `.eyebrow`, `.label`, `.dek`. Nothing else
-gets one — duplicate twice, extract on the third.
+Every page's root element carries `.pizarra` (face, size, tabular numbers,
+focus ring). The panel classes set `--viz-ground`, the colour the charts draw
+their halos and node fills in, so a chart reads right on a panel, on spot or
+on a white card without being told. There are no component classes: the
+handoff's `.card`, `.eyebrow`, `.label`, `.dek` went with it.
 
 ### 4. Numbers and strings each have exactly one home
 
@@ -229,16 +220,13 @@ own.
 
 ## What exists and what is next
 
-Built (Phase 3, `WEB_PLAN.md` §5): the scaffold, the design tokens, the three
-fonts, the masthead shell, the landing page, and the deploy. Built (Phase 4):
-`lib/viz/` and `components/viz/` — the pitch in both orientations, seven pitch
-layers and the two chart primitives, catalogued on `/demo`. Built (Phase 5a,
-v1): the two hi-fi screens and the match list, on the real export —
-`next build` emits 49 static pages, 41 of them match pages.
+Built (Phases 3-5, `WEB_PLAN.md` §5): the landing, screen 01 (season), the
+match list, screen 02 (match), screen 03 (squad + player) and `/demo`, all in
+the Pizarra world since 24 Oct 2026 (`md/CHANGELOG.md`).
 
-The nav's first two sections are links; the other four are still inert text
-marked *en construcción*, because a static export has no useful 404. When a
-page lands, flip its `ready` flag in `lib/routes.ts`.
+The pill nav shows only built sections; an unbuilt one is left out. When a
+page lands, flip its `ready` flag in `lib/routes.ts`; the numbered exits show
+"Pronto" for a level with no page yet.
 
 Next:
 

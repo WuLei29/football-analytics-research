@@ -13,7 +13,7 @@
  * `/{equipo}/plantilla/{season}`, which opens on the first player of the
  * squad (16 Oct 2026). One page, two addresses, so they cannot drift.
  *
- * Moved to Pizarra on 24 Oct 2026 (md/REDESIGN_HANDOFF.md): the handoff's
+ * Moved to Pizarra on 24 Oct 2026 (md/CHANGELOG.md): the handoff's
  * masthead and footer became `PillNav`, `Exits` and `BoardFooter`; the
  * blocks and their order are unchanged.
  */
@@ -91,11 +91,8 @@ export async function PlayerRoute({
       <PillNav team={equipo} season={season} seasonLabel={season.replace("-", "/")} active="squad" />
 
       <main className="mx-auto max-w-[1440px] px-4 pt-[88px] sm:px-8 sm:pt-[104px] lg:px-10">
-        {/* The arrowheads `SequenceDetail` references, inside the chart
-            adapter so they take the Pizarra inks. */}
-        <div className="pizarra-viz">
-          <VizDefs />
-        </div>
+        {/* The arrowheads `SequenceDetail` references, once. */}
+        <VizDefs />
 
         <div className="mx-auto max-w-[1360px]">
           {file && playerId !== null ? (

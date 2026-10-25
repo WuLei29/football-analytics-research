@@ -9,6 +9,12 @@
  *        bucketed with `gold.pitch_zones`. The sequence lab's start-zone
  *        filter (screen 04) reads the same grid.
  *
+ * Pizarra (24 Oct 2026, the last handoff page moved): drawn in the Pizarra
+ * tokens directly, by DESIGN.md's chart colour mapping (team for the club,
+ * rival for the opponent, slate for secondary marks, chalk for markings).
+ * `--viz-ground` is the surface the chart sits on, set by the panel classes
+ * in globals.css, for the halos and node fills drawn "in the ground colour".
+ *
  * Six longitudinal strips x five lateral channels, boundaries on the real
  * markings (`pitch-guide` §5, `gold.pitch_zones`). `zone_id` is
  * `x_strip * 10 + y_channel`, so 43 is strip 4, channel 3.
@@ -79,7 +85,7 @@ export function ZoneHeatmap({
       cased
       underlay={
         <>
-          <g fill="var(--color-blue)">
+          <g fill="var(--color-team)">
             {cells.map((cell) => {
               const r = zoneRect(orientation, cell.zone_id);
               return (
@@ -156,7 +162,7 @@ function ZoneGrid({ orientation }: { orientation: Orientation }) {
   return (
     <>
       <g
-        stroke="var(--color-card)"
+        stroke="var(--viz-ground, white)"
         strokeWidth={strokeWidth * 3}
         strokeOpacity={0.8}
         strokeDasharray={dash}
@@ -164,7 +170,7 @@ function ZoneGrid({ orientation }: { orientation: Orientation }) {
         {lines}
       </g>
       <g
-        stroke="var(--color-mid)"
+        stroke="var(--color-slate)"
         strokeWidth={strokeWidth}
         strokeOpacity={0.85}
         strokeDasharray={dash}

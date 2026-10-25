@@ -21,16 +21,12 @@
 
 import type { MomentumBin, MomentumMarker } from "@/components/viz/Momentum";
 import type { NetworkEdge, NetworkNode } from "@/components/viz/PassNetwork";
-import type { ProgressionAction } from "@/components/viz/ProgressionArrows";
-import type { DefensiveAction } from "@/components/viz/DefensiveActions";
-import type { SequenceEntry } from "@/components/viz/SequenceBrowser";
-import type { SequenceTrace } from "@/components/viz/SequenceTraces";
+import type { MapDefence, MapProgression, MapShot } from "@/components/match/MatchMap";
+import type { TrendRow } from "@/components/season/SeasonTrend";
 import type { SequenceAction } from "@/components/viz/SequenceDetail";
-import type { Shot } from "@/components/viz/ShotMap";
-import type { XtCell } from "@/components/viz/HeatSurface";
 import type { ZoneCell } from "@/components/viz/ZoneHeatmap";
-import type { RollingPoint } from "@/components/viz/RollingArea";
-import { ZONE_IDS, ZONE_X_BOUNDARIES, ZONE_Y_BOUNDARIES } from "@/lib/viz/pitch";
+import type { SequenceEntry } from "@/lib/data/sequences";
+import { ZONE_IDS, ZONE_X_BOUNDARIES, ZONE_Y_BOUNDARIES, type XtCell } from "@/lib/viz/pitch";
 import { kpiOver } from "@/lib/data/playerFilter";
 import {
   SCHEMA_VERSION,
@@ -74,7 +70,7 @@ export const demoMatch = {
  * Shots — both teams, opponent already mirrored by the export (§3.1)
  * ------------------------------------------------------------------------ */
 
-export const demoShots: Shot[] = (() => {
+export const demoShots: MapShot[] = (() => {
   const random = rng(7717);
   const espShooters = ["Puado", "Roberto Fernández", "Milla", "Dolan", "Kike García"];
   const valShooters = ["Hugo Duro", "Diego López", "Rioja", "Pepelu"];
@@ -186,7 +182,7 @@ export const demoNetworkEdges: NetworkEdge[] = (() => {
  * Progression, defence, sequences
  * ------------------------------------------------------------------------ */
 
-export const demoProgression: ProgressionAction[] = (() => {
+export const demoProgression: MapProgression[] = (() => {
   const random = rng(555);
   return Array.from({ length: 30 }, (_, i) => {
     const carry = i % 3 === 0;
@@ -200,6 +196,9 @@ export const demoProgression: ProgressionAction[] = (() => {
       end_x: Number(Math.min(103, x + length).toFixed(1)),
       end_y: Number(Math.max(2, Math.min(66, y + (random() - 0.5) * 24)).toFixed(1)),
       completed: random() > 0.18,
+      xt: null,
+      minute: 3 + i * 3,
+      player: null,
     };
   });
 })();
@@ -209,7 +208,7 @@ export const demoProgression: ProgressionAction[] = (() => {
  * reads them. The type mix is roughly what the export's six-type selection
  * gives on a real match: recoveries and duels dominate, blocks are rare.
  */
-export const demoDefence: { line_x: number; actions: DefensiveAction[] } = (() => {
+export const demoDefence: { line_x: number; actions: MapDefence[] } = (() => {
   const random = rng(31337);
   const types = [
     "ball_recovery",
@@ -246,40 +245,52 @@ export const demoDefence: { line_x: number; actions: DefensiveAction[] } = (() =
   };
 })();
 
-export const demoSequences: SequenceTrace[] = (() => {
-  const random = rng(80808);
-  return Array.from({ length: 12 }, (_, i) => {
-    const n = 4 + Math.floor(random() * 4);
-    let x = 20 + random() * 30;
-    let y = 8 + random() * 52;
-    const points: [number, number][] = [[Number(x.toFixed(1)), Number(y.toFixed(1))]];
-    for (let k = 1; k < n; k++) {
-      x = Math.min(103, x + 6 + random() * 18);
-      y = Math.max(3, Math.min(65, y + (random() - 0.5) * 22));
-      points.push([Number(x.toFixed(1)), Number(y.toFixed(1))]);
-    }
-    return { sequence_id: `SEQ-${14 + i * 3}`, points, ends_in_shot: i < 7 };
-  });
-})();
-
 /* --------------------------------------------------------------------------
  * The two charts
  * ------------------------------------------------------------------------ */
 
-/** 34 matchdays of a five-match rolling xG difference. */
-export const demoRollingXgd: RollingPoint[] = (() => {
+/**
+ * A 38-match season for `SeasonTrend`: each match's xG and xT both ways, and
+ * the five-match rolling mean of the two differences from matchday 5 on, as
+ * `overview.json` -> `rolling` ships it. (Replaced the two `RollingArea`
+ * series on 24 Oct 2026, when the season page's trend chart replaced them.)
+ */
+export const demoTrendRows: TrendRow[] = (() => {
   const random = rng(2451);
-  return Array.from({ length: 34 }, (_, i) => ({
-    matchday: i + 5,
-    value: Number((Math.sin(i / 4.4) * 0.62 + (random() - 0.5) * 0.5).toFixed(3)),
-  }));
+  const rivals = ["VAL", "SEV", "BET", "RSO", "ATH", "VIL", "GIR", "CEL", "OSA", "RAY"];
+  const rows = Array.from({ length: 38 }, (_, i) => {
+    const swing = Math.sin(i / 4.4) * 0.5;
+    const xgFor = Number(Math.max(0.2, 1.25 + swing + (random() - 0.5) * 0.9).toFixed(2));
+    const xgAgainst = Number(Math.max(0.2, 1.3 - swing + (random() - 0.5) * 0.9).toFixed(2));
+    const goalsFor = Math.round(xgFor + (random() - 0.5) * 1.4);
+    const goalsAgainst = Math.round(xgAgainst + (random() - 0.5) * 1.4);
+    const gf = Math.max(0, goalsFor);
+    const ga = Math.max(0, goalsAgainst);
+    return {
+      matchday: i + 1,
+      opponent: rivals[i % rivals.length],
+      abbr: rivals[i % rivals.length],
+      isHome: i % 2 === 0,
+      goalsFor: gf,
+      goalsAgainst: ga,
+      result: (gf > ga ? "W" : gf < ga ? "L" : "D") as TrendRow["result"],
+      xgFor,
+      xgAgainst,
+      xtFor: Number((xgFor * 0.55 + random() * 0.2).toFixed(3)),
+      xtAgainst: Number((xgAgainst * 0.55 + random() * 0.2).toFixed(3)),
+      rollXg: null as number | null,
+      rollXt: null as number | null,
+    };
+  });
+  const mean = (vals: number[]) => Number((vals.reduce((a, v) => a + v, 0) / vals.length).toFixed(3));
+  rows.forEach((row, i) => {
+    if (i < 4) return;
+    const window = rows.slice(i - 4, i + 1);
+    row.rollXg = mean(window.map((r) => r.xgFor - r.xgAgainst));
+    row.rollXt = mean(window.map((r) => r.xtFor - r.xtAgainst));
+  });
+  return rows;
 })();
-
-/** The same season on the xT scale — smaller numbers, same shape of story. */
-export const demoRollingXt: RollingPoint[] = demoRollingXgd.map((p, i) => ({
-  matchday: p.matchday,
-  value: Number((p.value * 0.34 + Math.cos(i / 6) * 0.06).toFixed(3)),
-}));
 
 /**
  * A 47 + 49 minute match, laid out as the export does: first half 1–47, then

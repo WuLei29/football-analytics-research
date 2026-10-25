@@ -18,21 +18,24 @@ use the `new-viz` skill.
   screen 03's match filter** (16 Oct 2026): KPIs are summed from per-match
   parts (`lib/data/playerFilter.ts`, mirrored and checked in
   `src/export/player.py`), and filtered sequences fetch their match files.
-- **Two visual worlds while the site moves over (24 Oct 2026).** The landing
-  `app/page.tsx` (and every page moved out of `app/(handoff)/`) is the new
-  **Pizarra** world: `DESIGN.md` at the repo root, tokens `board`/`panel`/
-  `team`/`rival`/`spot`/`good`/`fair`/`bad` in `globals.css`, root element `.pizarra`, components in
-  `components/landing/` and `components/shell/` (PillNav, Arrow, Exits,
-  BoardFooter). Pages still under `app/(handoff)/` keep the handoff
-  (`design_handoff_espanyol_analytics/README.md`, + `README-PLAYER.md` for screen
-  03). Use the tokens of the page's own world; never hard-code a hex either names.
+- **One visual world: Pizarra** (since 24 Oct 2026; the design handoff is
+  superseded). `DESIGN.md` at the repo root is the authority; tokens
+  `board`/`panel`/`chalk`/`slate`/`team`/`rival`/`spot`/`good`/`fair`/`bad` in
+  `globals.css`; every page's root element is `.pizarra`; shell parts in
+  `components/shell/` (PillNav, Arrow, Exits, BoardFooter, Dropdown). Never
+  hard-code a hex a token names. Blue says who (Espanyol), red the opponent;
+  green / amber / red say how good. One light-blue spot panel per screen.
+- **Every interactive map mark is reachable by keyboard and labelled**:
+  a `role="button"` with an `aria-label`, one roving tab stop per map, arrow
+  keys, Enter; a white `aria-live` readout instead of hover cards
+  (`match/MatchMap`, `player/EventMap`).
 - **No Spanish strings in components.** They go in `lib/labels.ts`; numbers go
   through `lib/format.ts`.
 - **Every chart composes on `<Pitch>`.** Geometry and flips live in
   `lib/viz/pitch.ts`. Components never mirror coordinates. Low `y` = right
   flank = bottom of a horizontal pitch.
 - **Every component opens with the header comment**: `Renders:` / `Props:` /
-  `Data:` plus the reason for each deviation from the handoff.
+  `Data:` plus the reason for each deviation from DESIGN.md or the brief.
 - **New layers get a fixture** in `lib/viz/fixtures.ts` and a card on `/demo`
   first.
 - Verify with `npm run typecheck`, then `npm run build`, then a browser look at

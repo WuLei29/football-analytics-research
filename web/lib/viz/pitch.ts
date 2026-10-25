@@ -250,6 +250,15 @@ export function zoneRect(o: Orientation, zoneId: number) {
   );
 }
 
+/** One cell of the xT model's 12 x 8 grid (`xt.py`), as the match file ships it. */
+export interface XtCell {
+  /** Column along the pitch, 0-11. */
+  cx: number;
+  /** Row across the pitch, 0-7. */
+  cy: number;
+  xt: number;
+}
+
 /**
  * Re-bin a 12 x 8 xT surface onto the 30 zones, by area overlap.
  *
@@ -276,7 +285,7 @@ export function zoneRect(o: Orientation, zoneId: number) {
  * files.
  */
 export function xtCellsToZones(
-  cells: readonly { cx: number; cy: number; xt: number }[],
+  cells: readonly XtCell[],
 ): { zone_id: number; value: number }[] {
   const w = PITCH_LENGTH / XT_COLS;
   const h = PITCH_WIDTH / XT_ROWS;

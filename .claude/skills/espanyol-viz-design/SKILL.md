@@ -18,9 +18,9 @@ description: >
   the catalog entry first and the user will not have to explain the chart.
 
   NOT the visual authority for colour, type, spacing or layout: that is
-  web/design_handoff_espanyol_analytics/README.md (+ README-PLAYER.md for
-  screen 03). Metric definitions come from the football-metrics skill; pitch
-  zones from pitch-guide.
+  DESIGN.md at the repo root (the Pizarra world, which superseded the design
+  handoff on 24 Oct 2026). Metric definitions come from the football-metrics
+  skill; pitch zones from pitch-guide.
 ---
 
 # Espanyol Analytics: chart catalog (v2)
@@ -33,15 +33,15 @@ and nothing more. This file is what makes that work: every chart has an entry
 
 | Concern | Authority |
 |---|---|
-| Colour tokens, typography, spacing, radii, page layout, interaction states | `web/design_handoff_espanyol_analytics/README.md`; screen 03: `README-PLAYER.md` |
+| Colour tokens, typography, spacing, radii, page layout, interaction states | `DESIGN.md` at the repo root (Pizarra; its "Chart colour mapping" says how every mark is coloured). The design handoff in `web/design_handoff_espanyol_analytics/` is superseded (24 Oct 2026); `README-PLAYER.md` keeps its data contract and decisions, not its look. |
 | What a metric means (progressive, key pass, touch…) | `football-metrics` skill. **Handoff definitions are placeholders** (football-metrics §8). |
 | Pitch zones, zone assignment, pitch geometry | `pitch-guide` skill, `gold.pitch_zones`, `web/lib/viz/pitch.ts` |
 | Data shape on the site | `md/WEB_DATA.md`, `web/lib/data/types.ts` |
 | **Mark grammar, encoding, which component, chart-specific rules** | **this skill** |
 | How v1 drew it (matplotlib values, Spanish copy, legends) | `references/v1-design-language.md`, `references/viz-catalog.md`, `references/web-translation.md` |
 
-Where the handoff and this skill disagree on a visual, the handoff wins.
-Where the handoff and the repo disagree on a **definition**, ask the user.
+Where DESIGN.md and this skill disagree on a visual, DESIGN.md wins.
+Where a brief and the repo disagree on a **definition**, ask the user.
 
 > **Old section numbers.** Comments in `web/components/viz/*.tsx` cite
 > "espanyol-viz-design §1 / §5 / §11". Those are the pre-10-Oct-2026 sections,
@@ -49,24 +49,34 @@ Where the handoff and the repo disagree on a **definition**, ask the user.
 > file they correspond to §1 rule 1 (one accent), rule 4 (z-order) and rule 5
 > (furniture is HTML).
 
-## 1. The v2 grammar: seven rules every chart follows
+## 1. The v2 grammar: eight rules every chart follows
 
-1. **One accent per pitch figure.** The analysed team or player gets `--blue`.
-   Opponents and neutral actions get `--faint` / `--mid` / `#C9B9A6`. Inside a
-   pitch, colour means "this is what you're reading", not category.
-2. **Semantic tokens aren't decoration.** `--gold` = carries (and assists on
-   screen 03's key-pass mode only), `--pos`/`--neg` = good/bad bands and deltas,
-   `--blue2` = the middle tier of a chain ranking.
+1. **Identity or verdict, never both** (DESIGN.md "Identity / Verdict
+   Rule"). The analysed team or player is `--color-team`; the opponent is
+   `--color-rival` (outline, solid only for goals); neutral or secondary
+   marks are `--color-slate`; markings `--color-chalk` (`--color-spot-line`
+   on the spot panel). Good / middling / bad are `--color-good` /
+   `--color-fair-fill` (text `--color-fair`) / `--color-bad`.
+2. **No other data hues.** Distinguish within a colour by fill, opacity,
+   dash or size: carries are a **dotted** team line, assists a thicker team
+   line ending in a dot, a failed action is faint (opacity ~0.3). The
+   handoff's gold, blue2 and grey-brown are gone.
 3. **Filled = succeeded / on target. Hollow or dashed = failed. Shape = event
    family. Size (area) = volume or value.** A failed action is drawn dashed or
    hollow, not dropped, when the chart is a list of attempts.
 4. **Z-order is element order.** `<Pitch underlay>` holds heat fills and zone
    rects. Pitch lines come next. `children` holds arrows, then dots, then nodes,
-   then the selected item last. Heat layers redraw lines in the card colour
-   (`lineColor`, `cased`) so markings read through.
-5. **Furniture is HTML, not SVG.** Title, note, legend (`<Legend>`), tooltip
-   and axis labels all sit around the SVG at real pixel sizes. Only things
-   placed in pitch coordinates go inside it.
+   then the selected item last. Heat layers redraw lines cased in the ground
+   colour (`--viz-ground`, set by the panel classes) so markings read through.
+5. **Furniture is HTML, not SVG.** Title, note, key (real marks in slate
+   text), the readout card and axis labels all sit around the SVG at real
+   pixel sizes. Only things placed in pitch coordinates go inside it. No
+   hover cards: a white `aria-live` readout under the map names the mark.
+8. **Every interactive mark is reachable by keyboard and labelled.** A mark
+   is a `role="button"` with an `aria-label`; the map is one roving tab stop,
+   the arrow keys walk the marks in match order, Enter opens (`MatchMap`,
+   `player/EventMap`). Delegate handlers to the SVG when marks number in
+   the thousands.
 6. **No Spanish in components.** Every string comes from `web/lib/labels.ts`;
    every number goes through `web/lib/format.ts`.
 7. **Never flip in a component.** The export puts every action in the analysed
@@ -74,48 +84,55 @@ Where the handoff and the repo disagree on a **definition**, ask the user.
    horizontal pitch (`lib/viz/pitch.ts` handles it). Sanity check: a right-back's
    heat belongs in the lower half.
 
-Empty state: the pitch is still drawn, with a centred mono message from
+Empty state: the pitch is still drawn, with a message from
 `labels.ts` (existing examples: `defenceEmpty`, the sequence `empty`). A chart
 never disappears.
 
-## 2. Component inventory (`web/components/viz/`)
+## 2. Component inventory
 
-Every chart composes on `<Pitch>`. Read the component's header comment before
-changing it, since each one records its deviations from the handoff.
+Every chart composes on `<Pitch>` (or draws `PitchLines` in its own SVG when
+its marks must be focusable: `<Pitch>` is `role="img"`, which hides its
+children). Read the component's header comment before changing it. Rebuilt
+on 24 Oct 2026 when the site moved to Pizarra; the handoff-only layers
+(`ShotMap`, `DefensiveActions`, `ActionArrows` / `ProgressionArrows`,
+`HoverCard`, `HeatSurface`, `SequenceTraces`, `SequenceBrowser`,
+`SequenceLegend`, `RollingArea`, `Legend`, `MetricToggle`) were deleted; the
+tag `pre-redesign-2026-10-23` has them.
+
+`web/components/viz/` (shared primitives):
 
 | Component | Draws | Key props | Client? | Used on |
 |---|---|---|---|---|
 | `Pitch` / `PitchLines` | Markings, `underlay` + `children` slots | `orientation`, `underlay`, `lineColor`, `cased`, `title` | no | everything |
-| `VizDefs` | Shared `<defs>` arrowheads (`viz-arrow-*`) | none | no | once per page using arrows |
-| `ShotMap` | Circles, r = R0 + √xG·K; solid goal / half on target / hollow off; hover card with goal frame | `shots: Shot[]` (optional `context`, `linked`), `teamSide`, `abbr`, `onSelect` | yes | 02, 03 (`Tiros`) |
-| `ActionArrows` / `ArrowLayer` | Arrows with a per-arrow tone (`blue`/`gold`/`faint`), width, opacity, `head`; failed dashed. `ArrowLayer` is the bare `<g>`; `hoverable` adds `data-i` hit lines, `highlight` redraws one loud | `actions: ArrowMark[]`, `hoverable`, `highlight` | no | 02 (via wrapper), 03 |
-| `HoverCard` | The dark hover card at a pitch point, flips below when no headroom; title, mono lines, gold hint | `x`, `y`, `figureHeight`, `title`, `lines`, `hint` | no | 02 (progression), 03 |
-| `ProgressionArrows` | Thin wrapper on `ActionArrows`: pass `--blue` thin, carry `--gold` thicker | `actions: {kind, x,y,end_x,end_y, completed}[]` | no | 02 |
-| `HeatSurface` | 12×8 **xT** grid cells | `cells: {cx, cy, xt}[]` | no | 02 |
-| `ZoneHeatmap` | 30-zone fills (each rect `data-zone`), optional grid, `children` above the lines (reception dots), `highlight` outlines one zone | `cells: {zone_id, value}[]`, `showGrid`, `children`, `highlight` | no | 02, 03 |
-| `DefensiveActions` | Diamonds, blue won / grey lost, type chips, dashed line height, hover; `display="heat"` bins the chip-filtered actions into zones | `actions: {type,x,y,outcome,minute?,player?,context?,linked?}[]`, `lineX`, `lineLabel`, `display`, `onSelect` | yes | 02, 03 |
+| `VizDefs` | Shared `<defs>` arrowheads (`viz-arrow-team`, `viz-arrow-slate`) | none | no | once per page drawing a `SequenceDetail` |
+| `ZoneHeatmap` | 30-zone fills panel → team, optional grid, `children` above the lines | `cells: {zone_id, value}[]`, `showGrid`, `highlight` | no | 02 (xT surface), /demo |
 | `PassNetwork` | Nodes at mean position (r by touches), edges (width by count, ≥4) | `nodes`, `edges` | no | 02 |
-| `SequenceTraces` | Polylines, start dot, end ring (big if shot), selection; `variant="player"`: width by `value`, gold dot on `touch` | `sequences: {sequence_id, points, ends_in_shot, value?, touch?}[]`, `selectedId`, `onSelect`, `variant` | no (page owns state) | 02, 03, 04 |
-| `SequenceDetail` | One chain action by action: pass arrow, curved cross, dotted carry, take-on dot, shot to goal-mouth y | `actions`, `describe` | yes | 02 |
-| `SequenceBrowser` | `SequenceDetail` + clickable list; scrolls the list (not the page) to `initialIndex` | `sequences`, `title`, `initialIndex` | yes | 02, 03 |
-| `Momentum` | Per-minute xT bars, team above / opponent below, goal markers | `bins`, `markers` | yes | 02 |
-| `RollingArea` | Diverging area around 0 (5-match rolling xGD / xTD) | `points` | no | 01 |
-| `Legend`, `Ramp` | HTML legend with real marks; LOW→HIGH ramp | `items` or `rows` | no | all |
-| `MetricToggle` | Two-option segmented pill (xT / VAEP) | `value`, `onChange` | yes | 02, 03 |
+| `SequenceDetail` | One chain action by action: pass arrow, curved cross, dotted carry, take-on dot, shot to goal-mouth y; the page's player in spot-line | `actions`, `focusPlayerId`, `orientation` | yes | 02, 03 (via `ChainCard`) |
+| `Momentum` | Diverging rolling xT, team above / rival below, goal and sub markers | `bins`, `markers`, `teamSide` | no | 02 |
 
-Non-pitch blocks live in `components/season` and `components/match`:
-`TeamProfile` (**the percentile cards**; its `PercentileCard` / `PercentileRow`
-are what screen 03's `components/player/PlayerPercentiles` is built from),
-`KpiStrip`, `PlayerLeaders`, `MatchTotals` (mirrored stat bars), `FormStrip`,
-`LeagueTable`.
+Interactive maps and blocks (keyboard model of rule 8):
 
-**Map -> sequence link** (both pages): a click on a mark whose row has `s`
-(index into the file's chain list, null when undrawable) opens that chain in
-the sequence block and scrolls to it. Screen 03: `PlayerBody` holds the pin.
-Screen 02 (22 Oct 2026): `match/SequenceLink` (context wrapping blocks 4-6),
-`match/MatchMaps` (`LinkedShotMap`, `LinkedProgression` with hover cards,
-`LinkedDefence`), read by `MatchSequences`. Only the published team's events
-link; the match file ships its chains only.
+| Component | Draws | Used on |
+|---|---|---|
+| `match/MatchMap` | One event map: `mode` = `shots` (circles, area = xG, fill by outcome, rival outline) / `progression` (pass solid, carry dotted, failed faint) / `defence` (diamonds filled won / outline lost, type pills, average line); readout card; opens the chain through `SequenceLink` | 02, /demo |
+| `player/EventMap` | Screen 03's eight modes in one SVG (passes, progressive, carries, touches, receptions, shots, defensive, key passes), heat / events switch, every mark and heat zone a button | 03 |
+| `landing/ChainPitch` | Latest match's shots on the spot; a shot draws its possession | landing |
+| `sequences/SequenceParts` | `ChainCard` (chain large + key + numbers + actions in words), `SequenceList`, `MetricSwitch` | 02, 03, /demo |
+| `matches/MatchShots` | Static shot pitch (one labelled image) | match list |
+| `landing/Thumbs`, `landing/XgStroke` | Small real drawings for index rows | landing, match list |
+
+Non-pitch blocks: `season/TeamProfile` (percentile cards; its `PercentileCard`
+/ `PercentileRow` also build screen 03's `PlayerPercentiles`), `KpiStrip`,
+`PlayerLeaders`, `FormStrip`, `LeagueTable`, `SeasonTrend` (interactive trend
+chart, replaced `RollingArea`); `match/MatchTotals` (two-ink split bars),
+`MatchPlayers`.
+
+**Map -> sequence link** (both pages): a click or Enter on a mark whose row
+has `s` (index into the file's chain list, null when undrawable) opens that
+chain in the sequence block (the spot panel) and scrolls to it. Screen 03:
+`PlayerBody` holds the pin. Screen 02: `match/SequenceLink` (context wrapping
+the maps and `MatchSequences`). Only the published team's events link; the
+match file ships its chains only.
 
 Helpers: `lib/viz/pitch.ts` (`project`, `zoneRect`, `xtCellRect`,
 `ZONE_*_BOUNDARIES`, `PITCH_VIEWBOX`), `lib/viz/scale.ts` (`linear`,
@@ -147,10 +164,11 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 - Data: `matches/{id}.json → shots[]` (exists); `players/{id}.json → shots[]`
   (WEB_DATA §9, planned) ← `silver.events` shot set, `xg`, `shot_play_pattern`,
   `goal_mouth_y/z`.
-- Use: `ShotMap`. For a single player, pass every shot with `side = teamSide`.
-  A separate player variant is only needed if the tooltip changes.
-- Marks: circle area ∝ xG; fill steps goal / on target / off-or-blocked; hover
-  shows the goal frame with the ball at `goal_mouth_y/z`.
+- Use: `MatchMap mode="shots"` (match), `player/EventMap` mode `tiros`
+  (player: every shot in team ink).
+- Marks: circle area ∝ xG; fill steps goal / on target / off-or-blocked; the
+  readout names player, minute, xG, outcome, body part. (The handoff's goal
+  frame inset went with its hover card; `goal_mouth_y/z` are still exported.)
 - Variants: filter by `shot_play_pattern` (open play / set piece / penalty),
   vertical half pitch.
 - Traps: own goals belong to the opponent; penalties are xG 0.79 (say so in the
@@ -162,10 +180,9 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 - Data (planned): player events with `value_assist` → `kind: 'assist' | 'key_pass'`,
   origin and end ← `silver.events`. Optionally `xa` per pass (the xG of the
   created shot).
-- Use: arrow layer (generalised `ProgressionArrows`, §5).
-- Marks (handoff): assists `--gold` w 0.85, key passes `--blue` w 0.55, opacity
-  0.85. This is the one place gold doesn't mean "carry". No carries are on this
-  pitch, so there's no ambiguity.
+- Use: `player/EventMap` mode `pases-clave`.
+- Marks: key passes team arrows; assists thicker team lines ending in a dot
+  (they were gold in the handoff; Pizarra has no gold).
 - Traps: key passes **exclude** assists (football-metrics §3). Second assists
   (Q218) aren't key passes.
 
@@ -177,8 +194,8 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
   `is_progressive`, `completed` ← `silver.events` + `gold.is_progressive`.
   A season can hold 1,000+ passes; the export may need to cap or sample, so
   decide with the user (WEB_PLAN §6 sets exposure limits).
-- Use: generalised arrow layer, with progressive passes in `--blue` (w 0.6, op 0.9)
-  and the rest in `--faint` (w 0.3, op 0.38). Failed passes dashed.
+- Use: `player/EventMap` mode `pases`: progressive passes team arrows, the
+  rest thin headless slate; failed faint.
 - Variants: completed only; one match.
 - Traps: arrowheads dominate at volume, so draw non-progressive passes without
   heads.
@@ -189,7 +206,9 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 - Data: `matches/{id}.json → progression` (top 30 by xT, exists); player
   version planned ← `gold.is_progressive` (**25% closer to goal**, same rule
   for both).
-- Use: `ProgressionArrows`. Pass blue, carry gold, failed dashed.
+- Use: `MatchMap mode="progression"` (match), `player/EventMap` modes
+  `progresivos` / `conducciones`. Pass solid team, carry dotted team, failed
+  faint.
 - Variants: origin heatmap of progressive passes (`ZoneHeatmap` on start
   zone); passes only; carries only.
 - Traps: legend copy must state the repo rule, not "≥10 m" (football-metrics §8).
@@ -216,7 +235,8 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 - Q: where on the pitch does he play?
 - Data: `players/{id}.json → heatmap.cells` (30 zones, WEB_DATA §9) ← on-ball
   **touch set** (football-metrics §2), `gold.zone_id`.
-- Use: `ZoneHeatmap`, alpha via `heatOpacity`. A `Ramp` legend underneath.
+- Use: `player/EventMap` mode `toques`, heat display (zones are buttons;
+  alpha via `heatOpacity`, panel → team), a ramp in the key.
 - Traps: the handoff mock draws 12×8. Use the **30 zones**; 12×8 is the xT
   grid. Check the right flank is at the bottom.
 
@@ -225,10 +245,11 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 - Data: `gold.pass_receptions` where `receiver_id = player`: `rx_zone_id` for
   the heatmap, and `rx_x, rx_y, is_progressive, spell_end` for dots. Drop
   `rx_gap_m > 5` when the exact point matters.
-- Use: `ZoneHeatmap` (density) or a dot layer (progressive receptions: `--blue`
-  filled dots, a ring when `rx_in_box`).
-- Variants: colour by `spell_end` (what he did next: shot, pass, lost it). Use
-  one accent for "progressed" and `--faint` for the rest, never a seven-colour key.
+- Use: `player/EventMap` mode `recepciones` (heat zones + progressive dots,
+  or every reception: progressive team dots, the rest slate, a ring in the
+  box).
+- Variants: by `spell_end` (what he did next: shot, pass, lost it). One ink
+  for "progressed" and slate for the rest, never a seven-colour key.
 - Traps: Opta records no receiver; this is derived (football-metrics §5).
 - v1: player_progressive_receptions.
 
@@ -237,41 +258,39 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 **Defensive actions** (screen 02 block 8; screen 03 mode `Defensive`)
 - Q: where does he/the team win or contest the ball?
 - Data: `matches/{id}.json → defence` (exists); player version planned.
-- Use: `DefensiveActions`. Blue = won, grey = lost, type chips, optional `lineX`.
-  For a player, omit `lineX` or pass his `def_action_avg_x`.
-- Marks: README-PLAYER asks for **colour by type** (tackle blue r1.1,
-  interception gold r0.9, recovery faint r0.8). That conflicts with this
-  component's "type via chips, colour = outcome" rule. Ask the user which one
-  applies on screen 03, and don't silently mix them.
+- Use: `MatchMap mode="defence"` (match: type pills, `lineX`),
+  `player/EventMap` mode `defensivas` (type pills, heat / events).
+- Marks: team diamonds, filled when won, outline when lost; type by the
+  pills, never by colour (README-PLAYER's colour-by-type is superseded).
 - Traps: `Challenge` = dribbled past (a loss). Clearances and recoveries
   dominate the cloud, which is why the chips exist.
 
 **Duels: aerial / ground** (planned, v1 had them)
 - Data: `Aerial` (both contestants), `Tackle` + `Attempted Tackle` +
   `Challenge`.
-- Use: `DefensiveActions` with a duel filter, or the v1 shapes (triangle aerial,
+- Use: the defence modes' type pills, or the v1 shapes (triangle aerial,
   square ground; filled won, hollow lost) if the user wants them on one pitch.
 - v1: defensive_duelsmap, player_defensive_duels.
 
 **Take-ons** (planned)
 - Data: `Take On` by outcome.
-- Marks: filled `--blue` circle won, hollow lost.
+- Marks: filled team circle won, hollow lost.
 - v1: player_takeons.
 
 ### Threat and sequences
 
 **xT surface** (screen 02)
-- Data: `matches/{id}.json → xt_grid` ← Σ xt per 12×8 cell.
-- Use: `HeatSurface`. Never re-bin to 30 zones.
+- Data: `matches/{id}.json → xt_zones` (30 zones, SQL) and `xt_grid` (12×8).
+- Use: `ZoneHeatmap` on `xt_zones` (screen 02 since 22 Sep 2026). `HeatSurface`
+  (12×8) was deleted on 24 Oct 2026; `xtCellsToZones` re-bins old files.
 
 **Sequence traces** (screen 02, 03 block 5, 04)
 - Q: which possessions mattered, and what shape did they take?
 - Data: `sequences[]` with `points` (start, end, up to 6 RDP waypoints),
   `ends_in_shot` ← `gold.sequences`.
-- Use: `SequenceTraces` (page owns `selectedId`) + a list (`SequenceBrowser`
-  pattern). Screen 03 adds a `--gold` r1.5 dot on the player's touch
-  (`player_touch_index`, planned), selected chain only, and inverts the selected
-  row instead of tinting it.
+- Use: `sequences/SequenceParts` (`ChainCard` + `SequenceList`) on the spot
+  panel. A many-traces overlay (`SequenceTraces`) existed and was deleted
+  unused on 24 Oct 2026; rebuild it from the tag if screen 04 needs it.
 - Traps: rank by `xt` or `vaep` sum; `sequence_id` renumbers on rebuild; filter
   `event_count ≥ 3` for style views; failed actions earn 0 xT.
 
@@ -283,8 +302,9 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 ### Not on a pitch
 
 **Percentile cards** (screen 01 block 5; screen 03 block 4)
-- Use: `TeamProfile` with a different metric source. Bar colour ≥70 `--pos`,
-  ≥45 `--blue`, else `--neg`. Show `peer_n` and the peer group.
+- Use: `TeamProfile` / `PercentileCard` + `PercentileRow`. Tier ≥70 `good`,
+  ≥45 `fair-fill` (number in `fair`), else `bad`. Show `peer_n` and the peer
+  group.
 - Data: `players/{id}.json → percentiles` (export gate, 25% of club minutes).
 - Traps: groups are `GK CB RB LB MID W ST`, not the handoff's three. The
   metrics come from `gold.percentile_metrics` for that group. Surface the
@@ -293,17 +313,16 @@ export field doesn't exist yet. Add it to the contract (WEB_DATA) first.
 **Radar**: v1 only (PyPizza). v2 replaces it with percentile cards. Don't
 reintroduce it unless asked.
 
-**Rolling area** (`RollingArea`), **Momentum** (`Momentum`), **Mirrored stat
-bars** (`MatchTotals`), **KPI tiles** (`KpiStrip`, the screen 03 profile KPIs
-follow the same type scale): reuse as they are.
+**Season trend** (`SeasonTrend`, replaced `RollingArea`), **Momentum**
+(`Momentum`), **Split stat bars** (`MatchTotals`), **KPI figures**
+(`KpiStrip`, raised cards; screen 03's KPIs are white cards on the profile
+panel): reuse as they are.
 
 ## 5. Known gaps to close as charts are built
 
-- ~~Generalise the arrow layer~~ — **done 16 Oct 2026**: `ActionArrows`
-  (per-arrow tone / width / opacity / head), `ProgressionArrows` is a wrapper.
-- **Dot layer.** The reception dots live in `components/player/EventMap.tsx`
-  (`ReceptionDots`, filled dot + ring in the box). On the next caller
-  (take-ons) lift it into `components/viz/`.
+- **One mark layer.** `MatchMap` and `player/EventMap` each draw their own
+  marks with the same keyboard model. On a third caller, lift the mark layer
+  (geometry, roving tab stop, readout) into `components/viz/`.
 - ~~Player export~~ — **done 16 Oct 2026**: `src/export/player.py` writes
   `players/{id}.json` (README-PLAYER "Data contract", with `passes` split into
   `passes` / `progressive_passes` / `key_passes` because the three modes have

@@ -13,7 +13,7 @@
  * the metric it is sorted by. `MetricSwitch`, the xT / VAEP pills.
  * Props: a `SequenceEntry` (`lib/data/sequences.ts`) per chain; the player
  *        page adds `focusPlayerId` / `focusName` so his nodes are drawn in
- *        the adapter's `--viz-focus` light blue and named in the key.
+ *        spot-line light blue and named in the key.
  * Data:  `matches/{match_id}.json` -> `sequences[]` (md/WEB_DATA.md §7.3).
  *
  * Pizarra (24 Oct 2026) redraw of the handoff's `SequenceBrowser` +
@@ -38,7 +38,7 @@ import {
   type SequenceMetric,
 } from "@/lib/labels";
 
-import type { SequenceEntry } from "@/components/viz/SequenceBrowser";
+import type { SequenceEntry } from "@/lib/data/sequences";
 import { SequenceDetail } from "@/components/viz/SequenceDetail";
 
 export const clockOf = (minute: number | null | undefined, second: number | null | undefined) =>
@@ -87,7 +87,7 @@ export function ChainCard({
       <h3 className="text-[18px] font-semibold tracking-[-0.01em]">{chainName(chain)}</h3>
       <p className="text-[14px] text-slate">{chain.context ? `${chain.context} · ${meta}` : meta}</p>
 
-      <div className="pizarra-viz mt-4">
+      <div className="mt-4">
         <SequenceDetail
           key={chain.sequence_id}
           actions={chain.actions}
@@ -134,7 +134,7 @@ export function ChainCard({
 }
 
 /**
- * The marks of `SequenceDetail`, in its Pizarra colours (the adapter's):
+ * The marks of `SequenceDetail`, in its Pizarra colours:
  * the handoff `SequenceLegend` vocabulary, drawn as real marks.
  */
 function ChainKey({ focusName }: { focusName?: string }) {

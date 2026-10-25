@@ -176,7 +176,7 @@ The site is the coach's tactics board the analysis is drawn on. The ground is wh
 
 The board is calm and dense in the way a real tactics board is: large light figures, short factual lines, and strokes that look drawn by hand (round caps, round joins, straight segments). Each screen has at most one light Espanyol-blue panel, the "spot", where the page's signature interaction lives. Exits are numbered only where the order carries information (the depth ladder season, match, possession, player, method).
 
-Pizarra is the new world, built first on the landing (`/`, 24 Oct 2026) and replacing the older design handoff page by page. Light theme only: there is no dark mode. (Until the author's review of 24 Oct 2026 the highlight panel was a dark "night" board with lightened inks; it read as too heavy and became the light-blue spot the same day.)
+Pizarra is the site's one world since 24 Oct 2026: built first on the landing, then screen 01, the match list, screen 02, screen 03 and `/demo`, page by page; it formally superseded the design handoff in `web/design_handoff_espanyol_analytics/` the same day. Light theme only: there is no dark mode. (Until the author's review of 24 Oct 2026 the highlight panel was a dark "night" board with lightened inks; it read as too heavy and became the light-blue spot the same day.)
 
 **Key Characteristics:**
 - White enamel board, flat tonal panels, no borders; depth by overlap, plus two raised things (nav, figure cards).
@@ -224,9 +224,9 @@ A near-neutral enamel ground with a faint green-grey cast, Espanyol blue for ide
 
 **The Tone Step Rule.** Surfaces separate by one lightness step (board, panel, panel-deep, chalk), never by a border. Hover and focus move a surface exactly one step darker.
 
-### Chart colour mapping (for pages that move into Pizarra)
+### Chart colour mapping
 
-The shared viz components were drawn for the handoff palette. When a page moves out of `app/(handoff)/`, remap its marks like this:
+Every chart colours its marks like this (the viz components name these tokens directly since 24 Oct 2026):
 
 - **Team marks** (shots, passes, touches, actions): team, on light panels and on spot alike.
 - **Opponent marks**: rival as an outline only; a solid rival fill only for the opponent's goals.
@@ -338,7 +338,7 @@ The foot of every page but the landing (`components/shell/Exits`): the depth ind
 - **Sequence block (the spot, `MatchSequences`, halves shared with screen 03 in `components/sequences/SequenceParts`):** heading and xT / VAEP switch (pressed pill team-filled in a spot-deep track); left, a white card with the chain large (name, meta line, `SequenceDetail`, the marks key, five light numbers, "Acción por acción" as a disclosure); right, a white card with the scrolling list, rows step to panel on hover, the selected one on spot in team.
 - **Totals:** 20px light values either side of a 14px slate label, over a 6px chalk track holding two round strokes (team / rival) that meet at the split; one or two columns; which side is which said in the caption.
 - **Player boxes:** panels of six rows; abbreviation in team or rival, name 15px/500, light figure; the leader row white.
-- **Chart adapter `.pizarra-viz`:** wraps the shared charts (Momentum, PassNetwork, ZoneHeatmap, SequenceDetail, VizDefs) and remaps the legacy tokens they name to Pizarra values (blue and gold to team, opp to rival, mid and faint to slate, pitch, grid, line and track to chalk, card to the ground: white, or panel with `.on-panel`; all faces to Hanken). Transitional: it goes with the legacy tokens.
+- **Chart ground `--viz-ground`:** the colour the charts draw halos, casings and node fills in. The panel classes set it (`bg-panel`, `bg-spot`, `bg-white` in globals.css), so a chart reads right on whatever surface holds it; default white. (Until 24 Oct 2026 a transitional `.pizarra-viz` adapter remapped the handoff tokens instead.)
 
 ### Player page blocks (screen 03, 24 Oct 2026)
 - **Layout:** the handoff's order: header; toolbar (player picker left, match filter right); the profile card (360px) beside the event map; the percentile cards; the sequence block on the spot.
@@ -377,7 +377,4 @@ Provenance at 14px slate in two columns (1.55fr, 1fr): source, metrics note, una
 - **Don't** use more than one spot panel on a screen, or add a dark mode.
 - **Don't** put kickers or uppercase eyebrows above headings, or decorative section numbers; numbers are allowed only where order carries meaning.
 - **Don't** use Unicode glyphs as icons; use the drawn arrow.
-- **Don't** use the legacy handoff tokens on a Pizarra page (see below).
-
-### Legacy handoff tokens (do not use on Pizarra pages)
-`web/app/globals.css` still declares the design handoff's tokens (paper, card, line, mid, faint, blue, blue2, pos, neg, gold, track, opp, opp-strong, pitch, grid, on-dark, navy; the Outfit / Figtree / DM Mono faces; the h1 / kpi / h2card / h3 / narrative sizes; the card, chip and hero radii; and the `.card`, `.eyebrow`, `.label`, `.dek` classes). They exist only for the pages still under `web/app/(handoff)/`, for which `web/design_handoff_espanyol_analytics/README.md` remains the authority until each page moves. They are legacy: never use them on a Pizarra page (the `.pizarra-viz` adapter, which redefines them for the shared charts, is the one sanctioned exception), and delete them when the `(handoff)` folder is empty.
+- **Don't** reintroduce the design handoff's tokens, faces or classes (paper, card, blue, gold; Outfit / Figtree / DM Mono; `.card`, `.eyebrow`, `.label`, `.dek`). They were deleted on 24 Oct 2026; the tag `pre-redesign-2026-10-23` has them.

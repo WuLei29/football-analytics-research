@@ -1,82 +1,36 @@
 /*
- * globals.css — the design system, as code.
+ * globals.css — the design system, as code: the Pizarra world.
  *
- * TWO WORLDS, while the site moves from one to the other (24 Oct 2026):
- *   - the handoff tokens (paper, card, blue, Outfit/Figtree/DM Mono), still
- *     used by every page under app/(handoff)/;
- *   - the Pizarra tokens further down (board, panel, team, rival, Hanken
- *     Grotesk), whose source of truth is DESIGN.md at the repo root, used by
- *     the landing and by each page as it moves over.
+ * Source of truth: DESIGN.md at the repo root (+ .impeccable/design.json). If
+ * the two ever disagree, DESIGN.md wins and this file is wrong.
  *
- * Handoff section — source of truth: web/design_handoff_espanyol_analytics/
- * README.md, section "Design Tokens". Every value below is copied from that table; if the
- * two ever disagree, the handoff wins and this file is wrong.
+ * One world since 24 Oct 2026: the design handoff's tokens (paper, card,
+ * blue, gold, Outfit / Figtree / DM Mono), its `.card` / `.eyebrow` /
+ * `.label` / `.dek` classes and the transitional `.pizarra-viz` chart adapter
+ * were deleted when the last page left `app/(handoff)/` (md/CHANGELOG.md).
+ * The pre-redesign look is the tag `pre-redesign-2026-10-23`.
  *
  * Tailwind v4 has no `tailwind.config.ts`. Tokens are declared here inside
  * `@theme`, which does two things at once:
- *   1. emits a real CSS custom property  ->  `var(--color-blue)`
- *   2. generates the matching utilities  ->  `bg-blue`, `text-blue`, `border-blue`
- * So a component can use either, which is exactly what WEB_PLAN.md §3 asks for.
- *
- * (WEB_PLAN.md v0.4 §3 says "tokens go into tailwind.config.ts". That file no
- * longer exists in Tailwind v4 — `@theme` is its replacement and the tokens are
- * still verbatim. Noted here so the difference is not a surprise.)
+ *   1. emits a real CSS custom property  ->  `var(--color-team)`
+ *   2. generates the matching utilities  ->  `bg-team`, `text-team`
+ * So a component can use either.
  */
 
 @import "tailwindcss";
 
 @theme {
-  /* ---- Colours: the eleven tokens of the handoff ------------------------ */
-  --color-paper: #faede1; /* page background, inner chips/rows            */
-  --color-card: #fffbf5; /* card surface                                 */
-  --color-line: #e4d6c5; /* card borders, dotted table rules             */
-  --color-ink: #17181c; /* primary text, hard rules, tooltip surface    */
-  --color-mid: #6b6257; /* secondary text, opponent values              */
-  --color-faint: #9a8d7e; /* meta text, axis labels, "away" mark          */
-  --color-blue: #0b4c9e; /* primary accent (Espanyol), positive series   */
-  --color-blue2: #2c82d2; /* secondary blue                               */
-  --color-pos: #1e7a4d; /* positive deltas, top-quartile percentile     */
-  --color-neg: #a83a2c; /* negative deltas, bottom half, defensive line */
-  --color-gold: #b0872f; /* carries, group B in comparison               */
-
-  /* ---- Supporting literals the handoff uses inline ---------------------- */
-  --color-track: #efe3d4; /* bar track                                    */
-  --color-opp: #c9b9a6; /* opponent fills                               */
-  --color-opp-strong: #8e8172; /* away marks                                   */
-  --color-pitch: #d9c9b6; /* pitch lines                                  */
-  --color-grid: #eadccb; /* momentum gridlines                           */
-  --color-on-dark: #f6efe6; /* text on the dark hero                        */
-  --color-navy: #0a2340; /* hero ground behind the photo                 */
-
-  /* ---- Type: three faces, wired to next/font in app/layout.tsx ---------- */
-  --font-display: var(--font-outfit), "Outfit", system-ui, sans-serif;
-  --font-sans: var(--font-figtree), "Figtree", system-ui, sans-serif;
-  --font-mono: var(--font-dm-mono), "DM Mono", ui-monospace, monospace;
-
-  /* ---- Type scale: only the roles the handoff names ---------------------- */
-  --text-h1: 46px;
-  --text-h1--line-height: 1;
-  --text-h1--letter-spacing: -0.035em;
-  --text-kpi: 44px;
-  --text-kpi--line-height: 0.86;
-  --text-kpi--letter-spacing: -0.02em;
-  --text-h2card: 19px;
-  --text-h2card--letter-spacing: -0.015em;
-  --text-h3: 16px;
-  --text-narrative: 20px;
-  --text-narrative--line-height: 1.42;
-
   /* ---- Pizarra: the tactics-board world (DESIGN.md) ---------------------
      White enamel board, flat panels one tone step apart. Blue says "this is
-     Espanyol"; green / amber / red say good / middling / bad (revised 24 Oct
-     2026 at the author's request: the verdict colours read faster than two
-     inks). The one highlight panel per screen is a light Espanyol blue
-     ("spot"); only the nav and the headline figures are raised. */
+     Espanyol", red marks the opponent; green / amber / red say good /
+     middling / bad. The one highlight panel per screen is a light Espanyol
+     blue ("spot"); only the nav and the headline figures are raised. */
   --color-board: #f4f5f2; /* the board: page ground                       */
   --color-panel: #eceee9; /* a panel pinned on the board                  */
   --color-panel-deep: #e3e6e0; /* hover/focus step, secondary pills         */
   --color-chalk: #d3d6d0; /* zero lines, empty tracks, pitch lines        */
   --color-slate: #5a5f66; /* secondary text (5.2:1 on panel-deep)         */
+  --color-ink: #17181c; /* primary text                                 */
   --color-team: #123e8c; /* Espanyol: identity, selection, the club's line */
   --color-team-deep: #0c2d68; /* hover of team-filled controls              */
   --color-rival: #c4372b; /* the opponent's marks (4.6:1 on panel)        */
@@ -93,16 +47,12 @@
   --shadow-raised: 0 1px 2px rgb(18 28 45 / 0.06), 0 8px 24px -6px rgb(18 28 45 / 0.12);
   --shadow-float: 0 1px 2px rgb(18 28 45 / 0.08), 0 14px 36px -10px rgb(18 28 45 / 0.28);
 
+  /* One face, wired to next/font in app/layout.tsx. */
   --font-board: var(--font-hanken), "Hanken Grotesk", system-ui, sans-serif;
 
   --radius-board: 28px;
   --radius-panel: 22px;
   --radius-row: 18px;
-
-  /* ---- Shape ------------------------------------------------------------ */
-  --radius-card: 14px;
-  --radius-chip: 10px;
-  --radius-hero: 22px;
   --radius-pill: 999px;
 }
 
@@ -111,39 +61,28 @@
  * ------------------------------------------------------------------------ */
 @layer base {
   html {
-    background: var(--color-paper);
-    color: var(--color-ink);
-  }
-
-  body {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    /* The handoff has no shadows and no transitions beyond hover colour.
-       Keep it that way — it is what makes the design read as print. */
-  }
-
-  ::selection {
-    background: var(--color-blue);
-    color: var(--color-on-dark);
-  }
-
-  /* ---- Pizarra pages: their root element carries .pizarra --------------- */
-  html:has(.pizarra) {
     background: var(--color-board);
+    color: var(--color-ink);
     scrollbar-color: var(--color-chalk) var(--color-board);
   }
 
+  body {
+    font-family: var(--font-board);
+  }
+
+  ::selection {
+    background: var(--color-team);
+    color: #fff;
+  }
+
+  /* Every page's root element carries .pizarra: face, size, tabular
+     numbers, focus ring. */
   .pizarra {
     font-family: var(--font-board);
     font-size: 15px;
     line-height: 1.5;
     color: var(--color-ink);
     font-variant-numeric: tabular-nums;
-  }
-
-  .pizarra ::selection {
-    background: var(--color-team);
-    color: #fff;
   }
 
   .pizarra :focus-visible {
@@ -159,87 +98,27 @@
     text-wrap: pretty;
   }
 
-  /* ---- The chart adapter (24 Oct 2026, transitional) ---------------------
-   * The shared viz components (Momentum, PassNetwork, ZoneHeatmap,
-   * SequenceDetail) still name the handoff's tokens, because the player page
-   * draws them in the handoff world too. Inside `.pizarra-viz` those names
-   * resolve to Pizarra values, which is DESIGN.md's chart colour mapping in
-   * one place: team for the club and for carries (the gold is retired),
-   * rival for the opponent, chalk for markings and grids, slate for
-   * secondary ink, the board face for SVG text. `--viz-ground` is the
-   * surface the chart sits on (white card or panel), for the halos drawn in
-   * the "card" colour. Delete this block with the handoff tokens once
-   * `app/(handoff)/` is empty and the components name Pizarra tokens. */
-  .pizarra-viz {
-    --viz-ground: white;
-    --viz-opponent: var(--color-rival);
-    /* The player page's player in a chain: light blue, between the white
-       nodes of his teammates and the team-filled finisher. */
-    --viz-focus: var(--color-spot-line);
-    --color-blue: var(--color-team);
-    --color-gold: var(--color-team);
-    --color-opp: var(--color-rival);
-    --color-opp-strong: var(--color-rival);
-    --color-mid: var(--color-slate);
-    --color-faint: var(--color-slate);
-    --color-card: var(--viz-ground);
-    --color-pitch: var(--color-chalk);
-    --color-grid: var(--color-chalk);
-    --color-line: var(--color-chalk);
-    --color-track: var(--color-chalk);
-    --color-pos: var(--color-good);
-    --color-neg: var(--color-bad);
-    --font-mono: var(--font-board);
-    --font-sans: var(--font-board);
-    --font-display: var(--font-board);
-    /* Momentum's in-SVG labels: board face, sentence case, legible size. */
-    --viz-text: 16px;
-    --viz-tracking: 0;
-    --viz-case: none;
-    --viz-name-weight: 600;
-    --viz-opponent-opacity: 0.22;
+  /* The ground a chart sits on, for the halos and node fills the viz
+     components draw "in the ground colour" (`var(--viz-ground, white)`):
+     whatever surface is nearest. */
+  .bg-panel {
+    --viz-ground: var(--color-panel);
   }
 
-  .pizarra-viz.on-panel {
-    --viz-ground: var(--color-panel);
+  .bg-spot {
+    --viz-ground: var(--color-spot);
+  }
+
+  .bg-white {
+    --viz-ground: #fff;
   }
 }
 
 /* --------------------------------------------------------------------------
- * The four idioms that repeat on every screen of the design.
- *
- * These exist because they appear more than three times each in the handoff
- * (WEB_PLAN.md §3.2: "duplicate twice, extract on the third"). Nothing else
- * gets a component class — everything else is Tailwind utilities in place.
+ * Motion
  * ------------------------------------------------------------------------ */
 @layer components {
-  /* Card surface: the container of nearly every block. */
-  .card {
-    background: var(--color-card);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-card);
-    padding: 16px;
-  }
-
-  /* Section eyebrow: "01 · SEASON OVERVIEW". Mono 9.5px, wide, blue. */
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 9.5px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-blue);
-  }
-
-  /* Field label above a value: "POINTS", "PPDA". Mono 9px, slightly tighter. */
-  .label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-mid);
-  }
-
-  /* Pizarra: a possession drawn as a marker stroke (ChainPitch). The path has
+  /* A possession drawn as a marker stroke (ChainPitch). The path has
      pathLength=1, so one dash of length 1 is the whole stroke. */
   .chain-stroke {
     stroke-dasharray: 1;
@@ -261,20 +140,13 @@
     }
   }
 
-  /* Keyboard focus on a shot mark: a ring drawn inside the figure. */
+  /* Keyboard focus on a shot mark of the chain pitch: a ring drawn inside
+     the figure. */
   .shot-ring {
     opacity: 0;
   }
 
   g:focus-visible > .shot-ring {
     opacity: 1;
-  }
-
-  /* Dek / note: the italic Figtree line beside a heading. */
-  .dek {
-    font-family: var(--font-sans);
-    font-style: italic;
-    font-size: 12.5px;
-    color: var(--color-mid);
   }
 }

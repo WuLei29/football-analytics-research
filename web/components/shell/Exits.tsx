@@ -15,7 +15,7 @@
  *
  * The numbers are allowed (the craft floor refuses decorative section
  * numbers) because the order carries information: it is the depth ladder
- * of md/REDESIGN_HANDOFF.md, "Rules of the world". No thumbnails here, unlike
+ * of the redesign (DESIGN.md, "Numbered exits"). No thumbnails here, unlike
  * the landing: at the end of a page they would be a second, smaller copy of
  * charts the reader has just seen.
  */
