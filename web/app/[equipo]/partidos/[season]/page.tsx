@@ -25,6 +25,7 @@ import Link from "next/link";
 
 import { MatchIndex, type MatchIndexRow } from "@/components/matches/MatchIndex";
 import { MatchShots } from "@/components/matches/MatchShots";
+import { ShotLegend } from "@/components/matches/ShotLegend";
 import { Arrow } from "@/components/shell/Arrow";
 import { BoardFooter } from "@/components/shell/BoardFooter";
 import { Exits, type ExitRow } from "@/components/shell/Exits";
@@ -32,6 +33,7 @@ import { PillNav } from "@/components/shell/PillNav";
 import { getManifest, getMatch, getOverview, getSeason, getSquad, getTeam } from "@/lib/data/load";
 import { dec, longDate, signed } from "@/lib/format";
 import { matchList as copy, landing, season as seasonCopy, site } from "@/lib/labels";
+import { rivalStyle } from "@/lib/clubs";
 import { routes } from "@/lib/routes";
 
 const DISC = {
@@ -101,7 +103,7 @@ export default async function MatchListPage({ params }: PageProps) {
     {
       key: "match",
       title: landing.chapters.match.title,
-      dek: landing.chapters.match.dek(played),
+      dek: landing.chapters.match.dek,
       href: routes.matches(equipo, season),
     },
     {
@@ -185,9 +187,12 @@ export default async function MatchListPage({ params }: PageProps) {
 
           {/* --- The latest match, on the spot ------------------------------ */}
           {latest && latestFile && (
+            /* The opponent in its club colour, as on the landing and its
+               match page (2 Nov 2026, DESIGN.md "Club identity"). */
             <section
               aria-labelledby="ultimo"
               className="mt-8 grid gap-8 rounded-panel bg-spot p-6 sm:p-8 lg:mt-10 lg:grid-cols-[1fr_2.2fr] lg:p-10"
+              style={rivalStyle(latestFile.match[rivalSide].color)}
             >
               <div className="flex flex-col">
                 <h2 id="ultimo" className="text-[26px] leading-tight font-semibold tracking-[-0.02em]">
@@ -211,23 +216,12 @@ export default async function MatchListPage({ params }: PageProps) {
                   <span className="text-[32px] leading-none font-light tracking-[-0.03em] tabular-nums">
                     <span className="text-team">{dec(latest.xg_for, 2)}</span>
                     <span className="text-spot-text">–</span>
-                    <span className="text-rival">{dec(latest.xg_against, 2)}</span>
+                    <span className="text-rival-ink">{dec(latest.xg_against, 2)}</span>
                   </span>
                   <span className={`text-[17px] font-medium tabular-nums ${latestXgd >= 0 ? "text-good" : "text-bad"}`}>
                     {signed(latestXgd, 2)}
                   </span>
                 </p>
-                <ul className="mt-6 space-y-1.5 text-[14px] text-spot-text">
-                  <li>
-                    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className="mr-2 inline-block align-[-1px]"><circle cx="6" cy="6" r="4.5" fill="var(--color-team)" stroke="var(--color-team)" strokeWidth="1.2" /></svg>
-                    {copy.legendTeam(latestFile.match[teamSide].abbr)}
-                  </li>
-                  <li>
-                    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className="mr-2 inline-block align-[-1px]"><circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--color-rival)" strokeWidth="1.2" /></svg>
-                    {copy.legendRival(latestFile.match[rivalSide].abbr)}
-                  </li>
-                  <li>{copy.legendSize}</li>
-                </ul>
                 <Link
                   href={routes.match(equipo, latest.match_id)}
                   className="mt-8 hidden self-start rounded-full bg-team px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-team-deep lg:inline-block"
@@ -245,6 +239,7 @@ export default async function MatchListPage({ params }: PageProps) {
                     latestShots.filter((s) => s.side !== teamSide).length,
                   )}
                 />
+                <ShotLegend rival={latestFile.match[rivalSide].abbr} />
                 {/* The same link after the pitch on a phone, where the columns
                     stack and the left one's button would come first. */}
                 <Link

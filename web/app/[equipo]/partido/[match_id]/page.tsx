@@ -30,7 +30,12 @@
  * handoff page moved, 24 Oct 2026).
  *
  * The published club is the blue one wherever a colour distinguishes the
- * sides; `match.team_side` says which side that is (§7).
+ * sides; `match.team_side` says which side that is (§7). Since 2 Nov 2026
+ * the other side is drawn in its own club colour: the page root sets
+ * `--color-rival` (marks) and `--color-rival-ink` (text, darkened to 4.5:1
+ * when the colour is too light) from `match.{side}.color` (`lib/clubs.ts`),
+ * so every chart below picks it up without a prop. The heading carries both
+ * crests (WEB_PLAN.md §10.1).
  */
 
 import Link from "next/link";
@@ -46,13 +51,15 @@ import { Exits, type ExitRow } from "@/components/shell/Exits";
 import { PillNav } from "@/components/shell/PillNav";
 import { Momentum } from "@/components/viz/Momentum";
 import { PassNetwork } from "@/components/viz/PassNetwork";
+import { Crest } from "@/components/shell/Crest";
 import { VizDefs } from "@/components/viz/VizDefs";
 import { ZoneHeatmap } from "@/components/viz/ZoneHeatmap";
 import { matchReading } from "@/content/narratives";
+import { rivalStyle } from "@/lib/clubs";
 import { getManifest, getMatch, getOverview, getSquad, getTeam } from "@/lib/data/load";
 import { sequenceEntry } from "@/lib/data/sequences";
 import { dec, longDate } from "@/lib/format";
-import { matchPage as copy, landing, site, viz } from "@/lib/labels";
+import { matchHover, matchPage as copy, landing, site, viz } from "@/lib/labels";
 import { routes } from "@/lib/routes";
 
 /** The rolling window the momentum chart smooths with, and its caption. */
@@ -134,15 +141,39 @@ export default async function MatchPage({ params }: PageProps) {
   // The markers are keys in the file; the sentence is built here (§3.7).
   // Cards are exported but not drawn: thirteen vertical rules over a chart
   // whose subject is the shape of the xT curve (handoff decision, kept).
+  // Each goal and sub also carries its hover card (1 Nov 2026): the scorer,
+  // the score after it (markers arrive in playing order) and the xG of the
+  // shot it came from; for a sub, who came on and off.
+  const score = { home: 0, away: 0 };
+  const abbrOf = (side: "home" | "away" | null) => (side ? header[side].abbr : "");
   const markers = momentum.markers
     .filter((m) => m.type !== "card")
-    .map((m) => ({
-      period: m.period,
-      minute: m.minute,
-      type: m.type,
-      side: m.side,
-      label: viz.marker[m.label_key]?.(m.minute) ?? `${m.minute}`,
-    }));
+    .map((m) => {
+      let title: string | undefined;
+      let lines: string[] | undefined;
+      if (m.type === "goal" && m.side) {
+        score[m.side] += 1;
+        const shot = shots.find((s) => s.outcome === "goal" && s.player_id === m.player_id && s.minute === m.minute);
+        title = matchHover.goalTitle(m.minute);
+        lines = [
+          ...(m.name ? [matchHover.goalScorer(m.name, abbrOf(m.side))] : []),
+          matchHover.goalScore(`${score.home}–${score.away}`),
+          ...(shot ? [matchHover.goalXg(dec(shot.xg, 2))] : []),
+        ];
+      } else if (m.type === "sub") {
+        title = matchHover.subTitle(m.minute, abbrOf(m.side));
+        lines = m.name ? [matchHover.subLine(m.name, m.off_name ?? null)] : [];
+      }
+      return {
+        period: m.period,
+        minute: m.minute,
+        type: m.type,
+        side: m.side,
+        label: viz.marker[m.label_key]?.(m.minute) ?? `${m.minute}`,
+        title,
+        lines,
+      };
+    });
 
   const ht =
     header.home.goals_ht !== null && header.away.goals_ht !== null
@@ -159,7 +190,7 @@ export default async function MatchPage({ params }: PageProps) {
     {
       key: "match",
       title: landing.chapters.match.title,
-      dek: landing.chapters.match.dek(overview.matches.length),
+      dek: landing.chapters.match.dek,
       href: routes.matches(equipo, season),
     },
     {
@@ -178,7 +209,7 @@ export default async function MatchPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="pizarra">
+    <div className="pizarra" style={rivalStyle(opponent.color)}>
       <PillNav team={equipo} season={season} seasonLabel={season.replace("-", "/")} active="matches" />
 
       <main className="mx-auto max-w-[1440px] px-4 pt-[88px] sm:px-8 sm:pt-[104px] lg:px-10">
@@ -190,7 +221,10 @@ export default async function MatchPage({ params }: PageProps) {
           <header className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
             <div>
               <h1 className="text-[clamp(34px,3.9vw,58px)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance">
-                {header.home.short_name} {header.home.goals}–{header.away.goals} {header.away.short_name}
+                <Crest crest={header.home.crest} color={header.home.color} abbr={header.home.abbr} size="0.8em" className="mr-[0.22em] align-[-0.06em]" />
+                {header.home.short_name} {header.home.goals}–{header.away.goals}{" "}
+                <Crest crest={header.away.crest} color={header.away.color} abbr={header.away.abbr} size="0.8em" className="mr-[0.22em] align-[-0.06em]" />
+                {header.away.short_name}
                 <br />
                 <span className="text-team">{copy.verdict(row.result, xgd)}</span>
               </h1>

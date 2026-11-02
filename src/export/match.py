@@ -36,6 +36,7 @@ from typing import Any, Callable
 
 from . import db
 from .config import (
+    club_identity,
     MATCH_PLAYER_BOXES,
     MATCH_PLAYER_ROWS,
     MATCH_SEQUENCES,
@@ -84,6 +85,9 @@ def _match_block(match: dict[str, Any], stats: dict[int, dict[str, Any]],
             "team_id": team_id,
             "short_name": short_name,
             "abbr": abbr,
+            # §3.8: the header crest, and the opponent's colour replaces
+            # --color-rival in this page's charts.
+            **club_identity(abbr),
             "goals": as_int(goals),
             "goals_ht": as_int(goals_ht),
             "xg": r_xg(stats[team_id]["xg_for"]),
@@ -207,6 +211,9 @@ def _markers(rows: list[dict[str, Any]], home_id: int, away_id: int
             "label_key": kind,
             "player_id": as_int(row["player_id"]) if kind != "period" else None,
             "name": row["player_name"] if kind != "period" else None,
+            # The player a substitute replaced (db.MARKERS_SQL); null on
+            # every other marker, and on a sub whose pair is not adjacent.
+            "off_name": row["off_player_name"] if kind == "sub" else None,
         })
 
     # Markers outside the two halves (period 14 is the post-match End event)
@@ -269,6 +276,14 @@ def _network(nodes: list[dict[str, Any]], edges: list[dict[str, Any]],
                 "from": int(e["player_a"]),
                 "to": int(e["player_b"]),
                 "passes": int(e["passes"]),
+                # Per direction (1 Nov 2026, the edge hover): `ab` is
+                # from -> to, `ba` to -> from.
+                "passes_ab": int(e["passes_ab"]),
+                "passes_ba": int(e["passes_ba"]),
+                "key_passes_ab": int(e["key_passes_ab"]),
+                "key_passes_ba": int(e["key_passes_ba"]),
+                "assists_ab": int(e["assists_ab"]),
+                "assists_ba": int(e["assists_ba"]),
             }
             for e in edges
             if int(e["player_a"]) in ids and int(e["player_b"]) in ids

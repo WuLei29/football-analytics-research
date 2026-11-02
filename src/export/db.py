@@ -447,15 +447,33 @@ def fetch_momentum(conn, match_id: int) -> list[dict[str, Any]]:
 # for every player and never drifts. `silver.events.player_name` is a copy
 # taken at load time and disagrees with it on ~17k rows (accents, mostly), so
 # the event queries join `players` rather than read the copy.
+#
+# `off_player_name` (1 Nov 2026): the player a substitute replaced. Opta emits
+# a substitution as typeId 18 (player off) immediately followed by typeId 19
+# (player on) for the same team — 4,702 of 4,703 pairs adjacent in
+# (json_index, event_id) order, measured that day — so the previous event of a
+# 19 names who went off. Null when the pair is not adjacent.
 MARKERS_SQL = """
+WITH ev AS (
+    SELECT e.*,
+           lag(e.type_id)   OVER w AS prev_type_id,
+           lag(e.team_id)   OVER w AS prev_team_id,
+           lag(e.player_id) OVER w AS prev_player_id
+    FROM silver.events e
+    WHERE e.match_id = %(match_id)s
+    WINDOW w AS (ORDER BY e.json_index, e.event_id)
+)
 SELECT e.event_id, e.minute, e.period, e.type_id, e.event_type, e.team_id,
        e.player_id,
        COALESCE(p.match_name, e.player_name) AS player_name,
+       CASE WHEN e.type_id = 19 AND e.prev_type_id = 18
+                 AND e.prev_team_id = e.team_id
+            THEN po.match_name END AS off_player_name,
        e.raw_data -> 'qualifier' AS qualifiers
-FROM silver.events e
-LEFT JOIN silver.players p ON p.player_id = e.player_id
-WHERE e.match_id = %(match_id)s
-  AND (e.event_type = 'Goal' OR e.type_id IN (17, 19, 30))
+FROM ev e
+LEFT JOIN silver.players p  ON p.player_id  = e.player_id
+LEFT JOIN silver.players po ON po.player_id = e.prev_player_id
+WHERE e.event_type = 'Goal' OR e.type_id IN (17, 19, 30)
 ORDER BY e.period, e.minute, e.json_index, e.event_id
 """
 
@@ -464,7 +482,8 @@ def fetch_match_markers(conn, match_id: int) -> list[dict[str, Any]]:
     """Goals, cards, players coming on, and period ends.
 
     Only typeId 19 (player on) is read for substitutions: 18 and 19 come in
-    pairs and drawing both would put two lines on the same minute.
+    pairs and drawing both would put two lines on the same minute. The 18 is
+    still read, as `off_player_name` on its 19.
     """
     return _rows(conn, MARKERS_SQL, {"match_id": match_id})
 
@@ -507,7 +526,7 @@ def fetch_network_nodes(conn, match_id: int, team_id: int) -> list[dict[str, Any
 # receiving player's own touch or carry.
 NETWORK_EDGES_SQL = """
 WITH ev AS (
-    SELECT team_id, player_id, event_type, outcome,
+    SELECT team_id, player_id, event_type, outcome, value_assist,
            lead(player_id) OVER w AS next_player,
            lead(team_id)   OVER w AS next_team
     FROM silver.events
@@ -516,7 +535,22 @@ WITH ev AS (
 )
 SELECT least(player_id, next_player)    AS player_a,
        greatest(player_id, next_player) AS player_b,
-       count(*)                         AS passes
+       count(*)                         AS passes,
+       -- Per direction, a = the lower player_id (1 Nov 2026, for the edge
+       -- hover). Key pass / assist: Q-derived `value_assist` on the pass
+       -- (13/14/15 the shot missed or was saved, 16 it was a goal), the
+       -- football-metrics definitions; the receiver is the next event's
+       -- player, who is the shooter.
+       count(*) FILTER (WHERE player_id < next_player) AS passes_ab,
+       count(*) FILTER (WHERE player_id > next_player) AS passes_ba,
+       count(*) FILTER (WHERE player_id < next_player
+                          AND value_assist IN ('13', '14', '15')) AS key_passes_ab,
+       count(*) FILTER (WHERE player_id > next_player
+                          AND value_assist IN ('13', '14', '15')) AS key_passes_ba,
+       count(*) FILTER (WHERE player_id < next_player
+                          AND value_assist = '16') AS assists_ab,
+       count(*) FILTER (WHERE player_id > next_player
+                          AND value_assist = '16') AS assists_ba
 FROM ev
 WHERE team_id = %(team_id)s
   AND event_type = 'Pass'

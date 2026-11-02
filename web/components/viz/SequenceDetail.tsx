@@ -6,10 +6,10 @@
  * Renders: a horizontal pitch with every action of a single sequence drawn in
  * its own mark — passes, crosses, carries, take-ons, regains and the shot —
  * plus a numbered circle for each player who touched the ball, with the final
- * actor inverted; a ring around where the chain began; and an HTML tooltip
- * on hover naming the hovered action.
+ * actor inverted; a ring around where the chain began; and, when the caller
+ * passes `describe`, a `HoverCard` on the action under the pointer or focus.
  * Props: `actions` (ordered), `title`, `orientation`, node sizing overrides,
- *        `describe` (the caller's words for the tooltip).
+ *        `describe` (the caller's words for the card), `hint` (how to walk it).
  * Data:  `matches/{match_id}.json` -> `sequences[].actions` (md/WEB_DATA.md
  *        §7), from `silver.events` ordered by `(json_index, event_id)`.
  *
@@ -65,11 +65,14 @@
  * its own: the last arrowhead plus the hover card say it, and a ring there
  * was tried and taken out the same day as clutter.
  *
- * Hover is an HTML tooltip, not an SVG `<title>` (20 Sep 2026): the native
- * one waits a second and cannot carry two lines. The pattern is `ShotMap`'s —
- * a positioned sibling placed by `projectFraction`, flipped below the mark
- * when there is no room above. The hovered action stays at full opacity and
- * the rest fade, so a busy chain can be read one action at a time. This file
+ * Hover (20 Sep 2026, card and keyboard since 2 Nov 2026 at the author's
+ * request): the shared white `HoverCard`, as on every other chart, at a
+ * line's midpoint or a point event's spot. The hovered action stays at full
+ * opacity and the rest fade, so a busy chain can be read one action at a
+ * time. It owns its <svg> and draws `PitchLines` itself (as `PassNetwork`
+ * does) because `<Pitch>` sets `role="img"` and would hide the buttons:
+ * each action is a `role="button"` in chain order, one tab stop, the arrow
+ * keys walk the chain, and an `aria-live` line repeats the card. This file
  * holds no Spanish: `describe` returns the words, this file places them.
  *
  * Line STYLE carries the action type and colour is kept for team identity, so
@@ -88,11 +91,12 @@
  *     two-digit number still sets at 1.5 with the 1.8 mono size.
  */
 
-import { useRef, useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 
-import { project, projectFraction, type Orientation } from "@/lib/viz/pitch";
+import { PITCH_VIEWBOX, project, type Orientation } from "@/lib/viz/pitch";
 
-import { Pitch } from "./Pitch";
+import { HoverCard } from "./HoverCard";
+import { PitchLines } from "./Pitch";
 
 /** One entry of `sequences[].actions` (WEB_DATA §7). */
 export interface SequenceAction {
@@ -142,9 +146,11 @@ interface SequenceDetailProps {
   /**
    * The tooltip of one action — the caller's translation of `type`, the
    * player, the outcome, and for the first/last action how the chain began
-   * or ended. Without it the marks have no hover.
+   * or ended. Without it the marks have no hover and are not controls.
    */
-  describe?: (action: SequenceAction, role: ActionRole) => ActionTooltip;
+  describe?: (action: SequenceAction, role: ActionRole, index: number) => ActionTooltip;
+  /** Appended to the pitch's accessible name when `describe` is given: how to walk it. */
+  hint?: string;
   /**
    * The player page's player: his nodes are drawn in spot-line light blue so a reader
    * sees where in the chain he was (README-PLAYER §5). Absent on the match
@@ -185,10 +191,6 @@ const LINE_KINDS = new Set(["pass", "cross", "carry", "clearance", "shot"]);
 /** Faded when another action is hovered. */
 const DIMMED = 0.3;
 
-/** The tallest tooltip (title + two lines) plus its gap, in CSS px. */
-const TOOLTIP_MAX_HEIGHT = 74;
-const TOOLTIP_WIDTH = 150;
-
 export function SequenceDetail({
   actions,
   orientation = "horizontal",
@@ -196,10 +198,30 @@ export function SequenceDetail({
   nodeRadius = 1.5,
   className,
   describe,
+  hint,
   focusPlayerId,
 }: SequenceDetailProps) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const figureRef = useRef<HTMLDivElement>(null);
+  const [focusIndex, setFocusIndex] = useState(0);
+  const refs = useRef<(SVGGElement | null)[]>([]);
+  const [vx, vy, vw, vh] = PITCH_VIEWBOX[orientation].split(" ").map(Number);
+
+  function onKey(e: KeyboardEvent, i: number) {
+    const next =
+      e.key === "ArrowRight" || e.key === "ArrowDown"
+        ? Math.min(actions.length - 1, i + 1)
+        : e.key === "ArrowLeft" || e.key === "ArrowUp"
+          ? Math.max(0, i - 1)
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? actions.length - 1
+              : null;
+    if (next === null) return;
+    e.preventDefault();
+    setFocusIndex(next);
+    refs.current[next]?.focus();
+  }
 
   const at = (x: number, y: number) => project(orientation, x, y);
   /** An action's destination, falling back to its origin for point events. */
@@ -213,10 +235,21 @@ export function SequenceDetail({
 
   const first = actions[0];
   const hoveredAction = hovered !== null ? actions[hovered] : null;
+  const card = describe && hoveredAction && hovered !== null ? describe(hoveredAction, roleOf(hovered), hovered) : null;
+  const anchor = hoveredAction ? tooltipAnchor(hoveredAction, endOf(hoveredAction)) : null;
+  const cardAt = anchor ? at(anchor.x, anchor.y) : null;
 
   return (
-    <div ref={figureRef} className={className} style={{ position: "relative" }}>
-      <Pitch orientation={orientation} title={title}>
+    <div className={`relative ${className ?? ""}`}>
+      <svg
+        viewBox={PITCH_VIEWBOX[orientation]}
+        width="100%"
+        style={{ display: "block" }}
+        role={describe ? "group" : "img"}
+        aria-label={describe && hint ? `${title}. ${hint}` : title}
+        onMouseLeave={() => setHovered(null)}
+      >
+        <PitchLines orientation={orientation} />
         {/* z 2 — the travel of the ball. */}
         <g fill="none">
           {actions.map((action, i) => {
@@ -420,54 +453,79 @@ export function SequenceDetail({
           />
         )}
 
-        {/* z 8 — invisible hit targets, one per action, so a 0.35-wide line
-            can be hovered without aiming. Point events get a generous disc. */}
+        {/* z 8 — hit targets, one per action, so a 0.35-wide line can be
+            hovered without aiming; point events get a generous disc. Each is
+            a button in chain order (one tab stop, arrows walk it); the hovered
+            or focused one shows a faint team halo along its path. */}
         {describe && (
-          <g fill="transparent" stroke="transparent" style={{ cursor: "default" }}>
+          <g fill="transparent" stroke="transparent">
             {actions.map((action, i) => {
               const from = at(action.x, action.y);
               const end = endOf(action);
               const to = at(end.x, end.y);
-              const handlers = {
-                onMouseEnter: () => setHovered(i),
-                onMouseLeave: () => setHovered(null),
-              };
-              if (LINE_KINDS.has(action.kind) && (from.x !== to.x || from.y !== to.y)) {
-                return action.kind === "cross" ? (
-                  <path key={i} d={arcPath(from, to, 0.3)} strokeWidth={2.2} {...handlers} />
-                ) : (
-                  <line
-                    key={i}
-                    x1={from.x}
-                    y1={from.y}
-                    x2={to.x}
-                    y2={to.y}
-                    strokeWidth={2.2}
-                    {...handlers}
-                  />
-                );
-              }
-              return <circle key={i} cx={from.x} cy={from.y} r={1.4} {...handlers} />;
+              const text = describe(action, roleOf(i), i);
+              const on = hovered === i;
+              const halo = on
+                ? { stroke: "var(--color-team)", strokeOpacity: 0.12, fill: "var(--color-team)", fillOpacity: 0 }
+                : {};
+              const isLine = LINE_KINDS.has(action.kind) && (from.x !== to.x || from.y !== to.y);
+              return (
+                <g
+                  key={i}
+                  ref={(el) => {
+                    refs.current[i] = el;
+                  }}
+                  role="button"
+                  tabIndex={i === focusIndex ? 0 : -1}
+                  aria-label={[text.title, ...text.lines].join(". ")}
+                  className="cursor-pointer outline-none"
+                  onMouseEnter={() => setHovered(i)}
+                  onFocus={() => {
+                    setHovered(i);
+                    setFocusIndex(i);
+                  }}
+                  onBlur={() => setHovered(null)}
+                  onClick={() => setHovered(i)}
+                  onKeyDown={(e) => onKey(e, i)}
+                >
+                  {isLine ? (
+                    action.kind === "cross" ? (
+                      <path d={arcPath(from, to, 0.3)} strokeWidth={2.2} fill="none" strokeLinecap="round" {...halo} />
+                    ) : (
+                      <line x1={from.x} y1={from.y} x2={to.x} y2={to.y} strokeWidth={2.2} strokeLinecap="round" {...halo} />
+                    )
+                  ) : (
+                    <circle
+                      cx={from.x}
+                      cy={from.y}
+                      r={1.4}
+                      {...(on ? { fill: "var(--color-team)", fillOpacity: 0.12 } : {})}
+                    />
+                  )}
+                </g>
+              );
             })}
           </g>
         )}
-      </Pitch>
+      </svg>
 
-      {describe && hoveredAction && hovered !== null && (
-        <Tooltip
-          content={describe(hoveredAction, roleOf(hovered))}
-          anchor={tooltipAnchor(hoveredAction, endOf(hoveredAction))}
-          orientation={orientation}
-          figureHeight={figureRef.current?.clientHeight ?? 0}
+      {card && cardAt && (
+        <HoverCard
+          x={(cardAt.x - vx) / vw}
+          y={(cardAt.y - vy) / vh}
+          title={card.title}
+          lines={card.lines}
+          accent="var(--color-team)"
         />
+      )}
+      {describe && (
+        <p aria-live="polite" className="sr-only">
+          {card ? [card.title, ...card.lines].join(". ") : ""}
+        </p>
       )}
     </div>
   );
 }
-
-/* --------------------------------------------------------------------------
- * The tooltip
- * ------------------------------------------------------------------------ */
 
 /** A line is labelled at its midpoint; a point event where it happened. */
 function tooltipAnchor(action: SequenceAction, end: { x: number; y: number }) {
@@ -475,70 +533,6 @@ function tooltipAnchor(action: SequenceAction, end: { x: number; y: number }) {
     return { x: (action.x + end.x) / 2, y: (action.y + end.y) / 2 };
   }
   return { x: action.x, y: action.y };
-}
-
-/**
- * `ShotMap`'s tooltip, reduced: HTML so the type sets at real pixel sizes,
- * positioned as a fraction of the SVG's box, fixed width so every card is the
- * same size, flipped below the mark when the measured headroom is short.
- */
-function Tooltip({
-  content,
-  anchor,
-  orientation,
-  figureHeight,
-}: {
-  content: ActionTooltip;
-  anchor: { x: number; y: number };
-  orientation: Orientation;
-  /** Rendered height of the figure, in CSS px. 0 if not measured yet. */
-  figureHeight: number;
-}) {
-  const at = projectFraction(orientation, anchor.x, anchor.y);
-  const headroom = at.y * figureHeight;
-  const above = figureHeight > 0 ? headroom > TOOLTIP_MAX_HEIGHT : at.y > 0.25;
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: `${at.x * 100}%`,
-        top: `${at.y * 100}%`,
-        transform: above ? "translate(-50%,-124%)" : "translate(-50%,24%)",
-        background: "var(--color-team-deep)",
-        borderRadius: 9,
-        padding: "6px 8px",
-        pointerEvents: "none",
-        width: TOOLTIP_WIDTH,
-        zIndex: 4,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "var(--font-board)",
-          fontSize: 12,
-          fontWeight: 600,
-          lineHeight: 1.25,
-          color: "white",
-          marginBottom: 2,
-        }}
-      >
-        {content.title}
-      </div>
-      <div
-        style={{
-          fontFamily: "var(--font-board)",
-          fontSize: 9,
-          color: "rgb(255 255 255 / 0.78)",
-          lineHeight: 1.5,
-        }}
-      >
-        {content.lines.map((line, i) => (
-          <div key={i}>{line}</div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 /* --------------------------------------------------------------------------

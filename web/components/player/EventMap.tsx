@@ -44,6 +44,13 @@
  *     box; shots `ShotMap`'s encoding in team; defensive actions team
  *     diamonds, filled when won, outline when lost; heat panel to team.
  * Under 640 px the pitch turns vertical, attacking up, as on the match page.
+ *
+ * The key is also a filter (2 Nov 2026, author's review, as `MatchMap`):
+ * passes by progressive / the rest / failed, progressive passes and carries
+ * by completed / failed, key passes / assists, receptions by progressive /
+ * the rest / in the box, shots by goal / on target / off target, defensive
+ * actions by won / lost. Zones of a heat display are never filtered. A mode
+ * or display switch clears it.
  */
 
 import { memo, useEffect, useMemo, useRef, useState, type FocusEvent, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
@@ -53,6 +60,7 @@ import {
   PLAYER_MAP_MODES,
   defensiveActionType,
   matchExplorer,
+  matchHover,
   player as copy,
   playerMapModes,
   sequenceActionType,
@@ -67,6 +75,7 @@ import { setVista, useVista } from "@/lib/vista";
 import type { MapView } from "@/lib/data/playerFilter";
 import { PASS_FLAG, RX_FLAG, type CarryRow, type PassRow, type PlayerMatch, type ReceptionRow } from "@/lib/data/types";
 
+import { HoverCard } from "../viz/HoverCard";
 import { PitchLines } from "../viz/Pitch";
 
 /* -- What a mark is ---------------------------------------------------------- */
@@ -96,7 +105,14 @@ interface Item {
   title: string;
   line: string;
   s: number | null;
+  /** The key entries this mark belongs to (the legend filter). Zones have
+      none and are never filtered out: the heat is the backdrop. */
+  cats?: string[];
 }
+
+/** A key entry: its mark, its words, and the filter it toggles (null: a
+    note, not a filter). */
+type KeyItem = { mark: ReactNode; text: string; cat: string | null };
 
 /** The modes with a heat-or-events switch, and where each one opens. */
 type HeatMode = "toques" | "recepciones" | "defensivas";
@@ -135,6 +151,19 @@ function useNarrow(): boolean {
     return () => mq.removeEventListener("change", update);
   }, []);
   return narrow;
+}
+
+/** The floating card on the mark under the pointer: a zone's centre, else the mark. */
+function EventCard({ o, item }: { o: Orientation; item: Item }) {
+  const [vx, vy, vw, vh] = PITCH_VIEWBOX[o].split(" ").map(Number);
+  let p: { x: number; y: number };
+  if (item.g.kind === "zone") {
+    const r = zoneRect(o, item.g.zone);
+    p = { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+  } else {
+    p = project(o, item.g.x, item.g.y);
+  }
+  return <HoverCard x={(p.x - vx) / vw} y={(p.y - vy) / vh} title={item.title} lines={[item.line]} accent="var(--color-team)" />;
 }
 
 /** Where a mark sits, for its focus ring. */
@@ -185,7 +214,13 @@ export function EventMap({
           : H.pass;
     // A failed action earns 0 xT by construction; the line says "Fallado".
     const result = done ? [H.completed, r[6] === null ? null : H.xt(dec(r[6], 3))] : [H.failed];
-    return { g, title, line: [context(r[5], r[7]), ...result.filter(Boolean)].join(" · "), s: r[8] };
+    // Legend filter: progressive or the rest; key pass or assist; failed.
+    const cats = [
+      isProgressive(r) ? "progressive" : "rest",
+      isAssist(r) ? "assist" : "key",
+      done ? "done" : "failed",
+    ];
+    return { g, title, line: [context(r[5], r[7]), ...result.filter(Boolean)].join(" · "), s: r[8], cats };
   };
   const arrowOf = (r: PassRow | CarryRow, extra: Partial<Extract<Geometry, { kind: "arrow" }>>): Geometry => ({
     kind: "arrow",
@@ -206,7 +241,7 @@ export function EventMap({
   }, [view.defence]);
 
   // The marks of the current display, in match order (the keyboard's order).
-  const items: Item[] = useMemo(() => {
+  const allItems: Item[] = useMemo(() => {
     const zoneItems = (cells: { zone_id: number; value: number }[], say: (n: number) => string): Item[] => {
       const total = cells.reduce((a, z) => a + z.value, 0);
       return [...cells]
@@ -233,6 +268,7 @@ export function EventMap({
           title: H.carry,
           line: [context(r[5], r[7]), r[4] === 1 ? (r[6] === null ? H.completed : H.xt(dec(r[6], 3))) : H.carryLost].join(" · "),
           s: r[8],
+          cats: [r[4] === 1 ? "done" : "failed"],
         }));
       case "pases-clave":
         return view.keyPasses.map((r) =>
@@ -257,6 +293,10 @@ export function EventMap({
           title: isRxProgressive(r) ? H.progressiveReception : H.reception,
           line: [context(r[3], r[4]), ...((r[2] & RX_FLAG.inBox) !== 0 ? [H.inBox] : [])].join(" · "),
           s: r[5],
+          cats: [
+            isRxProgressive(r) ? "progressive" : "rest",
+            ...((r[2] & RX_FLAG.inBox) !== 0 ? ["box"] : []),
+          ],
         }));
         return heat ? [...zoneItems(view.receptionZones, viz.zoneHover.receptions), ...dots] : dots;
       }
@@ -269,6 +309,8 @@ export function EventMap({
             shotBodyPart(s.body_part).toLowerCase(),
           ].join(" · "),
           s: s.s,
+          // On target includes goals, as in the match totals.
+          cats: [...(s.outcome === "goal" ? ["goal"] : []), ON_TARGET.has(s.outcome) ? "on_target" : "off_target"],
         }));
       case "defensivas": {
         const rows = view.defence.filter((d) => defenceType === null || d.type === defenceType);
@@ -285,6 +327,7 @@ export function EventMap({
           title: defensiveActionType(d.type),
           line: [context(d.m, d.minute), d.outcome === "won" ? copy.legendWon : copy.legendLost].join(" · "),
           s: d.s,
+          cats: [d.outcome === "won" ? "won" : "lost"],
         }));
       }
     }
@@ -292,9 +335,21 @@ export function EventMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, heat, view, matches, touchTypes, defenceType]);
 
+  // The legend filter (2 Nov 2026, as on the match page): one key entry's
+  // category, or null for everything. Keyed by mode and display, so
+  // switching either clears it without an effect.
+  const legendAt = `${mode}:${display}`;
+  const [legend, setLegend] = useState<{ at: string; cat: string | null }>({ at: legendAt, cat: null });
+  const legendCat = legend.at === legendAt ? legend.cat : null;
+  const toggleCat = (cat: string) => setLegend({ at: legendAt, cat: legendCat === cat ? null : cat });
+  const items = useMemo(
+    () => (legendCat === null ? allItems : allItems.filter((it) => it.g.kind === "zone" || it.cats?.includes(legendCat))),
+    [allItems, legendCat],
+  );
+
   // Hover, focus and the tab stop are keyed by what is drawn, so a mode
   // switch drops them without an effect.
-  const drawn = `${mode}:${display}:${defenceType ?? ""}`;
+  const drawn = `${mode}:${display}:${defenceType ?? ""}:${legendCat ?? ""}`;
   const [cursor, setCursor] = useState<{ at: string; active: number | null; focus: number; keyboard: boolean }>({
     at: drawn,
     active: null,
@@ -397,13 +452,14 @@ export function EventMap({
       )}
 
       <div className="mt-4 flex-1">
+        <div className={o === "vertical" ? "relative mx-auto w-full max-w-[360px]" : "relative"}>
         <svg
           ref={svgRef}
           viewBox={PITCH_VIEWBOX[o]}
           width="100%"
           role="group"
           aria-label={copy.mapLabel(title, items.length)}
-          className={o === "vertical" ? "mx-auto block max-w-[360px]" : "block"}
+          className="block"
           onMouseOver={(e: MouseEvent) => {
             const i = indexOf(e);
             if (i !== null) setCursor((cur) => ({ ...(cur.at === drawn ? cur : live), at: drawn, active: i, keyboard: false }));
@@ -438,6 +494,9 @@ export function EventMap({
             <circle cx={ring.x} cy={ring.y} r={ring.r} fill="none" stroke="var(--color-ink)" strokeWidth={0.5} pointerEvents="none" />
           )}
         </svg>
+        {/* The pointer's card (1 Nov 2026); the keyboard reads the readout below. */}
+        {hot && !live.keyboard && <EventCard o={o} item={hot} />}
+        </div>
       </div>
 
       <div aria-live="polite" className="mt-3 min-h-[76px] rounded-row bg-white px-4 py-3">
@@ -458,7 +517,7 @@ export function EventMap({
         )}
       </div>
 
-      {!empty && <Key mode={mode} heat={heat} />}
+      {!empty && <Key mode={mode} heat={heat} cat={legendCat} onCat={toggleCat} />}
     </article>
   );
 }
@@ -641,8 +700,25 @@ function Highlight({ o, g }: { o: Orientation; g: Geometry }) {
   return <circle cx={a.x} cy={a.y} r={a.r} fill="none" stroke="var(--color-ink)" strokeWidth={0.35} pointerEvents="none" />;
 }
 
-/** The key under the map, in words and real marks. */
-function Key({ mode, heat }: { mode: PlayerMapMode; heat: boolean }) {
+/**
+ * The key under the map, in words and real marks. Every entry that names a
+ * kind of mark is also a quiet filter button (2 Nov 2026, the match page's
+ * `MatchMap` legend): a click keeps only that kind, a second click clears
+ * it; the hint shows only while an entry is hovered or focused. Notes (the
+ * size rule, the heat ramp, the progressive rule) are not buttons.
+ */
+function Key({
+  mode,
+  heat,
+  cat,
+  onCat,
+}: {
+  mode: PlayerMapMode;
+  heat: boolean;
+  cat: string | null;
+  onCat: (cat: string) => void;
+}) {
+  const [hint, setHint] = useState<string | null>(null);
   const L = copy.legend;
   const V = viz.legend;
   const sw = (child: ReactNode, w = 14) => (
@@ -668,41 +744,71 @@ function Key({ mode, heat }: { mode: PlayerMapMode; heat: boolean }) {
   const ramp = (
     <span aria-hidden="true" className="mr-1.5 inline-block h-1.5 w-12 rounded-full bg-[linear-gradient(90deg,var(--color-panel-deep),var(--color-team))]" />
   );
-  const failed: [ReactNode, string] = [line({ opacity: 0.32 }), L.failed];
+  const k = (mark: ReactNode, text: string, cat: string | null = null): KeyItem => ({ mark, text, cat });
+  const failed = k(line({ opacity: 0.32 }), L.failed, "failed");
+  const heatRamp = k(ramp, `${V.low} → ${V.high}`);
 
-  const items: [ReactNode, string][] =
-    mode === "pases" ? [[line(), V.progressivePass], [line({ color: "var(--color-slate)", opacity: 0.6 }), L.restPasses], failed]
-    : mode === "progresivos" ? [[line(), V.progressivePass], failed, [null, L.progressiveRule]]
-    : mode === "conducciones" ? [[line({ dash: "0.1 3.5" }), V.carry], failed, [null, L.progressiveRule]]
-    : mode === "pases-clave" ? [[line(), L.keyPass], [line({ dot: true }), L.assist]]
-    : mode === "toques" ? (heat ? [[ramp, `${V.low} → ${V.high}`]] : [[dot("var(--color-team)", 0.5), L.touchDot]])
+  const items: KeyItem[] =
+    mode === "pases" ? [k(line(), V.progressivePass, "progressive"), k(line({ color: "var(--color-slate)", opacity: 0.6 }), L.restPasses, "rest"), failed]
+    : mode === "progresivos" ? [k(line(), V.progressivePass, "done"), failed, k(null, L.progressiveRule)]
+    : mode === "conducciones" ? [k(line({ dash: "0.1 3.5" }), V.carry, "done"), failed, k(null, L.progressiveRule)]
+    : mode === "pases-clave" ? [k(line(), L.keyPass, "key"), k(line({ dot: true }), L.assist, "assist")]
+    : mode === "toques" ? (heat ? [heatRamp] : [k(dot("var(--color-team)", 0.5), L.touchDot)])
     : mode === "recepciones"
       ? [
-          heat ? [ramp, L.receptionZones] : [dot("var(--color-slate)", 0.45), L.receptionAll],
-          [dot("var(--color-team)"), L.receptionDot],
-          [dot("var(--color-team)", 1, true), L.receptionRing],
+          heat ? k(ramp, L.receptionZones) : k(dot("var(--color-slate)", 0.45), L.receptionAll, "rest"),
+          k(dot("var(--color-team)"), L.receptionDot, "progressive"),
+          k(dot("var(--color-team)", 1, true), L.receptionRing, "box"),
         ]
     : mode === "tiros"
       ? [
-          [dot("var(--color-team)"), V.shotGoal],
-          [sw(<circle cx="6" cy="6" r="4.5" fill="var(--color-team)" fillOpacity="0.45" stroke="var(--color-team)" strokeWidth="1.2" />), V.shotOn],
-          [sw(<circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--color-team)" strokeWidth="1.2" />), V.shotOff],
-          [null, matchExplorer.legend.size],
+          k(dot("var(--color-team)"), V.shotGoal, "goal"),
+          k(sw(<circle cx="6" cy="6" r="4.5" fill="var(--color-team)" fillOpacity="0.45" stroke="var(--color-team)" strokeWidth="1.2" />), V.shotOn, "on_target"),
+          k(sw(<circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--color-team)" strokeWidth="1.2" />), V.shotOff, "off_target"),
+          k(null, matchExplorer.legend.size),
         ]
-    : heat ? [[ramp, `${V.low} → ${V.high}`]]
+    : heat ? [heatRamp]
     : [
-        [sw(<rect x="3" y="3" width="6" height="6" transform="rotate(45 6 6)" fill="var(--color-team)" fillOpacity="0.8" stroke="var(--color-team)" />), matchExplorer.legend.won],
-        [sw(<rect x="3" y="3" width="6" height="6" transform="rotate(45 6 6)" fill="none" stroke="var(--color-team)" strokeWidth="1.2" />), matchExplorer.legend.lost],
+        k(sw(<rect x="3" y="3" width="6" height="6" transform="rotate(45 6 6)" fill="var(--color-team)" fillOpacity="0.8" stroke="var(--color-team)" />), matchExplorer.legend.won, "won"),
+        k(sw(<rect x="3" y="3" width="6" height="6" transform="rotate(45 6 6)" fill="none" stroke="var(--color-team)" strokeWidth="1.2" />), matchExplorer.legend.lost, "lost"),
       ];
 
+  const on = items.find((it) => it.cat !== null && it.cat === cat);
+  const filters = items.filter((it) => it.cat !== null).length > 1;
+
   return (
-    <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-slate">
-      {items.map(([mark, text]) => (
-        <li key={text} className="flex items-center">
-          {mark}
-          {text}
-        </li>
-      ))}
-    </ul>
+    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[13px] text-slate">
+      <ul className="contents">
+        {items.map((it) => (
+          <li key={it.text} className="flex items-center">
+            {it.cat === null || !filters ? (
+              <>
+                {it.mark}
+                {it.text}
+              </>
+            ) : (
+              <button
+                type="button"
+                aria-pressed={cat === it.cat}
+                onClick={() => onCat(it.cat!)}
+                onMouseEnter={() => setHint(it.cat)}
+                onMouseLeave={() => setHint(null)}
+                onFocus={() => setHint(it.cat)}
+                onBlur={() => setHint(null)}
+                className={`flex cursor-pointer items-center rounded-full underline-offset-4 transition-opacity hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline ${
+                  cat === null ? "" : cat === it.cat ? "font-semibold text-team" : "opacity-45"
+                }`}
+              >
+                {it.mark}
+                {it.text}
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <span aria-live="polite" className="text-[12px] text-slate/80">
+        {hint !== null ? (hint === cat ? matchHover.filterClear : matchHover.filterHint) : on ? matchHover.filterOn(on.text) : ""}
+      </span>
+    </div>
   );
 }

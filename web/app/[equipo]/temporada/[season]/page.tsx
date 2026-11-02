@@ -117,7 +117,7 @@ export default async function SeasonPage({ params }: PageProps) {
     {
       key: "match",
       title: landing.chapters.match.title,
-      dek: landing.chapters.match.dek(played),
+      dek: landing.chapters.match.dek,
       href: played > 0 ? routes.matches(equipo, season) : null,
     },
     {

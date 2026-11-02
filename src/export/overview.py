@@ -18,7 +18,7 @@ from typing import Any
 
 from . import db
 from .config import (KPIS, LEADER_METRICS, LEADER_ROWS, Kpi, TeamConfig,
-                     min_minutes_for)
+                     club_identity, min_minutes_for)
 from .io import Writer, as_int, r, r_rate, r_value, r_xg
 from .seasons import SeasonMeta
 
@@ -114,6 +114,8 @@ def _match_row(row: dict[str, Any]) -> dict[str, Any]:
         "opponent_name": row["opponent_name"],
         "opponent_short_name": row["opponent_short_name"],
         "opponent_abbr": row["opponent_abbr"],
+        # §3.8: the crest and colour the form strip and match list draw.
+        **{f"opponent_{k}": v for k, v in club_identity(row["opponent_abbr"]).items()},
         "result": row["result"],
         "goals_for": as_int(row["goals_for"]),
         "goals_against": as_int(row["goals_against"]),

@@ -1,8 +1,9 @@
 /**
  * MatchIndex — every match of the season as one whole-row link, newest first.
  *
- * Renders: per row, the matchday, date and venue (slate), the opponent as
- * the row title, a result disc with the table's letter (G good, E fair-fill
+ * Renders: per row, the opponent's crest (32px; its colour chip when none
+ * is supplied, 2 Nov 2026), the matchday, date and venue (slate), the
+ * opponent as the row title, a result disc with the table's letter (G good, E fair-fill
  * with an ink letter, P bad) and the score, a pair of round-capped xG strokes
  * (for in team blue over against in rival red, one scale for the whole list,
  * never under 2.0) with the two values and the net in good / bad, then a
@@ -30,6 +31,7 @@ import type { OverviewMatch } from "@/lib/data/types";
 
 import { ShotsThumb } from "@/components/landing/Thumbs";
 import { Arrow } from "@/components/shell/Arrow";
+import { Crest } from "@/components/shell/Crest";
 
 export interface MatchIndexRow {
   match: OverviewMatch;
@@ -89,12 +91,15 @@ export function MatchIndex({ rows, team }: { rows: MatchIndexRow[]; team: string
             )}
             className="group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2 rounded-row bg-panel px-4 py-3.5 transition-colors hover:bg-panel-deep focus-visible:bg-panel-deep sm:px-5 md:grid-cols-[minmax(0,1fr)_auto_auto] lg:grid-cols-[minmax(0,280px)_120px_minmax(0,1fr)_112px_20px] lg:gap-x-8"
           >
-            <span className="min-w-0" aria-hidden="true">
-              <span className="block text-[14px] text-slate">
-                {copy.matchdayShort(m.matchday)} · {shortDate(m.date)} · {m.is_home ? copy.home : copy.away}
-              </span>
-              <span className="mt-0.5 block truncate text-[18px] font-semibold tracking-[-0.01em] transition-colors group-hover:text-team group-focus-visible:text-team">
-                {m.opponent_short_name}
+            <span className="flex min-w-0 items-center gap-3.5" aria-hidden="true">
+              <Crest crest={m.opponent_crest} color={m.opponent_color} abbr={m.opponent_abbr} size={32} />
+              <span className="min-w-0">
+                <span className="block text-[14px] text-slate">
+                  {copy.matchdayShort(m.matchday)} · {shortDate(m.date)} · {m.is_home ? copy.home : copy.away}
+                </span>
+                <span className="mt-0.5 block truncate text-[18px] font-semibold tracking-[-0.01em] transition-colors group-hover:text-team group-focus-visible:text-team">
+                  {m.opponent_short_name}
+                </span>
               </span>
             </span>
 

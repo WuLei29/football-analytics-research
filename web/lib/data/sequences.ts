@@ -63,6 +63,7 @@ export function sequenceEntry(s: Omit<MatchSequence, "rank">, context?: string):
   return {
     sequence_id: s.sequence_id,
     primary_phase: s.primary_phase ?? "chaotic",
+    kind: s.kind,
     outcome: s.outcome ?? "turnover",
     start_kind: s.start_kind,
     end_action: s.end_action,

@@ -19,6 +19,15 @@
  * number as a large light chalk numeral on the panel-deep ground. The plate
  * and chip stay opaque (white, team) so the type passes contrast over ANY
  * photo; Pizarra has no black fills, so the handoff's dark plate is white.
+ *
+ * KPI verdicts (2 Nov 2026, author's review): each KPI figure is good green
+ * or bad red against the league peers of the player's role, the percentile
+ * cards' tiers (top 30% good, bottom 45% bad, ink between), from the cut-offs
+ * the export ships in `kpi.band` (a total is judged per 90). Because the cut-
+ * offs are values, not a percentile, a match-filtered figure is judged the
+ * same way. The first KPI is no longer team blue: blue says who, and the
+ * figure now says how good. When the player leads the squad in a KPI (rank 1
+ * among at least SQUAD_MIN ranked teammates) its sub line becomes a good pill.
  */
 
 import { dec, EMPTY, num, numericDate } from "@/lib/format";
@@ -30,6 +39,28 @@ import {
   positionLabels,
 } from "@/lib/labels";
 import type { PlayerBio, PlayerKpi } from "@/lib/data/types";
+
+/** A squad lead below this many ranked teammates is not news (a goalkeeper
+    is "first" of one or two at his own rates). */
+const SQUAD_MIN = 3;
+
+const VERDICT_CLASS = { good: "text-good", fair: "", bad: "text-bad" } as const;
+
+/** Good / middling / bad against the role's league peers, or null when the
+    player has no band (under the minutes gate) or no value. */
+function kpiVerdict(kpi: PlayerKpi): keyof typeof VERDICT_CLASS | null {
+  const band = kpi.band;
+  const on = band?.on === "per_90" ? kpi.per_90 : kpi.value;
+  if (!band || on === null) return null;
+  if (band.good_from !== null && on >= band.good_from) return "good";
+  if (band.bad_below !== null && on < band.bad_below) return "bad";
+  return "fair";
+}
+
+/** Rank 1 in the squad, among enough teammates to mean something. */
+function leadsSquad(kpi: PlayerKpi): boolean {
+  return kpi.squad_rank === 1 && kpi.squad_n !== null && kpi.squad_n >= SQUAD_MIN;
+}
 
 export function ProfileCard({
   player,
@@ -99,18 +130,34 @@ export function ProfileCard({
         ))}
       </dl>
 
-      {/* 3 · Four KPIs, white cards on the panel. */}
+      {/* 3 · Four KPIs, white cards on the panel; the figure in its
+          verdict colour, a squad lead as a good pill. */}
       <dl className="grid grid-cols-2 gap-2">
-        {kpis.map((kpi, i) => (
-          <div key={kpi.key} className="flex flex-col rounded-row bg-white px-4 py-3.5">
-            <dt className="text-[13px] leading-snug font-medium">{label(playerKpiLabels, kpi.key)}</dt>
-            <dd className={`mt-2 text-[36px] leading-[0.95] font-light tracking-[-0.04em] tabular-nums ${i === 0 ? "text-team" : ""}`}>
-              {kpi.value === null ? EMPTY : dec(kpi.value, kpi.decimals)}
-              {kpi.value !== null && kpi.scale === "pct" && <span className="ml-0.5 text-[0.5em] tracking-normal">%</span>}
-            </dd>
-            <dd className="mt-auto pt-2 text-[13px] leading-snug text-slate">{kpiSub(kpi, selected)}</dd>
-          </div>
-        ))}
+        {kpis.map((kpi) => {
+          const verdict = kpiVerdict(kpi);
+          const lead = leadsSquad(kpi);
+          return (
+            <div key={kpi.key} className="flex flex-col rounded-row bg-white px-4 py-3.5">
+              <dt className="text-[13px] leading-snug font-medium">{label(playerKpiLabels, kpi.key)}</dt>
+              <dd className={`mt-2 text-[36px] leading-[0.95] font-light tracking-[-0.04em] tabular-nums ${verdict ? VERDICT_CLASS[verdict] : ""}`}>
+                {kpi.value === null ? EMPTY : dec(kpi.value, kpi.decimals)}
+                {kpi.value !== null && kpi.scale === "pct" && <span className="ml-0.5 text-[0.5em] tracking-normal">%</span>}
+                {verdict && kpi.band && (
+                  <span className="sr-only">. {copy.kpiVerdict[verdict](kpi.band.peer_group)}</span>
+                )}
+              </dd>
+              <dd className="mt-auto flex flex-col items-start gap-1 pt-2 text-[13px] leading-snug text-slate">
+                {lead && (
+                  <span className="rounded-full bg-good/12 px-2 py-0.5 font-semibold whitespace-nowrap text-good">
+                    {copy.kpiSquadLead}
+                    <span className="sr-only"> ({copy.kpiSquadRank(1, kpi.squad_n ?? 0)})</span>
+                  </span>
+                )}
+                {!(lead && !kpi.total) && <span>{kpiSub(kpi, selected)}</span>}
+              </dd>
+            </div>
+          );
+        })}
       </dl>
     </article>
   );

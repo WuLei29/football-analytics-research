@@ -15,9 +15,18 @@
  * Server component: nothing here moves.
  */
 
+import { divergingAreaPath } from "@/lib/viz/scale";
+
+/*
+ * Shaded like `Momentum` (1 Nov 2026, the author's review): the area between
+ * the stroke and zero is filled, team blue where the club out-created its
+ * rival and rival red where it did not, at Momentum's opacities. The stroke
+ * went thinner at the same time (3.5 -> 2 on the lead), so the fill carries
+ * the weight and the line only draws its edge.
+ */
 const SIZES = {
-  lead: { w: 220, h: 64, stroke: 3.5, dot: 5.5 },
-  thumb: { w: 112, h: 32, stroke: 2.5, dot: 3.5 },
+  lead: { w: 220, h: 64, stroke: 2, dot: 4 },
+  thumb: { w: 112, h: 32, stroke: 1.5, dot: 2.75 },
 } as const;
 
 export function XgStroke({
@@ -44,13 +53,16 @@ export function XgStroke({
     values.length === 1 ? w / 2 : pad + (i * (w - 2 * pad)) / (values.length - 1);
   const y = (v: number) => h / 2 - (v / extent) * (h / 2 - pad);
 
-  const d = values.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+  const points = values.map((v, i) => ({ x: x(i), y: y(v) }));
+  const d = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
   const last = values.length - 1;
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" className={`block h-auto max-w-full ${className}`}>
       <title>{title}</title>
-      <line x1={0} y1={h / 2} x2={w} y2={h / 2} stroke="var(--color-chalk)" strokeWidth={1.5} />
+      <path d={divergingAreaPath(points, h / 2, 1)} fill="var(--color-team)" fillOpacity={0.28} />
+      <path d={divergingAreaPath(points, h / 2, -1)} fill="var(--color-rival)" fillOpacity={0.22} />
+      <line x1={0} y1={h / 2} x2={w} y2={h / 2} stroke="var(--color-chalk)" strokeWidth={1} />
       <path d={d} fill="none" stroke={ink} strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" />
       <circle cx={x(last)} cy={y(values[last])} r={dot} fill={ink} />
     </svg>

@@ -24,7 +24,8 @@ from __future__ import annotations
 from typing import Any, Callable
 
 from . import db
-from .config import PEER_POOL_MIN, PLAYER_SPINE, SpineMetric, min_minutes_for
+from .config import (PEER_POOL_MIN, PLAYER_KPIS, PLAYER_SPINE, PlayerKpi,
+                     SpineMetric, min_minutes_for)
 
 Row = dict[str, Any]
 
@@ -43,6 +44,18 @@ def _percent_rank(values: list[float], value: float) -> float:
         return 0.0
     below = sum(1 for v in values if v < value)
     return 100.0 * below / (len(values) - 1)
+
+
+def peer_pooling(eligible: list[Row]) -> tuple[bool, bool]:
+    """(pool_fb, pool_am): whether RB + LB rank as FB and AM inside MID,
+    because a role has fewer than PEER_POOL_MIN eligible players."""
+    role_n: dict[str, int] = {}
+    for r in eligible:
+        role_n[r["role_group"]] = role_n.get(r["role_group"], 0) + 1
+    pool_fb = any(role_n.get(g, 0) < PEER_POOL_MIN for g in ("RB", "LB")
+                  if g in role_n)
+    pool_am = "AM" in role_n and role_n["AM"] < PEER_POOL_MIN
+    return pool_fb, pool_am
 
 
 def spine_columns() -> list[str]:
@@ -78,12 +91,7 @@ def rank_season(
     eligible = [r for r in rows
                 if r["role_group"] is not None
                 and r["minutes_played"] >= min_minutes(r)]
-    role_n: dict[str, int] = {}
-    for r in eligible:
-        role_n[r["role_group"]] = role_n.get(r["role_group"], 0) + 1
-    pool_fb = any(role_n.get(g, 0) < PEER_POOL_MIN for g in ("RB", "LB")
-                  if g in role_n)
-    pool_am = "AM" in role_n and role_n["AM"] < PEER_POOL_MIN
+    pool_fb, pool_am = peer_pooling(eligible)
 
     # Rule 5: a pooled set ranks on the union of its roles' metrics.
     peers: dict[str, list[Row]] = {}
@@ -194,3 +202,89 @@ def player_percentiles(conn, cs_id: int) -> dict[tuple[int, int], dict[str, Any]
             r, results[(r["player_id"], r["team_id"])], gate(r), direction)
         for r in rows if r["role_group"] is not None
     }
+
+# ---------------------------------------------------------------------------
+# KPI verdict bands (WEB_DATA §9, 2 Nov 2026)
+# ---------------------------------------------------------------------------
+#
+# The profile card colours each headline KPI good / middling / bad, the
+# percentile cards' tiers (good >= 70, bad < 45). Its value can be rebuilt for
+# any selection of matches on the page, so the export ships the two CUT-OFFS
+# in display units, not a percentile: the page compares any value with them.
+# Peers: every La Liga player of the same peer group past the site's minutes
+# gate, pooled exactly as rank_season pools. A season total is compared per
+# 90 (a striker with 1,200 minutes against one with 3,000), a rate as is.
+# Every headline KPI is higher-is-better.
+
+GOOD_FROM_PCT = 70
+BAD_BELOW_PCT = 45
+
+
+def kpi_measure(kpi: PlayerKpi, row: Row) -> float | None:
+    """What a KPI is compared on, in display units: per 90 for a total."""
+    raw = row.get(kpi.key)
+    if raw is None:
+        return None
+    if kpi.total:
+        minutes = row["minutes_played"]
+        return float(raw) * 90.0 / minutes if minutes else None
+    return float(raw) * 100 if kpi.scale == "pct" else float(raw)
+
+
+def _cut(values: list[float], pct: float) -> float | None:
+    """The smallest value whose percent_rank reaches `pct` (values sorted)."""
+    n = len(values)
+    for v in values:
+        # Sorted, so the first index of v is the count strictly below it.
+        if 100.0 * values.index(v) / (n - 1) >= pct:
+            return v
+    return None
+
+
+def kpi_bands(rows: list[Row], min_minutes: Callable[[Row], float]
+              ) -> dict[str, Any]:
+    """{"pool_fb", "pool_am", "bands": {(peer_group, key): band}} for a season.
+
+    A band is {peer_group, peer_n, bad_below, good_from}; good_from is None
+    when no value reaches the 70th percent_rank (ties at the top).
+    """
+    eligible = [r for r in rows
+                if r["role_group"] is not None
+                and r["minutes_played"] >= min_minutes(r)]
+    pool_fb, pool_am = peer_pooling(eligible)
+    groups: dict[str, list[Row]] = {}
+    for r in eligible:
+        groups.setdefault(_peer_group(r["role_group"], pool_fb, pool_am), []).append(r)
+
+    kpis = {k.key: k for ks in PLAYER_KPIS.values() for k in ks}
+    bands: dict[tuple[str, str], dict[str, Any]] = {}
+    for pg in sorted(groups):
+        for key in sorted(kpis):
+            values = sorted(v for v in (kpi_measure(kpis[key], r) for r in groups[pg])
+                            if v is not None)
+            if len(values) < 2:
+                continue
+            bands[(pg, key)] = {
+                "peer_group": pg,
+                "peer_n": len(values),
+                "bad_below": _round(_cut(values, BAD_BELOW_PCT)),
+                "good_from": _round(_cut(values, GOOD_FROM_PCT)),
+            }
+    return {"pool_fb": pool_fb, "pool_am": pool_am, "bands": bands}
+
+
+def _round(v: float | None) -> float | None:
+    return None if v is None else round(v, 4)
+
+
+def band_for(bands: dict[str, Any], role: str, key: str) -> dict[str, Any] | None:
+    pg = _peer_group(role, bands["pool_fb"], bands["pool_am"])
+    return bands["bands"].get((pg, key))
+
+
+def player_kpi_bands(conn, cs_id: int) -> dict[str, Any]:
+    """kpi_bands for one season, read from gold.player_season_stats."""
+    keys = sorted({k.key for ks in PLAYER_KPIS.values() for k in ks})
+    rows = db.fetch_player_season_rows(conn, cs_id, keys)
+    return kpi_bands(rows, lambda r: min_minutes_for(r["team_matches"]))
+

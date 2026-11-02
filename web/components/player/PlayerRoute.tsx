@@ -66,7 +66,7 @@ export async function PlayerRoute({
     {
       key: "match",
       title: landing.chapters.match.title,
-      dek: landing.chapters.match.dek(overview.matches.length),
+      dek: landing.chapters.match.dek,
       href: overview.matches.length > 0 ? routes.matches(equipo, season) : null,
     },
     {

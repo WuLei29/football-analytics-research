@@ -10,7 +10,8 @@
  * over it as one round-capped stroke, and a caption under the pitch saying
  * which shot and which possession it is.
  * Props: `shots` (straight from the match file), `chains` (the possessions
- * those shots point at, keyed by the shot's `s`), the two abbreviations.
+ * those shots point at, keyed by the shot's `s`), the two abbreviations,
+ * and an optional `legend` node drawn between the pitch and the caption.
  * Data:  `matches/{match_id}.json` -> `shots[]` and `sequences[]`, joined by
  *        `shots[].s` (md/WEB_DATA.md §7.1). The page passes only the chains a
  *        shot points at, so this island ships a few hundred bytes of points,
@@ -39,7 +40,7 @@
  *     solid goal, half on target, hollow off), so the two maps read alike.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { dec } from "@/lib/format";
 import { landing, shotOutcome } from "@/lib/labels";
@@ -108,11 +109,14 @@ export function ChainPitch({
   chains,
   teamSide,
   abbr,
+  legend,
 }: {
   shots: ChainShot[];
   chains: Record<number, Chain>;
   teamSide: "home" | "away";
   abbr: { team: string; rival: string };
+  /** The key, drawn in the corner right under the pitch (`ShotLegend`). */
+  legend?: ReactNode;
 }) {
   const o: Orientation = useNarrow() ? "vertical" : "horizontal";
   // A fingertip-sized target on a phone (r 5 m is ~46 px across at 340 px
@@ -263,6 +267,8 @@ export function ChainPitch({
           );
         })}
       </svg>
+
+      {legend}
 
       <figcaption className="mt-4 min-h-[3.25rem]" aria-live="polite">
         {selected ? (

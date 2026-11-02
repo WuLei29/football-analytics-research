@@ -30,7 +30,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from . import db, league_table, manifest, match, overview, player, squad
-from .player_percentiles import player_percentiles
+from .player_percentiles import player_kpi_bands, player_percentiles
 from .config import DEFAULT_OUT, EXPORT_TEAMS
 from .io import Writer
 from .seasons import load_seasons
@@ -155,6 +155,7 @@ def main(argv: list[str] | None = None) -> int:
             for season in seasons:
                 cs_id = season.competition_season_id
                 percentiles = player_percentiles(conn, cs_id) if "player" in steps else {}
+                bands = player_kpi_bands(conn, cs_id) if "player" in steps else {}
                 for team_cfg in EXPORT_TEAMS:
                     if "squad" in steps:
                         rows = squad.build(conn, writer, team_cfg, season, generated_at)
@@ -171,6 +172,7 @@ def main(argv: list[str] | None = None) -> int:
                         db.fetch_player_kpi_rows(conn, cs_id, team_cfg.team_id,
                                                  player.kpi_keys()),
                         percentiles,
+                        bands,
                         db.fetch_team(conn, team_cfg.team_id),
                         max((int(m["matchday"]) for m in matches), default=None),
                         generated_at,

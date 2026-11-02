@@ -40,14 +40,25 @@
  *     when the duel was lost (one identity, outcome by fill), the average
  *     line dashed in slate.
  * Under 640 px the pitch turns vertical, attacking up, as `ChainPitch` does.
+ *
+ * Revised 1 Nov 2026 (author's review):
+ *   - a `HoverCard` beside the mark under the pointer, with the readout's
+ *     title and line, as the handoff's hover cards did; the readout under
+ *     the map stays (it is the keyboard's and the screen reader's);
+ *   - the key is also a filter: each entry is a quiet button (no pill, no
+ *     fill) that shows "Clic para filtrar" on hover and, on click, keeps
+ *     only the marks of that kind; a second click clears it. Shots filter by
+ *     outcome (both teams) or by side; progression by pass, carry or failed;
+ *     defence by won or lost (its type pills stay).
  */
 
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
 import { dec } from "@/lib/format";
-import { defensiveActionType, matchExplorer as copy, shotBodyPart, shotOutcome } from "@/lib/labels";
-import { PITCH_VIEWBOX, project, type Orientation } from "@/lib/viz/pitch";
+import { defensiveActionType, matchExplorer as copy, matchHover, shotBodyPart, shotOutcome } from "@/lib/labels";
+import { PITCH_VIEWBOX, project, type Orientation, type Point } from "@/lib/viz/pitch";
 
+import { HoverCard } from "@/components/viz/HoverCard";
 import { PitchLines } from "@/components/viz/Pitch";
 
 import { useSequenceLink } from "./SequenceLink";
@@ -101,6 +112,12 @@ interface Mark {
   size: number;
   title: string;
   line: string;
+  /** Where the hover card points, in SVG units. */
+  at: (o: Orientation) => Point;
+  /** The legend entries this mark belongs to (the legend filter). */
+  cats: string[];
+  /** Who the mark is (the card's dot): team or rival ink. */
+  ink: string;
   draw: (o: Orientation, state: { active: boolean; opened: boolean; focus: boolean }) => ReactNode;
 }
 
@@ -152,6 +169,10 @@ function shotMarks(shots: MapShot[], teamSide: "home" | "away", abbr: { team: st
       const goal = s.outcome === "goal";
       return {
         key: `shot-${s.shot_id}`,
+        at: (o: Orientation) => project(o, s.x, s.y),
+        // A goal is also on target, so "A puerta" matches the totals' count.
+        cats: [ours ? "team" : "rival", ...(goal ? ["goal"] : []), ON_TARGET.has(s.outcome) ? "on_target" : "off_target"],
+        ink: ours ? "var(--color-team)" : "var(--color-rival)",
         s: ours ? (s.s ?? null) : null,
         size: s.xg,
         title: copy.shotTitle(s.name, ours ? abbr.team : abbr.rival),
@@ -187,6 +208,9 @@ function progressionMarks(actions: MapProgression[]): Mark[] {
     .sort((x, y) => (x.a.minute ?? 0) - (y.a.minute ?? 0) || x.i - y.i)
     .map(({ a, i }) => ({
       key: `prog-${i}`,
+      at: (o: Orientation) => project(o, (a.x + a.end_x) / 2, (a.y + a.end_y) / 2),
+      cats: a.completed ? [a.kind] : [a.kind, "failed"],
+      ink: "var(--color-team)",
       s: a.s ?? null,
       size: 0,
       title: a.player ? `${copy.progressionTitle[a.kind]} · ${a.player}` : copy.progressionTitle[a.kind],
@@ -226,6 +250,9 @@ function defenceMarks(actions: MapDefence[], type: string | null): Mark[] {
     .sort((x, y) => x.a.minute - y.a.minute || x.i - y.i)
     .map(({ a, i }) => ({
       key: `def-${i}`,
+      at: (o: Orientation) => project(o, a.x, a.y),
+      cats: [a.outcome],
+      ink: "var(--color-team)",
       s: a.s ?? null,
       size: 0,
       title: a.player ? `${defensiveActionType(a.type)} · ${a.player}` : defensiveActionType(a.type),
@@ -259,16 +286,24 @@ export function MatchMap(props: MapProps) {
   const o: Orientation = useNarrow() ? "vertical" : "horizontal";
   const { ids, opened, open } = useSequenceLink();
   const [defenceType, setDefenceType] = useState<string | null>(null);
+  /** The legend filter: one legend entry's key, or null for everything. */
+  const [legendCat, setLegendCat] = useState<string | null>(null);
+  /** Whether the pointer (not the keyboard) put a mark under the card. */
+  const [pointer, setPointer] = useState(false);
   const [active, setActive] = useState<number | null>(null);
   const [focusIndex, setFocusIndex] = useState(0);
   const [keyboard, setKeyboard] = useState(false);
   const markRefs = useRef<(SVGGElement | null)[]>([]);
 
   const marks: Mark[] = useMemo(() => {
-    if (props.mode === "shots") return shotMarks(props.shots, props.teamSide, props.abbr);
-    if (props.mode === "progression") return progressionMarks(props.actions);
-    return defenceMarks(props.actions, defenceType);
-  }, [props, defenceType]);
+    const all =
+      props.mode === "shots"
+        ? shotMarks(props.shots, props.teamSide, props.abbr)
+        : props.mode === "progression"
+          ? progressionMarks(props.actions)
+          : defenceMarks(props.actions, defenceType);
+    return legendCat === null ? all : all.filter((m) => m.cats.includes(legendCat));
+  }, [props, defenceType, legendCat]);
 
   const defenceCounts = useMemo(() => {
     if (props.mode !== "defence") return [];
@@ -282,7 +317,7 @@ export function MatchMap(props: MapProps) {
   useEffect(() => {
     setActive(null);
     setFocusIndex(0);
-  }, [defenceType]);
+  }, [defenceType, legendCat]);
 
   // Big shots underneath, small ones on top, so every mark stays reachable.
   const drawOrder = useMemo(() => marks.map((_, i) => i).sort((a, b) => marks[b].size - marks[a].size), [marks]);
@@ -335,12 +370,13 @@ export function MatchMap(props: MapProps) {
         </div>
       )}
 
+      <div className={o === "vertical" ? "relative mx-auto w-full max-w-[360px]" : "relative"}>
       <svg
         viewBox={PITCH_VIEWBOX[o]}
         width="100%"
         role="group"
         aria-label={copy.mapLabel[props.mode](marks.length)}
-        className={o === "vertical" ? "mx-auto block max-w-[360px]" : "block"}
+        className="block"
         onMouseLeave={() => setActive(null)}
       >
         {props.mode === "progression" && (
@@ -375,9 +411,13 @@ export function MatchMap(props: MapProps) {
               tabIndex={i === focusIndex ? 0 : -1}
               aria-label={copy.markLabel(m.title, m.line, m.s != null)}
               className="cursor-pointer outline-none"
-              onMouseEnter={() => setActive(i)}
+              onMouseEnter={() => {
+                setActive(i);
+                setPointer(true);
+              }}
               onFocus={(e) => {
                 setActive(i);
+                setPointer(false);
                 setFocusIndex(i);
                 setKeyboard(e.currentTarget.matches(":focus-visible"));
               }}
@@ -390,6 +430,8 @@ export function MatchMap(props: MapProps) {
           );
         })}
       </svg>
+      {hot && pointer && <MarkCard mark={hot} o={o} />}
+      </div>
 
       <div aria-live="polite" className="min-h-[76px] rounded-row bg-white px-4 py-3">
         {hot ? (
@@ -405,14 +447,26 @@ export function MatchMap(props: MapProps) {
         )}
       </div>
 
-      <Legend {...props} />
+      <Legend {...props} cat={legendCat} onCat={(c) => setLegendCat((prev) => (prev === c ? null : c))} />
     </div>
   );
 }
 
-/** The key under the map, in words and real marks. */
-function Legend(props: MapProps) {
+/** The floating card on the mark under the pointer. */
+function MarkCard({ mark, o }: { mark: Mark; o: Orientation }) {
+  const [vx, vy, vw, vh] = PITCH_VIEWBOX[o].split(" ").map(Number);
+  const p = mark.at(o);
+  return <HoverCard x={(p.x - vx) / vw} y={(p.y - vy) / vh} title={mark.title} lines={[mark.line]} accent={mark.ink} />;
+}
+
+/**
+ * The key under the map, in words and real marks. Each entry with a `cat`
+ * is also a quiet filter button; the hint appears only while one is hovered
+ * or focused, so the key reads as a key until someone reaches for it.
+ */
+function Legend(props: MapProps & { cat: string | null; onCat: (cat: string) => void }) {
   const L = copy.legend;
+  const [hint, setHint] = useState<string | null>(null);
   const dot = (fill: string, fillOpacity: number, stroke: string) => (
     <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className="mr-2 inline-block shrink-0">
       <circle cx="6" cy="6" r="4.5" fill={fill} fillOpacity={fillOpacity} stroke={stroke} strokeWidth="1.2" />
@@ -429,28 +483,71 @@ function Legend(props: MapProps) {
     </svg>
   );
 
-  const items: ReactNode[] =
+  const items: { cat: string | null; name: string; mark: ReactNode }[] =
     props.mode === "shots"
       ? [
-          <>{dot("var(--color-team)", 1, "var(--color-team)")}{L.shotTeam(props.abbr.team)}</>,
-          <>{dot("var(--color-rival)", 0, "var(--color-rival)")}{L.shotRival(props.abbr.rival)}</>,
-          <>{L.size}</>,
+          { cat: "team", name: props.abbr.team, mark: dot("var(--color-team)", 1, "var(--color-team)") },
+          { cat: "rival", name: props.abbr.rival, mark: dot("var(--color-rival)", 0, "var(--color-rival)") },
+          { cat: "goal", name: L.goal, mark: dot("var(--color-team)", 1, "var(--color-team)") },
+          { cat: "on_target", name: L.onTarget, mark: dot("var(--color-team)", 0.45, "var(--color-team)") },
+          { cat: "off_target", name: L.offTarget, mark: dot("var(--color-team)", 0, "var(--color-team)") },
+          { cat: null, name: L.size, mark: null },
         ]
       : props.mode === "progression"
-        ? [<>{stroke()}{L.pass}</>, <>{stroke("0.1 4")}{L.carry}</>, <>{stroke(undefined, 0.32)}{L.failed}</>]
+        ? [
+            { cat: "pass", name: L.pass, mark: stroke() },
+            { cat: "carry", name: L.carry, mark: stroke("0.1 4") },
+            { cat: "failed", name: L.failed, mark: stroke(undefined, 0.32) },
+          ]
         : [
-            <>{diamond(true)}{L.won}</>,
-            <>{diamond(false)}{L.lost}</>,
-            ...(props.lineX != null ? [<>{stroke("3 3", 1, "var(--color-slate)")}{L.line(dec(props.lineX, 1))}</>] : []),
+            { cat: "won", name: L.won, mark: diamond(true) },
+            { cat: "lost", name: L.lost, mark: diamond(false) },
+            ...(props.lineX != null
+              ? [{ cat: null, name: L.line(dec(props.lineX, 1)), mark: stroke("3 3", 1, "var(--color-slate)") }]
+              : []),
           ];
 
+  const on = items.find((it) => it.cat !== null && it.cat === props.cat);
+
   return (
-    <ul className="flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-slate">
-      {items.map((item, i) => (
-        <li key={i} className="flex items-center">
-          {item}
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[13px] text-slate">
+      <ul className="contents">
+        {items.map((it, i) => (
+          <li key={i} className="flex items-center">
+            {it.cat === null ? (
+              <>
+                {it.mark}
+                {it.name}
+              </>
+            ) : (
+              <button
+                type="button"
+                aria-pressed={props.cat === it.cat}
+                onClick={() => props.onCat(it.cat!)}
+                onMouseEnter={() => setHint(it.cat)}
+                onMouseLeave={() => setHint(null)}
+                onFocus={() => setHint(it.cat)}
+                onBlur={() => setHint(null)}
+                className={`flex cursor-pointer items-center rounded-full underline-offset-4 transition-opacity hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline ${
+                  props.cat === null ? "" : props.cat === it.cat ? "font-semibold text-team" : "opacity-45"
+                }`}
+              >
+                {it.mark}
+                {it.name}
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <span aria-live="polite" className="text-[12px] text-slate/80">
+        {hint !== null
+          ? hint === props.cat
+            ? matchHover.filterClear
+            : matchHover.filterHint
+          : on
+            ? matchHover.filterOn(on.name)
+            : ""}
+      </span>
+    </div>
   );
 }

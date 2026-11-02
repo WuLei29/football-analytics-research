@@ -27,6 +27,12 @@
  * the same series; the bars add the match-by-match values the mean hides, and
  * the readout makes every bar answerable. The plot stretches to a fixed CSS
  * height with non-scaling strokes, so it is tall enough on a phone.
+ *
+ * Revised 1 Nov 2026 (author's review, to match the landing's xG stroke):
+ * bars thinner (0.56 -> 0.3 of a column, cap 14), the rolling line 3 -> 2 px
+ * with an 8 px end dot, and the area between the line and zero shaded in team
+ * blue at 0.14, under the bars, so the trend reads as a shape and the bars
+ * as the matches inside it.
  */
 
 import { useState, type KeyboardEvent } from "react";
@@ -73,7 +79,7 @@ export function SeasonTrend({ rows, window }: { rows: TrendRow[]; window: number
   const yAt = (v: number) => zeroY - (v / max) * (zeroY - PAD);
   const step = W / rows.length;
   const xAt = (i: number) => step * (i + 0.5);
-  const barW = Math.min(step * 0.56, 40);
+  const barW = Math.min(step * 0.3, 14);
 
   const line = rows
     .map((r, i) => ({ r: roll(r), i }))
@@ -81,6 +87,9 @@ export function SeasonTrend({ rows, window }: { rows: TrendRow[]; window: number
     .map((p) => ({ x: xAt(p.i), y: yAt(p.r) }));
   const linePath = line.map((p, k) => `${k === 0 ? "M" : "L"}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(" ");
   const last = line.at(-1);
+  // The shade: the area between the rolling line and zero, closed along the axis.
+  const areaPath =
+    line.length > 1 ? `${linePath} L${line.at(-1)!.x.toFixed(2)} ${zeroY} L${line[0].x.toFixed(2)} ${zeroY} Z` : "";
 
   const labelEvery = rows.length > 12 ? 5 : 1;
   const pct = (v: number, of: number) => `${(v / of) * 100}%`;
@@ -143,6 +152,7 @@ export function SeasonTrend({ rows, window }: { rows: TrendRow[]; window: number
             ))}
           {/* The selected match: a soft column behind its bar. */}
           <rect x={xAt(selected) - step / 2} y={0} width={step} height={H} fill="var(--color-spot)" />
+          {areaPath && <path d={areaPath} fill="var(--color-team)" fillOpacity={0.14} />}
           {rows.map((r, i) => {
             const v = net(r);
             const y = yAt(v);
@@ -160,10 +170,10 @@ export function SeasonTrend({ rows, window }: { rows: TrendRow[]; window: number
           })}
           <line x1={0} y1={zeroY} x2={W} y2={zeroY} stroke="var(--color-slate)" strokeWidth={1.25} vectorEffect="non-scaling-stroke" />
           {linePath && (
-            <path d={linePath} fill="none" stroke="var(--color-team)" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+            <path d={linePath} fill="none" stroke="var(--color-team)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           )}
           {last && (
-            <line x1={last.x} y1={last.y} x2={last.x} y2={last.y} stroke="var(--color-team)" strokeWidth={11} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+            <line x1={last.x} y1={last.y} x2={last.x} y2={last.y} stroke="var(--color-team)" strokeWidth={8} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
           )}
           {/* Hit columns: the whole height of each match, for pointer and tap. */}
           {rows.map((_, i) => (

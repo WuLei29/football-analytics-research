@@ -18,7 +18,7 @@ from datetime import datetime
 from typing import Any
 
 from . import db
-from .config import EXPORT_TEAMS, PROFILE_METRICS, ProfileMetric
+from .config import EXPORT_TEAMS, PROFILE_METRICS, ProfileMetric, club_identity
 from .io import Writer, as_int, r, r_rate
 from .seasons import SeasonMeta
 
@@ -136,6 +136,8 @@ def _table_row(row: dict[str, Any]) -> dict[str, Any]:
         "name": row["team_name"],
         "short_name": row["team_short_name"],
         "abbr": row["team_abbreviation"],
+        # Crest path (null when none is supplied) and colour, §3.8.
+        **club_identity(row["team_abbreviation"]),
         "played": as_int(row["matches_played"]),
         "won": as_int(row["wins"]),
         "drawn": as_int(row["draws"]),

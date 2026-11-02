@@ -32,8 +32,10 @@ import { ChainPitch, type Chain, type ChainShot } from "@/components/landing/Cha
 import { DepthIndex, type IndexRow } from "@/components/landing/DepthIndex";
 import { PillNav } from "@/components/shell/PillNav";
 import { SeasonHighlight } from "@/components/landing/SeasonHighlight";
+import { ShotLegend } from "@/components/matches/ShotLegend";
 import { ChainThumb, FigureThumb, ShotsThumb } from "@/components/landing/Thumbs";
 import { XgStroke } from "@/components/landing/XgStroke";
+import { rivalStyle } from "@/lib/clubs";
 import { brand } from "@/lib/brand";
 import { getManifest, getMatch, getOverview, getSquad } from "@/lib/data/load";
 import { longDate } from "@/lib/format";
@@ -98,7 +100,6 @@ export default async function HomePage() {
     `${matchFile.match.home.short_name} ${matchFile.match.home.goals}–${matchFile.match.away.goals} ${matchFile.match.away.short_name}`;
 
   const scorer = overview.leaders.find((l) => l.key === "goals")?.rows[0] ?? null;
-  const matchesAllSeasons = team.seasons.reduce((n, s) => n + s.matches_played, 0);
   const seasonLabelShort = season.slug.replace("-", "/");
 
   const rows: IndexRow[] = [
@@ -119,7 +120,7 @@ export default async function HomePage() {
     {
       key: "match",
       title: landing.chapters.match.title,
-      dek: landing.chapters.match.dek(matchesAllSeasons),
+      dek: landing.chapters.match.dek,
       href: routes.matches(team.slug, season.slug),
       thumb: <ShotsThumb shots={ourShots} title={landing.thumbMatch} />,
     },
@@ -187,9 +188,12 @@ export default async function HomePage() {
           </div>
 
           {matchFile && latest && (
+            /* The opponent in its club colour, as on its match page
+               (2 Nov 2026, DESIGN.md "Club identity"). */
             <section
               aria-labelledby="ultimo"
               className="mt-6 grid gap-8 rounded-panel bg-spot p-6 text-ink sm:p-8 lg:mt-8 lg:grid-cols-[1fr_2.2fr] lg:p-10"
+              style={rivalStyle(matchFile.match[rivalSide].color)}
             >
               <div className="flex flex-col">
                 <h2 id="ultimo" className="text-[26px] leading-tight font-semibold tracking-[-0.02em]">
@@ -200,21 +204,6 @@ export default async function HomePage() {
                 </p>
                 <p className="mt-5 text-[32px] leading-none font-light tracking-[-0.03em]">{latestTitle}</p>
                 <p className="mt-6 max-w-[38ch] text-[15px] leading-[1.5] text-spot-text">{landing.latestHint}</p>
-                <ul className="mt-6 space-y-1.5 text-[14px] text-spot-text">
-                  <li>
-                    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className="mr-2 inline-block align-[-1px]"><circle cx="6" cy="6" r="4.5" fill="var(--color-team)" stroke="var(--color-team)" strokeWidth="1.2" /></svg>
-                    {landing.legendTeam(matchFile.match[teamSide].abbr)}
-                  </li>
-                  <li>
-                    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className="mr-2 inline-block align-[-1px]"><circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--color-rival)" strokeWidth="1.2" /></svg>
-                    {landing.legendRival(matchFile.match[rivalSide].abbr)}
-                  </li>
-                  <li>{landing.legendSize}</li>
-                  <li>
-                    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" className="mr-2 inline-block align-[-1px]"><circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--color-team)" strokeOpacity="0.4" strokeWidth="1.2" /></svg>
-                    {landing.legendUnlinked}
-                  </li>
-                </ul>
                 <Link
                   href={routes.match(team.slug, latest.match_id)}
                   className="mt-8 hidden self-start rounded-full bg-team px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-team-deep lg:inline-block"
@@ -228,6 +217,7 @@ export default async function HomePage() {
                   chains={chains}
                   teamSide={teamSide}
                   abbr={{ team: matchFile.match[teamSide].abbr, rival: matchFile.match[rivalSide].abbr }}
+                  legend={<ShotLegend rival={matchFile.match[rivalSide].abbr} unlinked />}
                 />
                 {/* The same link, after the pitch on a phone, where the
                     columns stack and the left one's button would come first. */}
@@ -252,7 +242,11 @@ export default async function HomePage() {
               <p className="text-[clamp(28px,3vw,40px)] leading-[1.05] font-light tracking-[-0.03em]">
                 {brand.author.name}
               </p>
-              <p className="mt-4 max-w-[62ch] text-[17px] leading-[1.55] text-slate">{landing.authorBody}</p>
+              {landing.authorBody.map((paragraph, i) => (
+                <p key={i} className={`${i === 0 ? "mt-4" : "mt-3"} max-w-[62ch] text-[17px] leading-[1.55] text-slate`}>
+                  {paragraph}
+                </p>
+              ))}
               <p className="mt-6 flex flex-wrap gap-3">
                 <a
                   href={brand.author.linkedin}

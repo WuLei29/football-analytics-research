@@ -18,7 +18,14 @@
  * Ticking a box while a preset is on starts from the preset's matches, so
  * "Últimos 5" then unticking one gives the other four. The choice is written
  * to `?partidos=` (`lib/vista.ts`), which every other block reads.
+ *
+ * "Desmarcar todos" (2 Nov 2026, author's review: with 30 matches, picking
+ * three meant unticking 27). The page cannot draw an empty selection, so the
+ * clear is a draft held here: every box shows unticked and a line says the
+ * page keeps its view; the first box ticked becomes the selection.
  */
+
+import { useState } from "react";
 
 import { shortDate, num } from "@/lib/format";
 import { matchList, matchPicker, player as copy } from "@/lib/labels";
@@ -46,9 +53,18 @@ export function MatchFilter({
   selection: MatchSelection;
   idx: Set<number> | null;
 }) {
-  const choose = (sel: MatchSelection) => setPartidos(serializeSelection(sel));
+  // The cleared draft: nothing ticked, nothing written to the URL yet.
+  const [blank, setBlank] = useState(false);
+  const choose = (sel: MatchSelection) => {
+    setBlank(false);
+    setPartidos(serializeSelection(sel));
+  };
 
   const toggle = (i: number) => {
+    if (blank) {
+      choose({ kind: "custom", ids: [matches[i].match_id] });
+      return;
+    }
     const ids = new Set(
       [...(idx ?? matches.keys())].map((j) => matches[j].match_id),
     );
@@ -101,10 +117,10 @@ export function MatchFilter({
             <button
               key={p}
               type="button"
-              aria-pressed={selection.kind === p}
+              aria-pressed={!blank && selection.kind === p}
               onClick={() => choose({ kind: p })}
               className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${
-                selection.kind === p ? "bg-team text-white" : "bg-panel-deep text-ink hover:bg-chalk"
+                !blank && selection.kind === p ? "bg-team text-white" : "bg-panel-deep text-ink hover:bg-chalk"
               }`}
             >
               {presetLabel(p)}
@@ -112,11 +128,26 @@ export function MatchFilter({
           ))}
         </div>
 
-        <p className="mt-3 mb-1 text-[13px] text-slate">{copy.filter.pick}</p>
+        <div className="mt-3 mb-1 flex items-baseline justify-between gap-3 text-[13px]">
+          <p className="text-slate">{copy.filter.pick}</p>
+          <button
+            type="button"
+            onClick={() => setBlank(true)}
+            disabled={blank}
+            className="rounded-full font-semibold text-team underline-offset-4 hover:underline focus-visible:underline disabled:text-slate disabled:no-underline"
+          >
+            {copy.filter.clearAll}
+          </button>
+        </div>
+        {blank && (
+          <p aria-live="polite" className="mb-1 rounded-[12px] bg-spot px-2 py-1.5 text-[13px] text-spot-text">
+            {copy.filter.blankHint}
+          </p>
+        )}
         <ul className="max-h-[300px] overflow-y-auto">
           {[...matches.keys()].reverse().map((i) => {
             const m = matches[i];
-            const on = idx === null || idx.has(i);
+            const on = !blank && (idx === null || idx.has(i));
             return (
               <li key={m.match_id}>
                 <label className="flex cursor-pointer items-center gap-2.5 rounded-[12px] px-2 py-1.5 transition-colors hover:bg-panel">

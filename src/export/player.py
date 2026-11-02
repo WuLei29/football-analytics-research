@@ -61,6 +61,7 @@ from .config import (
 )
 from .io import Writer, as_int, r, r_coord, r_rate, r_value
 from .match import _body_part, _sequences as match_sequences, _shot_outcome
+from .player_percentiles import band_for
 from .seasons import SeasonMeta
 from .squad import display_name
 
@@ -241,7 +242,7 @@ def kpi_keys() -> list[str]:
 
 
 def _kpis(role: str, player_id: int, club_rows: list[dict[str, Any]],
-          min_minutes: float) -> list[dict[str, Any]]:
+          min_minutes: float, bands: dict[str, Any]) -> list[dict[str, Any]]:
     mine = next(row for row in club_rows if int(row["player_id"]) == player_id)
     minutes = int(mine["minutes_played"])
     out: list[dict[str, Any]] = []
@@ -263,14 +264,28 @@ def _kpis(role: str, player_id: int, club_rows: list[dict[str, Any]],
                 "per90": bool(formula.get("per90")),
             },
             "total": kpi.total,
+            # The verdict cut-offs (good / bad) among the league peers of the
+            # role, on per_90 for a total and on value for a rate; null when
+            # the player is under the minutes gate (WEB_DATA §9, 2 Nov 2026).
+            "band": None,
         }
-        if kpi.total:
+        if kpi.total and raw is not None and minutes > 0:
             # The sub line under a season total is its per-90.
-            if raw is not None and minutes > 0:
-                entry["per_90"] = r(float(raw) * 90.0 / minutes, 2)
-        else:
-            rank, n = squad_rank(club_rows, player_id, kpi.key, min_minutes)
-            entry["squad_rank"], entry["squad_n"] = rank, n
+            entry["per_90"] = r(float(raw) * 90.0 / minutes, 2)
+        # Rank inside the squad: the sub line of a rate, and since 2 Nov 2026
+        # also on a total, where rank 1 earns the card's highlight.
+        rank, n = squad_rank(club_rows, player_id, kpi.key, min_minutes)
+        entry["squad_rank"], entry["squad_n"] = rank, n
+        if rank is not None and bands:
+            band = band_for(bands, role, kpi.key)
+            if band is not None:
+                entry["band"] = {
+                    "on": "per_90" if kpi.total else "value",
+                    "bad_below": band["bad_below"],
+                    "good_from": band["good_from"],
+                    "peer_group": band["peer_group"],
+                    "peer_n": band["peer_n"],
+                }
         out.append(entry)
     return out
 
@@ -466,6 +481,7 @@ def _sequences(conn, team_id: int, rows: list[dict[str, Any]],
 def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
           squad_rows: list[dict[str, Any]], kpi_rows: list[dict[str, Any]],
           percentiles: dict[tuple[int, int], dict[str, Any]],
+          bands: dict[str, Any],
           team: dict[str, Any], through_matchday: int | None,
           generated_at: datetime) -> None:
     """Write one file per row of `squad_rows` (the rows squad.json shipped)."""
@@ -484,7 +500,7 @@ def build(conn, writer: Writer, team_cfg: TeamConfig, season: SeasonMeta,
         matches = [_match_entry(m, columns) for m in db.fetch_player_matches(
             conn, cs_id, team_id, player_id, columns)]
         index = {m["match_id"]: i for i, m in enumerate(matches)}
-        kpis = _kpis(role, player_id, kpi_rows, gate)
+        kpis = _kpis(role, player_id, kpi_rows, gate, bands)
         check_against_season(player_id, matches, kpis, role, row)
         # The chain index first: every map row points into it (`s`).
         chain_rows = db.fetch_player_sequence_index(conn, cs_id, team_id, player_id,

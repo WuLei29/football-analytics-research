@@ -15,6 +15,9 @@ data/*
 !data/mapping/
 !data/clean/
 !data/squads/
+# Hand-made inputs (player checklist, Transfermarkt URLs): small and
+# irreplaceable, so they are versioned, unlike the scraped data.
+!data/manual/
 
 
 # Ignore everything inside those folders

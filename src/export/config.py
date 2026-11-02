@@ -355,6 +355,65 @@ LEADER_ROWS = 6
 
 
 # ---------------------------------------------------------------------------
+# Club identity: colour and crest (§3.8, WEB_PLAN.md §10.1)
+# ---------------------------------------------------------------------------
+#
+# Keyed on silver.teams.abbreviation, the code every file already ships as
+# `abbr`. The colour marks the opponent on its match page (it replaces
+# --color-rival there) and fills the chip that stands in for a missing crest.
+# Approved by the author on 2 Nov 2026. Espanyol keeps the site's team blue
+# (--color-team), not the club config's #2388C4.
+#
+# A club that plays a published season and is missing here fails the export:
+# a page that silently fell back to the default red would look right and say
+# nothing about who the opponent is.
+CLUB_COLOURS: dict[str, str] = {
+    "ESP": "#123e8c",
+    "ALA": "#055e42",
+    "ATH": "#ff0302",
+    "ATM": "#e81422",
+    "BAR": "#a50044",
+    "BET": "#047c24",
+    "CEL": "#e5254e",
+    "DEP": "#57175e",
+    "ELC": "#2e7d32",
+    "GET": "#c43a2f",
+    "GIR": "#cf0c29",
+    "LEV": "#8e1b3e",
+    "MAL": "#a74b55",
+    "MLL": "#ed1b24",
+    "OSA": "#d30a29",
+    "OVI": "#e23627",
+    "RAC": "#00703c",
+    "RAY": "#eb3c34",
+    "RMA": "#532c53",
+    "RSO": "#d87722",
+    "SEV": "#bf2a37",
+    "VAL": "#e96c08",
+    "VIL": "#a68400",
+}
+
+# Crests are served from here, one PNG per club, named by the lower-case
+# abbreviation (`esp.png`). They are prepared from the originals in
+# web/resources/crests/ by `python -m src.export.crests`. A club without a
+# file ships `crest: null` and the site draws its colour chip instead.
+CREST_DIR = PROJECT_ROOT / "web" / "public" / "brand" / "crests"
+CREST_URL = "/brand/crests"
+
+
+def club_identity(abbr: str) -> dict[str, str | None]:
+    """`{"color", "crest"}` for one club. Raises on an unlisted club."""
+    if abbr not in CLUB_COLOURS:
+        raise KeyError(
+            f"Club '{abbr}' has no colour in CLUB_COLOURS (src/export/config.py). "
+            "Add one before exporting: every club on the site needs a colour."
+        )
+    name = f"{abbr.lower()}.png"
+    crest = f"{CREST_URL}/{name}" if (CREST_DIR / name).is_file() else None
+    return {"color": CLUB_COLOURS[abbr], "crest": crest}
+
+
+# ---------------------------------------------------------------------------
 # Shaping limits used by the match file (§7.1). Kept here so the exposure
 # rules of WEB_PLAN.md §6 are visible in one place.
 # ---------------------------------------------------------------------------

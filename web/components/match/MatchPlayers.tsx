@@ -6,7 +6,8 @@
  * the team's abbreviation in its ink, a name, and a light figure; the leader
  * row is white, as the season page's leader rows are.
  * Props: `boxes` (`players[]`) and `teamSide`, so the published club's
- * abbreviation is team blue and the opponent's rival red.
+ * abbreviation is team blue and the opponent's rival-ink (the opponent's
+ * club colour as text, darkened to 4.5:1 if needed; 2 Nov 2026).
  * Data:  `matches/{match_id}.json` -> `players[]` (md/WEB_DATA.md §7), from
  *        `gold.player_match_stats` for BOTH teams.
  *
@@ -44,7 +45,7 @@ export function MatchPlayers({
                 }`}
               >
                 <span
-                  className={`text-[13px] font-semibold ${row.side === teamSide ? "text-team" : "text-rival"}`}
+                  className={`text-[13px] font-semibold ${row.side === teamSide ? "text-team" : "text-rival-ink"}`}
                 >
                   {row.abbr}
                 </span>

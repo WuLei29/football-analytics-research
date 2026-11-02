@@ -3,7 +3,9 @@
  *
  * Renders: a table with `# / Club / PJ / G / E / P / DG / DxG / Pts`, a short
  * round-capped zone bar beside each position, and the published club on a
- * light-blue (spot) band with its name in team ink. On a phone the four record
+ * light-blue (spot) band with its name in team ink. Each club's crest
+ * (20px; its colour chip when no crest is supplied) sits before its name
+ * (2 Nov 2026, WEB_PLAN.md §10.1). On a phone the four record
  * columns (PJ G E P) are hidden: the five that stay fit 320 px without
  * scrolling, and the record is in the line under the page's h1.
  * Props: `rows` (`table[]`), `highlight` — the team_id to band, and `season`.
@@ -25,6 +27,7 @@
 
 import Link from "next/link";
 
+import { Crest } from "@/components/shell/Crest";
 import { num, signed } from "@/lib/format";
 import { season as copy } from "@/lib/labels";
 import { routes } from "@/lib/routes";
@@ -112,16 +115,19 @@ export function LeagueTable({
                 </td>
 
                 <td className={`${td} pl-2 ${isTeam ? "font-semibold text-team" : "font-medium"}`}>
-                  {row.slug ? (
-                    <Link
-                      href={routes.season(row.slug, season)}
-                      className="underline decoration-transparent underline-offset-4 hover:decoration-current"
-                    >
-                      {row.short_name}
-                    </Link>
-                  ) : (
-                    row.short_name
-                  )}
+                  <span className="flex items-center gap-2.5">
+                    <Crest crest={row.crest} color={row.color} abbr={row.abbr} />
+                    {row.slug ? (
+                      <Link
+                        href={routes.season(row.slug, season)}
+                        className="underline decoration-transparent underline-offset-4 hover:decoration-current"
+                      >
+                        {row.short_name}
+                      </Link>
+                    ) : (
+                      row.short_name
+                    )}
+                  </span>
                 </td>
 
                 <td className={`${td} ${RECORD} pl-2 text-right text-slate`}>{num(row.played)}</td>

@@ -771,12 +771,25 @@ export const demoPlayerFile: PlayerFile = (() => {
 
   // The season KPIs are the formulas over every match, as the export checks.
   const kpi = (key: string, scale: "raw" | "pct", decimals: 0 | 1 | 2 | 3, total: boolean, formula: KpiFormula): PlayerKpi => {
-    const base: PlayerKpi = { key, value: null, scale, decimals, per_90: null, squad_rank: null, squad_n: null, formula, total };
+    const base: PlayerKpi = { key, value: null, scale, decimals, per_90: null, squad_rank: null, squad_n: null, formula, total, band: null };
     const value = kpiOver(base, matches);
     const minutes = matches.reduce((a, mm) => a + mm.minutes, 0);
+    // Seeded verdicts so the demo shows all three tiers and the highlight:
+    // the cut-offs sit around the fixture's own value, a little above (bad),
+    // below (good) or either side (middling), keyed on the name's length.
+    const per90 = value === null ? null : Math.round((value * 9000) / minutes) / 100;
+    const on = total ? per90 : value;
+    const tier = key.length % 3;
+    const band = on === null ? null : {
+      on: total ? ("per_90" as const) : ("value" as const),
+      bad_below: tier === 0 ? on * 1.2 : on * 0.8,
+      good_from: tier === 1 ? on * 0.9 : on * 1.4,
+      peer_group: "CB",
+      peer_n: 74,
+    };
     return total
-      ? { ...base, value, per_90: value === null ? null : Math.round((value * 9000) / minutes) / 100 }
-      : { ...base, value, squad_rank: 3 + (key.length % 5), squad_n: 18 };
+      ? { ...base, value, per_90: per90, squad_rank: 1 + (key.length % 4), squad_n: 18, band }
+      : { ...base, value, squad_rank: 1 + (key.length % 5), squad_n: 18, band };
   };
   const sum = (f: (mm: PlayerMatch) => number) => matches.reduce((a, mm) => a + f(mm), 0);
 

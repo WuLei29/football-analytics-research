@@ -118,6 +118,10 @@ export interface LeagueTableRow {
   name: string;
   short_name: string;
   abbr: string;
+  /** The club's colour, `#rrggbb` (§3.8). */
+  color: string;
+  /** `/brand/crests/{abbr}.png`, or null when no crest is supplied (§3.8). */
+  crest: string | null;
   played: number;
   won: number;
   drawn: number;
@@ -202,6 +206,9 @@ export interface OverviewMatch {
   opponent_name: string;
   opponent_short_name: string;
   opponent_abbr: string;
+  /** The opponent's colour and crest (null when none is supplied), §3.8. */
+  opponent_color: string;
+  opponent_crest: string | null;
   goals_for: number;
   goals_against: number;
   result: "W" | "D" | "L";
@@ -287,6 +294,10 @@ export interface MatchSide {
   team_id: number;
   short_name: string;
   abbr: string;
+  /** The club's colour (§3.8); the opponent's replaces --color-rival on the page. */
+  color: string;
+  /** Crest path, or null when none is supplied (§3.8). */
+  crest: string | null;
   goals: number;
   goals_ht: number | null;
   xg: number;
@@ -332,6 +343,21 @@ export interface MomentumMarkerData {
   label_key: string;
   player_id: number | null;
   name: string | null;
+  /** Subs only: the player replaced (1 Nov 2026). Null when unpaired. */
+  off_name?: string | null;
+}
+
+/** One passing pair. `ab` = from -> to, `ba` = to -> from (1 Nov 2026). */
+export interface NetworkEdgeData {
+  from: number;
+  to: number;
+  passes: number;
+  passes_ab?: number;
+  passes_ba?: number;
+  key_passes_ab?: number;
+  key_passes_ba?: number;
+  assists_ab?: number;
+  assists_ba?: number;
 }
 
 export interface MatchNetwork {
@@ -346,7 +372,7 @@ export interface MatchNetwork {
     y: number;
     touches: number;
   }[];
-  edges: { from: number; to: number; passes: number }[];
+  edges: NetworkEdgeData[];
 }
 
 /** One of the fourteen stat rows, in the design's order (§7.2). */
@@ -494,6 +520,13 @@ export interface MatchSequence {
   /** How a `turnover` lost the ball, from the last action; null otherwise. */
   end_action: string | null;
   primary_phase: string | null;
+  /**
+   * The row title (WEB_DATA §7.6, `match.py::sequence_kind`): the priority
+   * ladder over the phase flags. Mirrored here on 2 Nov 2026 — the export had
+   * written it since 21 Sep, but the type and `sequenceEntry` dropped it, so
+   * every row fell back to `primary_phase`.
+   */
+  kind?: string | null;
   final_third_entry: boolean;
   penalty_box_entry: boolean;
   ends_in_shot: boolean;
@@ -652,12 +685,25 @@ export interface PlayerKpi {
   decimals: 0 | 1 | 2 | 3;
   /** Season totals only: the per-90 sub line. */
   per_90: number | null;
-  /** Rates and per-90s only: rank in the squad among players past the gate. */
+  /** Rank in the squad among players past the gate; on totals too since
+      2 Nov 2026 (rank 1 earns the card's highlight). Null under a filter. */
   squad_rank: number | null;
   squad_n: number | null;
   formula: KpiFormula;
   /** A season total (per-90 sub line) rather than a rate. */
   total: boolean;
+  /** Verdict cut-offs among the league peers of the role (2 Nov 2026): good
+      from `good_from`, bad below `bad_below`, compared on `per_90` for a
+      total and `value` for a rate. Null under the minutes gate. */
+  band: KpiBand | null;
+}
+
+export interface KpiBand {
+  on: "per_90" | "value";
+  bad_below: number | null;
+  good_from: number | null;
+  peer_group: string;
+  peer_n: number;
 }
 
 /**

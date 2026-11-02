@@ -18,9 +18,11 @@
  *
  * Pizarra (24 Oct 2026) redraw of the handoff's `SequenceBrowser` +
  * `SequenceLegend`: same layout (the chain large, the list on the right),
- * no mono labels, no ruled rows, no gold. `SequenceDetail` is drawn without
- * `describe`, so its marks have no hover card and none of them is a control
- * the keyboard cannot reach; the actions are listed in words instead.
+ * no mono labels, no ruled rows, no gold. Since 2 Nov 2026 (author's review)
+ * `SequenceDetail` gets `describe`: every action shows a hover card (what,
+ * when, who, outcome, metres gained, xG; how the chain began on the first and
+ * how it ended on the last) and is a keyboard-reachable button. The actions
+ * stay listed in words below too.
  */
 
 import type { ReactNode, Ref } from "react";
@@ -31,6 +33,7 @@ import {
   metricDefinitions,
   sequenceActionType,
   sequenceEnding,
+  sequenceHover,
   sequenceKind,
   sequencePhase,
   sequenceTrigger,
@@ -39,7 +42,7 @@ import {
 } from "@/lib/labels";
 
 import type { SequenceEntry } from "@/lib/data/sequences";
-import { SequenceDetail } from "@/components/viz/SequenceDetail";
+import { SequenceDetail, type ActionRole, type ActionTooltip, type SequenceAction } from "@/components/viz/SequenceDetail";
 
 export const clockOf = (minute: number | null | undefined, second: number | null | undefined) =>
   minute == null ? null : `${minute}'${String(second ?? 0).padStart(2, "0")}"`;
@@ -92,6 +95,8 @@ export function ChainCard({
           key={chain.sequence_id}
           actions={chain.actions}
           title={copy.chainPitch}
+          hint={sequenceHover.hint}
+          describe={(a, role, i) => describeAction(chain, a, role, i)}
           focusPlayerId={focusPlayerId}
         />
       </div>
@@ -131,6 +136,30 @@ export function ChainCard({
       </details>
     </div>
   );
+}
+
+/** Kinds whose line has a length worth stating. */
+const TRAVEL_KINDS = new Set(["pass", "cross", "carry"]);
+/** Kinds whose success or failure is the point of the action. */
+const OUTCOME_KINDS = new Set(["pass", "cross", "carry", "take_on"]);
+
+/** One action's hover card on the chain pitch. */
+function describeAction(chain: SequenceEntry, a: SequenceAction, role: ActionRole, i: number): ActionTooltip {
+  const H = sequenceHover;
+  const lines: string[] = [];
+  if (a.surname) lines.push(a.shirt_number !== null ? `${a.surname} (${a.shirt_number})` : a.surname);
+  const detail: string[] = [];
+  if (OUTCOME_KINDS.has(a.kind)) detail.push(a.outcome === "success" ? H.success : H.fail);
+  if (TRAVEL_KINDS.has(a.kind) && a.end_x != null) {
+    const dx = a.end_x - a.x;
+    if (Math.abs(dx) >= 1) detail.push(H.forward(dec(Math.abs(dx), 0), dx > 0));
+  }
+  if (a.kind === "shot" && a.xg != null) detail.push(H.xg(dec(a.xg, 2)));
+  if (detail.length) lines.push(detail.join(" · "));
+  if (role === "start" && chain.start_kind) lines.push(H.start(sequenceTrigger(chain.start_kind)));
+  if (role === "end") lines.push(H.end(sequenceEnding(chain.outcome, chain.end_action)));
+  lines.push(H.step(i + 1, chain.actions.length));
+  return { title: H.title(sequenceActionType(a.type), clockOf(a.minute, a.second)), lines };
 }
 
 /**

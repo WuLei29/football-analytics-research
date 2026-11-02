@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Momentum — who was threatening, minute by minute, over one match.
  *
@@ -56,11 +58,22 @@
  * so the minute ticks clear the opponent marker labels), zero line y = 120.
  * The vertical scale is NOT the handoff's fixed 200 units per 1.0 of xT — see
  * `scale` below.
+ *
+ * Interactive since 1 Nov 2026 (the author: "now looks more as an image
+ * embedded"). Each goal and each substitution group is a labelled button:
+ * hover, focus or tap shows a `HoverCard` with what the page composed for
+ * it (`title` + `lines` on the marker: scorer, score, the shot's xG; who
+ * came on and off). One tab stop, arrow keys walk the markers left to right,
+ * and an `aria-live` line repeats the card for a screen reader. Markers
+ * without a `title` (the /demo fixture) fall back to their `label`.
  */
 
-import type { CSSProperties } from "react";
+import { useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 
+import { matchHover } from "@/lib/labels";
 import { divergingAreaPath, rollingMean } from "@/lib/viz/scale";
+
+import { HoverCard } from "./HoverCard";
 
 /** One entry of `momentum.bins` (WEB_DATA §7). Both sides are positive. */
 /** The two team names: the board face, sentence case, at 600. */
@@ -80,6 +93,9 @@ export interface MomentumMarker {
   type: "goal" | "sub" | "card" | "period";
   side: "home" | "away" | null;
   label: string;
+  /** The hover card's heading and lines, composed by the page. */
+  title?: string;
+  lines?: string[];
 }
 
 interface MomentumProps {
@@ -131,13 +147,18 @@ const SUB_OPACITY = 0.55;
  * icon with a count rather than three rules on top of each other.
  */
 function groupSubs(markers: MomentumMarker[]) {
-  const groups = new Map<string, { period: 1 | 2; minute: number; side: MomentumMarker["side"]; count: number }>();
+  const groups = new Map<
+    string,
+    { period: 1 | 2; minute: number; side: MomentumMarker["side"]; count: number; items: MomentumMarker[] }
+  >();
   for (const m of markers) {
     if (m.type !== "sub") continue;
     const key = `${m.period}-${m.minute}-${m.side}`;
     const g = groups.get(key);
-    if (g) g.count += 1;
-    else groups.set(key, { period: m.period, minute: m.minute, side: m.side, count: 1 });
+    if (g) {
+      g.count += 1;
+      g.items.push(m);
+    } else groups.set(key, { period: m.period, minute: m.minute, side: m.side, count: 1, items: [m] });
   }
   return [...groups.values()];
 }
@@ -196,6 +217,10 @@ export function Momentum({
   pxPerUnit,
   className,
 }: MomentumProps) {
+  const [hot, setHot] = useState<number | null>(null);
+  const [focusIndex, setFocusIndex] = useState(0);
+  const hotRefs = useRef<(SVGGElement | null)[]>([]);
+
   // x is the bin's position in the file, not its minute (see the header).
   const xAtIndex = (index: number) => (index / Math.max(1, bins.length - 1)) * VIEW.width;
   const indexOf = (period: 1 | 2, minute: number) =>
@@ -248,6 +273,45 @@ export function Momentum({
   // glyphs on top of each other; the sub icon moves inward to make room.
   const goalSlots = new Set(goals.map((g) => `${g.period}-${g.minute}-${g.side}`));
 
+  // The interactive markers, left to right: each goal, each substitution
+  // group. `y` is the icon's, where the card points.
+  const hotspots = [
+    ...goals.map((g) => ({
+      key: `goal-${g.period}-${g.minute}-${g.side}`,
+      x: xAt(g.period, g.minute),
+      y: g.side === teamSide ? RULE.top + 6 : RULE.bottom - 6,
+      side: g.side,
+      title: g.title ?? g.label,
+      lines: g.lines ?? [],
+    })),
+    ...subs.map((sub) => ({
+      key: `sub-${sub.period}-${sub.minute}-${sub.side}`,
+      x: xAt(sub.period, sub.minute),
+      y: sub.side === teamSide ? RULE.top + 6 : RULE.bottom - 6,
+      side: sub.side,
+      title: sub.items[0].title ?? sub.items[0].label,
+      lines: sub.items.flatMap((m) => m.lines ?? []),
+    })),
+  ].sort((a, b) => a.x - b.x || a.y - b.y);
+  const active = hot !== null ? hotspots[hot] : null;
+
+  function onHotKey(e: KeyboardEvent, i: number) {
+    const next =
+      e.key === "ArrowRight" || e.key === "ArrowDown"
+        ? Math.min(hotspots.length - 1, i + 1)
+        : e.key === "ArrowLeft" || e.key === "ArrowUp"
+          ? Math.max(0, i - 1)
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? hotspots.length - 1
+              : null;
+    if (next === null) return;
+    e.preventDefault();
+    setFocusIndex(next);
+    hotRefs.current[next]?.focus();
+  }
+
   // A marker belongs to whoever it happened to; a period end to nobody.
   const colorOf = (side: MomentumMarker["side"]) =>
     side === null
@@ -257,14 +321,15 @@ export function Momentum({
         : "var(--color-rival)";
 
   return (
+    <div className={`relative ${className ?? ""}`}>
     <svg
       viewBox={`0 0 ${VIEW.width} ${VIEW.height}`}
       width="100%"
-      className={className}
       style={{ display: "block" }}
-      role="img"
+      role="group"
+      aria-label={`${teamName} · ${opponentName}. ${matchHover.momentumLabel(hotspots.length)}`}
+      onMouseLeave={() => setHot(null)}
     >
-      <title>{`${teamName} · ${opponentName}`}</title>
 
       {GRIDLINES.map((y) => (
         <line key={y} x1={0} y1={y} x2={VIEW.width} y2={y} stroke="var(--color-chalk)" strokeWidth={1} />
@@ -392,9 +457,48 @@ export function Momentum({
       <text x={0} y={25} fontFamily="var(--font-board)" fill="var(--color-team)" style={NAME_STYLE}>
         {teamName}
       </text>
-      <text x={0} y={222} fontFamily="var(--font-board)" fill="var(--color-rival)" style={NAME_STYLE}>
+      <text x={0} y={222} fontFamily="var(--font-board)" fill="var(--color-rival-ink)" style={NAME_STYLE}>
         {opponentName}
       </text>
+
+      {/* The hit areas, last so they sit over every mark: a column 18 units
+          wide down the marker's rule. The active one gets a ring on its icon. */}
+      {hotspots.map((h, i) => (
+        <g
+          key={h.key}
+          ref={(el) => {
+            hotRefs.current[i] = el;
+          }}
+          role="button"
+          tabIndex={i === focusIndex ? 0 : -1}
+          aria-label={matchHover.markerButton(h.title, h.lines)}
+          className="cursor-pointer outline-none"
+          onMouseEnter={() => setHot(i)}
+          onFocus={() => {
+            setHot(i);
+            setFocusIndex(i);
+          }}
+          onBlur={() => setHot(null)}
+          onClick={() => setHot(i)}
+          onKeyDown={(e) => onHotKey(e, i)}
+        >
+          <rect x={h.x - 9} y={RULE.top - 4} width={18} height={RULE.bottom - RULE.top + 8} fill="transparent" />
+          {hot === i && <circle cx={h.x} cy={h.y} r={10} fill="none" stroke={colorOf(h.side)} strokeWidth={1.5} />}
+        </g>
+      ))}
     </svg>
+    {active && (
+      <HoverCard
+        x={active.x / VIEW.width}
+        y={active.y / VIEW.height}
+        title={active.title}
+        lines={active.lines}
+        accent={colorOf(active.side)}
+      />
+    )}
+    <p aria-live="polite" className="sr-only">
+      {active ? matchHover.markerButton(active.title, active.lines) : ""}
+    </p>
+    </div>
   );
 }

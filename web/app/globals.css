@@ -34,6 +34,9 @@
   --color-team: #123e8c; /* Espanyol: identity, selection, the club's line */
   --color-team-deep: #0c2d68; /* hover of team-filled controls              */
   --color-rival: #c4372b; /* the opponent's marks (4.6:1 on panel)        */
+  --color-rival-ink: #c4372b; /* the opponent as text; = rival by default.
+     The match page overrides both with the opponent's club colour, and
+     rival-ink with a shade of it darkened to 4.5:1 on panel (lib/clubs.ts). */
   --color-spot: #dfe7f4; /* the one light-blue highlight panel           */
   --color-spot-deep: #cfdbef; /* hover/focus step on spot                   */
   --color-spot-line: #a3b6d8; /* pitch lines and ticks on spot              */

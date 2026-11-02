@@ -74,7 +74,7 @@ export const landing = {
   exitsCurrent: "Estás aquí",
   chapters: {
     season: { title: "Temporada", dek: (seasons: number) => `Tabla, forma, xG y xT · ${seasons} temporadas` },
-    match: { title: "Partido", dek: (n: number) => `${n} partidos con mapa de tiros y momentum` },
+    match: { title: "Partido", dek: "Todos los partidos, con mapa de tiros y momentum" },
     sequence: { title: "Secuencia", dek: "Cada posesión, acción por acción" },
     player: { title: "Jugador", dek: (n: number) => `${n} jugadores · percentiles por rol` },
     method: { title: "Método", dek: "Cómo se calcula cada métrica" },
@@ -93,25 +93,37 @@ export const landing = {
     `Minuto ${minute}, ${name}, xG ${xg}, ${outcome}. Dibujar la posesión.`,
   rivalShotsLabel: (abbr: string, n: number) => `${n} tiros de ${abbr}, en rojo`,
   unlinkedShotsLabel: (n: number) => `${n} tiros más del Espanyol, sin posesión dibujable`,
-  legendUnlinked: "Más claros: tiros sin posesión dibujable (menos de tres acciones)",
   chainCaption: (minute: number, name: string, xg: string, outcome: string) =>
     `${minute}' · ${name} · xG ${xg} · ${outcome}`,
   chainDetail: (events: number, passes: number, seconds: number) =>
     `Posesión de ${events} acciones y ${passes} ${passes === 1 ? "pase" : "pases"}, ${seconds} s`,
   chainXt: (xt: string) => ` · xT ${xt}`,
   noChain: "Este tiro no tiene una posesión dibujable (menos de tres acciones).",
-  legendTeam: (abbr: string) => `${abbr}: relleno = gol, medio = a puerta, hueco = fuera`,
-  legendRival: (abbr: string) => `${abbr}`,
-  legendSize: "Tamaño = xG",
   openMatch: "Ver el partido completo",
 
   authorHeading: "Quién está detrás",
-  authorBody:
-    "Este sitio es la última pieza de una cadena construida de principio a fin: " +
-    "ingesta de los datos de eventos de Opta, una base de datos por capas, " +
-    "modelos propios de xG, xT y VAEP, secuencias de posesión y fases de juego, " +
-    "y estas visualizaciones.",
+  /** Two paragraphs: the data platform first, then what is built on it. */
+  authorBody: [
+    "Este sitio es la última pieza de una plataforma de datos construida de principio a fin. " +
+      "Su base es una base de datos relacional diseñada con arquitectura medallion, en tres capas: " +
+      "bronce, con los datos de eventos de Opta tal como llegan; plata, un modelo relacional " +
+      "normalizado; y oro, agregados que se recalculan para crear la capa analítica " +
+      "en cualquier momento.",
+    "El modelo está pensado para escalar: una temporada o una " +
+      "competición nueva no cambian el esquema. Sobre esa base se apoyan los modelos propios de " +
+      "xG, xT y VAEP, las secuencias de posesión, las fases de juego y estas visualizaciones.",
+  ],
   repoLink: "El código, en GitHub",
+} as const;
+
+/** The corner key under the two spot-panel shot maps (`ShotLegend`). */
+export const shotLegend = {
+  label: "Leyenda del mapa de tiros",
+  goal: "Gol",
+  onTarget: "A puerta",
+  offTarget: "Fuera o bloqueado",
+  size: "Tamaño = xG",
+  unlinked: "Sin posesión dibujable",
 } as const;
 
 /* --------------------------------------------------------------------------
@@ -129,7 +141,7 @@ export const provenance = {
   sourceLine: (provider: string) => `Datos: ${provider}`,
   unaffiliated:
     "Proyecto personal sin relación con el RCD Espanyol ni con LaLiga. " +
-    "Sin fines comerciales.",
+    "Los escudos pertenecen a sus clubes. Sin fines comerciales.",
   buildLine: (stamp: string) => `Datos generados el ${stamp}`,
 } as const;
 
@@ -643,7 +655,7 @@ export const season = {
   /** The result badge, in the letters of the table's G / E / P columns. */
   resultLetter: { W: "G", D: "E", L: "P" },
   resultWord: { W: "victoria", D: "empate", L: "derrota" },
-  formLegend: "Verde: victoria · ámbar: empate · rojo: derrota · barras: xG a favor (azul) y en contra (rojo)",
+  formLegend: "Verde: victoria · ámbar: empate · rojo: derrota · barras: xG a favor (verde) y en contra (rojo)",
   /** Accessible name of one form cell (it is a link to the match). */
   formCellLabel: (
     matchday: number,
@@ -702,9 +714,6 @@ export const matchList = {
     `Jornada ${matchday} · ${date} · ${home ? "en casa" : "fuera"}`,
   latestPitchLabel: (team: number, rival: number) =>
     `Mapa de tiros del último partido: ${team} del Espanyol y ${rival} del rival.`,
-  legendTeam: (abbr: string) => `${abbr}: relleno = gol, medio = a puerta, hueco = fuera`,
-  legendRival: (abbr: string) => `${abbr}: relleno = gol`,
-  legendSize: "Tamaño = xG",
   xgPair: "xG a favor – en contra",
   /* The list. */
   listHeading: "Todos los partidos",
@@ -791,12 +800,13 @@ export const matchExplorer = {
   /** A mark's accessible name: its readout in one sentence. */
   markLabel: (title: string, line: string, linked: boolean) => `${title}. ${line}.${linked ? " Abre la jugada." : ""}`,
   legend: {
-    shotTeam: (abbr: string) => `${abbr}: relleno = gol, medio = a puerta, hueco = fuera`,
-    shotRival: (abbr: string) => `${abbr}: relleno = gol`,
+    goal: "Gol",
+    onTarget: "A puerta",
+    offTarget: "Fuera o bloqueado",
     size: "Tamaño = xG",
     pass: "Pase",
     carry: "Conducción",
-    failed: "Claro = fallado",
+    failed: "Fallado (más claro)",
     won: "Ganada",
     lost: "Perdida",
     line: (m: string) => `Línea defensiva media, ${m} m`,
@@ -815,6 +825,53 @@ export const matchExplorer = {
   listHeading: "Jugadas",
   sortLabel: "Ordenar por",
   rowValue: (metric: string, value: string) => `${value} ${metric}`,
+} as const;
+
+/**
+ * The hover cards and readouts of screen 02's momentum and pass network
+ * (1 Nov 2026), and the legend-as-filter hint shared by every map.
+ */
+export const matchHover = {
+  goalTitle: (minute: number) => `Gol · ${minute}'`,
+  goalScorer: (name: string, abbr: string) => `${name} · ${abbr}`,
+  goalScore: (score: string) => `Marcador: ${score}`,
+  goalXg: (xg: string) => `xG del tiro: ${xg}`,
+  subTitle: (minute: number, abbr: string) => `Cambio · ${minute}' · ${abbr}`,
+  subLine: (on: string, off: string | null) => (off ? `Entra ${on} · sale ${off}` : `Entra ${on}`),
+  halfTitle: "Descanso",
+  momentumLabel: (n: number) =>
+    `Momentum del partido. ${n} marcas de gol y cambio: entra con Tab y recórrelas con las flechas.`,
+  markerButton: (title: string, lines: string[]) => [title, ...lines].join(". "),
+
+  edgeTitle: (a: string, b: string) => `${a} ↔ ${b}`,
+  edgePasses: (n: number) => `${n} ${n === 1 ? "pase" : "pases"} entre los dos`,
+  edgeDirection: (from: string, to: string, n: number) => `${from} → ${to}: ${n}`,
+  edgeKeyPasses: (from: string, to: string, n: number) =>
+    `${n} ${n === 1 ? "pase clave" : "pases clave"} de ${from} a ${to}`,
+  edgeAssists: (from: string, to: string, n: number) =>
+    `${n} ${n === 1 ? "asistencia" : "asistencias"} de ${from} a ${to}`,
+  nodeTouches: (n: number) => `${n} toques`,
+  networkLabel: (players: number, pairs: number) =>
+    `Red de pases: ${players} jugadores y ${pairs} parejas. Entra con Tab y recórrela con las flechas.`,
+  networkIdle: "Pasa el cursor por una línea o un jugador para ver sus pases.",
+
+  /* The legend as a filter. */
+  filterHint: "Clic para filtrar",
+  filterClear: "Clic para ver todo",
+  filterOn: (what: string) => `Filtrado: ${what}`,
+} as const;
+
+/** The hover card of one action on the sequence pitch (`SequenceDetail`, 2 Nov 2026). */
+export const sequenceHover = {
+  title: (what: string, clock: string | null) => (clock ? `${what} · ${clock}` : what),
+  step: (i: number, n: number) => `Acción ${i} de ${n}`,
+  success: "Completado",
+  fail: "Fallado",
+  forward: (m: string, ahead: boolean) => (ahead ? `${m} m hacia delante` : `${m} m hacia atrás`),
+  xg: (xg: string) => `xG del tiro: ${xg}`,
+  start: (how: string) => `Inicio: ${how}`,
+  end: (how: string) => `Final: ${how}`,
+  hint: "Entra con Tab y recorre las acciones con las flechas.",
 } as const;
 
 /** The match dropdown in the header of screen 02 (`MatchPicker`). */
@@ -1118,6 +1175,10 @@ export const player = {
     home: "Como local",
     away: "Como visitante",
     pick: "O elige partidos",
+    /** Clears every box, so a few matches are picked from nothing. */
+    clearAll: "Desmarcar todos",
+    /** Under the cleared list: the page keeps its view until a box is ticked. */
+    blankHint: "Marca uno o más: la página cambia con el primero",
     count: (n: number) => (n === 1 ? "1 partido" : `${n} partidos`),
     /** The button when exactly one match is selected: "J5 · L LEV 3–0". */
     one: (matchday: number, venue: string, abbr: string, gf: number, ga: number) =>
@@ -1147,6 +1208,14 @@ export const player = {
   kpiPer90: (value: string) => `${value} por 90`,
   kpiSquadRank: (rank: number, n: number) => `${rank}.º de ${n} en la plantilla`,
   kpiUnranked: "pocos minutos para ordenar",
+  /** The highlight pill when a KPI leads the squad (short: the card is narrow). */
+  kpiSquadLead: "1.º del equipo",
+  /** Screen-reader verdict after a KPI figure, against the role's peers. */
+  kpiVerdict: {
+    good: (role: string) => `entre el 30 % mejor de LaLiga en su posición (${role})`,
+    fair: (role: string) => `en la zona media de LaLiga en su posición (${role})`,
+    bad: (role: string) => `por debajo de la media de LaLiga en su posición (${role})`,
+  },
   /** Under a filtered rate, where a squad rank would be a season fact. */
   kpiSelection: (n: number) => (n === 1 ? "en este partido" : `en estos ${n} partidos`),
 
