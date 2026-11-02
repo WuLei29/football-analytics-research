@@ -204,6 +204,7 @@ src/
     manifest.py league_table.py overview.py match.py   # one module per published file
     squad.py player.py            #   screen 03: squad.json + players/{id}.json (per match, filterable)
     player_percentiles.py         #   screen-03 percentile ranking (pure; site gate)
+    crests.py                     #   web/resources/crests -> public/brand/crests (trim, 128 px); not part of the export run
 sql/
   ddl/                            # gold DDL + gold_functions.sql (geometry helpers: zone_id, in_box, is_progressive…)
   seed/                           # formation_slot_positions
@@ -306,6 +307,7 @@ Project skills in `.claude/skills/`. Consult them before working in their area:
 | **`impeccable`** | Redesigning, critiquing, auditing or polishing the look of `web/` (third-party, v4.7.0). Its launcher downloads a binary on first run; it reads/writes `PRODUCT.md` and `DESIGN.md` at the repo root. |
 | **`better-accessibility`** | Keyboard, focus, ARIA, contrast and screen-reader checks on `web/` (third-party). |
 | **`better-colors`** | Palette, token naming and contrast measurement for `web/` (third-party). |
+| **`weekend-update`** | Refreshing the site with new matchdays end to end: scrape, squads, silver loads, events, sequences, gold, gates, export, commit. Order, checkpoints and the Windows traps. |
 
 **Precedence in `web/`:** the third-party design skills above (`impeccable`,
 `better-*`) are for critique, redesign and review. `DESIGN.md` at the repo

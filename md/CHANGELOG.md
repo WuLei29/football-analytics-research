@@ -10,6 +10,136 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 2 Nov 2026 — Weekend update: 2026/27 to match 2600 (+40 matches), `weekend-update` skill
+
+Data: 496 → 536 matches. Scraped 40 new match files, loaded squads
+(snapshot 2026-11-02, 20 clubs), matches, lineups (0 unresolved 2026-27
+players), events (40 loaded, 0 failed, 1,113 shots scored), sequences (32 s),
+gold (536 matches, 177,315 sequences, 1,072 `team_match_stats` rows, ~10 min,
+not the ~5 min the manual says) and the export (107 files; 4 new Espanyol
+matches and 4 new players). Gates G1–G4 hold; G3's xG reads 1410.0 vs 1410.1
+only because `xg_for` is float4 (unrounded 1410.0460 vs 1410.0457).
+
+Fix: `close_squad_entries` (`src/silver/squads/db.py`) used `execute_values`
+on an `UPDATE` with four placeholders; psycopg2 rejects it, and the path only
+runs when a player has left a squad, so the first snapshot with departures
+crashed (rolled back, nothing written). Now a plain `cur.execute`.
+
+New skill `.claude/skills/weekend-update`: the order, the scraper values, the
+checkpoints and the Windows traps (Store `python` stub, `PYTHONIOENCODING`,
+PowerShell BOM on piped input, squad files that are JSONP or missing).
+
+## 2 Nov 2026 — Player page review: KPI verdicts, map legend filter, filter clear
+
+- **KPI verdicts on the profile card** (author's review). Each KPI figure is
+  good green / bad red / ink against the league peers of the player's role,
+  the percentile cards' tiers (≥ 70 good, < 45 bad). The export ships cut-offs,
+  not a percentile (`kpis[].band`, `player_percentiles.kpi_bands`: same peer
+  pooling and 25 % minutes gate; a total compared per 90), so a match-filtered
+  figure is judged too. Totals now also carry `squad_rank` / `squad_n`; a
+  squad lead (rank 1 of ≥ 3) shows a good pill "1.º del equipo". The first KPI
+  is no longer team blue. Read-only before/after over the 47 player files:
+  only `band`, `squad_rank`, `squad_n` changed. 2025/26: 12 good, 20 middling,
+  36 bad, 32 unranked (under the gate); 2026/27: 22 / 14 / 28 / 24.
+- **Event map legend filters** (`player/EventMap`), as on the match maps:
+  passes progressive / rest / failed; progressive and carries completed /
+  failed; key pass / assist; receptions progressive / rest / in the box; shots
+  goal / on target / off target; defence won / lost. Heat zones never filter.
+- **Match filter "Desmarcar todos"**: clears every box as a draft (the page
+  cannot draw an empty selection); the first tick becomes the selection.
+- **Club colour on the latest-match spot panels** of the landing and match
+  list (`rivalStyle` on the section). `lib/clubs.ts` now measures text against
+  spot, the darker of the two grounds.
+- **Villarreal crest** supplied; all 23 clubs have one.
+
+## 2 Nov 2026 — Club crests and colours (WEB_PLAN §10.1)
+
+- **Crests.** 22 of 23 clubs supplied by the author, all checked against
+  their file name. Two were renamed to the database abbreviation
+  (`mall.png` → `mll.png`, `ryo.png` → `ray.png`); **Villarreal is missing**
+  and shows a colour chip. Originals moved to `web/resources/crests/`; new
+  `python -m src.export.crests` trims and scales them to 128 px into
+  `web/public/brand/crests/` (2.2 MB → 0.4 MB, 7–27 KB each).
+- **Colours.** `CLUB_COLOURS` in `src/export/config.py`, the author's seven
+  changes (RSO, ALA, GET, CEL, OVI, DEP, MAL) plus the rest as proposed.
+  The export fails on a club without one.
+- **Export (additive, schema 2).** `table[].color/crest`,
+  `matches[].opponent_color/opponent_crest`, `match.home|away.color/crest`.
+  Read-only before/after over all 99 files: only those eight keys added
+  (45 match files, 2 overviews, 40 table rows), no other value changed.
+- **Site.** New `shell/Crest` in the league table, form strip, match list rows
+  and the match h1. On the match page the opponent's colour replaces
+  `--color-rival` for every chart; new token `--color-rival-ink` carries a
+  text-safe shade (`lib/clubs.ts`, 4.5:1 on panel) for the player-box
+  abbreviations and the momentum name. Footer: "Los escudos pertenecen a sus
+  clubes." DESIGN.md: Identity / Verdict exception and "Club identity".
+- **Known limits.** Valencia and Real Sociedad (2.7:1) and Villarreal (3.0:1)
+  are below 3:1 on panel as marks. The landing, the match list's latest-match
+  panel and the form-strip / match-list xG strokes keep marker red.
+
+## 2 Nov 2026 — Sequence pitch hover; row titles fixed
+
+- **Hover cards on the sequence pitch** (author's request). `viz/SequenceDetail` now
+  owns its <svg> (as `PassNetwork` does, since `<Pitch>` is `role="img"`) and
+  makes every action a keyboard-reachable button with the shared white
+  `HoverCard` and an `aria-live` line; its own dark tooltip is deleted.
+  `SequenceParts::ChainCard` passes `describe` (words in `labels.sequenceHover`):
+  action · clock, player (shirt), completed / failed · metres forward or back
+  · shot xG, "Inicio:" on the first action, "Final:" on the last, "Acción n de N".
+  Match and player pages both get it.
+- **Bug: list rows were titled by `primary_phase`, not `kind`.** The export has
+  written `sequences[].kind` since 21 Sep 2026, but `MatchSequence` in
+  `web/lib/data/types.ts` lacked the field and `lib/data/sequences.ts::sequenceEntry`
+  never copied it, so `chainName` always fell back to the phase ("Zona media",
+  "Salida rápida"). Field mirrored and copied; match 1008 now reads 19 Ataque
+  posicional, 19 Ataque rápido, 15 Juego directo, 13 Salida de balón,
+  3 Contraataque, 1 Saque de banda directo. No data change.
+
+## 1 Nov 2026 — Match page review: hover cards, legend filters, interactive momentum and network
+
+- **`viz/HoverCard`** (new): a white floating card beside the hovered mark,
+  on the three match maps, the player's event map, momentum and the pass
+  network. The readouts stay.
+- **Momentum** is a client component: goals and sub groups are buttons
+  (roving tab stop, arrows) with a card: scorer, running score, shot xG;
+  who came on and off.
+- **Pass network** owns its svg (PitchLines) and is a client component:
+  every pair and player is a button; a pair's card gives passes, each
+  direction, key passes and assists; hovering dims the rest.
+- **Legend as filter** on `MatchMap`: quiet buttons, "Clic para filtrar" hint,
+  one category at a time. Shot legend now icons (side, gol, a puerta, fuera
+  o bloqueado) instead of the sentence; "A puerta" includes goals.
+- **Export**: `momentum.markers[].off_name`, `network.edges[]` per-direction
+  passes / key passes / assists (WEB_DATA §7.7). Re-exported: 99 files,
+  additive only.
+- WEB_PLAN §10.1: the crest and club-colour plan, paused for the author's
+  files.
+
+## 1 Nov 2026 — Season page review: form strip and trend
+
+- **Form strip** (`season/FormStrip`): the xG difference moved above the bars
+  at 18px/600; the xG-for bar is `good` green (was team blue); chalk
+  hairlines between matches. Legend label says "verde".
+- **Trend** (`season/SeasonTrend`): bars 0.56 -> 0.3 of a column (cap 40 ->
+  14), rolling line 3 -> 2px, end dot 11 -> 8px, area between the line and
+  zero shaded in team blue at 0.14.
+
+## 1 Nov 2026 — Landing review, first pass
+
+- **xG stroke** (`landing/XgStroke`, season panel and index thumb): stroke
+  thinned (lead 3.5 → 2, thumb 2.5 → 1.5) and the area to zero shaded like
+  `Momentum` (team 0.28 above, rival 0.22 below, via `divergingAreaPath`).
+- **Partido row dek** is "Todos los partidos, con mapa de tiros y momentum"
+  instead of a count summed over both seasons; the same row in every page's
+  exits uses it too.
+- **Quién está detrás** is two paragraphs that lead with the data platform:
+  PostgreSQL, the medallion layers (bronze / silver / gold), idempotent loads,
+  a schema that takes a new season or competition unchanged.
+- **Shot legend** on both spot panels (landing, match list) is the new
+  `matches/ShotLegend`: marks plus one or two words, right-aligned under the
+  pitch, replacing the sentence list in the left column. Labels
+  `legendTeam` / `legendRival` / `legendSize` / `legendUnlinked` removed.
+
 ## 24 Oct 2026 — Redesign finished: /demo moved, the handoff world deleted
 
 - **/demo** and **/demo/jugador** moved to `app/demo/` in Pizarra (pill nav,
