@@ -1,6 +1,6 @@
 {
   "competition_name": "Primera División",
-  "generated_at": "2026-10-22T21:31:42Z",
+  "generated_at": "2026-11-02T22:50:37Z",
   "league_complete": false,
   "matchdays_scheduled": 38,
   "profile": {
@@ -202,100 +202,100 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 95,
-            "v": 61.9
+            "p": 100,
+            "v": 63.9
           },
           "aerials_won": {
-            "p": 50,
-            "v": 10.4
+            "p": 40,
+            "v": 9.8
           },
           "crosses": {
-            "p": 15,
-            "v": 12.6
+            "p": 10,
+            "v": 11.8
           },
           "field_tilt": {
             "p": 100,
-            "v": 74.4
+            "v": 76.6
           },
           "fouls_committed": {
-            "p": 95,
-            "v": 9.6
+            "p": 85,
+            "v": 10.5
           },
           "npxg_for": {
             "p": 100,
-            "v": 3.08
+            "v": 2.75
           },
           "pass_share_att_third": {
-            "p": 65,
-            "v": 22.5
+            "p": 70,
+            "v": 22.7
           },
           "pass_share_def_third": {
             "p": 5,
-            "v": 21.5
+            "v": 18.9
           },
           "pass_share_mid_third": {
             "p": 100,
-            "v": 55.9
+            "v": 58.4
           },
           "possession_pct": {
             "p": 100,
-            "v": 63.4
+            "v": 63.8
           },
           "ppda": {
             "p": 100,
-            "v": 10.0
+            "v": 9.6
           },
           "progressive_carries": {
             "p": 100,
-            "v": 25.3
+            "v": 26.7
           },
           "progressive_passes": {
-            "p": 30,
-            "v": 84.6
+            "p": 20,
+            "v": 82.5
           },
           "progressive_passes_completed": {
             "p": 85,
-            "v": 48.1
+            "v": 46.4
           },
           "shot_accuracy": {
-            "p": 80,
-            "v": 38.7
+            "p": 100,
+            "v": 40.1
           },
           "tackle_success_rate": {
-            "p": 5,
-            "v": 52.6
+            "p": 15,
+            "v": 56.4
           },
           "tackles_won": {
-            "p": 15,
-            "v": 8.6
+            "p": 30,
+            "v": 9.2
           },
           "take_on_success_rate": {
             "p": 95,
-            "v": 53.1
+            "v": 51.1
           },
           "take_ons": {
-            "p": 95,
-            "v": 27.7
+            "p": 100,
+            "v": 25.6
           },
           "touches_in_box": {
-            "p": 100,
-            "v": 50.7
+            "p": 95,
+            "v": 46.1
           },
           "xg_fast_break": {
             "p": 100,
-            "v": 0.61
+            "v": 0.43
           },
           "xg_open_play": {
             "p": 100,
-            "v": 1.84
+            "v": 1.73
           },
           "xg_per_shot": {
             "p": 100,
-            "v": 0.17
+            "v": 0.154
           },
           "xg_set_piece": {
             "p": 100,
-            "v": 0.63
+            "v": 0.59
           }
         },
         "team_id": 4
@@ -303,76 +303,76 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 55,
-            "v": 51.6
+            "p": 75,
+            "v": 54.2
           },
           "aerials_won": {
-            "p": 30,
-            "v": 9.4
+            "p": 60,
+            "v": 10.5
           },
           "crosses": {
-            "p": 30,
-            "v": 15.3
+            "p": 25,
+            "v": 14.5
           },
           "field_tilt": {
             "p": 90,
-            "v": 60.0
+            "v": 61.4
           },
           "fouls_committed": {
-            "p": 60,
-            "v": 12.4
+            "p": 75,
+            "v": 11.6
           },
           "npxg_for": {
-            "p": 85,
-            "v": 1.56
+            "p": 80,
+            "v": 1.49
           },
           "pass_share_att_third": {
             "p": 90,
-            "v": 25.3
+            "v": 24.7
           },
           "pass_share_def_third": {
             "p": 25,
             "v": 25.2
           },
           "pass_share_mid_third": {
-            "p": 65,
-            "v": 49.5
+            "p": 75,
+            "v": 50.1
           },
           "possession_pct": {
             "p": 90,
-            "v": 54.9
+            "v": 55.4
           },
           "ppda": {
-            "p": 70,
-            "v": 13.6
+            "p": 85,
+            "v": 13.2
           },
           "progressive_carries": {
-            "p": 65,
+            "p": 80,
             "v": 16.7
           },
           "progressive_passes": {
-            "p": 90,
-            "v": 95.1
+            "p": 80,
+            "v": 93.3
           },
           "progressive_passes_completed": {
             "p": 95,
-            "v": 51.3
+            "v": 49.9
           },
           "shot_accuracy": {
             "p": 55,
-            "v": 36.4
+            "v": 34.2
           },
           "tackle_success_rate": {
-            "p": 45,
-            "v": 62.2
+            "p": 100,
+            "v": 67.6
           },
           "tackles_won": {
-            "p": 65,
-            "v": 10.6
+            "p": 80,
+            "v": 11.0
           },
           "take_on_success_rate": {
             "p": 80,
-            "v": 46.8
+            "v": 47.1
           },
           "take_ons": {
             "p": 65,
@@ -380,23 +380,23 @@
           },
           "touches_in_box": {
             "p": 85,
-            "v": 38.3
+            "v": 35.5
           },
           "xg_fast_break": {
-            "p": 80,
-            "v": 0.19
+            "p": 60,
+            "v": 0.13
           },
           "xg_open_play": {
             "p": 85,
-            "v": 1.01
+            "v": 1.04
           },
           "xg_per_shot": {
-            "p": 70,
-            "v": 0.106
+            "p": 60,
+            "v": 0.095
           },
           "xg_set_piece": {
-            "p": 85,
-            "v": 0.36
+            "p": 70,
+            "v": 0.32
           }
         },
         "team_id": 3
@@ -405,200 +405,99 @@
         "metrics": {
           "aerial_win_rate": {
             "p": 85,
-            "v": 54.1
+            "v": 55.3
           },
           "aerials_won": {
-            "p": 60,
-            "v": 11.3
+            "p": 5,
+            "v": 6.2
           },
           "crosses": {
-            "p": 40,
-            "v": 16.1
-          },
-          "field_tilt": {
-            "p": 75,
-            "v": 54.9
-          },
-          "fouls_committed": {
-            "p": 90,
-            "v": 9.7
-          },
-          "npxg_for": {
-            "p": 80,
-            "v": 1.55
-          },
-          "pass_share_att_third": {
-            "p": 70,
-            "v": 23.2
-          },
-          "pass_share_def_third": {
-            "p": 35,
-            "v": 26.5
-          },
-          "pass_share_mid_third": {
-            "p": 80,
-            "v": 50.2
-          },
-          "possession_pct": {
-            "p": 80,
-            "v": 53.2
-          },
-          "ppda": {
-            "p": 50,
-            "v": 14.9
-          },
-          "progressive_carries": {
-            "p": 75,
-            "v": 16.9
-          },
-          "progressive_passes": {
-            "p": 45,
-            "v": 86.3
-          },
-          "progressive_passes_completed": {
-            "p": 70,
-            "v": 42.0
-          },
-          "shot_accuracy": {
-            "p": 40,
-            "v": 35.2
-          },
-          "tackle_success_rate": {
             "p": 30,
-            "v": 56.8
-          },
-          "tackles_won": {
-            "p": 85,
-            "v": 11.3
-          },
-          "take_on_success_rate": {
-            "p": 100,
-            "v": 54.2
-          },
-          "take_ons": {
-            "p": 15,
-            "v": 15.3
-          },
-          "touches_in_box": {
-            "p": 80,
-            "v": 33.1
-          },
-          "xg_fast_break": {
-            "p": 90,
-            "v": 0.26
-          },
-          "xg_open_play": {
-            "p": 80,
-            "v": 0.95
-          },
-          "xg_per_shot": {
-            "p": 45,
-            "v": 0.089
-          },
-          "xg_set_piece": {
-            "p": 75,
-            "v": 0.34
-          }
-        },
-        "team_id": 5
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 100,
-            "v": 65.0
-          },
-          "aerials_won": {
-            "p": 15,
-            "v": 7.4
-          },
-          "crosses": {
-            "p": 50,
-            "v": 16.6
+            "v": 15.0
           },
           "field_tilt": {
-            "p": 70,
-            "v": 53.9
+            "p": 75,
+            "v": 50.7
           },
           "fouls_committed": {
             "p": 100,
-            "v": 8.4
+            "v": 8.7
           },
           "npxg_for": {
             "p": 95,
-            "v": 2.24
+            "v": 1.89
           },
           "pass_share_att_third": {
-            "p": 75,
-            "v": 23.6
+            "p": 60,
+            "v": 22.3
           },
           "pass_share_def_third": {
-            "p": 40,
-            "v": 26.7
+            "p": 60,
+            "v": 29.6
           },
           "pass_share_mid_third": {
-            "p": 70,
-            "v": 49.6
+            "p": 45,
+            "v": 48.1
           },
           "possession_pct": {
             "p": 85,
-            "v": 54.0
+            "v": 54.4
           },
           "ppda": {
             "p": 20,
-            "v": 17.2
+            "v": 16.7
           },
           "progressive_carries": {
             "p": 95,
-            "v": 23.6
+            "v": 22.7
           },
           "progressive_passes": {
-            "p": 40,
-            "v": 86.0
+            "p": 50,
+            "v": 87.3
           },
           "progressive_passes_completed": {
             "p": 90,
-            "v": 49.1
+            "v": 49.2
           },
           "shot_accuracy": {
-            "p": 70,
-            "v": 37.9
+            "p": 90,
+            "v": 38.4
           },
           "tackle_success_rate": {
-            "p": 90,
-            "v": 64.4
+            "p": 50,
+            "v": 59.9
           },
           "tackles_won": {
-            "p": 35,
-            "v": 9.6
+            "p": 50,
+            "v": 9.9
           },
           "take_on_success_rate": {
-            "p": 90,
-            "v": 52.9
+            "p": 100,
+            "v": 52.3
           },
           "take_ons": {
             "p": 90,
-            "v": 27.0
+            "v": 25.2
           },
           "touches_in_box": {
-            "p": 100,
-            "v": 50.7
+            "p": 90,
+            "v": 46.0
           },
           "xg_fast_break": {
             "p": 95,
-            "v": 0.46
+            "v": 0.39
           },
           "xg_open_play": {
             "p": 90,
-            "v": 1.28
+            "v": 1.14
           },
           "xg_per_shot": {
             "p": 90,
-            "v": 0.131
+            "v": 0.126
           },
           "xg_set_piece": {
             "p": 95,
-            "v": 0.49
+            "v": 0.35
           }
         },
         "team_id": 16
@@ -606,100 +505,302 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 35,
-            "v": 46.1
+            "p": 95,
+            "v": 55.5
           },
           "aerials_won": {
-            "p": 100,
-            "v": 15.1
+            "p": 65,
+            "v": 10.6
+          },
+          "crosses": {
+            "p": 55,
+            "v": 16.0
+          },
+          "field_tilt": {
+            "p": 80,
+            "v": 55.4
+          },
+          "fouls_committed": {
+            "p": 95,
+            "v": 10.1
+          },
+          "npxg_for": {
+            "p": 85,
+            "v": 1.52
+          },
+          "pass_share_att_third": {
+            "p": 85,
+            "v": 24.1
+          },
+          "pass_share_def_third": {
+            "p": 25,
+            "v": 25.2
+          },
+          "pass_share_mid_third": {
+            "p": 85,
+            "v": 50.7
+          },
+          "possession_pct": {
+            "p": 80,
+            "v": 52.9
+          },
+          "ppda": {
+            "p": 35,
+            "v": 15.9
+          },
+          "progressive_carries": {
+            "p": 75,
+            "v": 16.5
+          },
+          "progressive_passes": {
+            "p": 30,
+            "v": 83.7
+          },
+          "progressive_passes_completed": {
+            "p": 70,
+            "v": 41.8
+          },
+          "shot_accuracy": {
+            "p": 40,
+            "v": 33.2
+          },
+          "tackle_success_rate": {
+            "p": 25,
+            "v": 58.0
+          },
+          "tackles_won": {
+            "p": 75,
+            "v": 10.9
+          },
+          "take_on_success_rate": {
+            "p": 90,
+            "v": 48.1
+          },
+          "take_ons": {
+            "p": 25,
+            "v": 16.8
+          },
+          "touches_in_box": {
+            "p": 80,
+            "v": 31.9
+          },
+          "xg_fast_break": {
+            "p": 90,
+            "v": 0.3
+          },
+          "xg_open_play": {
+            "p": 70,
+            "v": 0.88
+          },
+          "xg_per_shot": {
+            "p": 50,
+            "v": 0.094
+          },
+          "xg_set_piece": {
+            "p": 95,
+            "v": 0.35
+          }
+        },
+        "team_id": 5
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 55,
+            "v": 51.6
+          },
+          "aerials_won": {
+            "p": 50,
+            "v": 10.0
           },
           "crosses": {
             "p": 45,
-            "v": 16.4
+            "v": 15.8
           },
           "field_tilt": {
-            "p": 65,
-            "v": 50.1
+            "p": 50,
+            "v": 47.2
           },
           "fouls_committed": {
-            "p": 15,
-            "v": 14.4
+            "p": 45,
+            "v": 12.5
           },
           "npxg_for": {
-            "p": 10,
-            "v": 0.64
+            "p": 70,
+            "v": 1.31
           },
           "pass_share_att_third": {
-            "p": 95,
-            "v": 26.5
+            "p": 30,
+            "v": 20.5
           },
           "pass_share_def_third": {
-            "p": 20,
-            "v": 24.9
+            "p": 40,
+            "v": 27.8
           },
           "pass_share_mid_third": {
-            "p": 45,
-            "v": 48.6
+            "p": 90,
+            "v": 51.6
           },
           "possession_pct": {
-            "p": 20,
-            "v": 46.6
+            "p": 65,
+            "v": 50.5
           },
           "ppda": {
             "p": 80,
-            "v": 13.4
+            "v": 13.6
           },
           "progressive_carries": {
+            "p": 45,
+            "v": 13.5
+          },
+          "progressive_passes": {
+            "p": 45,
+            "v": 85.5
+          },
+          "progressive_passes_completed": {
+            "p": 45,
+            "v": 39.4
+          },
+          "shot_accuracy": {
+            "p": 60,
+            "v": 35.0
+          },
+          "tackle_success_rate": {
+            "p": 30,
+            "v": 58.9
+          },
+          "tackles_won": {
+            "p": 65,
+            "v": 10.5
+          },
+          "take_on_success_rate": {
+            "p": 30,
+            "v": 39.2
+          },
+          "take_ons": {
+            "p": 10,
+            "v": 15.5
+          },
+          "touches_in_box": {
+            "p": 60,
+            "v": 23.7
+          },
+          "xg_fast_break": {
+            "p": 85,
+            "v": 0.25
+          },
+          "xg_open_play": {
+            "p": 55,
+            "v": 0.81
+          },
+          "xg_per_shot": {
+            "p": 60,
+            "v": 0.095
+          },
+          "xg_set_piece": {
             "p": 35,
-            "v": 11.3
+            "v": 0.24
+          }
+        },
+        "team_id": 17
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 30,
+            "v": 46.9
+          },
+          "aerials_won": {
+            "p": 100,
+            "v": 14.6
+          },
+          "crosses": {
+            "p": 40,
+            "v": 15.4
+          },
+          "field_tilt": {
+            "p": 70,
+            "v": 50.5
+          },
+          "fouls_committed": {
+            "p": 10,
+            "v": 14.6
+          },
+          "npxg_for": {
+            "p": 30,
+            "v": 0.96
+          },
+          "pass_share_att_third": {
+            "p": 95,
+            "v": 25.1
+          },
+          "pass_share_def_third": {
+            "p": 35,
+            "v": 26.3
+          },
+          "pass_share_mid_third": {
+            "p": 50,
+            "v": 48.7
+          },
+          "possession_pct": {
+            "p": 20,
+            "v": 45.8
+          },
+          "ppda": {
+            "p": 65,
+            "v": 14.5
+          },
+          "progressive_carries": {
+            "p": 25,
+            "v": 12.0
           },
           "progressive_passes": {
             "p": 100,
-            "v": 103.7
+            "v": 102.0
           },
           "progressive_passes_completed": {
-            "p": 80,
-            "v": 44.1
+            "p": 75,
+            "v": 44.2
           },
           "shot_accuracy": {
-            "p": 65,
-            "v": 37.7
+            "p": 80,
+            "v": 37.0
           },
           "tackle_success_rate": {
-            "p": 100,
-            "v": 64.9
+            "p": 75,
+            "v": 63.4
           },
           "tackles_won": {
             "p": 100,
-            "v": 12.4
+            "v": 12.9
           },
           "take_on_success_rate": {
-            "p": 45,
-            "v": 39.9
+            "p": 40,
+            "v": 39.7
           },
           "take_ons": {
-            "p": 70,
-            "v": 21.1
-          },
-          "touches_in_box": {
-            "p": 50,
+            "p": 80,
             "v": 21.7
           },
+          "touches_in_box": {
+            "p": 65,
+            "v": 24.4
+          },
           "xg_fast_break": {
-            "p": 45,
-            "v": 0.12
+            "p": 65,
+            "v": 0.15
           },
           "xg_open_play": {
-            "p": 10,
-            "v": 0.32
+            "p": 30,
+            "v": 0.55
           },
           "xg_per_shot": {
-            "p": 20,
-            "v": 0.079
+            "p": 30,
+            "v": 0.09
           },
           "xg_set_piece": {
-            "p": 15,
-            "v": 0.14
+            "p": 25,
+            "v": 0.2
           }
         },
         "team_id": 18
@@ -707,201 +808,201 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 40,
-            "v": 50.0
+            "p": 90,
+            "v": 55.4
           },
           "aerials_won": {
-            "p": 80,
-            "v": 12.9
-          },
-          "crosses": {
-            "p": 90,
-            "v": 19.1
-          },
-          "field_tilt": {
-            "p": 25,
-            "v": 41.4
-          },
-          "fouls_committed": {
-            "p": 35,
-            "v": 13.6
-          },
-          "npxg_for": {
-            "p": 50,
-            "v": 1.07
-          },
-          "pass_share_att_third": {
-            "p": 45,
-            "v": 21.5
-          },
-          "pass_share_def_third": {
-            "p": 60,
-            "v": 29.7
-          },
-          "pass_share_mid_third": {
-            "p": 50,
-            "v": 48.8
-          },
-          "possession_pct": {
-            "p": 45,
-            "v": 48.4
-          },
-          "ppda": {
-            "p": 60,
-            "v": 14.0
-          },
-          "progressive_carries": {
-            "p": 25,
-            "v": 11.1
-          },
-          "progressive_passes": {
-            "p": 35,
-            "v": 85.0
-          },
-          "progressive_passes_completed": {
-            "p": 35,
-            "v": 36.7
-          },
-          "shot_accuracy": {
-            "p": 45,
-            "v": 35.6
-          },
-          "tackle_success_rate": {
-            "p": 80,
-            "v": 64.2
-          },
-          "tackles_won": {
-            "p": 95,
+            "p": 85,
             "v": 12.3
           },
+          "crosses": {
+            "p": 100,
+            "v": 20.8
+          },
+          "field_tilt": {
+            "p": 85,
+            "v": 57.2
+          },
+          "fouls_committed": {
+            "p": 75,
+            "v": 11.6
+          },
+          "npxg_for": {
+            "p": 75,
+            "v": 1.34
+          },
+          "pass_share_att_third": {
+            "p": 55,
+            "v": 21.8
+          },
+          "pass_share_def_third": {
+            "p": 25,
+            "v": 25.2
+          },
+          "pass_share_mid_third": {
+            "p": 95,
+            "v": 53.0
+          },
+          "possession_pct": {
+            "p": 75,
+            "v": 52.0
+          },
+          "ppda": {
+            "p": 70,
+            "v": 14.1
+          },
+          "progressive_carries": {
+            "p": 85,
+            "v": 19.5
+          },
+          "progressive_passes": {
+            "p": 95,
+            "v": 97.9
+          },
+          "progressive_passes_completed": {
+            "p": 80,
+            "v": 45.3
+          },
+          "shot_accuracy": {
+            "p": 10,
+            "v": 25.9
+          },
+          "tackle_success_rate": {
+            "p": 45,
+            "v": 59.7
+          },
+          "tackles_won": {
+            "p": 15,
+            "v": 8.6
+          },
           "take_on_success_rate": {
-            "p": 20,
-            "v": 35.8
+            "p": 15,
+            "v": 37.2
           },
           "take_ons": {
-            "p": 80,
-            "v": 21.6
+            "p": 60,
+            "v": 19.9
           },
           "touches_in_box": {
-            "p": 45,
-            "v": 20.7
+            "p": 75,
+            "v": 30.7
           },
           "xg_fast_break": {
-            "p": 70,
-            "v": 0.16
+            "p": 45,
+            "v": 0.11
           },
           "xg_open_play": {
-            "p": 40,
-            "v": 0.62
+            "p": 75,
+            "v": 0.89
           },
           "xg_per_shot": {
-            "p": 35,
-            "v": 0.086
+            "p": 80,
+            "v": 0.107
           },
           "xg_set_piece": {
-            "p": 60,
-            "v": 0.28
+            "p": 70,
+            "v": 0.32
           }
         },
-        "team_id": 1
+        "team_id": 2
       },
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 50,
-            "v": 51.2
+            "p": 65,
+            "v": 52.0
           },
           "aerials_won": {
             "p": 70,
-            "v": 11.7
+            "v": 11.5
           },
           "crosses": {
-            "p": 30,
-            "v": 15.3
-          },
-          "field_tilt": {
-            "p": 5,
-            "v": 38.1
-          },
-          "fouls_committed": {
-            "p": 60,
-            "v": 12.4
-          },
-          "npxg_for": {
-            "p": 35,
-            "v": 0.82
-          },
-          "pass_share_att_third": {
-            "p": 5,
+            "p": 75,
             "v": 17.7
           },
+          "field_tilt": {
+            "p": 40,
+            "v": 46.4
+          },
+          "fouls_committed": {
+            "p": 75,
+            "v": 11.6
+          },
+          "npxg_for": {
+            "p": 50,
+            "v": 1.16
+          },
+          "pass_share_att_third": {
+            "p": 40,
+            "v": 20.9
+          },
           "pass_share_def_third": {
-            "p": 95,
-            "v": 34.7
+            "p": 75,
+            "v": 31.5
           },
           "pass_share_mid_third": {
             "p": 30,
             "v": 47.6
           },
           "possession_pct": {
-            "p": 30,
-            "v": 47.2
+            "p": 50,
+            "v": 49.0
           },
           "ppda": {
-            "p": 15,
-            "v": 17.5
+            "p": 25,
+            "v": 16.6
           },
           "progressive_carries": {
-            "p": 20,
-            "v": 10.7
+            "p": 30,
+            "v": 12.4
           },
           "progressive_passes": {
-            "p": 15,
-            "v": 80.6
+            "p": 10,
+            "v": 79.6
           },
           "progressive_passes_completed": {
-            "p": 15,
-            "v": 35.0
+            "p": 10,
+            "v": 34.0
           },
           "shot_accuracy": {
             "p": 85,
-            "v": 38.9
+            "v": 37.4
           },
           "tackle_success_rate": {
-            "p": 10,
-            "v": 54.1
+            "p": 20,
+            "v": 56.5
           },
           "tackles_won": {
             "p": 20,
-            "v": 9.4
+            "v": 9.1
           },
           "take_on_success_rate": {
-            "p": 5,
-            "v": 33.1
+            "p": 65,
+            "v": 42.9
           },
           "take_ons": {
-            "p": 45,
-            "v": 18.1
+            "p": 75,
+            "v": 20.4
           },
           "touches_in_box": {
-            "p": 10,
-            "v": 17.3
+            "p": 40,
+            "v": 21.4
           },
           "xg_fast_break": {
             "p": 10,
             "v": 0.04
           },
           "xg_open_play": {
-            "p": 35,
-            "v": 0.61
+            "p": 60,
+            "v": 0.82
           },
           "xg_per_shot": {
-            "p": 25,
-            "v": 0.08
+            "p": 65,
+            "v": 0.097
           },
           "xg_set_piece": {
-            "p": 20,
-            "v": 0.16
+            "p": 60,
+            "v": 0.29
           }
         },
         "team_id": 76
@@ -910,200 +1011,99 @@
         "metrics": {
           "aerial_win_rate": {
             "p": 70,
-            "v": 53.3
+            "v": 52.2
           },
           "aerials_won": {
-            "p": 65,
-            "v": 11.4
-          },
-          "crosses": {
-            "p": 55,
-            "v": 17.0
-          },
-          "field_tilt": {
-            "p": 50,
-            "v": 45.2
-          },
-          "fouls_committed": {
-            "p": 60,
-            "v": 12.4
-          },
-          "npxg_for": {
-            "p": 55,
-            "v": 1.11
-          },
-          "pass_share_att_third": {
-            "p": 40,
-            "v": 21.0
-          },
-          "pass_share_def_third": {
-            "p": 45,
-            "v": 26.9
-          },
-          "pass_share_mid_third": {
-            "p": 95,
-            "v": 52.1
-          },
-          "possession_pct": {
-            "p": 45,
-            "v": 48.4
-          },
-          "ppda": {
-            "p": 55,
-            "v": 14.8
-          },
-          "progressive_carries": {
-            "p": 55,
-            "v": 15.0
-          },
-          "progressive_passes": {
-            "p": 55,
-            "v": 88.7
-          },
-          "progressive_passes_completed": {
-            "p": 55,
-            "v": 40.3
-          },
-          "shot_accuracy": {
-            "p": 60,
-            "v": 36.5
-          },
-          "tackle_success_rate": {
-            "p": 55,
-            "v": 62.9
-          },
-          "tackles_won": {
-            "p": 80,
-            "v": 11.1
-          },
-          "take_on_success_rate": {
-            "p": 65,
-            "v": 42.1
-          },
-          "take_ons": {
-            "p": 35,
-            "v": 18.0
-          },
-          "touches_in_box": {
-            "p": 70,
-            "v": 25.4
-          },
-          "xg_fast_break": {
-            "p": 85,
-            "v": 0.23
-          },
-          "xg_open_play": {
-            "p": 45,
-            "v": 0.64
-          },
-          "xg_per_shot": {
-            "p": 45,
-            "v": 0.089
-          },
-          "xg_set_piece": {
-            "p": 50,
-            "v": 0.22
-          }
-        },
-        "team_id": 17
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 45,
-            "v": 50.4
-          },
-          "aerials_won": {
-            "p": 25,
+            "p": 20,
             "v": 8.7
           },
           "crosses": {
-            "p": 60,
-            "v": 17.1
+            "p": 65,
+            "v": 16.9
           },
           "field_tilt": {
             "p": 95,
-            "v": 66.9
+            "v": 66.6
           },
           "fouls_committed": {
-            "p": 75,
-            "v": 10.7
+            "p": 80,
+            "v": 11.3
           },
           "npxg_for": {
             "p": 90,
-            "v": 2.0
+            "v": 1.7
           },
           "pass_share_att_third": {
             "p": 100,
-            "v": 27.2
+            "v": 26.9
           },
           "pass_share_def_third": {
             "p": 10,
-            "v": 23.8
+            "v": 24.1
           },
           "pass_share_mid_third": {
             "p": 55,
-            "v": 48.9
+            "v": 49.0
           },
           "possession_pct": {
             "p": 95,
-            "v": 55.9
+            "v": 55.8
           },
           "ppda": {
             "p": 95,
-            "v": 11.7
+            "v": 12.1
           },
           "progressive_carries": {
             "p": 90,
-            "v": 19.9
+            "v": 20.2
           },
           "progressive_passes": {
-            "p": 65,
-            "v": 92.0
+            "p": 60,
+            "v": 92.2
           },
           "progressive_passes_completed": {
             "p": 100,
-            "v": 53.1
+            "v": 51.4
           },
           "shot_accuracy": {
-            "p": 90,
-            "v": 39.3
+            "p": 45,
+            "v": 33.3
           },
           "tackle_success_rate": {
-            "p": 90,
-            "v": 64.4
+            "p": 65,
+            "v": 62.8
           },
           "tackles_won": {
             "p": 35,
-            "v": 9.6
+            "v": 9.4
           },
           "take_on_success_rate": {
             "p": 45,
-            "v": 39.9
+            "v": 40.5
           },
           "take_ons": {
-            "p": 100,
-            "v": 29.0
+            "p": 95,
+            "v": 25.4
           },
           "touches_in_box": {
-            "p": 90,
-            "v": 48.6
+            "p": 100,
+            "v": 46.4
           },
           "xg_fast_break": {
-            "p": 5,
-            "v": 0.01
+            "p": 20,
+            "v": 0.05
           },
           "xg_open_play": {
             "p": 95,
-            "v": 1.57
+            "v": 1.29
           },
           "xg_per_shot": {
-            "p": 95,
-            "v": 0.146
+            "p": 85,
+            "v": 0.117
           },
           "xg_set_piece": {
-            "p": 90,
-            "v": 0.42
+            "p": 95,
+            "v": 0.35
           }
         },
         "team_id": 20
@@ -1111,504 +1111,100 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 90,
-            "v": 55.8
+            "p": 5,
+            "v": 40.0
           },
           "aerials_won": {
-            "p": 75,
-            "v": 12.0
+            "p": 10,
+            "v": 7.1
           },
           "crosses": {
-            "p": 100,
-            "v": 21.8
+            "p": 5,
+            "v": 11.7
           },
           "field_tilt": {
-            "p": 85,
-            "v": 58.3
+            "p": 60,
+            "v": 49.2
           },
           "fouls_committed": {
-            "p": 65,
-            "v": 11.5
+            "p": 50,
+            "v": 12.3
           },
           "npxg_for": {
-            "p": 75,
-            "v": 1.45
+            "p": 10,
+            "v": 0.77
           },
           "pass_share_att_third": {
             "p": 65,
             "v": 22.5
           },
           "pass_share_def_third": {
-            "p": 30,
-            "v": 25.6
+            "p": 55,
+            "v": 29.4
           },
           "pass_share_mid_third": {
-            "p": 90,
-            "v": 51.9
+            "p": 45,
+            "v": 48.1
           },
           "possession_pct": {
-            "p": 65,
-            "v": 50.1
+            "p": 55,
+            "v": 49.1
           },
           "ppda": {
-            "p": 65,
-            "v": 13.9
+            "p": 30,
+            "v": 16.3
           },
           "progressive_carries": {
-            "p": 85,
-            "v": 19.2
+            "p": 65,
+            "v": 16.2
           },
           "progressive_passes": {
-            "p": 80,
-            "v": 93.3
+            "p": 25,
+            "v": 82.8
           },
           "progressive_passes_completed": {
-            "p": 75,
-            "v": 42.2
+            "p": 60,
+            "v": 39.5
           },
           "shot_accuracy": {
-            "p": 25,
-            "v": 28.0
+            "p": 30,
+            "v": 30.6
           },
           "tackle_success_rate": {
-            "p": 95,
-            "v": 64.6
+            "p": 55,
+            "v": 60.4
           },
           "tackles_won": {
-            "p": 70,
-            "v": 10.7
+            "p": 10,
+            "v": 8.2
           },
           "take_on_success_rate": {
-            "p": 35,
-            "v": 38.3
+            "p": 10,
+            "v": 35.0
           },
           "take_ons": {
-            "p": 75,
-            "v": 21.3
+            "p": 5,
+            "v": 14.8
           },
           "touches_in_box": {
-            "p": 75,
-            "v": 31.2
+            "p": 15,
+            "v": 18.6
           },
           "xg_fast_break": {
             "p": 40,
             "v": 0.1
           },
           "xg_open_play": {
-            "p": 80,
-            "v": 0.95
+            "p": 25,
+            "v": 0.52
           },
           "xg_per_shot": {
-            "p": 65,
-            "v": 0.102
+            "p": 15,
+            "v": 0.086
           },
           "xg_set_piece": {
-            "p": 85,
-            "v": 0.36
-          }
-        },
-        "team_id": 2
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 80,
-            "v": 53.8
-          },
-          "aerials_won": {
-            "p": 85,
-            "v": 13.0
-          },
-          "crosses": {
-            "p": 95,
-            "v": 19.6
-          },
-          "field_tilt": {
-            "p": 40,
-            "v": 43.7
-          },
-          "fouls_committed": {
             "p": 10,
-            "v": 14.7
-          },
-          "npxg_for": {
-            "p": 35,
-            "v": 0.82
-          },
-          "pass_share_att_third": {
-            "p": 80,
-            "v": 24.0
-          },
-          "pass_share_def_third": {
-            "p": 20,
-            "v": 24.9
-          },
-          "pass_share_mid_third": {
-            "p": 85,
-            "v": 51.1
-          },
-          "possession_pct": {
-            "p": 10,
-            "v": 44.6
-          },
-          "ppda": {
-            "p": 40,
-            "v": 15.1
-          },
-          "progressive_carries": {
-            "p": 10,
-            "v": 9.6
-          },
-          "progressive_passes": {
-            "p": 95,
-            "v": 96.6
-          },
-          "progressive_passes_completed": {
-            "p": 45,
-            "v": 39.7
-          },
-          "shot_accuracy": {
-            "p": 10,
-            "v": 23.2
-          },
-          "tackle_success_rate": {
-            "p": 25,
-            "v": 56.2
-          },
-          "tackles_won": {
-            "p": 5,
-            "v": 7.1
-          },
-          "take_on_success_rate": {
-            "p": 35,
-            "v": 38.3
-          },
-          "take_ons": {
-            "p": 50,
-            "v": 18.3
-          },
-          "touches_in_box": {
-            "p": 5,
-            "v": 16.6
-          },
-          "xg_fast_break": {
-            "p": 55,
-            "v": 0.13
-          },
-          "xg_open_play": {
-            "p": 15,
-            "v": 0.46
-          },
-          "xg_per_shot": {
-            "p": 5,
-            "v": 0.07
-          },
-          "xg_set_piece": {
-            "p": 40,
-            "v": 0.21
-          }
-        },
-        "team_id": 9
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 30,
-            "v": 45.1
-          },
-          "aerials_won": {
-            "p": 55,
-            "v": 10.6
-          },
-          "crosses": {
-            "p": 85,
-            "v": 18.6
-          },
-          "field_tilt": {
-            "p": 35,
-            "v": 43.5
-          },
-          "fouls_committed": {
-            "p": 40,
-            "v": 13.4
-          },
-          "npxg_for": {
-            "p": 70,
-            "v": 1.34
-          },
-          "pass_share_att_third": {
-            "p": 25,
-            "v": 20.1
-          },
-          "pass_share_def_third": {
-            "p": 85,
-            "v": 33.1
-          },
-          "pass_share_mid_third": {
-            "p": 20,
-            "v": 46.8
-          },
-          "possession_pct": {
-            "p": 55,
-            "v": 48.7
-          },
-          "ppda": {
-            "p": 90,
-            "v": 12.4
-          },
-          "progressive_carries": {
-            "p": 40,
-            "v": 12.7
-          },
-          "progressive_passes": {
-            "p": 70,
-            "v": 92.3
-          },
-          "progressive_passes_completed": {
-            "p": 25,
-            "v": 36.1
-          },
-          "shot_accuracy": {
-            "p": 35,
-            "v": 33.7
-          },
-          "tackle_success_rate": {
-            "p": 15,
-            "v": 54.9
-          },
-          "tackles_won": {
-            "p": 35,
-            "v": 9.6
-          },
-          "take_on_success_rate": {
-            "p": 70,
-            "v": 43.4
-          },
-          "take_ons": {
-            "p": 25,
-            "v": 17.4
-          },
-          "touches_in_box": {
-            "p": 30,
-            "v": 19.6
-          },
-          "xg_fast_break": {
-            "p": 60,
-            "v": 0.14
-          },
-          "xg_open_play": {
-            "p": 65,
-            "v": 0.83
-          },
-          "xg_per_shot": {
-            "p": 60,
-            "v": 0.098
-          },
-          "xg_set_piece": {
-            "p": 70,
-            "v": 0.33
-          }
-        },
-        "team_id": 15
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 75,
-            "v": 53.7
-          },
-          "aerials_won": {
-            "p": 90,
-            "v": 14.4
-          },
-          "crosses": {
-            "p": 65,
-            "v": 17.4
-          },
-          "field_tilt": {
-            "p": 45,
-            "v": 45.1
-          },
-          "fouls_committed": {
-            "p": 25,
-            "v": 14.0
-          },
-          "npxg_for": {
-            "p": 35,
-            "v": 0.82
-          },
-          "pass_share_att_third": {
-            "p": 35,
-            "v": 20.8
-          },
-          "pass_share_def_third": {
-            "p": 55,
-            "v": 29.4
-          },
-          "pass_share_mid_third": {
-            "p": 75,
-            "v": 49.9
-          },
-          "possession_pct": {
-            "p": 30,
-            "v": 47.2
-          },
-          "ppda": {
-            "p": 45,
-            "v": 15.0
-          },
-          "progressive_carries": {
-            "p": 15,
-            "v": 9.7
-          },
-          "progressive_passes": {
-            "p": 85,
-            "v": 94.7
-          },
-          "progressive_passes_completed": {
-            "p": 60,
-            "v": 41.0
-          },
-          "shot_accuracy": {
-            "p": 95,
-            "v": 39.4
-          },
-          "tackle_success_rate": {
-            "p": 50,
-            "v": 62.7
-          },
-          "tackles_won": {
-            "p": 45,
-            "v": 9.9
-          },
-          "take_on_success_rate": {
-            "p": 10,
-            "v": 33.9
-          },
-          "take_ons": {
-            "p": 45,
-            "v": 18.1
-          },
-          "touches_in_box": {
-            "p": 20,
-            "v": 17.7
-          },
-          "xg_fast_break": {
-            "p": 15,
-            "v": 0.05
-          },
-          "xg_open_play": {
-            "p": 30,
-            "v": 0.54
-          },
-          "xg_per_shot": {
-            "p": 85,
-            "v": 0.123
-          },
-          "xg_set_piece": {
-            "p": 30,
-            "v": 0.18
-          }
-        },
-        "team_id": 13
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 10,
-            "v": 39.7
-          },
-          "aerials_won": {
-            "p": 10,
-            "v": 6.6
-          },
-          "crosses": {
-            "p": 20,
-            "v": 12.7
-          },
-          "field_tilt": {
-            "p": 80,
-            "v": 55.7
-          },
-          "fouls_committed": {
-            "p": 75,
-            "v": 10.7
-          },
-          "npxg_for": {
-            "p": 15,
-            "v": 0.76
-          },
-          "pass_share_att_third": {
-            "p": 85,
-            "v": 24.7
-          },
-          "pass_share_def_third": {
-            "p": 50,
-            "v": 28.0
-          },
-          "pass_share_mid_third": {
-            "p": 25,
-            "v": 47.2
-          },
-          "possession_pct": {
-            "p": 75,
-            "v": 51.2
-          },
-          "ppda": {
-            "p": 25,
-            "v": 16.5
-          },
-          "progressive_carries": {
-            "p": 80,
-            "v": 19.0
-          },
-          "progressive_passes": {
-            "p": 25,
-            "v": 83.4
-          },
-          "progressive_passes_completed": {
-            "p": 50,
-            "v": 39.9
-          },
-          "shot_accuracy": {
-            "p": 50,
-            "v": 36.1
-          },
-          "tackle_success_rate": {
-            "p": 40,
-            "v": 58.8
-          },
-          "tackles_won": {
-            "p": 10,
-            "v": 8.1
-          },
-          "take_on_success_rate": {
-            "p": 15,
-            "v": 34.3
-          },
-          "take_ons": {
-            "p": 10,
-            "v": 15.0
-          },
-          "touches_in_box": {
-            "p": 25,
-            "v": 18.4
-          },
-          "xg_fast_break": {
-            "p": 55,
-            "v": 0.13
-          },
-          "xg_open_play": {
-            "p": 25,
-            "v": 0.5
-          },
-          "xg_per_shot": {
-            "p": 30,
-            "v": 0.085
-          },
-          "xg_set_piece": {
-            "p": 5,
-            "v": 0.13
+            "v": 0.15
           }
         },
         "team_id": 6
@@ -1616,100 +1212,403 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 60,
-            "v": 51.7
+            "p": 45,
+            "v": 48.9
           },
           "aerials_won": {
-            "p": 95,
-            "v": 15.0
+            "p": 75,
+            "v": 11.8
           },
           "crosses": {
-            "p": 80,
-            "v": 18.3
+            "p": 90,
+            "v": 19.4
           },
           "field_tilt": {
-            "p": 60,
-            "v": 49.3
+            "p": 25,
+            "v": 42.4
           },
           "fouls_committed": {
+            "p": 25,
+            "v": 13.5
+          },
+          "npxg_for": {
+            "p": 35,
+            "v": 1.05
+          },
+          "pass_share_att_third": {
+            "p": 50,
+            "v": 21.5
+          },
+          "pass_share_def_third": {
+            "p": 55,
+            "v": 29.4
+          },
+          "pass_share_mid_third": {
+            "p": 70,
+            "v": 49.1
+          },
+          "possession_pct": {
+            "p": 25,
+            "v": 46.5
+          },
+          "ppda": {
+            "p": 45,
+            "v": 15.6
+          },
+          "progressive_carries": {
+            "p": 20,
+            "v": 11.7
+          },
+          "progressive_passes": {
+            "p": 40,
+            "v": 85.2
+          },
+          "progressive_passes_completed": {
+            "p": 25,
+            "v": 37.1
+          },
+          "shot_accuracy": {
+            "p": 65,
+            "v": 35.7
+          },
+          "tackle_success_rate": {
+            "p": 70,
+            "v": 62.9
+          },
+          "tackles_won": {
+            "p": 90,
+            "v": 11.5
+          },
+          "take_on_success_rate": {
             "p": 5,
-            "v": 17.1
+            "v": 34.8
+          },
+          "take_ons": {
+            "p": 75,
+            "v": 20.4
+          },
+          "touches_in_box": {
+            "p": 30,
+            "v": 21.0
+          },
+          "xg_fast_break": {
+            "p": 60,
+            "v": 0.13
+          },
+          "xg_open_play": {
+            "p": 40,
+            "v": 0.61
+          },
+          "xg_per_shot": {
+            "p": 20,
+            "v": 0.088
+          },
+          "xg_set_piece": {
+            "p": 40,
+            "v": 0.25
+          }
+        },
+        "team_id": 1
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 20,
+            "v": 46.1
+          },
+          "aerials_won": {
+            "p": 50,
+            "v": 10.0
+          },
+          "crosses": {
+            "p": 95,
+            "v": 19.6
+          },
+          "field_tilt": {
+            "p": 55,
+            "v": 48.0
+          },
+          "fouls_committed": {
+            "p": 35,
+            "v": 12.9
           },
           "npxg_for": {
             "p": 65,
-            "v": 1.29
+            "v": 1.28
           },
           "pass_share_att_third": {
-            "p": 55,
-            "v": 22.0
+            "p": 35,
+            "v": 20.8
           },
           "pass_share_def_third": {
-            "p": 65,
-            "v": 30.3
+            "p": 70,
+            "v": 31.4
           },
           "pass_share_mid_third": {
             "p": 35,
             "v": 47.8
           },
           "possession_pct": {
-            "p": 60,
-            "v": 49.5
+            "p": 65,
+            "v": 50.5
           },
           "ppda": {
-            "p": 80,
-            "v": 13.4
+            "p": 90,
+            "v": 12.8
           },
           "progressive_carries": {
-            "p": 75,
-            "v": 16.9
+            "p": 50,
+            "v": 14.8
           },
           "progressive_passes": {
-            "p": 80,
-            "v": 93.3
+            "p": 70,
+            "v": 93.2
           },
           "progressive_passes_completed": {
-            "p": 65,
-            "v": 41.1
+            "p": 35,
+            "v": 38.2
           },
           "shot_accuracy": {
-            "p": 15,
-            "v": 27.4
+            "p": 35,
+            "v": 33.1
           },
           "tackle_success_rate": {
-            "p": 65,
-            "v": 63.4
+            "p": 35,
+            "v": 59.0
           },
           "tackles_won": {
+            "p": 40,
+            "v": 9.5
+          },
+          "take_on_success_rate": {
             "p": 55,
-            "v": 10.1
+            "v": 42.0
+          },
+          "take_ons": {
+            "p": 40,
+            "v": 17.4
+          },
+          "touches_in_box": {
+            "p": 30,
+            "v": 21.0
+          },
+          "xg_fast_break": {
+            "p": 70,
+            "v": 0.16
+          },
+          "xg_open_play": {
+            "p": 65,
+            "v": 0.83
+          },
+          "xg_per_shot": {
+            "p": 35,
+            "v": 0.092
+          },
+          "xg_set_piece": {
+            "p": 50,
+            "v": 0.26
+          }
+        },
+        "team_id": 15
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 60,
+            "v": 51.9
+          },
+          "aerials_won": {
+            "p": 85,
+            "v": 12.3
+          },
+          "crosses": {
+            "p": 85,
+            "v": 18.5
+          },
+          "field_tilt": {
+            "p": 10,
+            "v": 40.2
+          },
+          "fouls_committed": {
+            "p": 15,
+            "v": 14.5
+          },
+          "npxg_for": {
+            "p": 15,
+            "v": 0.78
+          },
+          "pass_share_att_third": {
+            "p": 80,
+            "v": 23.3
+          },
+          "pass_share_def_third": {
+            "p": 35,
+            "v": 26.3
+          },
+          "pass_share_mid_third": {
+            "p": 80,
+            "v": 50.4
+          },
+          "possession_pct": {
+            "p": 5,
+            "v": 42.5
+          },
+          "ppda": {
+            "p": 40,
+            "v": 15.7
+          },
+          "progressive_carries": {
+            "p": 5,
+            "v": 8.7
+          },
+          "progressive_passes": {
+            "p": 85,
+            "v": 93.5
+          },
+          "progressive_passes_completed": {
+            "p": 40,
+            "v": 38.4
+          },
+          "shot_accuracy": {
+            "p": 10,
+            "v": 25.9
+          },
+          "tackle_success_rate": {
+            "p": 45,
+            "v": 59.7
+          },
+          "tackles_won": {
+            "p": 5,
+            "v": 8.1
           },
           "take_on_success_rate": {
             "p": 25,
-            "v": 37.8
+            "v": 37.9
+          },
+          "take_ons": {
+            "p": 50,
+            "v": 18.0
+          },
+          "touches_in_box": {
+            "p": 5,
+            "v": 14.2
+          },
+          "xg_fast_break": {
+            "p": 50,
+            "v": 0.12
+          },
+          "xg_open_play": {
+            "p": 5,
+            "v": 0.47
+          },
+          "xg_per_shot": {
+            "p": 5,
+            "v": 0.074
+          },
+          "xg_set_piece": {
+            "p": 15,
+            "v": 0.18
+          }
+        },
+        "team_id": 9
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 40,
+            "v": 48.6
+          },
+          "aerials_won": {
+            "p": 90,
+            "v": 13.1
+          },
+          "crosses": {
+            "p": 60,
+            "v": 16.4
+          },
+          "field_tilt": {
+            "p": 15,
+            "v": 41.4
+          },
+          "fouls_committed": {
+            "p": 5,
+            "v": 15.9
+          },
+          "npxg_for": {
+            "p": 40,
+            "v": 1.1
+          },
+          "pass_share_att_third": {
+            "p": 25,
+            "v": 20.2
+          },
+          "pass_share_def_third": {
+            "p": 90,
+            "v": 34.0
+          },
+          "pass_share_mid_third": {
+            "p": 5,
+            "v": 45.8
+          },
+          "possession_pct": {
+            "p": 30,
+            "v": 47.1
+          },
+          "ppda": {
+            "p": 55,
+            "v": 15.0
+          },
+          "progressive_carries": {
+            "p": 60,
+            "v": 15.6
+          },
+          "progressive_passes": {
+            "p": 90,
+            "v": 94.3
+          },
+          "progressive_passes_completed": {
+            "p": 60,
+            "v": 39.5
+          },
+          "shot_accuracy": {
+            "p": 15,
+            "v": 26.9
+          },
+          "tackle_success_rate": {
+            "p": 80,
+            "v": 64.2
+          },
+          "tackles_won": {
+            "p": 75,
+            "v": 10.9
+          },
+          "take_on_success_rate": {
+            "p": 60,
+            "v": 42.2
           },
           "take_ons": {
             "p": 20,
-            "v": 15.9
+            "v": 16.4
           },
           "touches_in_box": {
-            "p": 65,
-            "v": 24.4
+            "p": 45,
+            "v": 21.7
           },
           "xg_fast_break": {
             "p": 75,
-            "v": 0.17
+            "v": 0.18
           },
           "xg_open_play": {
-            "p": 70,
-            "v": 0.89
+            "p": 45,
+            "v": 0.69
           },
           "xg_per_shot": {
-            "p": 55,
-            "v": 0.095
+            "p": 40,
+            "v": 0.093
           },
           "xg_set_piece": {
-            "p": 35,
-            "v": 0.19
+            "p": 25,
+            "v": 0.2
           }
         },
         "team_id": 8
@@ -1717,100 +1616,201 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 65,
-            "v": 52.3
+            "p": 80,
+            "v": 54.4
           },
           "aerials_won": {
-            "p": 40,
-            "v": 9.9
+            "p": 95,
+            "v": 14.2
           },
           "crosses": {
-            "p": 5,
-            "v": 10.7
+            "p": 70,
+            "v": 17.6
           },
           "field_tilt": {
-            "p": 20,
-            "v": 40.8
+            "p": 30,
+            "v": 42.5
           },
           "fouls_committed": {
             "p": 20,
-            "v": 14.3
+            "v": 13.9
           },
           "npxg_for": {
             "p": 45,
-            "v": 1.02
+            "v": 1.12
           },
           "pass_share_att_third": {
-            "p": 30,
-            "v": 20.5
+            "p": 20,
+            "v": 19.7
           },
           "pass_share_def_third": {
-            "p": 70,
-            "v": 30.5
+            "p": 65,
+            "v": 31.2
           },
           "pass_share_mid_third": {
-            "p": 60,
-            "v": 49.0
+            "p": 70,
+            "v": 49.1
           },
           "possession_pct": {
-            "p": 15,
-            "v": 46.3
+            "p": 40,
+            "v": 47.7
           },
           "ppda": {
-            "p": 85,
-            "v": 13.3
+            "p": 60,
+            "v": 14.9
           },
           "progressive_carries": {
-            "p": 35,
-            "v": 11.3
+            "p": 10,
+            "v": 10.1
           },
           "progressive_passes": {
+            "p": 80,
+            "v": 93.3
+          },
+          "progressive_passes_completed": {
+            "p": 65,
+            "v": 41.0
+          },
+          "shot_accuracy": {
+            "p": 70,
+            "v": 36.1
+          },
+          "tackle_success_rate": {
+            "p": 60,
+            "v": 61.0
+          },
+          "tackles_won": {
+            "p": 55,
+            "v": 10.1
+          },
+          "take_on_success_rate": {
+            "p": 20,
+            "v": 37.5
+          },
+          "take_ons": {
+            "p": 45,
+            "v": 17.5
+          },
+          "touches_in_box": {
             "p": 10,
-            "v": 79.6
+            "v": 18.3
+          },
+          "xg_fast_break": {
+            "p": 35,
+            "v": 0.08
+          },
+          "xg_open_play": {
+            "p": 15,
+            "v": 0.48
+          },
+          "xg_per_shot": {
+            "p": 95,
+            "v": 0.13
+          },
+          "xg_set_piece": {
+            "p": 75,
+            "v": 0.33
+          }
+        },
+        "team_id": 13
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 50,
+            "v": 50.2
+          },
+          "aerials_won": {
+            "p": 35,
+            "v": 9.6
+          },
+          "crosses": {
+            "p": 20,
+            "v": 13.8
+          },
+          "field_tilt": {
+            "p": 45,
+            "v": 46.9
+          },
+          "fouls_committed": {
+            "p": 30,
+            "v": 13.1
+          },
+          "npxg_for": {
+            "p": 55,
+            "v": 1.17
+          },
+          "pass_share_att_third": {
+            "p": 75,
+            "v": 22.8
+          },
+          "pass_share_def_third": {
+            "p": 45,
+            "v": 28.1
+          },
+          "pass_share_mid_third": {
+            "p": 70,
+            "v": 49.1
+          },
+          "possession_pct": {
+            "p": 35,
+            "v": 47.2
+          },
+          "ppda": {
+            "p": 75,
+            "v": 13.8
+          },
+          "progressive_carries": {
+            "p": 40,
+            "v": 13.3
+          },
+          "progressive_passes": {
+            "p": 35,
+            "v": 84.0
           },
           "progressive_passes_completed": {
             "p": 30,
-            "v": 36.4
+            "v": 37.5
           },
           "shot_accuracy": {
             "p": 75,
-            "v": 38.4
+            "v": 36.3
           },
           "tackle_success_rate": {
-            "p": 20,
-            "v": 55.7
+            "p": 5,
+            "v": 55.1
           },
           "tackles_won": {
-            "p": 80,
-            "v": 11.1
+            "p": 45,
+            "v": 9.8
           },
           "take_on_success_rate": {
-            "p": 55,
-            "v": 41.0
+            "p": 70,
+            "v": 44.2
           },
           "take_ons": {
-            "p": 60,
-            "v": 19.1
+            "p": 55,
+            "v": 18.7
           },
           "touches_in_box": {
-            "p": 60,
-            "v": 23.7
+            "p": 70,
+            "v": 25.7
           },
           "xg_fast_break": {
-            "p": 30,
-            "v": 0.07
+            "p": 25,
+            "v": 0.06
           },
           "xg_open_play": {
-            "p": 55,
-            "v": 0.75
+            "p": 50,
+            "v": 0.74
           },
           "xg_per_shot": {
             "p": 80,
-            "v": 0.119
+            "v": 0.107
           },
           "xg_set_piece": {
-            "p": 30,
-            "v": 0.18
+            "p": 95,
+            "v": 0.35
           }
         },
         "team_id": 78
@@ -1818,100 +1818,201 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 15,
-            "v": 42.3
+            "p": 35,
+            "v": 47.1
           },
           "aerials_won": {
-            "p": 45,
-            "v": 10.0
+            "p": 25,
+            "v": 9.0
           },
           "crosses": {
-            "p": 70,
-            "v": 17.7
+            "p": 35,
+            "v": 15.3
           },
           "field_tilt": {
-            "p": 10,
-            "v": 39.0
+            "p": 65,
+            "v": 49.6
           },
           "fouls_committed": {
+            "p": 40,
+            "v": 12.8
+          },
+          "npxg_for": {
+            "p": 25,
+            "v": 0.93
+          },
+          "pass_share_att_third": {
+            "p": 45,
+            "v": 21.1
+          },
+          "pass_share_def_third": {
+            "p": 80,
+            "v": 31.6
+          },
+          "pass_share_mid_third": {
+            "p": 25,
+            "v": 47.4
+          },
+          "possession_pct": {
+            "p": 70,
+            "v": 51.4
+          },
+          "ppda": {
+            "p": 50,
+            "v": 15.5
+          },
+          "progressive_carries": {
+            "p": 55,
+            "v": 15.0
+          },
+          "progressive_passes": {
+            "p": 15,
+            "v": 82.1
+          },
+          "progressive_passes_completed": {
+            "p": 15,
+            "v": 36.1
+          },
+          "shot_accuracy": {
+            "p": 95,
+            "v": 39.6
+          },
+          "tackle_success_rate": {
+            "p": 95,
+            "v": 67.5
+          },
+          "tackles_won": {
+            "p": 60,
+            "v": 10.2
+          },
+          "take_on_success_rate": {
+            "p": 40,
+            "v": 39.7
+          },
+          "take_ons": {
+            "p": 30,
+            "v": 17.2
+          },
+          "touches_in_box": {
+            "p": 50,
+            "v": 23.1
+          },
+          "xg_fast_break": {
+            "p": 20,
+            "v": 0.05
+          },
+          "xg_open_play": {
+            "p": 35,
+            "v": 0.59
+          },
+          "xg_per_shot": {
+            "p": 50,
+            "v": 0.094
+          },
+          "xg_set_piece": {
+            "p": 50,
+            "v": 0.26
+          }
+        },
+        "team_id": 7
+      },
+      {
+        "metrics": {
+          "aerial_win_rate": {
+            "p": 10,
+            "v": 41.9
+          },
+          "aerials_won": {
+            "p": 55,
+            "v": 10.3
+          },
+          "crosses": {
             "p": 85,
-            "v": 10.0
+            "v": 18.5
+          },
+          "field_tilt": {
+            "p": 20,
+            "v": 42.2
+          },
+          "fouls_committed": {
+            "p": 90,
+            "v": 10.2
           },
           "npxg_for": {
             "p": 60,
-            "v": 1.17
+            "v": 1.27
           },
           "pass_share_att_third": {
-            "p": 15,
-            "v": 18.9
+            "p": 5,
+            "v": 18.3
           },
           "pass_share_def_third": {
             "p": 100,
-            "v": 36.8
+            "v": 34.8
           },
           "pass_share_mid_third": {
-            "p": 5,
-            "v": 44.3
+            "p": 15,
+            "v": 46.9
           },
           "possession_pct": {
-            "p": 5,
-            "v": 43.4
+            "p": 10,
+            "v": 45.0
           },
           "ppda": {
             "p": 10,
-            "v": 17.9
+            "v": 18.0
           },
           "progressive_carries": {
-            "p": 5,
-            "v": 9.2
+            "p": 15,
+            "v": 11.0
           },
           "progressive_passes": {
-            "p": 55,
-            "v": 88.7
+            "p": 65,
+            "v": 92.9
           },
           "progressive_passes_completed": {
-            "p": 40,
-            "v": 37.3
+            "p": 60,
+            "v": 39.5
           },
           "shot_accuracy": {
-            "p": 30,
-            "v": 31.2
+            "p": 50,
+            "v": 33.8
           },
           "tackle_success_rate": {
-            "p": 70,
-            "v": 63.8
+            "p": 85,
+            "v": 65.7
           },
           "tackles_won": {
             "p": 95,
-            "v": 12.3
+            "v": 11.8
           },
           "take_on_success_rate": {
-            "p": 60,
-            "v": 42.0
+            "p": 50,
+            "v": 41.6
           },
           "take_ons": {
-            "p": 5,
-            "v": 14.7
+            "p": 15,
+            "v": 15.7
           },
           "touches_in_box": {
-            "p": 35,
-            "v": 20.5
+            "p": 55,
+            "v": 23.2
           },
           "xg_fast_break": {
-            "p": 40,
-            "v": 0.1
+            "p": 30,
+            "v": 0.07
           },
           "xg_open_play": {
-            "p": 60,
-            "v": 0.76
+            "p": 80,
+            "v": 0.9
           },
           "xg_per_shot": {
-            "p": 75,
-            "v": 0.11
+            "p": 70,
+            "v": 0.105
           },
           "xg_set_piece": {
-            "p": 65,
-            "v": 0.3
+            "p": 60,
+            "v": 0.29
           }
         },
         "team_id": 11
@@ -1920,200 +2021,99 @@
         "metrics": {
           "aerial_win_rate": {
             "p": 25,
-            "v": 44.8
-          },
-          "aerials_won": {
-            "p": 40,
-            "v": 9.9
-          },
-          "crosses": {
-            "p": 35,
-            "v": 16.0
-          },
-          "field_tilt": {
-            "p": 55,
-            "v": 48.9
-          },
-          "fouls_committed": {
-            "p": 35,
-            "v": 13.6
-          },
-          "npxg_for": {
-            "p": 40,
-            "v": 0.98
-          },
-          "pass_share_att_third": {
-            "p": 50,
-            "v": 21.6
-          },
-          "pass_share_def_third": {
-            "p": 75,
-            "v": 31.7
-          },
-          "pass_share_mid_third": {
-            "p": 15,
-            "v": 46.7
-          },
-          "possession_pct": {
-            "p": 70,
-            "v": 50.2
-          },
-          "ppda": {
-            "p": 30,
-            "v": 16.0
-          },
-          "progressive_carries": {
-            "p": 50,
-            "v": 14.6
-          },
-          "progressive_passes": {
-            "p": 20,
-            "v": 82.9
-          },
-          "progressive_passes_completed": {
-            "p": 10,
-            "v": 34.4
-          },
-          "shot_accuracy": {
-            "p": 100,
             "v": 46.3
           },
-          "tackle_success_rate": {
-            "p": 60,
-            "v": 63.3
-          },
-          "tackles_won": {
-            "p": 45,
-            "v": 9.9
-          },
-          "take_on_success_rate": {
-            "p": 50,
-            "v": 40.8
-          },
-          "take_ons": {
-            "p": 55,
-            "v": 18.6
-          },
-          "touches_in_box": {
-            "p": 55,
-            "v": 22.9
-          },
-          "xg_fast_break": {
-            "p": 20,
-            "v": 0.06
-          },
-          "xg_open_play": {
-            "p": 50,
-            "v": 0.7
-          },
-          "xg_per_shot": {
-            "p": 50,
-            "v": 0.093
-          },
-          "xg_set_piece": {
-            "p": 50,
-            "v": 0.22
-          }
-        },
-        "team_id": 7
-      },
-      {
-        "metrics": {
-          "aerial_win_rate": {
-            "p": 20,
-            "v": 44.1
-          },
           "aerials_won": {
-            "p": 20,
-            "v": 8.0
+            "p": 30,
+            "v": 9.2
           },
           "crosses": {
-            "p": 75,
-            "v": 17.9
+            "p": 50,
+            "v": 15.9
           },
           "field_tilt": {
-            "p": 15,
-            "v": 39.6
+            "p": 5,
+            "v": 36.4
           },
           "fouls_committed": {
-            "p": 80,
-            "v": 10.6
+            "p": 60,
+            "v": 11.9
           },
           "npxg_for": {
-            "p": 35,
-            "v": 0.82
+            "p": 20,
+            "v": 0.87
           },
           "pass_share_att_third": {
-            "p": 20,
-            "v": 19.9
+            "p": 15,
+            "v": 19.5
           },
           "pass_share_def_third": {
-            "p": 80,
-            "v": 32.0
+            "p": 95,
+            "v": 34.3
           },
           "pass_share_mid_third": {
-            "p": 40,
-            "v": 48.1
+            "p": 10,
+            "v": 46.2
           },
           "possession_pct": {
-            "p": 35,
-            "v": 47.5
+            "p": 15,
+            "v": 45.4
           },
           "ppda": {
             "p": 5,
-            "v": 18.5
+            "v": 19.4
           },
           "progressive_carries": {
-            "p": 45,
-            "v": 12.9
+            "p": 35,
+            "v": 13.0
           },
           "progressive_passes": {
-            "p": 60,
-            "v": 90.0
+            "p": 55,
+            "v": 90.2
           },
           "progressive_passes_completed": {
             "p": 20,
-            "v": 35.6
+            "v": 36.3
           },
           "shot_accuracy": {
             "p": 20,
-            "v": 27.6
+            "v": 29.3
           },
           "tackle_success_rate": {
-            "p": 35,
-            "v": 58.3
+            "p": 10,
+            "v": 55.5
           },
           "tackles_won": {
-            "p": 50,
-            "v": 10.0
+            "p": 30,
+            "v": 9.2
           },
           "take_on_success_rate": {
-            "p": 75,
-            "v": 45.6
+            "p": 85,
+            "v": 47.6
           },
           "take_ons": {
-            "p": 30,
-            "v": 17.9
+            "p": 40,
+            "v": 17.4
           },
           "touches_in_box": {
-            "p": 45,
-            "v": 20.7
+            "p": 20,
+            "v": 20.0
           },
           "xg_fast_break": {
-            "p": 70,
-            "v": 0.16
+            "p": 80,
+            "v": 0.22
           },
           "xg_open_play": {
-            "p": 25,
+            "p": 20,
             "v": 0.5
           },
           "xg_per_shot": {
-            "p": 10,
-            "v": 0.075
+            "p": 25,
+            "v": 0.089
           },
           "xg_set_piece": {
-            "p": 15,
-            "v": 0.14
+            "p": 5,
+            "v": 0.13
           }
         },
         "team_id": 19
@@ -2121,100 +2121,100 @@
       {
         "metrics": {
           "aerial_win_rate": {
-            "p": 5,
-            "v": 37.4
+            "p": 15,
+            "v": 43.6
           },
           "aerials_won": {
-            "p": 5,
-            "v": 5.7
+            "p": 15,
+            "v": 7.2
           },
           "crosses": {
-            "p": 10,
-            "v": 11.0
+            "p": 15,
+            "v": 12.8
           },
           "field_tilt": {
-            "p": 30,
+            "p": 35,
             "v": 43.0
           },
           "fouls_committed": {
-            "p": 45,
-            "v": 12.9
+            "p": 60,
+            "v": 11.9
           },
           "npxg_for": {
             "p": 5,
-            "v": 0.58
+            "v": 0.74
           },
           "pass_share_att_third": {
-            "p": 15,
-            "v": 18.9
+            "p": 10,
+            "v": 19.1
           },
           "pass_share_def_third": {
-            "p": 95,
-            "v": 34.7
+            "p": 85,
+            "v": 33.9
           },
           "pass_share_mid_third": {
-            "p": 10,
-            "v": 46.4
+            "p": 20,
+            "v": 47.0
           },
           "possession_pct": {
-            "p": 55,
-            "v": 48.7
+            "p": 45,
+            "v": 48.4
           },
           "ppda": {
-            "p": 35,
-            "v": 15.8
+            "p": 15,
+            "v": 17.3
           },
           "progressive_carries": {
-            "p": 60,
+            "p": 70,
             "v": 16.4
           },
           "progressive_passes": {
             "p": 5,
-            "v": 70.0
+            "v": 72.6
           },
           "progressive_passes_completed": {
             "p": 5,
-            "v": 30.6
+            "v": 32.2
           },
           "shot_accuracy": {
-            "p": 5,
-            "v": 21.1
+            "p": 25,
+            "v": 30.0
           },
           "tackle_success_rate": {
-            "p": 75,
-            "v": 64.0
+            "p": 90,
+            "v": 65.8
           },
           "tackles_won": {
-            "p": 60,
-            "v": 10.4
+            "p": 90,
+            "v": 11.5
           },
           "take_on_success_rate": {
-            "p": 85,
-            "v": 49.7
+            "p": 75,
+            "v": 45.8
           },
           "take_ons": {
             "p": 85,
-            "v": 21.9
+            "v": 22.8
           },
           "touches_in_box": {
-            "p": 15,
-            "v": 17.6
+            "p": 40,
+            "v": 21.4
           },
           "xg_fast_break": {
-            "p": 30,
-            "v": 0.07
+            "p": 10,
+            "v": 0.04
           },
           "xg_open_play": {
-            "p": 5,
-            "v": 0.28
+            "p": 15,
+            "v": 0.48
           },
           "xg_per_shot": {
-            "p": 20,
-            "v": 0.079
+            "p": 10,
+            "v": 0.081
           },
           "xg_set_piece": {
-            "p": 55,
-            "v": 0.23
+            "p": 30,
+            "v": 0.21
           }
         },
         "team_id": 77
@@ -2226,383 +2226,423 @@
   "table": [
     {
       "abbr": "BAR",
+      "color": "#a50044",
+      "crest": "/brand/crests/bar.png",
       "drawn": 0,
-      "goal_difference": 24,
-      "goals_against": 7,
-      "goals_for": 31,
-      "lost": 0,
+      "goal_difference": 34,
+      "goals_against": 12,
+      "goals_for": 46,
+      "lost": 1,
       "name": "FC Barcelona",
-      "played": 7,
-      "points": 21,
+      "played": 11,
+      "points": 30,
       "position": 1,
       "short_name": "Barcelona",
       "slug": null,
       "team_id": 4,
-      "won": 7,
-      "xg_against": 6.1,
-      "xg_difference": 19.3,
-      "xg_for": 25.5
+      "won": 10,
+      "xg_against": 9.1,
+      "xg_difference": 25.1,
+      "xg_for": 34.2
     },
     {
       "abbr": "ATM",
+      "color": "#e81422",
+      "crest": "/brand/crests/atm.png",
       "drawn": 1,
-      "goal_difference": 9,
-      "goals_against": 7,
-      "goals_for": 16,
+      "goal_difference": 14,
+      "goals_against": 8,
+      "goals_for": 22,
       "lost": 1,
       "name": "Club Atlético de Madrid",
-      "played": 7,
-      "points": 16,
+      "played": 11,
+      "points": 28,
       "position": 2,
       "short_name": "Atlético",
       "slug": null,
       "team_id": 3,
-      "won": 5,
-      "xg_against": 6.7,
-      "xg_difference": 5.8,
-      "xg_for": 12.5
-    },
-    {
-      "abbr": "BET",
-      "drawn": 1,
-      "goal_difference": 2,
-      "goals_against": 7,
-      "goals_for": 9,
-      "lost": 1,
-      "name": "Real Betis Balompié",
-      "played": 7,
-      "points": 16,
-      "position": 3,
-      "short_name": "Betis",
-      "slug": null,
-      "team_id": 5,
-      "won": 5,
-      "xg_against": 11.3,
-      "xg_difference": -0.4,
-      "xg_for": 10.9
+      "won": 9,
+      "xg_against": 11.9,
+      "xg_difference": 6.1,
+      "xg_for": 18.0
     },
     {
       "abbr": "RMA",
+      "color": "#532c53",
+      "crest": "/brand/crests/rma.png",
       "drawn": 0,
-      "goal_difference": 10,
-      "goals_against": 8,
-      "goals_for": 18,
+      "goal_difference": 18,
+      "goals_against": 10,
+      "goals_for": 28,
       "lost": 2,
       "name": "Real Madrid CF",
-      "played": 7,
-      "points": 15,
-      "position": 4,
+      "played": 11,
+      "points": 27,
+      "position": 3,
       "short_name": "Real Madrid",
       "slug": null,
       "team_id": 16,
-      "won": 5,
-      "xg_against": 8.0,
-      "xg_difference": 9.3,
-      "xg_for": 17.3
+      "won": 9,
+      "xg_against": 12.1,
+      "xg_difference": 11.9,
+      "xg_for": 24.0
     },
     {
-      "abbr": "SEV",
-      "drawn": 1,
-      "goal_difference": 1,
-      "goals_against": 9,
-      "goals_for": 10,
-      "lost": 2,
-      "name": "Sevilla FC",
-      "played": 7,
-      "points": 13,
-      "position": 5,
-      "short_name": "Sevilla",
-      "slug": null,
-      "team_id": 18,
-      "won": 4,
-      "xg_against": 8.9,
-      "xg_difference": -2.8,
-      "xg_for": 6.1
-    },
-    {
-      "abbr": "ALA",
+      "abbr": "BET",
+      "color": "#047c24",
+      "crest": "/brand/crests/bet.png",
       "drawn": 2,
-      "goal_difference": 5,
-      "goals_against": 6,
-      "goals_for": 11,
+      "goal_difference": 3,
+      "goals_against": 15,
+      "goals_for": 18,
       "lost": 2,
-      "name": "Deportivo Alavés",
-      "played": 7,
-      "points": 11,
-      "position": 6,
-      "short_name": "Alavés",
+      "name": "Real Betis Balompié",
+      "played": 11,
+      "points": 23,
+      "position": 4,
+      "short_name": "Betis",
       "slug": null,
-      "team_id": 1,
-      "won": 3,
-      "xg_against": 8.4,
-      "xg_difference": -1.0,
-      "xg_for": 7.5
-    },
-    {
-      "abbr": "DEP",
-      "drawn": 4,
-      "goal_difference": 2,
-      "goals_against": 8,
-      "goals_for": 10,
-      "lost": 1,
-      "name": "RC Deportivo de A Coruña",
-      "played": 7,
-      "points": 10,
-      "position": 7,
-      "short_name": "Deportivo",
-      "slug": null,
-      "team_id": 76,
-      "won": 2,
-      "xg_against": 8.3,
-      "xg_difference": -2.5,
-      "xg_for": 5.8
+      "team_id": 5,
+      "won": 7,
+      "xg_against": 16.5,
+      "xg_difference": 1.0,
+      "xg_for": 17.5
     },
     {
       "abbr": "RSO",
+      "color": "#d87722",
+      "crest": "/brand/crests/rso.png",
       "drawn": 1,
-      "goal_difference": -4,
-      "goals_against": 13,
-      "goals_for": 9,
-      "lost": 3,
+      "goal_difference": 0,
+      "goals_against": 20,
+      "goals_for": 20,
+      "lost": 4,
       "name": "Real Sociedad de Fútbol",
-      "played": 7,
-      "points": 10,
-      "position": 8,
+      "played": 11,
+      "points": 19,
+      "position": 5,
       "short_name": "Real Sociedad",
       "slug": null,
       "team_id": 17,
+      "won": 6,
+      "xg_against": 17.1,
+      "xg_difference": -1.9,
+      "xg_for": 15.2
+    },
+    {
+      "abbr": "SEV",
+      "color": "#bf2a37",
+      "crest": "/brand/crests/sev.png",
+      "drawn": 2,
+      "goal_difference": -2,
+      "goals_against": 19,
+      "goals_for": 17,
+      "lost": 4,
+      "name": "Sevilla FC",
+      "played": 11,
+      "points": 17,
+      "position": 6,
+      "short_name": "Sevilla",
+      "slug": null,
+      "team_id": 18,
+      "won": 5,
+      "xg_against": 14.9,
+      "xg_difference": -2.8,
+      "xg_for": 12.1
+    },
+    {
+      "abbr": "ATH",
+      "color": "#ff0302",
+      "crest": "/brand/crests/ath.png",
+      "drawn": 3,
+      "goal_difference": 4,
+      "goals_against": 10,
+      "goals_for": 14,
+      "lost": 3,
+      "name": "Athletic Club",
+      "played": 10,
+      "points": 15,
+      "position": 7,
+      "short_name": "Athletic",
+      "slug": null,
+      "team_id": 2,
+      "won": 4,
+      "xg_against": 11.8,
+      "xg_difference": 4.0,
+      "xg_for": 15.8
+    },
+    {
+      "abbr": "DEP",
+      "color": "#57175e",
+      "crest": "/brand/crests/dep.png",
+      "drawn": 5,
+      "goal_difference": 1,
+      "goals_against": 14,
+      "goals_for": 15,
+      "lost": 3,
+      "name": "RC Deportivo de A Coruña",
+      "played": 11,
+      "points": 14,
+      "position": 8,
+      "short_name": "Deportivo",
+      "slug": null,
+      "team_id": 76,
       "won": 3,
-      "xg_against": 10.2,
-      "xg_difference": -1.6,
-      "xg_for": 8.5
+      "xg_against": 12.5,
+      "xg_difference": 1.0,
+      "xg_for": 13.5
     },
     {
       "abbr": "VIL",
-      "drawn": 2,
-      "goal_difference": 1,
-      "goals_against": 12,
-      "goals_for": 13,
-      "lost": 3,
+      "color": "#a68400",
+      "crest": "/brand/crests/vil.png",
+      "drawn": 3,
+      "goal_difference": 0,
+      "goals_against": 15,
+      "goals_for": 15,
+      "lost": 5,
       "name": "Villarreal CF",
-      "played": 7,
-      "points": 8,
+      "played": 11,
+      "points": 12,
       "position": 9,
       "short_name": "Villarreal",
       "slug": null,
       "team_id": 20,
-      "won": 2,
-      "xg_against": 8.8,
-      "xg_difference": 7.6,
-      "xg_for": 16.4
+      "won": 3,
+      "xg_against": 11.7,
+      "xg_difference": 9.4,
+      "xg_for": 21.0
     },
     {
-      "abbr": "ATH",
-      "drawn": 2,
-      "goal_difference": 1,
-      "goals_against": 6,
-      "goals_for": 7,
-      "lost": 2,
-      "name": "Athletic Club",
-      "played": 6,
-      "points": 8,
-      "position": 10,
-      "short_name": "Athletic",
-      "slug": null,
-      "team_id": 2,
-      "won": 2,
-      "xg_against": 6.8,
-      "xg_difference": 2.7,
-      "xg_for": 9.5
-    },
-    {
-      "abbr": "GET",
-      "drawn": 2,
-      "goal_difference": -3,
-      "goals_against": 7,
-      "goals_for": 4,
+      "abbr": "CEL",
+      "color": "#e5254e",
+      "crest": "/brand/crests/cel.png",
+      "drawn": 6,
+      "goal_difference": 0,
+      "goals_against": 10,
+      "goals_for": 10,
       "lost": 3,
-      "name": "Getafe CF",
-      "played": 7,
-      "points": 8,
-      "position": 11,
-      "short_name": "Getafe",
+      "name": "Real Club Celta de Vigo",
+      "played": 11,
+      "points": 12,
+      "position": 10,
+      "short_name": "Celta",
       "slug": null,
-      "team_id": 9,
+      "team_id": 6,
       "won": 2,
-      "xg_against": 8.6,
-      "xg_difference": -2.8,
-      "xg_for": 5.7
+      "xg_against": 13.4,
+      "xg_difference": -4.1,
+      "xg_for": 9.3
+    },
+    {
+      "abbr": "ALA",
+      "color": "#055e42",
+      "crest": "/brand/crests/ala.png",
+      "drawn": 3,
+      "goal_difference": -2,
+      "goals_against": 17,
+      "goals_for": 15,
+      "lost": 5,
+      "name": "Deportivo Alavés",
+      "played": 11,
+      "points": 12,
+      "position": 11,
+      "short_name": "Alavés",
+      "slug": null,
+      "team_id": 1,
+      "won": 3,
+      "xg_against": 14.9,
+      "xg_difference": -2.5,
+      "xg_for": 12.4
     },
     {
       "abbr": "RAY",
-      "drawn": 2,
+      "color": "#eb3c34",
+      "crest": "/brand/crests/ray.png",
+      "drawn": 3,
       "goal_difference": -5,
-      "goals_against": 16,
-      "goals_for": 11,
-      "lost": 3,
+      "goals_against": 20,
+      "goals_for": 15,
+      "lost": 4,
       "name": "Rayo Vallecano de Madrid",
-      "played": 7,
-      "points": 8,
+      "played": 10,
+      "points": 12,
       "position": 12,
       "short_name": "Rayo",
       "slug": null,
       "team_id": 15,
-      "won": 2,
-      "xg_against": 12.4,
-      "xg_difference": -3.1,
-      "xg_for": 9.4
+      "won": 3,
+      "xg_against": 17.1,
+      "xg_difference": -3.6,
+      "xg_for": 13.6
     },
     {
-      "abbr": "OSA",
-      "drawn": 2,
-      "goal_difference": -7,
-      "goals_against": 13,
-      "goals_for": 6,
-      "lost": 3,
-      "name": "CA Osasuna",
-      "played": 7,
-      "points": 8,
-      "position": 13,
-      "short_name": "Osasuna",
-      "slug": null,
-      "team_id": 13,
-      "won": 2,
-      "xg_against": 10.2,
-      "xg_difference": -2.1,
-      "xg_for": 8.1
-    },
-    {
-      "abbr": "CEL",
-      "drawn": 4,
-      "goal_difference": 2,
-      "goals_against": 6,
+      "abbr": "GET",
+      "color": "#c43a2f",
+      "crest": "/brand/crests/get.png",
+      "drawn": 3,
+      "goal_difference": -8,
+      "goals_against": 16,
       "goals_for": 8,
-      "lost": 2,
-      "name": "Real Club Celta de Vigo",
-      "played": 7,
-      "points": 7,
-      "position": 14,
-      "short_name": "Celta",
+      "lost": 5,
+      "name": "Getafe CF",
+      "played": 11,
+      "points": 12,
+      "position": 13,
+      "short_name": "Getafe",
       "slug": null,
-      "team_id": 6,
-      "won": 1,
-      "xg_against": 8.8,
-      "xg_difference": -2.7,
-      "xg_for": 6.1
+      "team_id": 9,
+      "won": 3,
+      "xg_against": 14.0,
+      "xg_difference": -5.5,
+      "xg_for": 8.6
     },
     {
       "abbr": "ESP",
-      "drawn": 1,
-      "goal_difference": 0,
-      "goals_against": 10,
-      "goals_for": 10,
-      "lost": 4,
+      "color": "#123e8c",
+      "crest": "/brand/crests/esp.png",
+      "drawn": 2,
+      "goal_difference": -1,
+      "goals_against": 14,
+      "goals_for": 13,
+      "lost": 6,
       "name": "Reial Club Deportiu Espanyol de Barcelona",
-      "played": 7,
-      "points": 7,
-      "position": 15,
+      "played": 11,
+      "points": 11,
+      "position": 14,
       "short_name": "Espanyol",
       "slug": "espanyol",
       "team_id": 8,
-      "won": 2,
-      "xg_against": 9.1,
-      "xg_difference": -0.1,
-      "xg_for": 9.1
+      "won": 3,
+      "xg_against": 15.5,
+      "xg_difference": -3.4,
+      "xg_for": 12.1
+    },
+    {
+      "abbr": "OSA",
+      "color": "#d30a29",
+      "crest": "/brand/crests/osa.png",
+      "drawn": 2,
+      "goal_difference": -11,
+      "goals_against": 22,
+      "goals_for": 11,
+      "lost": 6,
+      "name": "CA Osasuna",
+      "played": 11,
+      "points": 11,
+      "position": 15,
+      "short_name": "Osasuna",
+      "slug": null,
+      "team_id": 13,
+      "won": 3,
+      "xg_against": 17.3,
+      "xg_difference": -1.8,
+      "xg_for": 15.5
     },
     {
       "abbr": "RAC",
-      "drawn": 1,
-      "goal_difference": -10,
-      "goals_against": 21,
-      "goals_for": 11,
-      "lost": 4,
+      "color": "#00703c",
+      "crest": "/brand/crests/rac.png",
+      "drawn": 2,
+      "goal_difference": -14,
+      "goals_against": 29,
+      "goals_for": 15,
+      "lost": 6,
       "name": "Real Racing Club",
-      "played": 7,
-      "points": 7,
+      "played": 11,
+      "points": 11,
       "position": 16,
       "short_name": "Santander",
       "slug": null,
       "team_id": 78,
-      "won": 2,
-      "xg_against": 14.5,
-      "xg_difference": -5.8,
-      "xg_for": 8.7
-    },
-    {
-      "abbr": "LEV",
-      "drawn": 2,
-      "goal_difference": -4,
-      "goals_against": 12,
-      "goals_for": 8,
-      "lost": 3,
-      "name": "Levante UD",
-      "played": 6,
-      "points": 5,
-      "position": 17,
-      "short_name": "Levante",
-      "slug": null,
-      "team_id": 11,
-      "won": 1,
-      "xg_against": 11.5,
-      "xg_difference": -4.5,
-      "xg_for": 7.0
+      "won": 3,
+      "xg_against": 23.7,
+      "xg_difference": -9.2,
+      "xg_for": 14.5
     },
     {
       "abbr": "ELC",
-      "drawn": 2,
-      "goal_difference": -6,
-      "goals_against": 17,
-      "goals_for": 11,
-      "lost": 4,
+      "color": "#2e7d32",
+      "crest": "/brand/crests/elc.png",
+      "drawn": 4,
+      "goal_difference": -4,
+      "goals_against": 18,
+      "goals_for": 14,
+      "lost": 5,
       "name": "Elche CF",
-      "played": 7,
-      "points": 5,
-      "position": 18,
+      "played": 11,
+      "points": 10,
+      "position": 17,
       "short_name": "Elche",
       "slug": null,
       "team_id": 7,
-      "won": 1,
-      "xg_against": 12.0,
-      "xg_difference": -4.4,
-      "xg_for": 7.6
+      "won": 2,
+      "xg_against": 16.4,
+      "xg_difference": -3.8,
+      "xg_for": 12.6
+    },
+    {
+      "abbr": "LEV",
+      "color": "#8e1b3e",
+      "crest": "/brand/crests/lev.png",
+      "drawn": 4,
+      "goal_difference": -5,
+      "goals_against": 21,
+      "goals_for": 16,
+      "lost": 5,
+      "name": "Levante UD",
+      "played": 11,
+      "points": 10,
+      "position": 18,
+      "short_name": "Levante",
+      "slug": null,
+      "team_id": 11,
+      "won": 2,
+      "xg_against": 20.6,
+      "xg_difference": -6.6,
+      "xg_for": 14.0
     },
     {
       "abbr": "VAL",
-      "drawn": 1,
+      "color": "#e96c08",
+      "crest": "/brand/crests/val.png",
+      "drawn": 3,
       "goal_difference": -9,
-      "goals_against": 13,
-      "goals_for": 4,
-      "lost": 5,
+      "goals_against": 17,
+      "goals_for": 8,
+      "lost": 6,
       "name": "Valencia CF",
-      "played": 7,
-      "points": 4,
+      "played": 11,
+      "points": 9,
       "position": 19,
       "short_name": "Valencia",
       "slug": null,
       "team_id": 19,
-      "won": 1,
-      "xg_against": 10.7,
-      "xg_difference": -5.0,
-      "xg_for": 5.7
+      "won": 2,
+      "xg_against": 14.7,
+      "xg_difference": -4.4,
+      "xg_for": 10.3
     },
     {
       "abbr": "MAL",
-      "drawn": 3,
-      "goal_difference": -9,
-      "goals_against": 12,
-      "goals_for": 3,
-      "lost": 4,
+      "color": "#a74b55",
+      "crest": "/brand/crests/mal.png",
+      "drawn": 5,
+      "goal_difference": -13,
+      "goals_against": 21,
+      "goals_for": 8,
+      "lost": 6,
       "name": "Málaga CF",
-      "played": 7,
-      "points": 3,
+      "played": 11,
+      "points": 5,
       "position": 20,
       "short_name": "Málaga",
       "slug": null,
       "team_id": 77,
       "won": 0,
-      "xg_against": 11.5,
-      "xg_difference": -5.9,
-      "xg_for": 5.6
+      "xg_against": 18.9,
+      "xg_difference": -9.2,
+      "xg_for": 9.7
     }
   ]
 }

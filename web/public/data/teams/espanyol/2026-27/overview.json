@@ -1,57 +1,57 @@
 {
-  "generated_at": "2026-10-22T21:31:42Z",
+  "generated_at": "2026-11-02T22:50:37Z",
   "kpis": [
     {
       "key": "points",
       "peer_n": 20,
-      "rank": 15,
+      "rank": 14,
       "secondary": {
         "key": "points_per_match",
         "value": 1.0
       },
       "unit": "pts",
-      "value": 7
+      "value": 11
     },
     {
       "key": "xg_difference",
       "peer_n": 20,
-      "rank": 6,
+      "rank": 12,
       "secondary": {
         "key": "xg_difference_per_match",
-        "value": -0.0
+        "value": -0.3
       },
       "unit": "xG",
-      "value": -0.1
+      "value": -3.4
     },
     {
       "key": "possession_pct",
       "peer_n": 20,
-      "rank": 9,
+      "rank": 15,
       "secondary": null,
       "unit": "%",
-      "value": 49.5
+      "value": 47.1
     },
     {
       "key": "goals_for",
       "peer_n": 20,
-      "rank": 9,
+      "rank": 15,
       "secondary": {
         "key": "goals_per_match",
-        "value": 1.4
+        "value": 1.2
       },
       "unit": null,
-      "value": 10
+      "value": 13
     },
     {
       "key": "set_piece_goals_for",
       "peer_n": 20,
-      "rank": 8,
+      "rank": 7,
       "secondary": {
         "key": "set_piece_goal_share",
-        "value": 10.0
+        "value": 15.4
       },
       "unit": null,
-      "value": 1
+      "value": 2
     }
   ],
   "leaders": [
@@ -66,6 +66,20 @@
           "value": 6
         },
         {
+          "name": "Edu Expósito",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 1
+        },
+        {
+          "name": "L. Cabrera",
+          "player_id": 2360,
+          "position_group": "CB",
+          "shirt_number": 6,
+          "value": 1
+        },
+        {
           "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
@@ -80,25 +94,11 @@
           "value": 1
         },
         {
-          "name": "Marcos Fernández",
-          "player_id": 2376,
+          "name": "Bryan Zaragoza",
+          "player_id": 2130,
           "position_group": "W",
-          "shirt_number": 18,
+          "shirt_number": 15,
           "value": 1
-        },
-        {
-          "name": "M. Dmitrović",
-          "player_id": 2373,
-          "position_group": "GK",
-          "shirt_number": 13,
-          "value": 0
-        },
-        {
-          "name": "Edu Expósito",
-          "player_id": 2366,
-          "position_group": "MID",
-          "shirt_number": 8,
-          "value": 0
         }
       ],
       "unit": null
@@ -111,42 +111,42 @@
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
-          "value": 0.3
-        },
-        {
-          "name": "Roberto Fernández",
-          "player_id": 2359,
-          "position_group": "ST",
-          "shirt_number": 9,
-          "value": 0.24
-        },
-        {
-          "name": "Roger Hinojo",
-          "player_id": 2375,
-          "position_group": "LB",
-          "shirt_number": 21,
-          "value": 0.23
+          "value": 0.34
         },
         {
           "name": "Bryan Zaragoza",
           "player_id": 2130,
           "position_group": "W",
           "shirt_number": 15,
-          "value": 0.23
+          "value": 0.3
+        },
+        {
+          "name": "Roger Hinojo",
+          "player_id": 2375,
+          "position_group": "LB",
+          "shirt_number": 21,
+          "value": 0.22
+        },
+        {
+          "name": "L. Cabrera",
+          "player_id": 2360,
+          "position_group": "CB",
+          "shirt_number": 6,
+          "value": 0.2
+        },
+        {
+          "name": "Unai Núñez",
+          "player_id": 2339,
+          "position_group": "CB",
+          "shirt_number": 14,
+          "value": 0.18
         },
         {
           "name": "O. El Hilali",
           "player_id": 2363,
           "position_group": "RB",
           "shirt_number": 23,
-          "value": 0.2
-        },
-        {
-          "name": "Marcos Fernández",
-          "player_id": 2376,
-          "position_group": "W",
-          "shirt_number": 18,
-          "value": 0.2
+          "value": 0.17
         }
       ],
       "unit": null
@@ -155,6 +155,27 @@
       "key": "progressive_passes",
       "rows": [
         {
+          "name": "Edu Expósito",
+          "player_id": 2366,
+          "position_group": "MID",
+          "shirt_number": 8,
+          "value": 115
+        },
+        {
+          "name": "O. El Hilali",
+          "player_id": 2363,
+          "position_group": "RB",
+          "shirt_number": 23,
+          "value": 110
+        },
+        {
+          "name": "L. Cabrera",
+          "player_id": 2360,
+          "position_group": "CB",
+          "shirt_number": 6,
+          "value": 90
+        },
+        {
           "name": "M. Dmitrović",
           "player_id": 2373,
           "position_group": "GK",
@@ -162,39 +183,18 @@
           "value": 87
         },
         {
-          "name": "Edu Expósito",
-          "player_id": 2366,
-          "position_group": "MID",
-          "shirt_number": 8,
-          "value": 80
-        },
-        {
-          "name": "O. El Hilali",
-          "player_id": 2363,
-          "position_group": "RB",
-          "shirt_number": 23,
-          "value": 65
+          "name": "Ángel Fortuño",
+          "player_id": 2347,
+          "position_group": "GK",
+          "shirt_number": 1,
+          "value": 79
         },
         {
           "name": "Roger Hinojo",
           "player_id": 2375,
           "position_group": "LB",
           "shirt_number": 21,
-          "value": 52
-        },
-        {
-          "name": "C. Riedel",
-          "player_id": 2356,
-          "position_group": "CB",
-          "shirt_number": 5,
-          "value": 47
-        },
-        {
-          "name": "Unai Núñez",
-          "player_id": 2339,
-          "position_group": "CB",
-          "shirt_number": 14,
-          "value": 45
+          "value": 65
         }
       ],
       "unit": null
@@ -207,28 +207,35 @@
           "player_id": 2355,
           "position_group": "MID",
           "shirt_number": 28,
-          "value": 21
+          "value": 26
         },
         {
           "name": "Edu Expósito",
           "player_id": 2366,
           "position_group": "MID",
           "shirt_number": 8,
-          "value": 19
+          "value": 21
         },
         {
           "name": "Cala",
           "player_id": 4785,
           "position_group": "W",
           "shirt_number": 22,
-          "value": 12
+          "value": 14
+        },
+        {
+          "name": "Bryan Zaragoza",
+          "player_id": 2130,
+          "position_group": "W",
+          "shirt_number": 15,
+          "value": 14
         },
         {
           "name": "T. Dolan",
           "player_id": 2374,
           "position_group": "W",
           "shirt_number": 24,
-          "value": 10
+          "value": 11
         },
         {
           "name": "Urko González de Zárate",
@@ -236,13 +243,6 @@
           "position_group": "MID",
           "shirt_number": 4,
           "value": 10
-        },
-        {
-          "name": "Bryan Zaragoza",
-          "player_id": 2130,
-          "position_group": "W",
-          "shirt_number": 15,
-          "value": 7
         }
       ],
       "unit": null
@@ -257,6 +257,8 @@
       "match_id": 1543,
       "matchday": 1,
       "opponent_abbr": "LEV",
+      "opponent_color": "#8e1b3e",
+      "opponent_crest": "/brand/crests/lev.png",
       "opponent_name": "Levante UD",
       "opponent_short_name": "Levante",
       "opponent_team_id": 11,
@@ -274,6 +276,8 @@
       "match_id": 1553,
       "matchday": 2,
       "opponent_abbr": "RMA",
+      "opponent_color": "#532c53",
+      "opponent_crest": "/brand/crests/rma.png",
       "opponent_name": "Real Madrid CF",
       "opponent_short_name": "Real Madrid",
       "opponent_team_id": 16,
@@ -291,6 +295,8 @@
       "match_id": 1567,
       "matchday": 3,
       "opponent_abbr": "RSO",
+      "opponent_color": "#d87722",
+      "opponent_crest": "/brand/crests/rso.png",
       "opponent_name": "Real Sociedad de Fútbol",
       "opponent_short_name": "Real Sociedad",
       "opponent_team_id": 17,
@@ -308,6 +314,8 @@
       "match_id": 2031,
       "matchday": 4,
       "opponent_abbr": "SEV",
+      "opponent_color": "#bf2a37",
+      "opponent_crest": "/brand/crests/sev.png",
       "opponent_name": "Sevilla FC",
       "opponent_short_name": "Sevilla",
       "opponent_team_id": 18,
@@ -325,6 +333,8 @@
       "match_id": 2041,
       "matchday": 5,
       "opponent_abbr": "OSA",
+      "opponent_color": "#d30a29",
+      "opponent_crest": "/brand/crests/osa.png",
       "opponent_name": "CA Osasuna",
       "opponent_short_name": "Osasuna",
       "opponent_team_id": 13,
@@ -342,6 +352,8 @@
       "match_id": 2054,
       "matchday": 6,
       "opponent_abbr": "RAY",
+      "opponent_color": "#eb3c34",
+      "opponent_crest": "/brand/crests/ray.png",
       "opponent_name": "Rayo Vallecano de Madrid",
       "opponent_short_name": "Rayo",
       "opponent_team_id": 15,
@@ -359,6 +371,8 @@
       "match_id": 2060,
       "matchday": 7,
       "opponent_abbr": "ELC",
+      "opponent_color": "#2e7d32",
+      "opponent_crest": "/brand/crests/elc.png",
       "opponent_name": "Elche CF",
       "opponent_short_name": "Elche",
       "opponent_team_id": 7,
@@ -367,18 +381,94 @@
       "xg_for": 0.87,
       "xt_against": 1.13,
       "xt_for": 2.784
+    },
+    {
+      "date": "2026-10-09",
+      "goals_against": 1,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 2568,
+      "matchday": 8,
+      "opponent_abbr": "MAL",
+      "opponent_color": "#a74b55",
+      "opponent_crest": "/brand/crests/mal.png",
+      "opponent_name": "Málaga CF",
+      "opponent_short_name": "Málaga",
+      "opponent_team_id": 77,
+      "result": "D",
+      "xg_against": 0.76,
+      "xg_for": 1.59,
+      "xt_against": 1.72,
+      "xt_for": 0.657
+    },
+    {
+      "date": "2026-10-17",
+      "goals_against": 1,
+      "goals_for": 0,
+      "is_home": true,
+      "match_id": 2575,
+      "matchday": 9,
+      "opponent_abbr": "ATM",
+      "opponent_color": "#e81422",
+      "opponent_crest": "/brand/crests/atm.png",
+      "opponent_name": "Club Atlético de Madrid",
+      "opponent_short_name": "Atlético",
+      "opponent_team_id": 3,
+      "result": "L",
+      "xg_against": 1.34,
+      "xg_for": 0.42,
+      "xt_against": 2.158,
+      "xt_for": 1.13
+    },
+    {
+      "date": "2026-10-24",
+      "goals_against": 2,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 2587,
+      "matchday": 10,
+      "opponent_abbr": "RAC",
+      "opponent_color": "#00703c",
+      "opponent_crest": "/brand/crests/rac.png",
+      "opponent_name": "Real Racing Club",
+      "opponent_short_name": "Santander",
+      "opponent_team_id": 78,
+      "result": "L",
+      "xg_against": 3.49,
+      "xg_for": 0.64,
+      "xt_against": 2.376,
+      "xt_for": 1.664
+    },
+    {
+      "date": "2026-10-30",
+      "goals_against": 0,
+      "goals_for": 1,
+      "is_home": false,
+      "match_id": 2600,
+      "matchday": 11,
+      "opponent_abbr": "VIL",
+      "opponent_color": "#a68400",
+      "opponent_crest": "/brand/crests/vil.png",
+      "opponent_name": "Villarreal CF",
+      "opponent_short_name": "Villarreal",
+      "opponent_team_id": 20,
+      "result": "W",
+      "xg_against": 0.73,
+      "xg_for": 0.35,
+      "xt_against": 1.752,
+      "xt_for": 0.961
     }
   ],
   "record": {
-    "drawn": 1,
-    "form_last_5": "LLWDL",
-    "goals_against": 10,
-    "goals_for": 10,
-    "league_position": 15,
-    "lost": 4,
-    "points": 7,
+    "drawn": 2,
+    "form_last_5": "WLLDL",
+    "goals_against": 14,
+    "goals_for": 13,
+    "league_position": 14,
+    "lost": 6,
+    "points": 11,
     "points_per_match": 1.0,
-    "won": 2
+    "won": 3
   },
   "rolling": {
     "points": [
@@ -396,6 +486,26 @@
         "matchday": 7,
         "xg_difference": -0.084,
         "xt_difference": 0.664
+      },
+      {
+        "matchday": 8,
+        "xg_difference": 0.448,
+        "xt_difference": 0.489
+      },
+      {
+        "matchday": 9,
+        "xg_difference": 0.088,
+        "xt_difference": 0.135
+      },
+      {
+        "matchday": 10,
+        "xg_difference": -0.618,
+        "xt_difference": -0.003
+      },
+      {
+        "matchday": 11,
+        "xg_difference": -0.64,
+        "xt_difference": -0.388
       }
     ],
     "window": 5
@@ -404,9 +514,9 @@
   "season": {
     "is_final": false,
     "label": "2026/2027",
-    "matchdays_complete": 5,
+    "matchdays_complete": 7,
     "matchdays_scheduled": 38,
-    "matches_played": 7,
+    "matches_played": 11,
     "slug": "2026-27"
   },
   "team": {

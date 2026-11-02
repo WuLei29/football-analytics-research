@@ -1,6 +1,6 @@
 {
   "competition_name": "Primera División",
-  "generated_at": "2026-10-22T21:31:42Z",
+  "generated_at": "2026-11-02T22:50:37Z",
   "league_complete": true,
   "matchdays_scheduled": 38,
   "profile": {
@@ -2226,6 +2226,8 @@
   "table": [
     {
       "abbr": "BAR",
+      "color": "#a50044",
+      "crest": "/brand/crests/bar.png",
       "drawn": 1,
       "goal_difference": 59,
       "goals_against": 36,
@@ -2245,6 +2247,8 @@
     },
     {
       "abbr": "RMA",
+      "color": "#532c53",
+      "crest": "/brand/crests/rma.png",
       "drawn": 5,
       "goal_difference": 42,
       "goals_against": 35,
@@ -2264,6 +2268,8 @@
     },
     {
       "abbr": "VIL",
+      "color": "#a68400",
+      "crest": "/brand/crests/vil.png",
       "drawn": 6,
       "goal_difference": 26,
       "goals_against": 46,
@@ -2283,6 +2289,8 @@
     },
     {
       "abbr": "ATM",
+      "color": "#e81422",
+      "crest": "/brand/crests/atm.png",
       "drawn": 6,
       "goal_difference": 18,
       "goals_against": 44,
@@ -2302,6 +2310,8 @@
     },
     {
       "abbr": "BET",
+      "color": "#047c24",
+      "crest": "/brand/crests/bet.png",
       "drawn": 15,
       "goal_difference": 11,
       "goals_against": 48,
@@ -2321,6 +2331,8 @@
     },
     {
       "abbr": "CEL",
+      "color": "#e5254e",
+      "crest": "/brand/crests/cel.png",
       "drawn": 12,
       "goal_difference": 5,
       "goals_against": 48,
@@ -2340,6 +2352,8 @@
     },
     {
       "abbr": "GET",
+      "color": "#c43a2f",
+      "crest": "/brand/crests/get.png",
       "drawn": 6,
       "goal_difference": -6,
       "goals_against": 38,
@@ -2359,6 +2373,8 @@
     },
     {
       "abbr": "RAY",
+      "color": "#eb3c34",
+      "crest": "/brand/crests/ray.png",
       "drawn": 14,
       "goal_difference": -3,
       "goals_against": 44,
@@ -2378,6 +2394,8 @@
     },
     {
       "abbr": "VAL",
+      "color": "#e96c08",
+      "crest": "/brand/crests/val.png",
       "drawn": 10,
       "goal_difference": -9,
       "goals_against": 55,
@@ -2397,6 +2415,8 @@
     },
     {
       "abbr": "RSO",
+      "color": "#d87722",
+      "crest": "/brand/crests/rso.png",
       "drawn": 13,
       "goal_difference": -2,
       "goals_against": 61,
@@ -2416,6 +2436,8 @@
     },
     {
       "abbr": "ESP",
+      "color": "#123e8c",
+      "crest": "/brand/crests/esp.png",
       "drawn": 10,
       "goal_difference": -12,
       "goals_against": 55,
@@ -2435,6 +2457,8 @@
     },
     {
       "abbr": "ATH",
+      "color": "#ff0302",
+      "crest": "/brand/crests/ath.png",
       "drawn": 6,
       "goal_difference": -15,
       "goals_against": 58,
@@ -2454,6 +2478,8 @@
     },
     {
       "abbr": "ELC",
+      "color": "#2e7d32",
+      "crest": "/brand/crests/elc.png",
       "drawn": 13,
       "goal_difference": -8,
       "goals_against": 57,
@@ -2473,6 +2499,8 @@
     },
     {
       "abbr": "ALA",
+      "color": "#055e42",
+      "crest": "/brand/crests/ala.png",
       "drawn": 10,
       "goal_difference": -12,
       "goals_against": 56,
@@ -2492,6 +2520,8 @@
     },
     {
       "abbr": "SEV",
+      "color": "#bf2a37",
+      "crest": "/brand/crests/sev.png",
       "drawn": 7,
       "goal_difference": -14,
       "goals_against": 60,
@@ -2511,6 +2541,8 @@
     },
     {
       "abbr": "OSA",
+      "color": "#d30a29",
+      "crest": "/brand/crests/osa.png",
       "drawn": 9,
       "goal_difference": -6,
       "goals_against": 50,
@@ -2530,6 +2562,8 @@
     },
     {
       "abbr": "MLL",
+      "color": "#ed1b24",
+      "crest": "/brand/crests/mll.png",
       "drawn": 9,
       "goal_difference": -10,
       "goals_against": 57,
@@ -2549,6 +2583,8 @@
     },
     {
       "abbr": "LEV",
+      "color": "#8e1b3e",
+      "crest": "/brand/crests/lev.png",
       "drawn": 9,
       "goal_difference": -14,
       "goals_against": 61,
@@ -2568,6 +2604,8 @@
     },
     {
       "abbr": "GIR",
+      "color": "#cf0c29",
+      "crest": "/brand/crests/gir.png",
       "drawn": 14,
       "goal_difference": -16,
       "goals_against": 55,
@@ -2587,6 +2625,8 @@
     },
     {
       "abbr": "OVI",
+      "color": "#e23627",
+      "crest": "/brand/crests/ovi.png",
       "drawn": 11,
       "goal_difference": -34,
       "goals_against": 60,
