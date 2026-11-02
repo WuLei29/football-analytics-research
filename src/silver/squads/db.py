@@ -307,8 +307,9 @@ def close_squad_entries(
         return 0
 
     with conn.cursor() as cur:
-        psycopg2.extras.execute_values(
-            cur,
+        # Plain execute: execute_values accepts a single %s (the VALUES list),
+        # and this UPDATE has four placeholders.
+        cur.execute(
             """
             UPDATE silver.player_squads ps
             SET    end_date = %s
@@ -323,8 +324,7 @@ def close_squad_entries(
               AND  cs.source_season_id      = %s
               AND  ps.end_date IS NULL
             """,
-            [(end_date, tuple(source_player_ids), source_team_id, source_season_id)],
-            template="(%s, %s, %s, %s)",
+            (end_date, tuple(source_player_ids), source_team_id, source_season_id),
         )
         return cur.rowcount
 
