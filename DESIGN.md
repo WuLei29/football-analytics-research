@@ -308,8 +308,8 @@ Tactile pills, solid fills, colour-only hover. Nothing is filled black: the auth
 - **Motion:** colour transition only (Tailwind default 150ms).
 
 ### Navigation
-- **Pill nav:** one frosted, raised pill (see Elevation) fixed 12px (20px from sm) from the top, centred, max width viewport minus 24px. On the left the mark (a 30px team disc with a dotted chalk run ending in a dot) and the site name at 600; built sections as 14px/500 slate links (8px by 12px, hover panel with ink text), shown from md; the season as a team pill on the right. Unbuilt sections are omitted, not shown inert. The current section (`active`) is marked `aria-current` and sits on spot in team ink.
-- **Season pills:** under a page's h1 when a club has more than one season: the current one a team pill (`aria-current`), the others tone pills. 14px/600, 8px by 16px.
+- **Pill nav:** one frosted, raised pill (see Elevation) fixed 12px (20px from sm) from the top, centred, max width viewport minus 24px. On the left the mark (a 30px team disc with a dotted chalk run ending in a dot) and the site name at 600; built sections as 14px/500 slate links (8px by 12px, hover panel with ink text), shown from md; the season as a team pill on the right. Unbuilt sections are omitted, not shown inert. The current section (`active`) is marked `aria-current` and sits on spot in team ink; on the landing that is the site name.
+- **Season menu (`SeasonMenu`, 3 Nov 2026, replacing the season pills under the h1):** the nav's season pill gains a white chevron and opens a `Dropdown` panel, on every page and on phones; the current season on spot in team, the others step to panel on hover. It keeps the section: the landing goes to that season's landing (`/` for the home season, `/{team}/inicio/{season}` otherwise, and only seasons with a match played), Temporada and Partidos to themselves, a match to Partidos, a player to Plantilla. With one season to offer it stays a plain link.
 
 ### Cards / Containers
 - **Board:** the page sheet; board colour, 28px top radius.

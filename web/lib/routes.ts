@@ -14,6 +14,8 @@
 
 export const routes = {
   home: () => "/",
+  /** The landing for a chosen season; `/` is the home season's. */
+  landing: (team: string, season: string) => `/${team}/inicio/${season}`,
   /** Screen 01 — season overview. Phase 5a. */
   season: (team: string, season: string) => `/${team}/temporada/${season}`,
   /** The plain match list that links to the match pages. Phase 5a. */

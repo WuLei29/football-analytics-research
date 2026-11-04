@@ -146,6 +146,23 @@ export async function getSeason(slug: string) {
   return season;
 }
 
+/**
+ * The season `/` opens on: the manifest's default, unless the club has not
+ * played in it yet (the weeks before matchday 1), in which case the newest
+ * season with matches. A landing that opens on "0 puntos" for a month a year
+ * proves nothing.
+ */
+export async function getHomeSeason(teamSlug: string) {
+  const manifest = await getManifest();
+  const team = await getTeam(teamSlug);
+  const played = (slug: string) => (team.seasons.find((s) => s.slug === slug)?.matches_played ?? 0) > 0;
+  return (
+    (played(manifest.default.season) && manifest.seasons.find((s) => s.slug === manifest.default.season)) ||
+    manifest.seasons.find((s) => played(s.slug)) ||
+    manifest.seasons[0]
+  );
+}
+
 /** The club with this slug, or throw naming the slugs that do exist. */
 export async function getTeam(slug: string) {
   const manifest = await getManifest();

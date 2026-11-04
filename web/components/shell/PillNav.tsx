@@ -3,12 +3,20 @@
  * top of the viewport, over the photo first and over the board as you scroll.
  *
  * Renders: the site name (a link home), the built sections from `NAV_ITEMS`,
- * and the season as a filled pill linking to its overview. On a phone only
+ * and the season as a filled pill that opens the season menu. On a phone only
  * the name and the season pill stay; the landing's index carries the rest.
  * Props: `team`, `season` (slug), `seasonLabel` ("2026/27"), and `active`,
- *        the `NAV_ITEMS` key of the page it sits on (marked `aria-current`,
- *        team ink on the light-blue spot instead of slate).
- * Data:  none beyond the manifest values the page passes.
+ *        the `NAV_ITEMS` key of the page it sits on, or `"home"` on the
+ *        landing, which marks the site name (marked `aria-current`, team ink
+ *        on the light-blue spot instead of slate).
+ * Data:  `manifest.json`, for the club's seasons.
+ *
+ * The season menu keeps the reader on the same section (3 Nov 2026, replacing
+ * the pills under the h1): the landing goes to that season's landing, and a
+ * match or a player, which may not exist in the other season, to Partidos or
+ * Plantilla, the sections `active` already names. The landing offers only
+ * seasons with a match played. With one season to offer the pill stays a plain
+ * link to its overview.
  *
  * Raised and frosted (revised 24 Oct 2026, at the author's request): an
  * opaque board-coloured pill vanished over the white board once the photo
@@ -23,10 +31,13 @@
 
 import Link from "next/link";
 
+import { getHomeSeason, getManifest, getTeam } from "@/lib/data/load";
 import { landing, site } from "@/lib/labels";
 import { NAV_ITEMS, routes } from "@/lib/routes";
 
-export function PillNav({
+import { SeasonMenu } from "./SeasonMenu";
+
+export async function PillNav({
   team,
   season,
   seasonLabel,
@@ -37,6 +48,28 @@ export function PillNav({
   seasonLabel: string;
   active?: string;
 }) {
+  const manifest = await getManifest();
+  const club = await getTeam(team);
+  const home = await getHomeSeason(team);
+  const onLanding = active === "home";
+  const sectionHref = NAV_ITEMS.find((item) => item.key === active)?.href ?? routes.season;
+
+  const options = manifest.seasons
+    .filter((s) => {
+      const entry = club.seasons.find((t) => t.slug === s.slug);
+      return entry && (!onLanding || entry.matches_played > 0);
+    })
+    .map((s) => ({
+      slug: s.slug,
+      label: s.slug.replace("-", "/"),
+      current: s.slug === season,
+      href: !onLanding
+        ? sectionHref(team, s.slug)
+        : s.slug === home.slug
+          ? routes.home()
+          : routes.landing(team, s.slug),
+    }));
+
   return (
     <nav
       aria-label={landing.navLabel}
@@ -44,7 +77,10 @@ export function PillNav({
     >
       <Link
         href={routes.home()}
-        className="mr-2 flex items-center gap-2.5 rounded-full py-0.5 pr-2 pl-0.5 font-semibold tracking-[-0.01em] whitespace-nowrap"
+        aria-current={onLanding ? "page" : undefined}
+        className={`mr-2 flex items-center gap-2.5 rounded-full py-0.5 pr-3 pl-0.5 font-semibold tracking-[-0.01em] whitespace-nowrap ${
+          onLanding ? "bg-spot text-team" : ""
+        }`}
       >
         {/* The mark: a team disc with a chalk play drawn on it (a run that
             curves to a dot), the same hand as the data strokes. */}
@@ -74,12 +110,18 @@ export function PillNav({
           {item.label}
         </Link>
       ))}
-      <Link
-        href={routes.season(team, season)}
-        className="ml-2 rounded-full bg-team px-4 py-2 font-semibold whitespace-nowrap text-white transition-colors hover:bg-team-deep"
-      >
-        {seasonLabel}
-      </Link>
+      {options.length > 1 ? (
+        <div className="ml-2">
+          <SeasonMenu current={seasonLabel} options={options} />
+        </div>
+      ) : (
+        <Link
+          href={routes.season(team, season)}
+          className="ml-2 rounded-full bg-team px-4 py-2 font-semibold whitespace-nowrap text-white transition-colors hover:bg-team-deep"
+        >
+          {seasonLabel}
+        </Link>
+      )}
     </nav>
   );
 }

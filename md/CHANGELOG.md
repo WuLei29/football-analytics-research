@@ -10,6 +10,17 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 3 Nov 2026 — Season menu in the nav, a landing per season
+
+At the author's request. The nav's season pill opens a menu of seasons on every
+page (`shell/SeasonMenu`), replacing the pills under the h1 of Temporada and
+Partidos. It keeps the section; a match goes to Partidos and a player to
+Plantilla. The landing moved to `components/landing/LandingPage` and gained
+`/{equipo}/inicio/{season}` for the seasons `/` does not show; only seasons with
+a match played get one. The site name is marked as current on the landing. The
+leader title "Conducciones al último tercio" became "Conducciones al últ.
+tercio", to stay on one line.
+
 ## 3 Nov 2026 — Player page: photos, date of birth and height
 
 `silver.players`: `date_of_birth` 0 → 38 and `height_cm` 0 → 37 of the 38

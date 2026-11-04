@@ -4,8 +4,8 @@
  * Renders, top to bottom:
  *   1. the floating pill nav (Temporada marked) and the board, no photo;
  *   2. the page's <h1>, two facts (table position and points; the
- *      xG-difference rank in team blue), the record line, the season pills,
- *      and the data's status locked top-right;
+ *      xG-difference rank in team blue), the record line, and the data's
+ *      status locked top-right;
  *   3. the five figures as raised cards, then the authored reading in its
  *      own full-width card;
  *   4. the league table beside the light-blue spot panel, "partido a
@@ -103,8 +103,6 @@ export default async function SeasonPage({ params }: PageProps) {
   const xgKpi = overview.kpis.find((k) => k.key === "xg_difference") ?? null;
   const latest = overview.matches.at(-1) ?? null;
 
-  // The seasons this club has pages for, newest first (manifest order).
-  const seasons = manifest.seasons.filter((s) => team.seasons.some((t) => t.slug === s.slug));
   const short = (slug: string) => slug.replace("-", "/");
 
   const exits: ExitRow[] = [
@@ -198,29 +196,6 @@ export default async function SeasonPage({ params }: PageProps) {
                     )
                   : copy.dekEmpty(team.short_name, seasonMeta.label)}
               </p>
-              {seasons.length > 1 && (
-                <nav aria-label={copy.seasonsNav} className="mt-5 flex flex-wrap gap-2">
-                  {seasons.map((s) =>
-                    s.slug === season ? (
-                      <span
-                        key={s.slug}
-                        aria-current="page"
-                        className="rounded-full bg-team px-4 py-2 text-[14px] font-semibold text-white"
-                      >
-                        {s.label}
-                      </span>
-                    ) : (
-                      <Link
-                        key={s.slug}
-                        href={routes.season(equipo, s.slug)}
-                        className="rounded-full bg-panel-deep px-4 py-2 text-[14px] font-semibold transition-colors hover:bg-chalk"
-                      >
-                        {s.label}
-                      </Link>
-                    ),
-                  )}
-                </nav>
-              )}
             </div>
           </header>
 

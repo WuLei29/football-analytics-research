@@ -211,7 +211,7 @@ sql/
   seed/                           # formation_slot_positions, player_bio (date of birth + height, from Transfermarkt)
   fixes/                          # dated one-off data repairs
 web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
-  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/{temporada,partidos,partido,plantilla,jugador}, demo/
+  app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/{inicio,temporada,partidos,partido,plantilla,jugador}, demo/
   components/landing/             #   landing blocks: SeasonHighlight, DepthIndex, ChainPitch, Thumbs, XgStroke
   components/matches/             #   match list blocks: MatchIndex (rows), MatchShots (static shot pitch)
   components/shell/               #   Pizarra shell: PillNav, Arrow, Exits, BoardFooter, Dropdown

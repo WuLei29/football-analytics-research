@@ -4,7 +4,7 @@
  * Renders, top to bottom:
  *   1. the floating pill nav (Partidos marked) and the board, no photo;
  *   2. the page's <h1> (how many matches; the record in team blue), the goals
- *      and xG line, the season pills, and the data's status locked top-right;
+ *      and xG line, and the data's status locked top-right;
  *   3. the light-blue spot panel: the latest match, its score, result and xG
  *      pair beside a map of every shot, and the way into it;
  *   4. every match as a whole-row link, newest first (`MatchIndex`);
@@ -90,7 +90,6 @@ export default async function MatchListPage({ params }: PageProps) {
   const xgFor = overview.matches.reduce((t, m) => t + m.xg_for, 0);
   const xgAgainst = overview.matches.reduce((t, m) => t + m.xg_against, 0);
 
-  const seasons = manifest.seasons.filter((s) => team.seasons.some((t) => t.slug === s.slug));
   const short = (slug: string) => slug.replace("-", "/");
 
   const exits: ExitRow[] = [
@@ -159,29 +158,6 @@ export default async function MatchListPage({ params }: PageProps) {
                   ? copy.lead(record.goals_for, record.goals_against, dec(xgFor, 1), dec(xgAgainst, 1))
                   : copy.leadEmpty}
               </p>
-              {seasons.length > 1 && (
-                <nav aria-label={seasonCopy.seasonsNav} className="mt-5 flex flex-wrap gap-2">
-                  {seasons.map((s) =>
-                    s.slug === season ? (
-                      <span
-                        key={s.slug}
-                        aria-current="page"
-                        className="rounded-full bg-team px-4 py-2 text-[14px] font-semibold text-white"
-                      >
-                        {s.label}
-                      </span>
-                    ) : (
-                      <Link
-                        key={s.slug}
-                        href={routes.matches(equipo, s.slug)}
-                        className="rounded-full bg-panel-deep px-4 py-2 text-[14px] font-semibold transition-colors hover:bg-chalk"
-                      >
-                        {s.label}
-                      </Link>
-                    ),
-                  )}
-                </nav>
-              )}
             </div>
           </header>
 

@@ -2,16 +2,16 @@
 
 /**
  * Dropdown — a trigger button and the panel it opens, for the two menus of
- * screen 03 (the player picker and the match filter).
+ * screen 03 (the player picker and the match filter) and the nav's seasons.
  *
  * Renders: the trigger as a Pizarra tone pill (panel-deep, hover chalk,
- * 14px/600, a chevron), and under it an absolutely positioned white panel
- * (row radius, a hairline ink ring, no shadow: DESIGN.md's two raised things
- * are the nav and the figure cards) with the caller's content. Pizarra
- * since 24 Oct 2026, with screen 03.
+ * 14px/600, a chevron) or a team pill (`tone="team"`), and under it an
+ * absolutely positioned white panel (row radius, a hairline ink ring, no
+ * shadow: DESIGN.md's two raised things are the nav and the figure cards) with
+ * the caller's content. Pizarra since 24 Oct 2026, with screen 03.
  * Props: `label` (the accessible name), `trigger` (its visible content),
  *        `children` (the panel; a function receives `close`), `align`,
- *        `width` of the panel in px.
+ *        `width` of the panel in px, `tone` of the trigger.
  * Data:  none.
  *
  * Why not a native `<select>` like `MatchPicker`: the player rows draw a
@@ -29,12 +29,14 @@ export function Dropdown({
   children,
   align = "left",
   width = 300,
+  tone = "panel",
 }: {
   label: string;
   trigger: ReactNode;
   children: ReactNode | ((close: () => void) => ReactNode);
   align?: "left" | "right";
   width?: number;
+  tone?: "panel" | "team";
 }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -70,8 +72,10 @@ export function Dropdown({
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((o) => !o)}
-        className={`flex max-w-full cursor-pointer items-center gap-2 rounded-full py-2 pr-4 pl-3 text-[14px] font-semibold text-ink transition-colors hover:bg-chalk ${
-          open ? "bg-chalk" : "bg-panel-deep"
+        className={`flex max-w-full cursor-pointer items-center gap-2 rounded-full py-2 pr-4 text-[14px] font-semibold whitespace-nowrap transition-colors ${
+          tone === "team"
+            ? `pl-4 text-white hover:bg-team-deep ${open ? "bg-team-deep" : "bg-team"}`
+            : `pl-3 text-ink hover:bg-chalk ${open ? "bg-chalk" : "bg-panel-deep"}`
         }`}
       >
         {trigger}
@@ -80,7 +84,7 @@ export function Dropdown({
           viewBox="0 0 10 6"
           width="10"
           height="6"
-          className="ml-1 shrink-0 text-slate"
+          className={`ml-1 shrink-0 ${tone === "team" ? "text-white" : "text-slate"}`}
           fill="none"
           stroke="currentColor"
           strokeWidth="1.3"

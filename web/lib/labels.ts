@@ -33,6 +33,8 @@ export const site = {
  */
 export const landing = {
   navLabel: "Navegación principal",
+  /** The nav's season pill, to a screen reader. */
+  seasonMenu: (label: string) => `Temporada ${label}: cambiar de temporada`,
   /** "15º con 7 puntos." */
   headline: (position: number, points: number) =>
     `${position}º con ${points} ${points === 1 ? "punto" : "puntos"}.`,
@@ -251,7 +253,7 @@ export const leaderLabels: Record<string, string> = {
   goals: "Goles",
   vaep_per_90: "VAEP por 90",
   progressive_passes: "Pases progresivos",
-  carries_into_final_third: "Conducciones al último tercio",
+  carries_into_final_third: "Conducciones al últ. tercio",
 };
 
 /**
@@ -644,7 +646,6 @@ export const season = {
   /* ---- Pizarra (24 Oct 2026) ------------------------------------------ */
   /** The h1 before matchday 1, when there is no position to state. */
   titleEmpty: (team: string, label: string) => `El ${team} en ${label}.`,
-  seasonsNav: "Temporadas",
   figuresHeading: "Las cifras de la temporada",
   /** Under a figure: "1.0 por partido". */
   rankOf: (rank: number, of: number) => `${rank}º de ${of}`,

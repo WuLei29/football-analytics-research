@@ -1,6 +1,6 @@
 /**
  * PlayerLeaders — the four lists of screen 01: Goles, VAEP por 90, Pases
- * progresivos, Conducciones al último tercio. Pizarra world.
+ * progresivos, Conducciones al últ. tercio. Pizarra world.
  *
  * Renders: four panels (one column on a phone, two at sm, four at xl) of six
  * rows each, sorted descending. Row 1 is a team-filled row with white text
