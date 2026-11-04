@@ -10,6 +10,30 @@ The evergreen traps from these entries were also copied into `CLAUDE.md`
 
 ---
 
+## 3 Nov 2026 — Player page: photos, date of birth and height
+
+`silver.players`: `date_of_birth` 0 → 38 and `height_cm` 0 → 37 of the 38
+players with a published page (the other 1,355 rows stay empty; Alejandro
+Santiago's Transfermarkt profile lists no height). Values read from each
+profile, kept in `sql/seed/player_bio.sql` (idempotent, second run updates 0).
+Re-export: 107 files, and compared with the previous commit the only changes
+are `generated_at`, `player.date_of_birth`, `player.age` and `player.height_cm`.
+`preferred_foot` stays ours, from events; it is NULL for 5 of the 38.
+
+Photos: `python -m src.export.player_photos` reads the author's originals in
+`web/resources/players/{player_id}.{png,jpg,jpeg,webp}` and writes
+`web/public/players/{player_id}.jpg`: flattened on white (the originals mix
+cutouts and white grounds), trimmed to the player, at most 800 × 1100. 27
+photos, 1.9 MB served, from originals of up to 3 MB each. 26 of the 38 players
+with a page have one; the 27th is Gorosabel (1794), in the 2026/27 squad with
+no minutes yet. The card crops from the top so a head is never cut. The
+originals (48 MB) are gitignored; only the served copies are committed.
+
+The bio grid wrapped a date as `24/01/199` / `2` once dates existed: its
+column gap went from 20 to 12 px and the date no longer wraps.
+
+---
+
 ## 2 Nov 2026 — Weekend update: 2026/27 to match 2600 (+40 matches), `weekend-update` skill
 
 Data: 496 → 536 matches. Scraped 40 new match files, loaded squads

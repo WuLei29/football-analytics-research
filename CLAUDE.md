@@ -205,9 +205,10 @@ src/
     squad.py player.py            #   screen 03: squad.json + players/{id}.json (per match, filterable)
     player_percentiles.py         #   screen-03 percentile ranking (pure; site gate)
     crests.py                     #   web/resources/crests -> public/brand/crests (trim, 128 px); not part of the export run
+    player_photos.py              #   web/resources/players -> public/players/{player_id}.jpg; not part of the export run
 sql/
   ddl/                            # gold DDL + gold_functions.sql (geometry helpers: zone_id, in_box, is_progressive…)
-  seed/                           # formation_slot_positions
+  seed/                           # formation_slot_positions, player_bio (date of birth + height, from Transfermarkt)
   fixes/                          # dated one-off data repairs
 web/                              # Next.js 16 static site — web/README.md, md/WEB_PLAN.md
   app/                            #   Pizarra world (DESIGN.md): page.tsx = landing, [equipo]/{temporada,partidos,partido,plantilla,jugador}, demo/

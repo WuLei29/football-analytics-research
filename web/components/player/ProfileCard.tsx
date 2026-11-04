@@ -15,8 +15,10 @@
  *        position stay season facts.
  *
  * No photo source exists in the data (open decision 6). Photos are
- * hand-supplied, licensed assets; without one the block shows the shirt
- * number as a large light chalk numeral on the panel-deep ground. The plate
+ * hand-supplied assets, prepared by `python -m src.export.player_photos`;
+ * they are anchored to the top of the block so a crop never cuts a head.
+ * Without one the block shows the shirt number as a large light chalk
+ * numeral on the panel-deep ground. The plate
  * and chip stay opaque (white, team) so the type passes contrast over ANY
  * photo; Pizarra has no black fills, so the handoff's dark plate is white.
  *
@@ -100,7 +102,7 @@ export function ProfileCard({
       <div className="relative min-h-[220px] flex-1 overflow-hidden rounded-row bg-panel-deep">
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element -- static export, no optimiser
-          <img src={photo} alt="" className="absolute inset-0 size-full object-cover" />
+          <img src={photo} alt="" className="absolute inset-0 size-full object-cover object-top" />
         ) : (
           <div
             aria-hidden
@@ -121,11 +123,11 @@ export function ProfileCard({
       </div>
 
       {/* 2 · Bio grid: two columns of six. */}
-      <dl className="grid grid-cols-2 gap-x-5 gap-y-1.5 px-2">
+      <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 px-2">
         {bio.map(([key, value]) => (
           <div key={key} className="flex items-baseline justify-between gap-2">
             <dt className="text-[13px] text-slate">{key}</dt>
-            <dd className="min-w-0 text-right text-[14px] font-medium break-words">{value}</dd>
+            <dd className={`min-w-0 text-right text-[14px] font-medium break-words ${key === b.born ? "whitespace-nowrap" : ""}`}>{value}</dd>
           </div>
         ))}
       </dl>

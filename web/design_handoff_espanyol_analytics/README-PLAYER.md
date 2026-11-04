@@ -91,7 +91,8 @@ display:flex; flex-direction:column`. Four stacked blocks:
    border-radius:14px 14px 0 0; overflow:hidden; background:#EFE3D4`. Image `object-fit:cover`.
    **No photo source exists in the data.** Photos are hand-supplied assets
    (`web/public/players/{player_id}.jpg`, licensed, same posture as the hero and crest in `README.md`
-   § Assets). Without one, the block shows the shirt number as a large Outfit 700 `--line` numeral on
+   § Assets). **3 Nov 2026:** originals go in `web/resources/players/{player_id}.{png,jpg,jpeg,webp}`
+   and `python -m src.export.player_photos` writes the served files. Without one, the block shows the shirt number as a large Outfit 700 `--line` numeral on
    `#EFE3D4` (proposed). Overlays (both `pointer-events:none`):
    - name plate bottom-left (`left:14px; bottom:11px`): inline-block, `background:rgba(23,24,28,.82)`,
      radius 9px, `padding:5px 10px 6px`; first name DM Mono 9px `.18em` `rgba(255,255,255,.8)`,
@@ -108,7 +109,8 @@ display:flex; flex-direction:column`. Four stacked blocks:
    *Tarjetas* is `yellow_cards · red_cards` (`5 · 1`); *Penaltis* is `penalties_scored/penalties_taken`
    (`3/4`), `—` when he has taken none; *Sustituido* is `matches_subbed_off`. *Weight* and *Contract*
    from the mock are out because neither exists in the data.
-   `height_cm` and `date_of_birth` are hand-filled in `silver.players` and may be NULL; render `—`.
+   `height_cm` and `date_of_birth` are hand-filled in `silver.players` (`sql/seed/player_bio.sql`)
+   and may be NULL; render `—`.
    *Pie* is `preferred_foot`, derived from event foot qualifiers (`izquierdo / derecho / ambos`).
    *Posición* is the **primary position** from the formation slot (`CB`, `RB`, `DM`… mapped to Spanish
    in `labels.ts`), not `position_raw`.

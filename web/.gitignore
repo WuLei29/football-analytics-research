@@ -10,3 +10,6 @@ next-env.d.ts
 # Local env
 .env*.local
 .vercel
+
+# Player photo originals (48 MB); the served copies are in public/players
+resources/players/
